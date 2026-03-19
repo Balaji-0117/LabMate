@@ -81,7 +81,7 @@ LabMate/
 │
 ├── simulations/ # Simulation modules
 │ ├── web_simulations/ # Web-based simulations (JS)
-│ └── c_programs/ # C language simulations
+│ └── experiment_simulations/ # Experiment level simulations
 │
 ├── docs/ # Documentation
 │ └── project-plan.md
