@@ -46,3 +46,46 @@ LabMate is a web-based platform designed to help students understand lab experim
 - GitHub
 
 ---
+
+## 📁 Project Structure
+
+LabMate/
+│
+├── frontend/ # Frontend code (UI)
+│ ├── html/ # HTML pages
+│ │ └── index.html
+│ │
+│ ├── css/ # Stylesheets
+│ │ └── style.css
+│ │
+│ ├── js/ # JavaScript files
+│ │ └── app.js
+│ │
+│ └── assets/ # Static assets
+│ ├── logo/ # Logo files
+│ ├── images/ # Images used in UI
+│ └── icons/ # Icons
+│
+├── backend/ # Backend (Node.js + Express)
+│ ├── server.js # Main server file
+│ │
+│ ├── routes/ # API routes
+│ │
+│ ├── controllers/ # Business logic
+│ │
+│ └── models/ # Data models
+│
+├── database/ # Database files
+│ ├── schema.sql # Table creation queries
+│ └── seed.sql # Sample data
+│
+├── simulations/ # Simulation modules
+│ ├── web_simulations/ # Web-based simulations (JS)
+│ └── c_programs/ # C language simulations
+│
+├── docs/ # Documentation
+│ └── project-plan.md
+│
+├── .gitignore # Git ignore file
+├── README.md # Project overview
+└── LICENSE # License file
