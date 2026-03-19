@@ -114,3 +114,14 @@ feature/simulation
 feature/ui-design
 ```
 ---
+
+---
+
+## 📌 Coding Guidelines
+
+- Use meaningful variable names
+- Write clean and readable code
+- Follow folder structure strictly
+- Commit regularly with proper messages
+
+---
