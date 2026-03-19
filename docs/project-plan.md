@@ -125,3 +125,14 @@ feature/ui-design
 - Commit regularly with proper messages
 
 ---
+
+---
+
+## ⚠️ Rules for Team
+
+- Do not push directly to main branch
+- Always use feature branches
+- Review at least one teammate's code daily
+- Communicate regularly
+
+---
