@@ -48,7 +48,7 @@ LabMate is a web-based platform designed to help students understand lab experim
 ---
 
 ## 📁 Project Structure
-
+```
 LabMate/
 │
 ├── frontend/ # Frontend code (UI)
@@ -89,3 +89,4 @@ LabMate/
 ├── .gitignore # Git ignore file
 ├── README.md # Project overview
 └── LICENSE # License file
+```
