@@ -48,4 +48,32 @@ LabMate is a web-based platform designed to help students understand lab experim
 ---
 
 ## 📁 Project Structure
-
+LabMate
+│
+├── frontend
+│ ├── html
+│ ├── css
+│ ├── js
+│ └── assets
+│ ├── logo
+│ ├── images
+│ └── icons
+│
+├── backend
+│ ├── server.js
+│ ├── routes
+│ ├── controllers
+│ └── models
+│
+├── database
+│ ├── schema.sql
+│ └── seed.sql
+│
+├── simulations
+│ ├── web_simulations
+│ └── c_programs
+│
+├── docs
+│ └── project-plan.md
+│
+└── README.md
