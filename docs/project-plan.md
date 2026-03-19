@@ -90,3 +90,27 @@ LabMate/
 ├── README.md # Project overview
 └── LICENSE # License file
 ```
+
+---
+
+## 🔄 Development Workflow
+
+1. Create feature branch  
+2. Develop feature  
+3. Commit changes  
+4. Push to GitHub  
+5. Create Pull Request  
+6. Code Review  
+7. Merge to main  
+
+---
+
+## 🌿 Branch Naming Convention
+```
+feature/frontend
+feature/backend
+feature/database
+feature/simulation
+feature/ui-design
+```
+---
