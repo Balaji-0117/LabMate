@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thermometer Temperature Converter</title>
+
+<style>
+/* ============================================================
+   CSS VARIABLES — Light (Sky Blue) & Dark (Black Panther)
+   ============================================================ */
+:root {
+    --bg-page:        #e8f4fd;
+    --bg-card:        #ffffff;
+    --bg-card-inner:  #f0f8ff;
+    --border:         #87ceeb;
+    --border-strong:  #3a9bd5;
+    --text-primary:   #0d2b45;
+    --text-secondary: #3a6b8a;
+    --text-muted:     #6a9ab8;
+    --accent:         #1a88d0;
+    --accent-glow:    rgba(26,136,208,0.18); 
+    --accent-2:       #0ec4e0;
+    --btn-bg:         #1a88d0;
+    --btn-text:       #ffffff;
+    --btn-hover:      #1270b0;
+    --mercury-color:  #e8383d;
+    --mercury-glow:   rgba(232,56,61,0.35);
+    --scale-bg:       #dceefa;
+    --formula-bg:     #e6f3fc;
+    --formula-border: #87ceeb;
+    --step-bg:        #f7fbff;
+    --step-border:    #b8ddf5;
+    --step-active:    #e0f2fe;
+    --step-num-bg:    #1a88d0;
+    --step-num-text:  #ffffff;
+    --toggle-bg:      #87ceeb;
+    --toggle-knob:    #1a88d0;
+    --shadow:         0 4px 20px rgba(26,136,208,0.12);
+    --input-bg:       #ffffff;
+    --tick-color:     #5a9cbf;
+}
+
+[data-theme="dark"] {
+    --bg-page:        #050510;
+    --bg-card:        #0e0e1e;
+    --bg-card-inner:  #13132a;
+    --border:         #2a1f5a;
+    --border-strong:  #7b2fbe;
+    --text-primary:   #e8deff;
+    --text-secondary: #a78bd4;
+    --text-muted:     #6a5a9a;
+    --accent:         #9b4dff;
+    --accent-glow:    rgba(155,77,255,0.22);
+    --accent-2:       #c07aff;
+    --btn-bg:         #7b2fbe;
+    --btn-text:       #f0e6ff;
+    --btn-hover:      #9b4dff;
+    --mercury-color:  #bf3fff;
+    --mercury-glow:   rgba(191,63,255,0.45);
+    --scale-bg:       #0e0e22;
+    --formula-bg:     #110e22;
+    --formula-border: #7b2fbe;
+    --step-bg:        #0d0d1f;
+    --step-border:    #2a1f5a;
+    --step-active:    #1a1035;
+    --step-num-bg:    #7b2fbe;
+    --step-num-text:  #f0e6ff;
+    --toggle-bg:      #2a1f5a;
+    --toggle-knob:    #9b4dff;
+    --shadow:         0 4px 24px rgba(155,77,255,0.18);
+    --input-bg:       #0e0e1e;
+    --tick-color:     #6a4a9a;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 30px 16px 50px;
+    transition: background 0.4s, color 0.4s;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 780px;
+    margin: 0 auto 24px;
+}
+
+.app-title {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.app-title span {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 13px;
+    display: block;
+    margin-top: 2px;
+}
+
+.toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-track {
+    width: 46px;
+    height: 24px;
+    background: var(--toggle-bg);
+    border-radius: 12px;
+    position: relative;
+    border: 1px solid var(--border-strong);
+    transition: background 0.3s;
+}
+
+.toggle-knob {
+    width: 18px;
+    height: 18px;
+    background: var(--toggle-knob);
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    transition: transform 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .toggle-knob { transform: translateX(22px); }
+
+/* ============================================================
+   MAIN CARD
+   ============================================================ */
+.card {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    max-width: 780px;
+    margin: 0 auto;
+    box-shadow: var(--shadow);
+    transition: background 0.4s, border 0.4s;
+}
+
+/* ============================================================
+   CONTROLS ROW
+   ============================================================ */
+.controls-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+.field-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="number"] {
+    width: 130px;
+    padding: 10px 12px;
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border 0.2s, background 0.4s;
+}
+input[type="number"]:focus { border-color: var(--accent); }
+
+select {
+    padding: 10px 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    color: var(--text-primary);
+    outline: none;
+    cursor: pointer;
+    transition: border 0.2s, background 0.4s;
+    width: 165px;
+}
+select:focus { border-color: var(--accent); }
+
+.slider-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 140px;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(
+        to right,
+        var(--accent) 0%,
+        var(--accent) var(--slider-pct, 0%),
+        var(--border) var(--slider-pct, 0%),
+        var(--border) 100%
+    );
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-glow);
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.btn-convert {
+    padding: 10px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 10px var(--accent-glow);
+    white-space: nowrap;
+}
+.btn-convert:hover  { background: var(--btn-hover); transform: translateY(-1px); }
+.btn-convert:active { transform: translateY(0); }
+
+/* ============================================================
+   THERMOMETER
+   ============================================================ */
+.thermo-section { margin-bottom: 22px; }
+
+.section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.scale-ticks {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    margin-bottom: 3px;
+}
+.scale-ticks span {
+    font-size: 10px;
+    color: var(--tick-color);
+    width: 28px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+}
+
+.tick-lines {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 18px;
+    margin-bottom: 3px;
+}
+.tick-lines span {
+    width: 1px;
+    height: 7px;
+    background: var(--tick-color);
+    display: block;
+}
+
+.thermometer {
+    width: 100%;
+    height: 36px;
+    border: 2px solid var(--border-strong);
+    border-radius: 18px;
+    position: relative;
+    background: var(--scale-bg);
+    overflow: hidden;
+}
+
+.mercury {
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(
+        to right,
+        var(--mercury-color),
+        color-mix(in srgb, var(--mercury-color) 80%, white)
+    );
+    border-radius: 18px;
+    transition: width 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: inset 0 2px 6px rgba(255,255,255,0.2), 0 0 12px var(--mercury-glow);
+}
+
+.mercury-reading {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg-card);
+    border: 2px solid var(--mercury-color);
+    border-radius: 20px;
+    padding: 1px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--mercury-color);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+.mercury-reading.visible { opacity: 1; }
+
+.scale-labels-below {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 10px 0;
+}
+.scale-labels-below span {
+    font-size: 10px;
+    color: var(--text-muted);
+    width: 28px;
+    text-align: center;
+}
+
+/* ============================================================
+   RESULT
+   ============================================================ */
+.result-display {
+    text-align: center;
+    padding: 14px;
+    background: var(--bg-card-inner);
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 22px;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
+    transition: background 0.4s;
+}
+.result-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+}
+.result-sub  { font-size: 12px; color: var(--text-muted); }
+.result-idle { font-size: 14px; color: var(--text-muted); }
+.error-msg   { font-size: 14px; color: #e53e3e; font-weight: 600; }
+
+/* ============================================================
+   LIVE FORMULA BREAKDOWN
+   ============================================================ */
+.breakdown-section { }
+
+.breakdown-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.breakdown-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s;
+    animation: pulse 1.4s infinite;
+}
+.live-dot.active { opacity: 1; }
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1);   opacity: 1; }
+    50%       { transform: scale(1.6); opacity: 0.4; }
+}
+
+.steps-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.step-card {
+    background: var(--step-bg);
+    border: 1.5px solid var(--step-border);
+    border-radius: 10px;
+    padding: 11px 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: background 0.3s, border 0.3s, transform 0.25s;
+    opacity: 0.35;
+}
+
+.step-card.active {
+    background: var(--step-active);
+    border-color: var(--accent);
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+.step-num {
+    min-width: 24px;
+    height: 24px;
+    background: var(--step-num-bg);
+    color: var(--step-num-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: background 0.3s;
+}
+
+.step-card:not(.active) .step-num {
+    background: var(--border);
+    color: var(--text-muted);
+}
+
+.step-body { flex: 1; }
+
+.step-rule {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.step-math {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.step-math .val-in  { color: var(--accent);  font-weight: 700; font-size: 15px; }
+.step-math .val-out { color: var(--accent-2); font-weight: 700; font-size: 15px; }
+.step-math .val-mid { color: var(--text-secondary); font-weight: 600; }
+
+.breakdown-idle {
+    text-align: center;
+    padding: 28px 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    border: 1.5px dashed var(--border);
+    border-radius: 12px;
+}
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 560px) {
+    .controls-row { flex-direction: column; align-items: stretch; }
+    input[type="number"], select { width: 100%; }
+    .btn-convert { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="app-title">
+        🌡️ Temperature Converter
+        <span>Celsius · Fahrenheit</span>
+    </div>
+    <div class="toggle-wrap" onclick="toggleTheme()">
+        <span id="themeLabel">☀️ Light</span>
+        <div class="toggle-track"><div class="toggle-knob"></div></div>
+    </div>
+</div>
+
+<!-- MAIN CARD -->
+<div class="card">
+
+    <!-- Controls -->
+    <div class="controls-row">
+        <div>
+            <span class="field-label">Temperature</span>
+            <input type="number" id="tempInput" placeholder="e.g. 100" oninput="onInputChange()" />
+        </div>
+        <div>
+            <span class="field-label">From Unit</span>
+            <select id="unit" onchange="onUnitChange()">
+                <option value="C">°C — Celsius</option>
+                <option value="F">°F — Fahrenheit</option>
+            </select>
+        </div>
+        <div class="slider-group">
+            <span class="field-label">Quick Slider (0 – 150)</span>
+            <input type="range" id="slider" min="0" max="150" value="0"
+                   oninput="onSliderChange(this.value)" />
+            <div class="slider-labels">
+                <span>0°</span><span>50°</span><span>100°</span><span>150°</span>
+            </div>
+        </div>
+        <button class="btn-convert" onclick="convertTemp()">▶ Convert</button>
+    </div>
+
+    <!-- Thermometer -->
+    <div class="thermo-section">
+        <div class="section-label">🌡 Thermometer Reading</div>
+        <div class="scale-ticks" id="scaleTicks">
+            <span>0°C</span><span>25°C</span><span>50°C</span><span>75°C</span><span>100°C</span>
+        </div>
+        <div class="tick-lines">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="thermometer">
+            <div class="mercury" id="mercury">
+                <div class="mercury-reading" id="mercuryReading"></div>
+            </div>
+        </div>
+        <div class="scale-labels-below">
+            <span>0°</span><span>25°</span><span>50°</span><span>75°</span><span>100°</span>
+        </div>
+    </div>
+
+    <!-- Result -->
+    <div class="result-display" id="resultDisplay">
+        <div class="result-idle">— awaiting conversion —</div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Live Formula Breakdown -->
+    <div class="breakdown-section">
+        <div class="breakdown-header">
+            <div class="breakdown-title">📐 Step-by-Step Formula</div>
+            <div class="live-dot" id="liveDot"></div>
+        </div>
+        <div class="breakdown-idle" id="breakdownIdle">
+            Move the slider or enter a value — the formula will walk through each step live.
+        </div>
+        <div class="steps-grid" id="stepsGrid" style="display:none"></div>
+    </div>
+
+</div>
+
+<script>
+
+/* THEME TOGGLE */
+function toggleTheme() {
+    var html  = document.documentElement;
+    var label = document.getElementById("themeLabel");
+    var dark  = html.getAttribute("data-theme") === "dark";
+    html.setAttribute("data-theme", dark ? "light" : "dark");
+    label.textContent = dark ? "☀️ Light" : "🌑 Dark";
+}
+
+/* SLIDER → INPUT */
+function onSliderChange(val) {
+    document.getElementById("tempInput").value = val;
+    updateSliderFill(val, 0, 150);
+    convertTemp();
+}
+
+/* INPUT → SLIDER */
+function onInputChange() {
+    var val = parseFloat(document.getElementById("tempInput").value);
+    if (!isNaN(val)) {
+        var clamped = Math.max(0, Math.min(val, 150));
+        document.getElementById("slider").value = clamped;
+        updateSliderFill(clamped, 0, 150);
+    }
+    resetDisplay();
+}
+
+/* UNIT CHANGE */
+function onUnitChange() {
+    var val = document.getElementById("tempInput").value;
+    if (val !== "") { convertTemp(); }
+    else { updateScaleTicks(document.getElementById("unit").value); }
+}
+
+/* SLIDER FILL */
+function updateSliderFill(val, min, max) {
+    var pct = ((val - min) / (max - min)) * 100;
+    pct = Math.max(0, Math.min(pct, 100));
+    document.getElementById("slider").style.setProperty("--slider-pct", pct + "%");
+}
+
+/* RESET */
+function resetDisplay() {
+    document.getElementById("resultDisplay").innerHTML =
+        '<div class="result-idle">— awaiting conversion —</div>';
+    document.getElementById("liveDot").classList.remove("active");
+}
+
+/* SCALE TICKS */
+function updateScaleTicks(unit) {
+    var t = document.getElementById("scaleTicks");
+    if (unit === "C") {
+        t.innerHTML = "<span>0°C</span><span>25°C</span><span>50°C</span><span>75°C</span><span>100°C</span>";
+    } else {
+        t.innerHTML = "<span>32°F</span><span>77°F</span><span>122°F</span><span>167°F</span><span>212°F</span>";
+    }
+}
+
+/* MAIN CONVERSION */
+function convertTemp() {
+
+    var raw  = document.getElementById("tempInput").value;
+    var unit = document.getElementById("unit").value;
+    var disp = document.getElementById("resultDisplay");
+
+    if (raw === "") {
+        disp.innerHTML = '<div class="error-msg">⚠ Please enter a temperature value.</div>';
+        return;
+    }
+    var temp = parseFloat(raw);
+    if (isNaN(temp)) {
+        disp.innerHTML = '<div class="error-msg">⚠ Invalid input — please enter a number.</div>';
+        return;
+    }
+
+    var converted, celsiusVal, fromLbl, toLbl;
+    var steps = [];
+
+    if (unit === "C") {
+        fromLbl    = "°C";
+        toLbl      = "°F";
+        celsiusVal = temp;
+        converted  = (temp * 9 / 5) + 32;
+
+        var step1val = temp * 9;
+        var step2val = step1val / 5;
+        var step3val = step2val + 32;
+
+        steps = [
+            { rule: "Formula",                      math: "°F = ( °C × 9/5 ) + 32" },
+            { rule: "Step 1 — Substitute the value",math: "= ( <val-in>" + temp + "</val-in> × 9/5 ) + 32" },
+            { rule: "Step 2 — Multiply by 9",       math: temp + " × 9 = <val-mid>" + step1val.toFixed(4).replace(/\.?0+$/, "") + "</val-mid>" },
+            { rule: "Step 3 — Divide by 5",         math: step1val.toFixed(4).replace(/\.?0+$/, "") + " ÷ 5 = <val-mid>" + step2val.toFixed(4).replace(/\.?0+$/, "") + "</val-mid>" },
+            { rule: "Step 4 — Add 32",              math: step2val.toFixed(4).replace(/\.?0+$/, "") + " + 32 = <val-out>" + step3val.toFixed(2) + " °F</val-out>" }
+        ];
+
+    } else {
+        fromLbl    = "°F";
+        toLbl      = "°C";
+        var step1f = temp - 32;
+        var step2f = step1f * 5;
+        var step3f = step2f / 9;
+        converted  = step3f;
+        celsiusVal = converted;
+
+        steps = [
+            { rule: "Formula",                      math: "°C = ( °F − 32 ) × 5/9" },
+            { rule: "Step 1 — Substitute the value",math: "= ( <val-in>" + temp + "</val-in> − 32 ) × 5/9" },
+            { rule: "Step 2 — Subtract 32",         math: temp + " − 32 = <val-mid>" + step1f.toFixed(4).replace(/\.?0+$/, "") + "</val-mid>" },
+            { rule: "Step 3 — Multiply by 5",       math: step1f.toFixed(4).replace(/\.?0+$/, "") + " × 5 = <val-mid>" + step2f.toFixed(4).replace(/\.?0+$/, "") + "</val-mid>" },
+            { rule: "Step 4 — Divide by 9",         math: step2f.toFixed(4).replace(/\.?0+$/, "") + " ÷ 9 = <val-out>" + step3f.toFixed(2) + " °C</val-out>" }
+        ];
+    }
+
+    converted = Math.round(converted * 100) / 100;
+
+    disp.innerHTML =
+        '<div class="result-value">' + converted + ' ' + toLbl + '</div>' +
+        '<div class="result-sub">' + temp + ' ' + fromLbl + ' → ' + toLbl + '</div>';
+
+    var pct = Math.max(0, Math.min((celsiusVal / 100) * 100, 100));
+    document.getElementById("mercury").style.width = pct + "%";
+    var bubble = document.getElementById("mercuryReading");
+    bubble.textContent = celsiusVal.toFixed(1) + "°C";
+    bubble.classList.add("visible");
+
+    var sc = Math.max(0, Math.min(temp, 150));
+    document.getElementById("slider").value = sc;
+    updateSliderFill(sc, 0, 150);
+
+    updateScaleTicks(unit);
+    renderSteps(steps);
+}
+
+/* RENDER STEP CARDS */
+function renderSteps(steps) {
+    var idle = document.getElementById("breakdownIdle");
+    var grid = document.getElementById("stepsGrid");
+    var dot  = document.getElementById("liveDot");
+
+    idle.style.display = "none";
+    grid.style.display = "flex";
+    dot.classList.add("active");
+
+    var html = "";
+    for (var i = 0; i < steps.length; i++) {
+        var math = steps[i].math
+            .replace(/<val-in>/g,   '<span class="val-in">')
+            .replace(/<\/val-in>/g, '</span>')
+            .replace(/<val-out>/g,  '<span class="val-out">')
+            .replace(/<\/val-out>/g,'</span>')
+            .replace(/<val-mid>/g,  '<span class="val-mid">')
+            .replace(/<\/val-mid>/g,'</span>');
+
+        html +=
+            '<div class="step-card" id="step_' + i + '">' +
+                '<div class="step-num">' + (i === 0 ? "≡" : i) + '</div>' +
+                '<div class="step-body">' +
+                    '<div class="step-rule">' + steps[i].rule + '</div>' +
+                    '<div class="step-math">' + math + '</div>' +
+                '</div>' +
+            '</div>';
+    }
+    grid.innerHTML = html;
+
+    for (var j = 0; j < steps.length; j++) {
+        (function(idx) {
+            setTimeout(function() {
+                var card = document.getElementById("step_" + idx);
+                if (card) card.classList.add("active");
+            }, idx * 140);
+        })(j);
+    }
+
+    setTimeout(function() {
+        dot.classList.remove("active");
+    }, steps.length * 140 + 600);
+}
+
+/* ENTER KEY */
+document.getElementById("tempInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") convertTemp();
+});
+
+</script>
+</body>
+</html>
