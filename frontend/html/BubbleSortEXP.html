@@ -1,0 +1,2482 @@
+<!-- This is a HTML file -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experiment — LabMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/portal.css" />
+
+    <style>
+        /* =============================================
+       EXPERIMENT PAGE — Scoped Styles
+       ============================================= */
+        .exp-page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-page);
+        }
+
+        .exp-breadcrumb {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-var);
+            padding: 10px 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-soft);
+        }
+
+        .exp-breadcrumb a {
+            color: var(--accent-btn, var(--teal));
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .exp-breadcrumb a:hover {
+            color: var(--btn-hover, #1270b0);
+            text-decoration: underline;
+        }
+
+        .exp-breadcrumb .sep {
+            opacity: 0.45;
+            margin: 0 2px;
+        }
+
+        .exp-breadcrumb .current {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .exp-banner {
+            background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn, var(--teal)) 100%);
+            color: #fff;
+            padding: 22px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .exp-banner-icon {
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .exp-banner-meta {
+            flex: 1;
+        }
+
+        .exp-banner-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.78;
+            margin-bottom: 4px;
+        }
+
+        .exp-banner-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        .exp-banner-sub {
+            font-size: 0.83rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .exp-banner-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+        .exp-main-body {
+            flex: 1;
+            display: flex;
+            gap: 0;
+            padding: 32px 40px;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .exp-sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            margin-right: 28px;
+        }
+
+        .exp-sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-lg, 20px);
+            box-shadow: var(--sh-card);
+            overflow: hidden;
+            position: sticky;
+            top: 90px;
+        }
+
+        .exp-sidebar-header {
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border-var);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+        }
+
+        .exp-nav-list {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .exp-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--r-md, 12px);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-mid);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
+            text-align: left;
+            position: relative;
+        }
+
+        .exp-nav-btn:hover {
+            background: var(--scale-bg, var(--teal-dim));
+            color: var(--text-primary);
+            transform: translateX(3px);
+        }
+
+        .exp-nav-btn.active {
+            background: var(--scale-bg, var(--teal-dim));
+            color: var(--accent-btn, var(--teal));
+            font-weight: 600;
+        }
+
+        .exp-nav-btn.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            border-radius: 0 3px 3px 0;
+            background: var(--accent-btn, var(--teal));
+        }
+
+        .exp-nav-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--card-inner);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: background 0.22s ease;
+        }
+
+        .exp-nav-btn.active .exp-nav-icon {
+            background: var(--accent-btn, var(--teal));
+            color: #fff;
+        }
+
+        .exp-sidebar-progress {
+            padding: 14px 20px 18px;
+            border-top: 1px solid var(--border-var);
+        }
+
+        .exp-progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-soft);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .exp-progress-track {
+            height: 5px;
+            background: var(--scale-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .exp-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 20%;
+        }
+
+        .exp-content-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .exp-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-lg, 20px);
+            box-shadow: var(--sh-card);
+            overflow: hidden;
+        }
+
+        .exp-panel-header {
+            padding: 24px 32px 20px;
+            border-bottom: 1px solid var(--border-var);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .exp-panel-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--scale-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .exp-panel-title {
+            font-family: var(--font-display);
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+        }
+
+        .exp-panel-subtitle {
+            font-size: 0.83rem;
+            color: var(--text-soft);
+            margin-top: 2px;
+        }
+
+        .exp-panel-body {
+            padding: 32px;
+        }
+
+        .exp-section-content {
+            display: none;
+            animation: sectionFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .exp-section-content.visible {
+            display: block;
+        }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exp-body-text {
+            font-size: 0.95rem;
+            color: var(--text-mid);
+            line-height: 1.85;
+        }
+
+        .exp-body-text+.exp-body-text {
+            margin-top: 16px;
+        }
+
+        .exp-highlight-box {
+            background: var(--scale-bg);
+            border-left: 4px solid var(--accent-btn, var(--teal));
+            border-radius: 0 var(--r-md) var(--r-md) 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .exp-step-list {
+            counter-reset: steps;
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .exp-step-list li {
+            counter-increment: steps;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            font-size: 0.92rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+        }
+
+        .exp-step-list li::before {
+            content: counter(steps);
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .exp-materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .exp-material-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--card-inner);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 10px 14px;
+            font-size: 0.83rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .exp-material-chip-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-btn, var(--teal));
+            flex-shrink: 0;
+        }
+
+        .exp-result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.88rem;
+        }
+
+        .exp-result-table th {
+            background: var(--scale-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-strong);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .exp-result-table td {
+            padding: 11px 16px;
+            color: var(--text-mid);
+            border-bottom: 1px solid var(--border-var);
+            line-height: 1.4;
+        }
+
+        .exp-result-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .exp-result-table tr:hover td {
+            background: var(--card-inner);
+        }
+
+        .exp-result-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .exp-stat-card {
+            background: var(--card-inner);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 18px 16px;
+            text-align: center;
+        }
+
+        .exp-stat-value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-btn, var(--teal));
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .exp-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .exp-conclusion-box {
+            background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 20px 24px;
+            margin-top: 24px;
+        }
+
+        .exp-conclusion-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-btn, var(--teal));
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .exp-conclusion-text {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            line-height: 1.75;
+        }
+
+        .exp-divider {
+            height: 1px;
+            background: var(--border-var);
+            margin: 28px 0;
+            border: none;
+        }
+
+        .exp-tag {
+            display: inline-block;
+            background: var(--scale-bg);
+            color: var(--accent-btn, var(--teal));
+            border: 1px solid var(--border-var);
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin: 2px;
+        }
+
+        [data-theme="dark"] #site-header {
+            background: rgba(14, 14, 30, 0.97);
+        }
+
+        /* Theme switch in header */
+        .theme-switch {
+            display: inline-block;
+            height: 30px;
+            position: relative;
+            width: 64px;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: var(--scale-bg);
+            border: 1.5px solid var(--border-var);
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7px;
+            box-sizing: border-box;
+        }
+
+        .slider .icon {
+            width: 12px;
+            height: 12px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider .icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .light-icon {
+            color: #f39c12;
+        }
+
+        .dark-icon {
+            color: #aab;
+        }
+
+        .slider::before {
+            background-color: var(--bg-card);
+            bottom: 3px;
+            content: "";
+            height: 22px;
+            left: 4px;
+            position: absolute;
+            transition: transform .4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            width: 22px;
+            z-index: 2;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked+.slider {
+            border-color: var(--border-strong);
+        }
+
+        input:checked+.slider::before {
+            transform: translateX(34px);
+        }
+
+        .slider.round {
+            border-radius: 30px;
+        }
+
+        /* =============================================
+       BUBBLE SORT SIMULATION — Scoped inside .sim-wrap
+       ============================================= */
+        .sim-wrap {
+            --bs-bubble-size: 60px;
+            --bs-gap: 18px;
+            --bs-font-display: 'Orbitron', sans-serif;
+            --bs-font-body: 'DM Sans', sans-serif;
+            background: var(--card-inner);
+            border: 1.5px solid var(--border-var);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sim-wrap .bs-top-bar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .sim-wrap .bs-title {
+            font-family: var(--bs-font-display);
+            font-size: clamp(13px, 2.5vw, 18px);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-btn, var(--teal));
+            filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent));
+        }
+
+        .sim-wrap .bs-subtitle {
+            font-size: 11px;
+            color: var(--text-soft);
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        .sim-wrap .bs-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            padding: 11px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 12px;
+        }
+
+        .sim-wrap .bs-input-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            white-space: nowrap;
+        }
+
+        .sim-wrap .bs-array-input {
+            flex: 1;
+            min-width: 160px;
+            padding: 8px 12px;
+            background: var(--bg-page);
+            border: 1.5px solid var(--border-var);
+            border-radius: 9px;
+            font-family: var(--bs-font-body);
+            font-size: 13px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .sim-wrap .bs-array-input:focus {
+            border-color: var(--accent-btn, var(--teal));
+        }
+
+        .sim-wrap .bs-array-input::placeholder {
+            color: var(--text-soft);
+            opacity: 0.7;
+        }
+
+        .sim-wrap .bs-input-hint {
+            font-size: 10px;
+            color: var(--text-soft);
+            width: 100%;
+            margin-top: 2px;
+        }
+
+        .sim-wrap .bs-btn-sm {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 9px;
+            font-family: var(--bs-font-body);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
+        }
+
+        .sim-wrap .bs-btn-sm:active {
+            transform: scale(0.95);
+        }
+
+        .sim-wrap .bs-btn-apply {
+            background: var(--accent-btn, var(--teal));
+            color: #fff;
+        }
+
+        .sim-wrap .bs-btn-apply:hover {
+            background: var(--btn-hover);
+        }
+
+        .sim-wrap .bs-btn-random {
+            background: var(--bg-page);
+            color: var(--text-mid);
+            border: 1.5px solid var(--border-var);
+        }
+
+        .sim-wrap .bs-btn-random:hover {
+            background: var(--border-var);
+        }
+
+        .sim-wrap .bs-controls {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .sim-wrap .bs-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border: none;
+            border-radius: 40px;
+            font-family: var(--bs-font-body);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+            user-select: none;
+        }
+
+        .sim-wrap .bs-btn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .sim-wrap .bs-btn:disabled {
+            opacity: 0.32;
+            cursor: not-allowed;
+        }
+
+        .sim-wrap .bs-btn-icon {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+        }
+
+        .sim-wrap .bs-btn-start {
+            background: var(--accent-btn, var(--teal));
+            color: #fff;
+            box-shadow: 0 3px 12px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent);
+        }
+
+        .sim-wrap .bs-btn-start:hover:not(:disabled) {
+            background: var(--btn-hover);
+            transform: translateY(-1px);
+        }
+
+        .sim-wrap .bs-btn-pr {
+            background: #e6a800;
+            color: #fff;
+        }
+
+        .sim-wrap .bs-btn-pr:hover:not(:disabled) {
+            background: #c48f00;
+            transform: translateY(-1px);
+        }
+
+        .sim-wrap .bs-btn-pr.is-resume {
+            background: var(--border-strong);
+            color: #fff;
+        }
+
+        .sim-wrap .bs-btn-pr.is-resume:hover:not(:disabled) {
+            background: var(--btn-hover);
+        }
+
+        .sim-wrap .bs-btn-reset {
+            background: var(--bg-card);
+            color: var(--text-mid);
+            border: 1.5px solid var(--border-var);
+        }
+
+        .sim-wrap .bs-btn-reset:hover:not(:disabled) {
+            background: var(--scale-bg);
+            transform: translateY(-1px);
+        }
+
+        .sim-wrap .bs-speed-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .sim-wrap .bs-speed-label {
+            font-size: 10px;
+            color: var(--text-soft);
+            white-space: nowrap;
+        }
+
+        .sim-wrap .bs-speed-badge {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent-btn, var(--teal));
+            min-width: 48px;
+            text-align: right;
+        }
+
+        .sim-wrap input[type="range"].bs-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 90px;
+            height: 4px;
+            background: var(--border-var);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .sim-wrap input[type="range"].bs-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-btn, var(--teal));
+            cursor: pointer;
+        }
+
+        .sim-wrap .bs-status-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .sim-wrap .bs-stat-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 16px;
+            padding: 4px 12px;
+            font-size: 11px;
+            color: var(--text-soft);
+            white-space: nowrap;
+        }
+
+        .sim-wrap .bs-stat-pill .val {
+            font-weight: 700;
+            color: var(--accent-btn, var(--teal));
+            margin-left: 3px;
+        }
+
+        .sim-wrap #bsStatusMsg {
+            flex: 1;
+            min-width: 150px;
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-soft);
+            font-style: italic;
+        }
+
+        .sim-wrap #bsStatusMsg.comparing {
+            color: #e6a800;
+        }
+
+        .sim-wrap #bsStatusMsg.swapping {
+            color: #FF6B6B;
+        }
+
+        .sim-wrap #bsStatusMsg.sorted {
+            color: var(--border-strong);
+        }
+
+        .sim-wrap #bsStatusMsg.done {
+            color: var(--accent-2, #0EC4E0);
+        }
+
+        .sim-wrap #bsStatusMsg.paused {
+            color: #e6a800;
+        }
+
+        .sim-wrap .bs-arena-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .sim-wrap .bs-ocean-floor {
+            position: absolute;
+            bottom: 0;
+            left: -24px;
+            right: -24px;
+            height: 38px;
+            background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--border-var) 20%, transparent) 40%, color-mix(in srgb, var(--border-strong) 30%, transparent) 100%);
+            border-top: 1px solid color-mix(in srgb, var(--border-strong) 35%, transparent);
+            border-radius: 0 0 14px 14px;
+            overflow: hidden;
+        }
+
+        .sim-wrap .bs-ocean-floor::before,
+        .sim-wrap .bs-ocean-floor::after {
+            content: '';
+            position: absolute;
+            top: -7px;
+            left: -40px;
+            right: -40px;
+            height: 12px;
+            background: repeating-linear-gradient(90deg, transparent, transparent 16px, color-mix(in srgb, var(--border-strong) 25%, transparent) 16px, color-mix(in srgb, var(--border-strong) 25%, transparent) 32px);
+            border-radius: 50%;
+            animation: bs-ocean 4s linear infinite;
+        }
+
+        .sim-wrap .bs-ocean-floor::after {
+            top: 4px;
+            animation-duration: 5.5s;
+            animation-direction: reverse;
+            opacity: 0.5;
+        }
+
+        @keyframes bs-ocean {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(64px);
+            }
+        }
+
+        .sim-wrap .bs-arena {
+            position: relative;
+            width: 100%;
+            min-height: 160px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 32px;
+            padding-top: 16px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .sim-wrap .bs-bubble-slot {
+            position: relative;
+            width: var(--bs-bubble-size);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Water fill layer inside bubble */
+        .sim-wrap .bs-bubble-water {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 0%;
+            background: linear-gradient(to top, color-mix(in srgb, var(--border-strong) 52%, transparent) 0%, color-mix(in srgb, var(--border-strong) 22%, transparent) 100%);
+            border-radius: 0 0 50% 50% / 0 0 40% 40%;
+            pointer-events: none;
+            z-index: 1;
+            transition: none;
+        }
+        .sim-wrap .bs-bubble-water::before {
+            content: '';
+            position: absolute;
+            top: -5px; left: -20%; right: -20%; height: 10px;
+            background: color-mix(in srgb, var(--border-strong) 35%, transparent);
+            border-radius: 50%;
+            animation: bs-water-ripple 1.8s ease-in-out infinite;
+        }
+        @keyframes bs-water-ripple {
+            0%, 100% { transform: scaleX(1) translateY(0); }
+            50%       { transform: scaleX(1.1) translateY(-2px); }
+        }
+        @keyframes bs-water-rise {
+            0%   { height: 0%;  opacity: 0; }
+            15%  { opacity: 1; }
+            100% { height: 92%; opacity: 1; }
+        }
+        .sim-wrap .bs-bubble.sorted .bs-bubble-water {
+            animation: bs-water-rise 0.75s cubic-bezier(0.22, 0.85, 0.46, 1) forwards;
+        }
+
+        .sim-wrap .bs-bubble {
+            width: var(--bs-bubble-size);
+            height: var(--bs-bubble-size);
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--bs-font-display);
+            font-size: 13px;
+            font-weight: 700;
+            background: transparent;
+            border: 2.5px solid var(--border-strong);
+            color: var(--text-primary);
+            box-shadow: none;
+            transition: border-color 0.25s, box-shadow 0.25s, color 0.25s, transform 0.25s;
+            will-change: transform;
+            overflow: hidden;
+            cursor: default;
+            user-select: none;
+            z-index: 0;
+        }
+
+        .sim-wrap .bs-bubble::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 11px;
+            width: 13px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: rotate(-30deg);
+            pointer-events: none;
+            opacity: 0.5;
+            z-index: 2;
+        }
+        .sim-wrap .bs-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: 9px; right: 8px; width: 5px; height: 4px;
+            background: rgba(255,255,255,0.35);
+            border-radius: 50%;
+            pointer-events: none; opacity: 0.3; z-index: 2;
+        }
+
+        .sim-wrap .bs-bubble-num {
+            position: relative; z-index: 3;
+        }
+
+        .sim-wrap .bs-bubble.floating {
+            animation: bs-float 2.8s ease-in-out infinite;
+        }
+
+        @keyframes bs-float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .sim-wrap .bs-bubble.comparing {
+            animation: none !important;
+            border-color: #FFD166;
+            border-width: 3px;
+            color: #c47a00;
+            box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.2), 0 0 18px rgba(255, 209, 102, 0.7);
+            transform: translateY(-9px) scale(1.07);
+        }
+
+        .sim-wrap .bs-bubble.swapping {
+            animation: none !important;
+            border-color: #FF6B6B;
+            border-width: 3px;
+            color: #cc2b2b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2), 0 0 20px rgba(255, 107, 107, 0.7);
+        }
+
+        .sim-wrap .bs-bubble.sorted {
+            animation: none !important;
+            border-color: var(--border-strong);
+            border-width: 2.5px;
+            color: var(--text-primary);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--border-strong) 18%, transparent), 0 0 12px color-mix(in srgb, var(--border-strong) 40%, transparent);
+        }
+
+        [data-theme="dark"] .sim-wrap .bs-bubble.comparing {
+            color: #ffe8a0;
+        }
+
+        [data-theme="dark"] .sim-wrap .bs-bubble.swapping {
+            color: #ffb0b0;
+        }
+
+        .sim-wrap .bs-slot-index {
+            font-size: 9px;
+            color: var(--text-soft);
+            letter-spacing: 0.3px;
+        }
+
+        .sim-wrap .bs-splash-host {
+            position: absolute;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .sim-wrap .bs-drop {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .sim-wrap .bs-log-title {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            margin-bottom: 7px;
+        }
+
+        .sim-wrap .bs-log-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 12px;
+            padding: 10px 14px;
+            max-height: 110px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-var) transparent;
+        }
+
+        .sim-wrap .bs-log-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            padding: 3px 0;
+            border-bottom: 1px solid color-mix(in srgb, var(--border-var) 35%, transparent);
+            font-size: 11px;
+            color: var(--text-mid);
+            line-height: 1.5;
+        }
+
+        .sim-wrap .bs-log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .sim-wrap .bs-tag {
+            flex-shrink: 0;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-top: 1px;
+        }
+
+        .sim-wrap .tag-pass {
+            background: color-mix(in srgb, var(--accent-btn, var(--teal)) 15%, transparent);
+            color: var(--accent-btn, var(--teal));
+        }
+
+        .sim-wrap .tag-compare {
+            background: rgba(255, 209, 102, 0.18);
+            color: #c47a00;
+        }
+
+        .sim-wrap .tag-swap {
+            background: rgba(255, 107, 107, 0.18);
+            color: #cc2b2b;
+        }
+
+        .sim-wrap .tag-sorted {
+            background: color-mix(in srgb, var(--border-strong) 18%, transparent);
+            color: var(--border-strong);
+        }
+
+        .sim-wrap .tag-done {
+            background: color-mix(in srgb, var(--accent-2, #0EC4E0) 18%, transparent);
+            color: var(--accent-2, #0EC4E0);
+        }
+
+        .sim-wrap .tag-noswap {
+            background: color-mix(in srgb, var(--border-var) 35%, transparent);
+            color: var(--text-soft);
+        }
+
+        .sim-wrap .tag-paused {
+            background: rgba(255, 209, 102, 0.18);
+            color: #c47a00;
+        }
+
+        [data-theme="dark"] .sim-wrap .tag-compare {
+            color: #ffe8a0;
+        }
+
+        [data-theme="dark"] .sim-wrap .tag-swap {
+            color: #ffb0b0;
+        }
+
+        [data-theme="dark"] .sim-wrap .tag-paused {
+            color: #ffe8a0;
+        }
+
+        .sim-wrap .bs-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-var);
+        }
+
+        .sim-wrap .bs-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-soft);
+        }
+
+        .sim-wrap .bs-legend-bub {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: transparent;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .sim-wrap .bs-legend-bub::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 4px;
+            width: 5px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.45);
+            border-radius: 50%;
+            transform: rotate(-30deg);
+        }
+
+        .sim-wrap .lb-idle {
+            border: 2.5px solid var(--border-strong);
+        }
+
+        .sim-wrap .lb-compare {
+            border: 3px solid #FFD166;
+            box-shadow: 0 0 8px rgba(255, 209, 102, 0.7);
+        }
+
+        .sim-wrap .lb-swap {
+            border: 3px solid #FF6B6B;
+            box-shadow: 0 0 8px rgba(255, 107, 107, 0.7);
+        }
+
+        .sim-wrap .lb-sorted {
+            border: 2.5px solid var(--border-strong);
+            box-shadow: 0 0 6px color-mix(in srgb, var(--border-strong) 40%, transparent);
+        }
+
+        /* ---- Responsive ---- */
+        @media (max-width: 800px) {
+            .exp-main-body {
+                flex-direction: column;
+                padding: 20px 16px;
+            }
+
+            .exp-sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .exp-sidebar-card {
+                position: static;
+            }
+
+            .exp-nav-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+                padding: 10px;
+            }
+
+            .exp-nav-btn {
+                flex: 1;
+                min-width: calc(50% - 3px);
+                justify-content: center;
+                font-size: 0.8rem;
+                padding: 10px 8px;
+            }
+
+            .exp-nav-btn.active::before {
+                display: none;
+            }
+
+            .exp-banner {
+                padding: 18px 20px;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .exp-panel-body {
+                padding: 20px;
+            }
+
+            .exp-panel-header {
+                padding: 18px 20px;
+            }
+
+            .exp-breadcrumb {
+                padding: 8px 16px;
+            }
+
+            .sim-wrap {
+                --bs-bubble-size: 46px;
+                --bs-gap: 8px;
+            }
+
+            .sim-wrap .bs-bubble {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .exp-nav-btn {
+                min-width: calc(50% - 3px);
+            }
+
+            .exp-result-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .exp-banner-badge {
+                display: none;
+            }
+
+            .sim-wrap {
+                --bs-bubble-size: 38px;
+            }
+
+            .sim-wrap .bs-bubble {
+                font-size: 10px;
+            }
+
+            #bsStatusMsg {
+                text-align: left;
+                min-width: unset;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="exp-page-wrapper">
+
+    <!-- ===================== HEADER ===================== -->
+    <!-- <header id="site-header" role="navigation" aria-label="Primary site navigation">
+    <div id="header-logo-wrapper">
+      <a href="labmate_landing.html" aria-label="LabMate home">
+        <img src="../assets/images/LabMateLogo.png" alt="LabMate" id="header-logo-img" />
+      </a>
+    </div>
+    <nav id="primary-nav" aria-label="Main menu">
+      <ul id="nav-links-list" role="list">
+        <li class="nav-item"><a href="labmate_landing.html#home-section" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="labmate_landing.html#about-section" class="nav-link">About Us</a></li>
+        <li class="nav-item"><a href="labmate_landing.html#colleges-section" class="nav-link">Colleges In Collaboration</a></li>
+        <li class="nav-item"><a href="labmate_landing.html#contact-section" class="nav-link">Contact Us</a></li>
+        <li class="nav-item"><a href="labmate_landing.html#enews-section" class="nav-link">E-News</a></li>
+        <li class="nav-item"><a href="labmate_landing.html#why-labmate-section" class="nav-link">Why LabMate?</a></li>
+      </ul>
+    </nav>
+    <div id="header-actions" style="display:flex;align-items:center;gap:16px;flex:1;justify-content:flex-end;">
+      <label class="theme-switch" for="exp-theme-toggle" aria-label="Toggle dark mode" style="margin:0;">
+        <input type="checkbox" id="exp-theme-toggle" />
+        <div class="slider round">
+          <span class="icon light-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="icon dark-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </div>
+      </label>
+      <a href="login.html" class="nav-login-btn" style="margin-left:0;">Login</a>
+    </div>
+    <button id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links-list">
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+    </button>
+  </header> -->
+
+    <header class="portal-header">
+        <div class="header-left">
+            <!-- <button class="icon-btn sidebar-toggle" id="sidebar-toggle-btn" aria-label="Toggle Sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button> -->
+            <a href="" aria-label="LabMate home">
+                <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+            </a>
+            <div class="college-info">
+                <h1 class="college-name">Aditya University</h1>
+                <span class="stream-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        style="vertical-align:-1px;margin-right:3px">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"></path>
+                        <path d="M4.93 4.93l14.14 14.14"></path>
+                    </svg>
+                    AIML Stream
+                </span>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="search-icon">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="global-search" placeholder="Search experiments & records…"
+                    aria-label="Global Search" />
+            </div>
+        </div>
+
+        <div class="header-right">
+            <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+                <input type="checkbox" id="portal-theme-checkbox" />
+                <div class="slider round">
+                    <span class="icon light-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="icon dark-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </div>
+            </label>
+
+            <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="notification-badge"></span>
+            </button>
+
+            <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+                <div class="notif-panel-header">
+                    <span>Notifications</span>
+                    <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+                </div>
+                <div class="notif-list">
+                    <div class="notif-item notif-unread">
+                        <div class="notif-dot"></div>
+                        <div class="notif-body">
+                            <p>New assignment from <strong>Aditya University</strong></p>
+                            <span>Bubble Sort experiment is now due this Friday</span>
+                            <time>2 hours ago</time>
+                        </div>
+                    </div>
+                    <div class="notif-item notif-unread">
+                        <div class="notif-dot"></div>
+                        <div class="notif-body">
+                            <p>Physics Lab Update</p>
+                            <span>Zener Diode Characteristics has been unlocked</span>
+                            <time>Yesterday</time>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-dropdown">
+                <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
+                    <div class="profile-avatar">S</div>
+                    <div class="profile-name-tag">
+                        <span class="prof-name">Santhosh</span>
+                        <span class="prof-roll">24P31A42XX</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="chevron-down">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <div class="dropdown-menu">
+                    <div class="dropdown-header">
+                        <div class="dh-avatar">S</div>
+                        <div>
+                            <strong>Santhosh</strong>
+                            <span>24P31A42XX · AIML</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                        </svg> My Profile</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                        </svg> Settings</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                        </svg> My Progress</a>
+                    <hr>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg> Help & Support</a>
+                    <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg> Log out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== BREADCRUMB ===================== -->
+    <div class="exp-breadcrumb">
+        <a href="portal.html">Dashboard</a>
+        <span class="sep">›</span>
+        <a href="c_programming_lab.html">C Programming Lab</a>
+        <span class="sep">›</span>
+        <span class="current">Bubble Sort</span>
+    </div>
+
+    <!-- ===================== BANNER ===================== -->
+    <div class="exp-banner">
+        <div class="exp-banner-icon">💧</div>
+        <div class="exp-banner-meta">
+            <div class="exp-banner-label">C Programming · Experiment 01</div>
+            <div class="exp-banner-title">Bubble Sort</div>
+            <div class="exp-banner-sub">Understand the sorting process step-by-step with visualizations.</div>
+        </div>
+        <!-- <div class="exp-banner-badge">💻 Virtual Lab</div> -->
+    </div>
+
+    <!-- ===================== MAIN BODY ===================== -->
+    <div class="exp-main-body">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="exp-sidebar" role="complementary" aria-label="Experiment sections">
+            <div class="exp-sidebar-card">
+                <div class="exp-sidebar-header">Sections</div>
+                <nav class="exp-nav-list" aria-label="Experiment navigation">
+                    <button class="exp-nav-btn active" data-section="aim" aria-current="true">
+                        <span class="exp-nav-icon">🎯</span>Aim
+                    </button>
+                    <button class="exp-nav-btn" data-section="description">
+                        <span class="exp-nav-icon">📋</span>Description
+                    </button>
+                    <button class="exp-nav-btn" data-section="procedure">
+                        <span class="exp-nav-icon">📝</span>Procedure
+                    </button>
+                    <button class="exp-nav-btn" data-section="simulation">
+                        <span class="exp-nav-icon">💻</span>Simulation
+                    </button>
+                    <button class="exp-nav-btn" data-section="result">
+                        <span class="exp-nav-icon">📊</span>Result
+                    </button>
+                </nav>
+                <div class="exp-sidebar-progress">
+                    <div class="exp-progress-label">
+                        <span>Progress</span>
+                        <span id="progress-pct">20%</span>
+                    </div>
+                    <div class="exp-progress-track">
+                        <div class="exp-progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT CONTENT AREA -->
+        <main class="exp-content-area" id="exp-content-main" role="main">
+            <div class="exp-panel">
+
+                <!-- ========== AIM ========== -->
+                <div class="exp-section-content visible" id="section-aim">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">🎯</div>
+                        <div>
+                            <div class="exp-panel-title">Aim</div>
+                            <div class="exp-panel-subtitle">Objective of this experiment</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            To understand and visualise the working of the <strong>Bubble Sort algorithm</strong> — one
+                            of the simplest comparison-based sorting techniques — and analyse its step-by-step
+                            behaviour, including comparisons, swaps, and pass-by-pass progress.
+                        </p>
+                        <div class="exp-highlight-box">
+                            <strong>Learning Objective:</strong> Develop an intuitive understanding of how Bubble Sort
+                            repeatedly compares adjacent elements and moves larger values toward the end of the array —
+                            similar to how bubbles rise to the surface of water.
+                        </div>
+                        <p class="exp-body-text">
+                            By the end of this experiment, you will be able to trace the execution of Bubble Sort on any
+                            given array, count comparisons and swaps, identify sorted sub-arrays, and understand its
+                            <strong>O(n²)</strong> time complexity.
+                        </p>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject
+                                Tags:</strong></p>
+                        <div style="margin-top:8px;">
+                            <span class="exp-tag">Sorting Algorithm</span>
+                            <span class="exp-tag">Bubble Sort</span>
+                            <span class="exp-tag">Comparison Sort</span>
+                            <span class="exp-tag">O(n²) Complexity</span>
+                            <span class="exp-tag">CS Lab</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== DESCRIPTION ========== -->
+                <div class="exp-section-content" id="section-description">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📋</div>
+                        <div>
+                            <div class="exp-panel-title">Description</div>
+                            <div class="exp-panel-subtitle">Theory &amp; background</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            <strong>Bubble Sort</strong> is an elementary sorting algorithm that repeatedly steps
+                            through the list, compares adjacent elements, and swaps them if they are in the wrong order.
+                            This pass is repeated until the list is sorted.
+                        </p>
+                        <p class="exp-body-text">
+                            The algorithm gets its name because smaller elements gradually "bubble" to the top of the
+                            list (beginning), while larger elements "sink" to the bottom (end) with each pass.
+                        </p>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Program in C language:</strong></p>
+                        <div class="exp-highlight-box" style="font-family: 'Courier New', monospace; font-size: 0.85rem; line-height: 1.5; background: var(--card-inner); overflow-x: auto; white-space: pre; padding: 20px;">
+    #include &lt;stdio.h&gt;
+
+    // Function to perform bubble sort on an array
+    void Bubble_sort(int a[], int n) {
+        int flag = 0; // Variable to check if any swapping happened
+        for (int i = 0; i < n - 1; i++) {
+            flag = 0; // Reset flag for each pass
+            for (int j = 1; j < n - i; j++) {
+                if (a[j - 1] > a[j]) {
+                    // Swap the elements
+                    flag = 1;
+                    int temp = a[j - 1];
+                    a[j - 1] = a[j];
+                    a[j] = temp;
+                }
+            }
+            // If no swapping happened, the array is already sorted
+            if (flag == 0) break;
+        }
+    }
+
+    int main() {
+        int n;
+        if (scanf("%d", &n) != 1) return 0;
+        int a[n];
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &a[i]);
+        }
+        // Call the bubble sort function
+        Bubble_sort(a, n);
+        // Print the sorted array
+        for (int i = 0; i < n; i++) {
+            printf("%d ", a[i]);
+        }
+        return 0;
+    }
+</div>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Complexity Analysis:</strong></p>
+                        <div class="exp-materials-grid">
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Best Case: O(n)
+                            </div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Worst Case: O(n²)
+                            </div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Average Case:
+                                O(n²)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Space: O(1) —
+                                In-place</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Stable Sort: ✔ Yes
+                            </div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Adaptive: ✔ Yes
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== PROCEDURE ========== -->
+                <div class="exp-section-content" id="section-procedure">
+                    <div class="exp-panel-header">
+                        <div class="exp-nav-icon"
+                            style="width:44px;height:44px;border-radius:12px;background:var(--scale-bg);display:flex;align-items:center;justify-content:center;font-size:1.3rem;">
+                            📝</div>
+                        <div>
+                            <div class="exp-panel-title">Procedure</div>
+                            <div class="exp-panel-subtitle">Step-by-step instructions</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">Follow each step carefully to understand how Bubble Sort operates on
+                            the array.</p>
+                        <ol class="exp-step-list">
+                            <li>Start with an unsorted array of <strong>n</strong> elements displayed as bubbles on
+                                screen.</li>
+                            <li>Begin <strong>Pass 1</strong>: Compare the first two adjacent elements (index 0 and 1).
+                            </li>
+                            <li>If the left element is <strong>greater</strong> than the right element,
+                                <strong>swap</strong> them. Otherwise, move on without swapping.</li>
+                            <li>Move to the next pair (index 1 and 2) and repeat the comparison. Continue until the end
+                                of the unsorted portion.</li>
+                            <li>After Pass 1, the <strong>largest element</strong> will have "bubbled up" to the last
+                                position. Mark it as sorted.</li>
+                            <li>Begin <strong>Pass 2</strong>: Repeat the process for the remaining n−1 elements. The
+                                second-largest element settles in its position.</li>
+                            <li>Continue for <strong>n−1 passes</strong> total. After each pass, one more element is
+                                placed in its final sorted position.</li>
+                            <li>The algorithm is complete when no swaps occur in a pass, or after n−1 passes — whichever
+                                comes first.</li>
+                            <li>Record the total number of <strong>comparisons</strong> and <strong>swaps</strong> made
+                                during the sort in the Result section.</li>
+                        </ol>
+                        <div class="exp-highlight-box">
+                            <strong>Tip:</strong> Use the Speed slider in the Simulation to slow down the animation and
+                            carefully observe each comparison and swap event.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== SIMULATION ========== -->
+                <div class="exp-section-content" id="section-simulation">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">💻</div>
+                        <div>
+                            <div class="exp-panel-title">Simulation</div>
+                            <div class="exp-panel-subtitle">Interactive Bubble Sort visualiser</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body" style="padding:20px;">
+
+                        <!-- ===== BUBBLE SORT WIDGET ===== -->
+                        <div class="sim-wrap" id="simWrap">
+
+                            <div class="bs-top-bar">
+                                <div>
+                                    <div class="bs-title">💧 Bubble Sort</div>
+                                    <div class="bs-subtitle">Watch numbers rise and settle — just like bubbles in water
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bs-input-row">
+                                <span class="bs-input-label">Array:</span>
+                                <input type="text" class="bs-array-input" id="bsArrayInput"
+                                    placeholder="e.g. 45, -12, 78, 3, -56, 23" />
+                                <button class="bs-btn-sm bs-btn-apply" onclick="BS.applyInput()">✔ Apply</button>
+                                <button class="bs-btn-sm bs-btn-random" onclick="BS.randomize()">🎲 Random</button>
+                                <div class="bs-input-hint">Enter 2–10 integers (−999 to 999) separated by commas, or click
+                                    Random.</div>
+                            </div>
+
+                            <div class="bs-controls">
+                                <button class="bs-btn bs-btn-start" id="bsBtnStart" onclick="BS.start()">
+                                    <svg class="bs-btn-icon" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M3 2.5l10 5.5-10 5.5V2.5z" />
+                                    </svg>
+                                    Start
+                                </button>
+                                <button class="bs-btn bs-btn-pr" id="bsBtnPR" onclick="BS.togglePause()" disabled>
+                                    <svg class="bs-btn-icon" id="bsPRIcon" viewBox="0 0 16 16" fill="currentColor">
+                                        <rect x="3" y="2" width="4" height="12" rx="1" />
+                                        <rect x="9" y="2" width="4" height="12" rx="1" />
+                                    </svg>
+                                    <span id="bsPRLabel">Pause</span>
+                                </button>
+                                <button class="bs-btn bs-btn-reset" id="bsBtnReset" onclick="BS.reset()">
+                                    <svg class="bs-btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round">
+                                        <path d="M13.5 8A5.5 5.5 0 1 1 8 2.5" />
+                                        <polyline points="11 2.5 8 2.5 8 5.5" />
+                                    </svg>
+                                    Reset
+                                </button>
+                                <div class="bs-speed-group">
+                                    <span class="bs-speed-label">Speed:</span>
+                                    <input type="range" class="bs-slider" id="bsSpeedSlider" min="1" max="5" value="3"
+                                        oninput="BS.setSpeed(this.value)" />
+                                    <span class="bs-speed-badge" id="bsSpeedBadge">Medium</span>
+                                </div>
+                            </div>
+
+                            <div class="bs-status-bar">
+                                <div class="bs-stat-pill">Pass <span class="val" id="bsStatPass">—</span></div>
+                                <div class="bs-stat-pill">Comparisons <span class="val" id="bsStatComp">0</span></div>
+                                <div class="bs-stat-pill">Swaps <span class="val" id="bsStatSwap">0</span></div>
+                                <div id="bsStatusMsg">Ready — press Start</div>
+                            </div>
+
+                            <div class="bs-arena-wrapper">
+                                <div class="bs-arena" id="bsArena"></div>
+                                <div class="bs-ocean-floor"></div>
+                            </div>
+
+                            <div>
+                                <div class="bs-log-title">Event Log</div>
+                                <div class="bs-log-panel" id="bsLogPanel">
+                                    <div class="bs-log-entry">
+                                        <span class="bs-tag tag-pass">INFO</span>
+                                        <span>Enter an array or click Random, then press Start.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bs-legend">
+                                <div class="bs-legend-item">
+                                    <div class="bs-legend-bub lb-idle"></div>Idle
+                                </div>
+                                <div class="bs-legend-item">
+                                    <div class="bs-legend-bub lb-compare"></div>Comparing
+                                </div>
+                                <div class="bs-legend-item">
+                                    <div class="bs-legend-bub lb-swap"></div>Swapping
+                                </div>
+                                <div class="bs-legend-item">
+                                    <div class="bs-legend-bub lb-sorted"></div>Sorted
+                                </div>
+                            </div>
+
+                        </div><!-- /.sim-wrap -->
+
+                    </div>
+                </div>
+
+                <!-- ========== RESULT ========== -->
+                <div class="exp-section-content" id="section-result">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📊</div>
+                        <div>
+                            <div class="exp-panel-title">Result</div>
+                            <div class="exp-panel-subtitle">Live observations &amp; analysis from your simulation</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+
+                        <!-- Pending state (shown before simulation runs) -->
+                        <div id="result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
+                            <div style="font-size:2.8rem;margin-bottom:14px;">🧪</div>
+                            <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No simulation data yet</p>
+                            <p style="font-size:0.85rem;line-height:1.7;">Run the <strong>Simulation</strong> tab first. Once sorting completes, your pass-by-pass observations and summary statistics will appear here automatically.</p>
+                        </div>
+
+                        <!-- Live results (shown after simulation completes) -->
+                        <div id="result-live" style="display:none;">
+                            <p class="exp-body-text" id="result-array-label"><strong>Observation Table</strong> — sorted array will be shown below after each pass:</p>
+                            <table class="exp-result-table" id="result-pass-table">
+                                <thead>
+                                    <tr>
+                                        <th>Pass No.</th>
+                                        <th>Comparisons in Pass</th>
+                                        <th>Swaps in Pass</th>
+                                        <th>Array After Pass</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="result-pass-tbody">
+                                    <!-- Rows added dynamically -->
+                                </tbody>
+                            </table>
+                            <hr class="exp-divider" />
+                            <p class="exp-body-text"><strong>Summary:</strong></p>
+                            <div class="exp-result-stats">
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-total-comp">—</div>
+                                    <div class="exp-stat-label">Total Comparisons</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-total-swap">—</div>
+                                    <div class="exp-stat-label">Total Swaps</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-total-pass">—</div>
+                                    <div class="exp-stat-label">Passes Required</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-array-size">—</div>
+                                    <div class="exp-stat-label">Array Size (n)</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value">O(n²)</div>
+                                    <div class="exp-stat-label">Time Complexity</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value">O(1)</div>
+                                    <div class="exp-stat-label">Space Complexity</div>
+                                </div>
+                            </div>
+                            <div class="exp-conclusion-box">
+                                <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
+                                <p class="exp-conclusion-text" id="result-conclusion-text">
+                                    <!-- filled dynamically -->
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- In-progress state (shown while simulation is running) -->
+                        <div id="result-inprogress" style="display:none;text-align:center;padding:30px 20px;color:var(--text-soft);">
+                            <div style="font-size:2.2rem;margin-bottom:12px;animation:bs-float 1.5s ease-in-out infinite;">💧</div>
+                            <p style="font-size:0.9rem;font-weight:600;color:var(--accent-btn,var(--teal));">Simulation in progress…</p>
+                            <p style="font-size:0.82rem;margin-top:6px;">Results will populate here once sorting completes.</p>
+                            <p class="exp-body-text" style="margin-top:18px;" id="result-live-progress">Pass <span id="res-live-pass">0</span> • Comparisons: <span id="res-live-comp">0</span> • Swaps: <span id="res-live-swap">0</span></p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- /.exp-panel -->
+        </main>
+
+    </div><!-- /.exp-main-body -->
+
+
+    <script>
+        /* =====================================================
+           PAGE NAVIGATION & THEME
+        ===================================================== */
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Theme toggle
+            const toggle = document.getElementById('exp-theme-toggle');
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                if (savedTheme === 'dark') toggle.checked = true;
+            }
+            toggle?.addEventListener('change', () => {
+                const theme = toggle.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            });
+
+            // Section navigation
+            const navBtns = document.querySelectorAll('.exp-nav-btn');
+            const sections = document.querySelectorAll('.exp-section-content');
+            const progFill = document.getElementById('progress-fill');
+            const progPct = document.getElementById('progress-pct');
+            const total = navBtns.length;
+
+            let visited = (() => { try { return JSON.parse(sessionStorage.getItem('visitedSections') || '["aim"]'); } catch { return ['aim']; } })();
+
+            function updateProgress(v) {
+                const pct = Math.round((v.length / total) * 100);
+                progFill.style.width = pct + '%';
+                progPct.textContent = pct + '%';
+            }
+            updateProgress(visited);
+
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.dataset.section;
+                    navBtns.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+                    btn.classList.add('active'); btn.setAttribute('aria-current', 'true');
+                    sections.forEach(s => s.classList.remove('visible'));
+                    const sec = document.getElementById('section-' + target);
+                    if (sec) { sec.style.animation = 'none'; sec.offsetHeight; sec.style.animation = ''; sec.classList.add('visible'); }
+                    if (!visited.includes(target)) { visited.push(target); sessionStorage.setItem('visitedSections', JSON.stringify(visited)); }
+                    updateProgress(visited);
+                });
+            });
+
+            // Mobile hamburger
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const navList = document.getElementById('nav-links-list');
+            menuBtn?.addEventListener('click', () => { const open = navList.classList.toggle('open'); menuBtn.setAttribute('aria-expanded', String(open)); });
+        });
+
+
+        /* =====================================================
+           BUBBLE SORT ENGINE  (upgraded — water-fill + live Results)
+        ===================================================== */
+        const BSConfig = {
+            speedMap: { 1: { ms: 1400, label: 'Slow' }, 2: { ms: 900, label: 'Slower' }, 3: { ms: 560, label: 'Medium' }, 4: { ms: 260, label: 'Fast' }, 5: { ms: 110, label: 'Blazing' } },
+            current: 3,
+            get ms() { return this.speedMap[this.current].ms; },
+        };
+
+        const BSAudio = (() => {
+            let ctx = null;
+            const getCtx = () => { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); return ctx; };
+            const tone = (freq, dur, vol = 0.05) => {
+                try {
+                    const c = getCtx(), osc = c.createOscillator(), g = c.createGain();
+                    osc.connect(g); g.connect(c.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, c.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(freq * 0.3, c.currentTime + dur);
+                    g.gain.setValueAtTime(vol, c.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+                    osc.start(); osc.stop(c.currentTime + dur);
+                } catch (_) { }
+            };
+            return {
+                compare: () => tone(520, 0.06, 0.04),
+                swap: () => tone(380, 0.12, 0.06),
+                sorted: () => tone(680, 0.18, 0.07),
+                done: () => { tone(660, 0.15, 0.07); setTimeout(() => tone(880, 0.2, 0.06), 180); },
+            };
+        })();
+
+        const BSStats = {
+            pass: 0, comp: 0, swap: 0,
+            reset() { this.pass = 0; this.comp = 0; this.swap = 0; this.render(); },
+            incPass() { this.pass++; this.render(); },
+            incComp() { this.comp++; this.render(); },
+            incSwap() { this.swap++; this.render(); },
+            render() {
+                document.getElementById('bsStatPass').textContent = this.pass || '—';
+                document.getElementById('bsStatComp').textContent = this.comp;
+                document.getElementById('bsStatSwap').textContent = this.swap;
+                // Update live results tab in-progress view
+                const lp = document.getElementById('res-live-pass');
+                const lc = document.getElementById('res-live-comp');
+                const ls = document.getElementById('res-live-swap');
+                if (lp) lp.textContent = this.pass;
+                if (lc) lc.textContent = this.comp;
+                if (ls) ls.textContent = this.swap;
+            },
+        };
+
+        const BSStatus = {
+            set(msg, cls = '') { const el = document.getElementById('bsStatusMsg'); el.textContent = msg; el.className = cls; },
+        };
+
+        const BSLogger = {
+            clear() { document.getElementById('bsLogPanel').innerHTML = ''; },
+            add(tag, cls, msg) {
+                const p = document.getElementById('bsLogPanel');
+                const e = document.createElement('div'); e.className = 'bs-log-entry';
+                e.innerHTML = `<span class="bs-tag ${cls}">${tag}</span><span>${msg}</span>`;
+                p.appendChild(e); p.scrollTop = p.scrollHeight;
+            },
+            pass(n, t) { this.add('PASS', 'tag-pass', `Pass ${n} of ${t}`); },
+            compare(a, b, i, j) { this.add('COMPARE', 'tag-compare', `[${i}]=${a} vs [${j}]=${b}`); },
+            swap(a, b) { this.add('SWAP', 'tag-swap', `${a} ↔ ${b} — swapping`); },
+            noSwap(a, b) { this.add('—', 'tag-noswap', `${a} ≤ ${b} — no swap`); },
+            sorted(v, i) { this.add('SORTED', 'tag-sorted', `${v} settled at [${i}]`); },
+            done() { this.add('DONE', 'tag-done', '🎉 Array fully sorted!'); },
+            paused() { this.add('PAUSED', 'tag-paused', '⏸ Paused.'); },
+            resumed() { this.add('INFO', 'tag-pass', '▶ Resumed.'); },
+        };
+
+        /* ---- Results Tab Live Update ---- */
+        const BSResults = {
+            initialArray: [],
+            passData: [],   // [{comp, swap, arraySnapshot}]
+
+            reset(arr) {
+                this.initialArray = [...arr];
+                this.passData = [];
+                // Show in-progress state
+                document.getElementById('result-pending').style.display = 'none';
+                document.getElementById('result-live').style.display = 'none';
+                document.getElementById('result-inprogress').style.display = '';
+                document.getElementById('result-pass-tbody').innerHTML = '';
+            },
+
+            recordPass(passNum, comp, swap, arraySnapshot) {
+                this.passData.push({ passNum, comp, swap, array: [...arraySnapshot] });
+            },
+
+            finalize(totalComp, totalSwap, totalPass, arr) {
+                document.getElementById('result-inprogress').style.display = 'none';
+                document.getElementById('result-pending').style.display = 'none';
+
+                // Array label
+                document.getElementById('result-array-label').innerHTML =
+                    `<strong>Observation Table</strong> — Input: <code>[${this.initialArray.join(', ')}]</code>`;
+
+                // Build pass table
+                const tbody = document.getElementById('result-pass-tbody');
+                tbody.innerHTML = '';
+                this.passData.forEach(({ passNum, comp, swap, array }) => {
+                    const sortedIdx = array.length - passNum; // index of last sorted element this pass
+                    const cells = array.map((v, i) =>
+                        i >= sortedIdx ? `<strong>${v}</strong>` : `${v}`
+                    ).join(', ');
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>Pass ${passNum}</td><td>${comp}</td><td>${swap}</td><td>${cells}</td>`;
+                    tbody.appendChild(tr);
+                });
+
+                // Summary stats
+                document.getElementById('res-total-comp').textContent = totalComp;
+                document.getElementById('res-total-swap').textContent = totalSwap;
+                document.getElementById('res-total-pass').textContent = totalPass;
+                document.getElementById('res-array-size').textContent = arr.length;
+
+                // Conclusion
+                const efficiency = totalSwap === 0 ? 'with no swaps needed (already sorted!)' :
+                    totalSwap < totalComp / 2 ? 'efficiently with minimal swaps' : 'performing all necessary swaps';
+                document.getElementById('result-conclusion-text').innerHTML =
+                    `The Bubble Sort algorithm successfully sorted the array <code>[${this.initialArray.join(', ')}]</code>
+                    into <code>[${arr.join(', ')}]</code> in <strong>${totalPass} pass${totalPass !== 1 ? 'es' : ''}</strong>
+                    with <strong>${totalComp} comparisons</strong> and <strong>${totalSwap} swap${totalSwap !== 1 ? 's' : ''}</strong> — ${efficiency}.
+                    The experiment confirms that Bubble Sort has an <strong>O(n²)</strong> worst-case complexity,
+                    making it suitable for small datasets or nearly-sorted arrays.
+                    The visualisation clearly demonstrates how larger elements "bubble up" to their correct positions
+                    after each pass, filling with water as they settle.`;
+
+                document.getElementById('result-live').style.display = '';
+            },
+
+            abort() {
+                document.getElementById('result-inprogress').style.display = 'none';
+                document.getElementById('result-pending').style.display = '';
+            },
+        };
+
+        const BSSplash = {
+            burst(slotEl) {
+                const bub = slotEl.querySelector('.bs-bubble');
+                const br = bub.getBoundingClientRect();
+                const ar = document.getElementById('bsArena').getBoundingClientRect();
+                const host = document.createElement('div'); host.className = 'bs-splash-host';
+                host.style.left = (br.left - ar.left + br.width / 2) + 'px';
+                host.style.top = (br.top - ar.top + br.height / 2) + 'px';
+                document.getElementById('bsArena').appendChild(host);
+                const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+                const palette = dark
+                    ? ['#9B4DFF', '#C07AFF', '#7B2FBE', 'rgba(232,222,255,0.9)', 'rgba(192,122,255,0.7)', '#b388ff', 'rgba(255,255,255,0.6)']
+                    : ['#9CD5FF', '#6AB0E3', '#3A9BD5', '#C1E5FF', 'rgba(255,255,255,0.92)', '#EAF6FF', '#87CEEB', 'rgba(58,155,213,0.75)'];
+                let longestEnd = 0;
+                const DROP_COUNT = 22;
+                for (let i = 0; i < DROP_COUNT; i++) {
+                    const d = document.createElement('div'); d.className = 'bs-drop';
+                    const ang = (i / DROP_COUNT) * 360 + Math.random() * 12;
+                    const rad = ang * Math.PI / 180;
+                    const dist = 32 + Math.random() * 52;
+                    const dur = 520 + Math.random() * 300;
+                    const dly = i * 16;
+                    const w = 4 + Math.random() * 7, h = w * (0.55 + Math.random() * 0.7);
+                    const rx = Math.min(w, h) / 2;
+                    const col = palette[Math.floor(Math.random() * palette.length)];
+                    d.style.cssText = `width:${w}px;height:${h}px;border-radius:${rx}px;margin-left:${-w/2}px;margin-top:${-h/2}px;background:${col};box-shadow:inset 0 ${Math.ceil(h*0.22)}px ${Math.ceil(w*0.4)}px rgba(255,255,255,0.45);`;
+                    const rotateDeg = ang + 90;
+                    d.animate([
+                        { transform: `rotate(${rotateDeg}deg) translate(0,0) scale(1)`, opacity: 0.95 },
+                        { transform: `rotate(${rotateDeg}deg) translate(${Math.cos(rad)*dist*0.35}px,${Math.sin(rad)*dist*0.35}px) scale(1.05)`, opacity: 0.85, offset: 0.18 },
+                        { transform: `rotate(${rotateDeg}deg) translate(${Math.cos(rad)*dist}px,${Math.sin(rad)*dist}px) scale(0.1)`, opacity: 0 },
+                    ], { duration: dur, delay: dly, easing: 'cubic-bezier(0.2,0.8,0.4,1)', fill: 'forwards' });
+                    host.appendChild(d);
+                    longestEnd = Math.max(longestEnd, dly + dur);
+                }
+                return new Promise(resolve => setTimeout(() => { host.remove(); resolve(); }, longestEnd + 60));
+            },
+        };
+
+        const BSRenderer = {
+            slots: [], values: [],
+            build(array) {
+                const arena = document.getElementById('bsArena'); arena.innerHTML = '';
+                this.slots = []; this.values = [...array];
+                array.forEach((val, i) => {
+                    const slot = document.createElement('div'); slot.className = 'bs-bubble-slot';
+                    const bub = document.createElement('div'); bub.className = 'bs-bubble floating';
+                    // Water fill layer
+                    const water = document.createElement('div'); water.className = 'bs-bubble-water';
+                    bub.appendChild(water);
+                    // Number label (above water)
+                    const numSpan = document.createElement('span'); numSpan.className = 'bs-bubble-num';
+                    numSpan.textContent = val;
+                    bub.appendChild(numSpan);
+                    bub.style.animationDelay = (i * 0.22) + 's';
+                    const idx = document.createElement('div'); idx.className = 'bs-slot-index'; idx.textContent = `[${i}]`;
+                    slot.appendChild(bub); slot.appendChild(idx);
+                    arena.appendChild(slot); this.slots.push(slot);
+                });
+            },
+            bub(i) { return this.slots[i]?.querySelector('.bs-bubble'); },
+            getNumSpan(i) { return this.slots[i]?.querySelector('.bs-bubble-num'); },
+            setState(i, state) {
+                const b = this.bub(i); if (!b) return;
+                const water = b.querySelector('.bs-bubble-water');
+                b.className = 'bs-bubble ' + state;
+                if (state === 'floating') {
+                    b.style.animationDelay = (i * 0.22) + 's';
+                    if (water) water.style.animation = 'none';
+                }
+                if (state === 'sorted' && water) {
+                    water.style.animation = 'none';
+                    water.offsetWidth; // reflow to retrigger
+                    water.style.animation = '';
+                }
+            },
+            async animateSwap(i, j, durMs) {
+                const sI = this.slots[i], sJ = this.slots[j];
+                const bI = this.bub(i), bJ = this.bub(j);
+                if (!bI || !bJ) return;
+                const dx = sJ.getBoundingClientRect().left - sI.getBoundingClientRect().left;
+                const arc = 80, dur = Math.max(durMs * 0.72, 200);
+                const aI = bI.animate([
+                    { transform: 'translate(0,0)', easing: 'ease-in' },
+                    { transform: `translate(${dx*0.5}px,${-arc}px)`, easing: 'linear', offset: 0.4 },
+                    { transform: `translate(${dx}px,0)`, easing: 'ease-out' },
+                ], { duration: dur, fill: 'forwards' });
+                const aJ = bJ.animate([
+                    { transform: 'translate(0,0)', easing: 'ease-in' },
+                    { transform: `translate(${-dx*0.5}px,${arc*0.38}px)`, easing: 'linear', offset: 0.4 },
+                    { transform: `translate(${-dx}px,0)`, easing: 'ease-out' },
+                ], { duration: dur, fill: 'forwards' });
+                await Promise.all([aI.finished, aJ.finished]);
+                aI.cancel(); aJ.cancel();
+                // Swap the number text
+                const nI = this.getNumSpan(i), nJ = this.getNumSpan(j);
+                if (nI && nJ) { const tmp = nI.textContent; nI.textContent = nJ.textContent; nJ.textContent = tmp; }
+                [this.values[i], this.values[j]] = [this.values[j], this.values[i]];
+            },
+            async animatePop(i, durMs) {
+                const b = this.bub(i); if (!b) return;
+                const a = b.animate([
+                    { transform: 'scale(1) translateY(0)', opacity: 1 },
+                    { transform: 'scale(1.35) translateY(-14px)', opacity: 0.8, offset: 0.35 },
+                    { transform: 'scale(0) translateY(-44px)', opacity: 0 },
+                ], { duration: Math.min(durMs * 0.65, 480), fill: 'forwards', easing: 'ease-in' });
+                await a.finished;
+            },
+            async animateReform(i, durMs) {
+                const b = this.bub(i); if (!b) return;
+                b.className = 'bs-bubble sorted'; b.style.opacity = '0';
+                const water = b.querySelector('.bs-bubble-water');
+                if (water) { water.style.animation = 'none'; water.offsetWidth; water.style.animation = ''; }
+                const a = b.animate([
+                    { transform: 'scale(0) translateY(-28px)', opacity: 0 },
+                    { transform: 'scale(1.15) translateY(0)', opacity: 1, offset: 0.6 },
+                    { transform: 'scale(1)', opacity: 1 },
+                ], { duration: Math.min(durMs * 0.5, 380), fill: 'forwards', easing: 'cubic-bezier(0.34,1.56,0.64,1)' });
+                await a.finished; b.style.opacity = '';
+            },
+        };
+
+        const BS = (() => {
+            let running = false, stopFlag = false, paused = false;
+            const SPEED_LABELS = { 1: 'Slow', 2: 'Slower', 3: 'Medium', 4: 'Fast', 5: 'Blazing' };
+
+            function setSpeed(v) { BSConfig.current = +v; document.getElementById('bsSpeedBadge').textContent = SPEED_LABELS[v]; }
+
+            function randomArray() {
+                const n = 5 + Math.floor(Math.random() * 4);
+                return Array.from({ length: n }, () => {
+                    const choice = Math.random();
+                    if (choice < 0.33) return Math.floor(Math.random() * 20) - 10;
+                    if (choice < 0.66) return Math.floor(Math.random() * 200) - 100;
+                    return Math.floor(Math.random() * 1999) - 999;
+                });
+            }
+
+            function applyInput() {
+                if (running) return;
+                const raw = document.getElementById('bsArrayInput').value.trim();
+                if (!raw) { randomize(); return; }
+                const parsed = raw.split(/[,\s]+/).map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n) && n >= -999 && n <= 999);
+                if (parsed.length < 2 || parsed.length > 10) { alert('Please enter 2–10 integers between −999 and 999.'); return; }
+                _init(parsed);
+            }
+
+            function randomize() {
+                if (running) return;
+                const arr = randomArray();
+                document.getElementById('bsArrayInput').value = arr.join(', ');
+                _init(arr);
+            }
+
+            function _init(arr) {
+                stopFlag = true; running = false; paused = false;
+                setUI('idle'); BSStats.reset(); BSLogger.clear();
+                BSStatus.set('Ready — press Start', '');
+                BSRenderer.build(arr);
+                // Reset results tab to pending
+                document.getElementById('result-pending').style.display = '';
+                document.getElementById('result-live').style.display = 'none';
+                document.getElementById('result-inprogress').style.display = 'none';
+            }
+
+            function reset() { randomize(); }
+
+            function togglePause() {
+                if (!running) return;
+                if (paused) {
+                    paused = false; setUI('running');
+                    BSStatus.set('▶ Resumed…', ''); BSLogger.resumed();
+                } else {
+                    paused = true; setUI('paused');
+                    BSStatus.set('⏸ Paused — press Resume to continue', 'paused'); BSLogger.paused();
+                }
+            }
+
+            function setPRBtn(isPaused) {
+                const btn = document.getElementById('bsBtnPR'), icon = document.getElementById('bsPRIcon'), label = document.getElementById('bsPRLabel');
+                if (isPaused) {
+                    btn.classList.add('is-resume'); label.textContent = 'Resume';
+                    icon.innerHTML = '<path d="M3 2.5l10 5.5-10 5.5V2.5z"/>';
+                } else {
+                    btn.classList.remove('is-resume'); label.textContent = 'Pause';
+                    icon.innerHTML = '<rect x="3" y="2" width="4" height="12" rx="1"/><rect x="9" y="2" width="4" height="12" rx="1"/>';
+                }
+            }
+
+            function setUI(state) {
+                const isR = state === 'running', isP = state === 'paused';
+                document.getElementById('bsBtnStart').disabled = isR || isP;
+                document.getElementById('bsBtnPR').disabled = !(isR || isP);
+                document.getElementById('bsBtnReset').disabled = false;
+                setPRBtn(isP);
+            }
+
+            function delay(ms) {
+                return new Promise(resolve => {
+                    const check = () => {
+                        if (stopFlag) { resolve(); return; }
+                        if (paused) { setTimeout(check, 55); return; }
+                        setTimeout(resolve, ms);
+                    };
+                    check();
+                });
+            }
+
+            async function start() {
+                if (running) return;
+                running = true; stopFlag = false; paused = false;
+                setUI('running'); BSLogger.clear(); BSStats.reset();
+                BSResults.reset([...BSRenderer.values]);
+                const n = BSRenderer.values.length;
+
+                for (let pass = 0; pass < n - 1; pass++) {
+                    if (stopFlag) break;
+                    BSStats.incPass();
+                    BSStatus.set(`Pass ${BSStats.pass} of ${n - 1}`, '');
+                    BSLogger.pass(BSStats.pass, n - 1);
+                    const limit = n - pass - 1;
+                    let passComp = 0, passSwap = 0;
+
+                    for (let j = 0; j < limit; j++) {
+                        while (paused && !stopFlag) await new Promise(r => setTimeout(r, 55));
+                        if (stopFlag) break;
+                        const a = BSRenderer.values[j], b = BSRenderer.values[j + 1];
+                        BSRenderer.setState(j, 'comparing'); BSRenderer.setState(j + 1, 'comparing');
+                        BSStats.incComp(); passComp++;
+                        BSStatus.set(`Comparing  ${a}  and  ${b}`, 'comparing');
+                        BSLogger.compare(a, b, j, j + 1); BSAudio.compare();
+                        await delay(BSConfig.ms * 0.55);
+                        while (paused && !stopFlag) await new Promise(r => setTimeout(r, 55));
+                        if (stopFlag) break;
+                        if (a > b) {
+                            BSStats.incSwap(); passSwap++;
+                            BSRenderer.setState(j, 'swapping'); BSRenderer.setState(j + 1, 'swapping');
+                            BSStatus.set(`Swapping  ${a}  ↔  ${b}`, 'swapping');
+                            BSLogger.swap(a, b); BSAudio.swap();
+                            await BSRenderer.animateSwap(j, j + 1, BSConfig.ms);
+                            if (stopFlag) break;
+                            BSRenderer.setState(j, 'floating'); BSRenderer.setState(j + 1, 'floating');
+                        } else {
+                            BSLogger.noSwap(a, b);
+                            BSRenderer.setState(j, 'floating'); BSRenderer.setState(j + 1, 'floating');
+                        }
+                        await delay(BSConfig.ms * 0.3);
+                    }
+
+                    if (stopFlag) break;
+                    while (paused && !stopFlag) await new Promise(r => setTimeout(r, 55));
+                    if (stopFlag) break;
+
+                    const si = n - pass - 1, sv = BSRenderer.values[si];
+                    BSStatus.set(`${sv} settled into position!`, 'sorted');
+                    BSLogger.sorted(sv, si); BSAudio.sorted();
+                    const splashDone = BSSplash.burst(BSRenderer.slots[si]);
+                    await BSRenderer.animatePop(si, BSConfig.ms);
+                    await splashDone; await delay(100);
+                    await BSRenderer.animateReform(si, BSConfig.ms);
+                    await delay(BSConfig.ms * 0.2);
+
+                    // Record pass data for Results tab
+                    BSResults.recordPass(pass + 1, passComp, passSwap, [...BSRenderer.values]);
+                }
+
+                if (!stopFlag) {
+                    const first = BSRenderer.bub(0);
+                    if (first && !first.classList.contains('sorted')) {
+                        const s0 = BSSplash.burst(BSRenderer.slots[0]);
+                        await BSRenderer.animatePop(0, BSConfig.ms * 0.7);
+                        await s0; await delay(80);
+                        await BSRenderer.animateReform(0, BSConfig.ms * 0.7);
+                    }
+                    BSStatus.set('✅  All elements sorted!', 'done');
+                    BSLogger.done(); BSAudio.done();
+                    // Finalize Results tab
+                    BSResults.finalize(BSStats.comp, BSStats.swap, BSStats.pass, [...BSRenderer.values]);
+                } else {
+                    BSStatus.set('⏹  Stopped.', '');
+                    BSResults.abort();
+                }
+                running = false; setUI('idle');
+            }
+
+            function init() {
+                const arr = randomArray();
+                document.getElementById('bsArrayInput').value = arr.join(', ');
+                BSRenderer.build(arr); setUI('idle');
+            }
+
+            return { start, togglePause, reset, randomize, applyInput, setSpeed, init };
+        })();
+
+        // Init the bubble sort widget once DOM is ready
+        document.addEventListener('DOMContentLoaded', () => { BS.init(); });
+    </script>
+    <script src="../js/portal.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="LabMate — Your virtual laboratory platform. Explore interactive lab courses, demo experiments, and institution-grade science simulations online." />
+  <meta name="keywords"
+    content="LabMate, virtual lab, online laboratory, science simulation, engineering lab, college lab, e-learning" />
+  <meta name="author" content="LabMate Team" />
+
+  <meta property="og:title" content="LabMate — Virtual Laboratory Platform" />
+  <meta property="og:description"
+    content="Explore virtual lab courses, demo experiments, and institution collaborations on LabMate." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/images/og-preview.png" />
+
+  <title>LabMate — Virtual Laboratory Platform</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+
+  <section id="logo-splash" role="banner" aria-label="LabMate brand introduction">
+    <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo — Virtual Laboratory Platform" id="splash-logo" />
+    <p id="splash-tagline">
+      Empowering Science. Virtually.
+    </p>
+  </section>
+
+  <header id="site-header" role="navigation" aria-label="Primary site navigation">
+    <div id="header-logo-wrapper">
+      <a href="#home-section" aria-label="LabMate home">
+        <img src="../assets/images/LabMateLogo.png" alt="LabMate" id="header-logo-img" />
+      </a>
+    </div>
+
+    <nav id="primary-nav" aria-label="Main menu">
+      <button id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"
+        aria-controls="nav-links-list">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+
+      <ul id="nav-links-list" role="list">
+        <li class="nav-item">
+          <a href="#home-section" class="nav-link" aria-current="page">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="#about-section" class="nav-link">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a href="#colleges-section" class="nav-link">Colleges In Collaboration</a>
+        </li>
+        <li class="nav-item">
+          <a href="#contact-section" class="nav-link">Contact Us</a>
+        </li>
+        <li class="nav-item">
+          <a href="#enews-section" class="nav-link">E-News</a>
+        </li>
+        <li class="nav-item">
+          <a href="#why-labmate-section" class="nav-link">Why LabMate?</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div id="header-actions" style="display: flex; align-items: center; justify-content: flex-end; gap: 16px; flex: 1;">
+      <!-- Theme Switcher -->
+      <label class="theme-switch" for="checkbox" aria-label="Toggle dark mode"
+        style="margin:0; margin-right: 4px; display:inline-block;">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider round">
+          <span class="icon light-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg></span>
+          <span class="icon dark-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg></span>
+        </div>
+      </label>
+
+      <a href="login.html" class="nav-login-btn" aria-label="Login to LabMate" style="margin-left: 0;">Login</a>
+    </div>
+
+    <button id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"
+      aria-controls="nav-links-list">
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+    </button>
+  </header>
+
+  <main id="main-content">
+
+    <section id="home-section" aria-labelledby="hero-heading">
+      <div id="hero-background" role="img" aria-label="Virtual laboratory illustration background"></div>
+      <div id="hero-content">
+        <h1 id="hero-heading">
+          Welcome to <span class="brand-highlight">LabMate</span>
+        </h1>
+        <h2 id="hero-subheading">
+          Your Smart Virtual Laboratory Partner
+        </h2>
+        <p id="hero-description">
+          LabMate brings world-class laboratory experiences to your screen —
+          enabling students, educators, and institutions to conduct, analyse,
+          and learn through safe, immersive virtual experiments anytime,
+          anywhere.
+        </p>
+        <div id="hero-cta-group" role="group" aria-label="Primary call to action buttons">
+          <a href="#courses-section" class="cta-btn cta-primary" role="button">Explore Labs</a>
+          <a href="#demo-section" class="cta-btn cta-secondary" role="button">Watch Demo</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about-section" aria-labelledby="about-heading">
+      <h2 id="about-heading" class="section-heading">About Us</h2>
+      <div class="section-heading-underline" aria-hidden="true"></div>
+      <div id="about-content-wrapper" class="two-col-layout">
+        <div id="about-text" class="col-text">
+          <h3 class="subsection-heading">Our Vision</h3>
+          <p>
+            To democratise access to high-quality laboratory education by
+            replacing physical constraints with limitless digital exploration.
+          </p>
+          <h3 class="subsection-heading">Our Mission</h3>
+          <p>
+            LabMate partners with colleges and universities to deliver
+            accredited virtual lab modules that are curriculum-aligned,
+            instructor-managed, and student-friendly.
+          </p>
+          <ul id="about-highlights-list" class="feature-list">
+            <li>Founded with an education-first philosophy</li>
+            <li>Aiming to serve 50+ colleges across the country</li>
+            <li>Targeting 10,000+ students enrollment</li>
+            <li>Building a team of industry-expert content creators</li>
+          </ul>
+        </div>
+        <div id="about-image" class="col-image">
+          <img src="../assets/images/about-team.jpeg" alt="The LabMate team collaborating on virtual lab content"
+            class="section-image" />
+        </div>
+      </div>
+    </section>
+
+    <section id="why-labmate-section" aria-labelledby="why-heading">
+      <h2 id="why-heading" class="section-heading">Why LabMate?</h2>
+      <div class="section-heading-underline" aria-hidden="true"></div>
+      <p id="why-intro" class="section-intro-text">
+        LabMate is not just another e-learning platform. We are purpose-built
+        for laboratory education, combining pedagogy, technology, and
+        institutional support.
+      </p>
+      <div id="objectives-grid" class="card-grid" role="list">
+        <article class="objective-card" role="listitem">
+          <div class="card-icon-wrapper" aria-hidden="true">
+            <img src="assets/icons/safe-experiment.svg" alt="" />
+          </div>
+          <h3 class="card-heading">Safe & Risk-Free Experiments</h3>
+          <p class="card-description">
+            Conduct dangerous chemical or electrical experiments without
+            any physical risk to students or infrastructure.
+          </p>
+        </article>
+        <article class="objective-card" role="listitem">
+          <div class="card-icon-wrapper" aria-hidden="true">
+            <img src="assets/icons/access.svg" alt="" />
+          </div>
+          <h3 class="card-heading">24 / 7 Anytime Access</h3>
+          <p class="card-description">
+            Students can repeat experiments at any hour, from any device,
+            accelerating learning at their own pace.
+          </p>
+        </article>
+        <article class="objective-card" role="listitem">
+          <div class="card-icon-wrapper" aria-hidden="true">
+            <img src="assets/icons/cost.svg" alt="" />
+          </div>
+          <h3 class="card-heading">Cost-Effective for Institutions</h3>
+          <p class="card-description">
+            Eliminate recurring costs of lab equipment, chemicals, and
+            maintenance with a single annual subscription.
+          </p>
+        </article>
+        <article class="objective-card" role="listitem">
+          <div class="card-icon-wrapper" aria-hidden="true">
+            <img src="assets/icons/curriculum.svg" alt="" />
+          </div>
+          <h3 class="card-heading">Curriculum-Aligned Content</h3>
+          <p class="card-description">
+            Every experiment maps directly to university syllabi, ensuring
+            academic compliance and exam readiness.
+          </p>
+        </article>
+        <article class="objective-card" role="listitem">
+          <div class="card-icon-wrapper" aria-hidden="true">
+            <img src="assets/icons/analytics.svg" alt="" />
+          </div>
+          <h3 class="card-heading">Performance Analytics</h3>
+          <p class="card-description">
+            Instructors get real-time dashboards tracking student progress,
+            completion rates, and assessment scores.
+          </p>
+        </article>
+        <article class="objective-card" role="listitem">
+          <div class="card-icon-wrapper" aria-hidden="true">
+            <img src="assets/icons/branches.svg" alt="" />
+          </div>
+          <h3 class="card-heading">Multi-Branch Engineering Labs</h3>
+          <p class="card-description">
+            Supports CSE, ECE, Mechanical, Civil, and more — a single
+            platform for the entire campus.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="courses-section" aria-labelledby="courses-heading">
+      <h2 id="courses-heading" class="section-heading">Our Virtual Lab Courses</h2>
+      <div class="section-heading-underline" aria-hidden="true"></div>
+      <p class="section-intro-text">
+        Choose from a wide spectrum of fully-simulated laboratory
+        courses spanning core engineering, science, and technology
+        disciplines.
+      </p>
+      <div id="courses-filter-bar" role="tablist" aria-label="Filter courses by branch">
+        <button class="filter-tab active-tab" role="tab" aria-selected="true" aria-controls="courses-grid">All</button>
+        <button class="filter-tab" role="tab" aria-selected="false" aria-controls="courses-grid">CSE</button>
+        <button class="filter-tab" role="tab" aria-selected="false" aria-controls="courses-grid">ECE</button>
+        <button class="filter-tab" role="tab" aria-selected="false" aria-controls="courses-grid">Mechanical</button>
+        <button class="filter-tab" role="tab" aria-selected="false" aria-controls="courses-grid">Civil</button>
+        <button class="filter-tab" role="tab" aria-selected="false" aria-controls="courses-grid">Chemistry</button>
+        <button class="filter-tab" role="tab" aria-selected="false" aria-controls="courses-grid">Physics</button>
+      </div>
+      <div id="courses-grid" class="card-grid" role="tabpanel" aria-labelledby="courses-heading">
+        <article class="course-card" role="listitem">
+          <div class="course-thumbnail-wrapper">
+            <img src="assets/images/courses/data-structures-lab.png" alt="Data Structures Virtual Lab thumbnail"
+              class="course-thumbnail" />
+          </div>
+          <div class="course-card-body">
+            <h3 class="course-title">Data Structures Lab</h3>
+            <span class="course-branch-badge">CSE</span>
+            <p class="course-description">
+              Visualise stacks, queues, trees, and graphs with
+              interactive step-by-step simulations.
+            </p>
+            <a href="courses/data-structures-lab.html" class="course-enroll-btn">Learn More</a>
+          </div>
+        </article>
+        <article class="course-card" role="listitem">
+          <div class="course-thumbnail-wrapper">
+            <img src="assets/images/courses/circuits-lab.png" alt="Electronic Circuits Lab thumbnail"
+              class="course-thumbnail" />
+          </div>
+          <div class="course-card-body">
+            <h3 class="course-title">Electronic Circuits Lab</h3>
+            <span class="course-branch-badge">ECE</span>
+            <p class="course-description">
+              Build and test analog/digital circuits in a risk-free
+              virtual breadboard environment.
+            </p>
+            <a href="courses/electronic-circuits-lab.html" class="course-enroll-btn">Learn More</a>
+          </div>
+        </article>
+        <article class="course-card" role="listitem">
+          <div class="course-thumbnail-wrapper">
+            <img src="assets/images/courses/thermodynamics-lab.png" alt="Thermodynamics Lab thumbnail"
+              class="course-thumbnail" />
+          </div>
+          <div class="course-card-body">
+            <h3 class="course-title">Thermodynamics Lab</h3>
+            <span class="course-branch-badge">Mechanical</span>
+            <p class="course-description">
+              Simulate heat engines, Carnot cycles, and refrigeration
+              systems with real-time graphs.
+            </p>
+            <a href="courses/thermodynamics-lab.html" class="course-enroll-btn">Learn More</a>
+          </div>
+        </article>
+        <article class="course-card" role="listitem">
+          <div class="course-thumbnail-wrapper">
+            <img src="assets/images/courses/organic-chemistry-lab.png" alt="Organic Chemistry Lab thumbnail"
+              class="course-thumbnail" />
+          </div>
+          <div class="course-card-body">
+            <h3 class="course-title">Organic Chemistry Lab</h3>
+            <span class="course-branch-badge">Chemistry</span>
+            <p class="course-description">
+              Perform titrations, distillations, and organic synthesis
+              reactions safely on screen.
+            </p>
+            <a href="courses/organic-chemistry-lab.html" class="course-enroll-btn">Learn More</a>
+          </div>
+        </article>
+        <article class="course-card" role="listitem">
+          <div class="course-thumbnail-wrapper">
+            <img src="assets/images/courses/surveying-lab.png" alt="Surveying Lab thumbnail" class="course-thumbnail" />
+          </div>
+          <div class="course-card-body">
+            <h3 class="course-title">Surveying & Levelling Lab</h3>
+            <span class="course-branch-badge">Civil</span>
+            <p class="course-description">
+              Master theodolite, total station, and levelling operations
+              in a 3-D virtual field.
+            </p>
+            <a href="courses/surveying-lab.html" class="course-enroll-btn">Learn More</a>
+          </div>
+        </article>
+        <article class="course-card" role="listitem">
+          <div class="course-thumbnail-wrapper">
+            <img src="assets/images/courses/optics-lab.png" alt="Optics and Laser Lab thumbnail"
+              class="course-thumbnail" />
+          </div>
+          <div class="course-card-body">
+            <h3 class="course-title">Optics & Laser Lab</h3>
+            <span class="course-branch-badge">Physics</span>
+            <p class="course-description">
+              Explore diffraction, interference, and laser propagation
+              with accurate ray-tracing simulations.
+            </p>
+            <a href="courses/optics-lab.html" class="course-enroll-btn">Learn More</a>
+          </div>
+        </article>
+      </div>
+      <div id="courses-view-all-wrapper" class="centered-cta-wrapper">
+        <a href="courses.html" class="cta-btn cta-secondary" role="button">View All Courses</a>
+      </div>
+    </section>
+
+    <section id="colleges-section" aria-labelledby="colleges-heading">
+      <h2 id="colleges-heading" class="section-heading">Colleges In Collaboration With Us</h2>
+      <div class="section-heading-underline" aria-hidden="true"></div>
+      <p class="section-intro-text">
+        LabMate is trusted by leading engineering and science institutions
+        across the country. Join our growing academic network.
+      </p>
+      <div id="colleges-logo-marquee" aria-label="Scrolling list of partner college logos" role="list">
+        <div class="marquee-track">
+          <!-- ORIGINAL SET -->
+          <div class="college-logo-item" role="listitem">
+            <img src="assets/images/colleges/college-1-logo.png" alt="ABC Institute of Technology" class="college-logo" />
+            <span class="college-name">ABC Institute of Technology</span>
+          </div>
+          <div class="college-logo-item" role="listitem">
+            <img src="assets/images/colleges/college-2-logo.png" alt="XYZ College of Engineering" class="college-logo" />
+            <span class="college-name">XYZ College of Engineering</span>
+          </div>
+          <div class="college-logo-item" role="listitem">
+            <img src="assets/images/colleges/college-3-logo.png" alt="National Science College" class="college-logo" />
+            <span class="college-name">National Science College</span>
+          </div>
+          <div class="college-logo-item" role="listitem">
+            <img src="assets/images/colleges/college-4-logo.png" alt="City Polytechnic University" class="college-logo" />
+            <span class="college-name">City Polytechnic University</span>
+          </div>
+          <div class="college-logo-item" role="listitem">
+            <img src="assets/images/colleges/college-5-logo.png" alt="State Engineering College" class="college-logo" />
+            <span class="college-name">State Engineering College</span>
+          </div>
+          
+          <!-- CLONED SET FOR INFINITE SCROLL -->
+          <div class="college-logo-item" aria-hidden="true">
+            <img src="assets/images/colleges/college-1-logo.png" alt="" class="college-logo" />
+            <span class="college-name">ABC Institute of Technology</span>
+          </div>
+          <div class="college-logo-item" aria-hidden="true">
+            <img src="assets/images/colleges/college-2-logo.png" alt="" class="college-logo" />
+            <span class="college-name">XYZ College of Engineering</span>
+          </div>
+          <div class="college-logo-item" aria-hidden="true">
+            <img src="assets/images/colleges/college-3-logo.png" alt="" class="college-logo" />
+            <span class="college-name">National Science College</span>
+          </div>
+          <div class="college-logo-item" aria-hidden="true">
+            <img src="assets/images/colleges/college-4-logo.png" alt="" class="college-logo" />
+            <span class="college-name">City Polytechnic University</span>
+          </div>
+          <div class="college-logo-item" aria-hidden="true">
+            <img src="assets/images/colleges/college-5-logo.png" alt="" class="college-logo" />
+            <span class="college-name">State Engineering College</span>
+          </div>
+        </div>
+      </div>
+      <div class="centered-cta-wrapper">
+        <a href="#contact-section" class="cta-btn cta-primary" role="button">Partner With Us</a>
+      </div>
+    </section>
+
+    <section id="enews-section" aria-labelledby="enews-heading">
+      <h2 id="enews-heading" class="section-heading">Updates & Announcements</h2>
+      <div class="section-heading-underline" aria-hidden="true"></div>
+      <div id="announcements-list" role="list">
+        <article class="announcement-card" role="listitem">
+          <span class="announcement-badge announcement-badge--new">New</span>
+          <div class="announcement-content">
+            <time class="announcement-date" datetime="2026-03-15">March 15, 2026</time>
+            <h3 class="announcement-title">LabMate 3.0 Launched with AR-Assisted Labs</h3>
+            <p class="announcement-excerpt">
+              Our biggest update yet — augmented-reality overlays now
+              available for select chemistry and physics experiments.
+            </p>
+            <a href="news/labmate-3-launch.html" class="read-more-link">Read More <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+        <article class="announcement-card" role="listitem">
+          <span class="announcement-badge announcement-badge--event">Event</span>
+          <div class="announcement-content">
+            <time class="announcement-date" datetime="2026-03-10">March 10, 2026</time>
+            <h3 class="announcement-title">LabMate WebConf 2026 — Registration Open</h3>
+            <p class="announcement-excerpt">
+              Join 500 + educators at our annual conference dedicated to
+              the future of virtual laboratory education.
+            </p>
+            <a href="news/webconf-2026.html" class="read-more-link">Read More <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+        <article class="announcement-card" role="listitem">
+          <span class="announcement-badge announcement-badge--update">Update</span>
+          <div class="announcement-content">
+            <time class="announcement-date" datetime="2026-02-28">February 28, 2026</time>
+            <h3 class="announcement-title">New Civil Engineering Lab Modules Added</h3>
+            <p class="announcement-excerpt">
+              Ten new soil mechanics and structural analysis experiments
+              are now live for Civil Engineering students.
+            </p>
+            <a href="news/civil-modules-update.html" class="read-more-link">Read More <span
+                aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      </div>
+      <div id="enews-subscribe-box" aria-labelledby="subscribe-heading">
+        <h3 id="subscribe-heading" class="subsection-heading">Subscribe to Our E-News</h3>
+        <p>Get platform updates, new course alerts, and event invitations delivered to your inbox.</p>
+        <form id="subscribe-form" action="#" method="post" aria-label="Newsletter subscription form">
+          <label for="subscribe-email" class="form-label">Email Address</label>
+          <input type="email" id="subscribe-email" name="email" placeholder="you@example.com" required
+            aria-required="true" class="form-input" />
+          <button type="submit" id="subscribe-btn" class="cta-btn cta-primary">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="demo-section" aria-labelledby="demo-heading">
+      <h2 id="demo-heading" class="section-heading">Demo Labs — Try Before You Buy</h2>
+      <div class="section-heading-underline" aria-hidden="true"></div>
+      <p class="section-intro-text">
+        Experience the LabMate difference first-hand. Click any demo
+        below to launch a free preview experiment — no login required.
+      </p>
+      <div id="demo-labs-grid" class="card-grid" role="list">
+        <article class="demo-card" role="listitem">
+          <div class="demo-thumbnail-wrapper">
+            <img src="assets/images/demos/sorting-demo.png" alt="Sorting Algorithm Visualiser demo preview"
+              class="demo-thumbnail" />
+            <div class="demo-play-overlay" aria-hidden="true">▶</div>
+          </div>
+          <div class="demo-card-body">
+            <span class="demo-branch-label">CSE</span>
+            <h3 class="demo-title">Sorting Algorithm Visualiser</h3>
+            <p class="demo-description">
+              Watch Bubble Sort, Quick Sort, and Merge Sort
+              come to life with animated step breakdowns.
+            </p>
+            <a href="demos/sorting-visualiser.html" class="demo-launch-btn"
+              aria-label="Launch Sorting Algorithm Visualiser demo">Launch Demo</a>
+          </div>
+        </article>
+        <article class="demo-card" role="listitem">
+          <div class="demo-thumbnail-wrapper">
+            <img src="assets/images/demos/logic-gates-demo.png" alt="Logic Gates Simulator demo preview"
+              class="demo-thumbnail" />
+            <div class="demo-play-overlay" aria-hidden="true">▶</div>
+          </div>
+          <div class="demo-card-body">
+            <span class="demo-branch-label">ECE</span>
+            <h3 class="demo-title">Logic Gates Simulator</h3>
+            <p class="demo-description">
+              Build combinational circuits with AND, OR, NOT gates
+              and verify truth tables instantly.
+            </p>
+            <a href="demos/logic-gates.html" class="demo-launch-btn"
+              aria-label="Launch Logic Gates Simulator demo">Launch Demo</a>
+          </div>
+        </article>
+        <article class="demo-card" role="listitem">
+          <div class="demo-thumbnail-wrapper">
+            <img src="assets/images/demos/titration-demo.png" alt="Acid-Base Titration demo preview"
+              class="demo-thumbnail" />
+            <div class="demo-play-overlay" aria-hidden="true">▶</div>
+          </div>
+          <div class="demo-card-body">
+            <span class="demo-branch-label">Chemistry</span>
+            <h3 class="demo-title">Acid-Base Titration</h3>
+            <p class="demo-description">
+              Add titrant drop-by-drop and watch the pH curve plot
+              in real time until the equivalence point.
+            </p>
+            <a href="demos/titration.html" class="demo-launch-btn" aria-label="Launch Acid-Base Titration demo">Launch
+              Demo</a>
+          </div>
+        </article>
+        <article class="demo-card" role="listitem">
+          <div class="demo-thumbnail-wrapper">
+            <img src="assets/images/demos/stress-strain-demo.png" alt="Stress-Strain Curve demo preview"
+              class="demo-thumbnail" />
+            <div class="demo-play-overlay" aria-hidden="true">▶</div>
+          </div>
+          <div class="demo-card-body">
+            <span class="demo-branch-label">Mechanical</span>
+            <h3 class="demo-title">Stress-Strain Curve Analyser</h3>
+            <p class="demo-description">
+              Apply tensile loads to virtual specimens and derive
+              Young's Modulus from the interactive graph.
+            </p>
+            <a href="demos/stress-strain.html" class="demo-launch-btn" aria-label="Launch Stress-Strain demo">Launch
+              Demo</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="testimonials-section" aria-labelledby="testimonials-heading">
+      <h2 id="testimonials-heading" class="section-heading">What Our Users Say</h2>
+      <div class="section-heading-underline" aria-hidden="true"></div>
+      <div id="testimonials-carousel" role="region" aria-label="User testimonials carousel" aria-live="polite">
+        <blockquote class="testimonial-card" id="testimonial-1">
+          <p class="testimonial-quote">
+            "LabMate's virtual chemistry lab helped me understand
+            titrations that I could never grasp from textbooks alone.
+            The visual feedback is incredible."
+          </p>
+          <footer class="testimonial-author">
+            <img src="assets/images/testimonials/student-1.jpg" alt="Photo of Priya S., B.Sc. Chemistry student"
+              class="testimonial-avatar" />
+            <div class="testimonial-author-info">
+              <cite class="testimonial-name">Priya S.</cite>
+              <span class="testimonial-role">B.Sc. Chemistry, Year 2</span>
+            </div>
+          </footer>
+        </blockquote>
+        <blockquote class="testimonial-card" id="testimonial-2">
+          <p class="testimonial-quote">
+            "As a faculty member, LabMate has transformed how I deliver
+            practicals. Analytics tell me exactly which students are
+            struggling before the exam."
+          </p>
+          <footer class="testimonial-author">
+            <img src="assets/images/testimonials/faculty-1.jpg" alt="Photo of Dr. Ramesh K., Assistant Professor"
+              class="testimonial-avatar" />
+            <div class="testimonial-author-info">
+              <cite class="testimonial-name">Dr. Ramesh K.</cite>
+              <span class="testimonial-role">Asst. Professor, ECE — XYZ College of Engineering</span>
+            </div>
+          </footer>
+        </blockquote>
+        <blockquote class="testimonial-card" id="testimonial-3">
+          <p class="testimonial-quote">
+            "Since adopting LabMate, our lab operational costs dropped
+            by 40 % and student satisfaction scores reached an all-time
+            high. A game-changer for our institution."
+          </p>
+          <footer class="testimonial-author">
+            <img src="assets/images/testimonials/director-1.jpg" alt="Photo of Prof. Anita M., Director of Academics"
+              class="testimonial-avatar" />
+            <div class="testimonial-author-info">
+              <cite class="testimonial-name">Prof. Anita M.</cite>
+              <span class="testimonial-role">Director of Academics — ABC Institute of Technology</span>
+            </div>
+          </footer>
+        </blockquote>
+      </div>
+      <div id="carousel-controls" aria-label="Testimonial carousel navigation">
+        <button class="carousel-btn carousel-btn--prev" aria-label="Previous testimonial"
+          aria-controls="testimonials-carousel">←</button>
+        <div id="carousel-dots" role="tablist" aria-label="Select testimonial">
+          <button class="carousel-dot active-dot" role="tab" aria-selected="true" aria-label="Testimonial 1"></button>
+          <button class="carousel-dot" role="tab" aria-selected="false" aria-label="Testimonial 2"></button>
+          <button class="carousel-dot" role="tab" aria-selected="false" aria-label="Testimonial 3"></button>
+        </div>
+        <button class="carousel-btn carousel-btn--next" aria-label="Next testimonial"
+          aria-controls="testimonials-carousel">→</button>
+      </div>
+    </section>
+
+    <section id="contact-section" aria-labelledby="contact-heading">
+      <h2 id="contact-heading" class="section-heading">Contact Us</h2>
+      <div class="section-heading-underline" aria-hidden="true"></div>
+      <div id="contact-layout" class="two-col-layout">
+        <div id="contact-form-wrapper" class="col-text">
+          <h3 class="subsection-heading">Send Us a Message</h3>
+          <form id="contact-form" action="#" method="post" aria-label="Contact LabMate form" novalidate>
+            <div class="form-group">
+              <label for="contact-name" class="form-label">Full Name</label>
+              <input type="text" id="contact-name" name="full_name" placeholder="Your Full Name" required
+                aria-required="true" class="form-input" autocomplete="name" />
+            </div>
+            <div class="form-group">
+              <label for="contact-email" class="form-label">Email Address</label>
+              <input type="email" id="contact-email" name="email" placeholder="you@institution.edu" required
+                aria-required="true" class="form-input" autocomplete="email" />
+            </div>
+            <div class="form-group">
+              <label for="contact-phone" class="form-label">Phone Number <span
+                  class="optional-label">(Optional)</span></label>
+              <input type="tel" id="contact-phone" name="phone" placeholder="+91 98765 43210" class="form-input"
+                autocomplete="tel" />
+            </div>
+            <div class="form-group">
+              <label for="contact-subject" class="form-label">Subject</label>
+              <select id="contact-subject" name="subject" required aria-required="true" class="form-select">
+                <option value="" disabled selected>Select a subject</option>
+                <option value="general">General Enquiry</option>
+                <option value="partnership">Institutional Partnership</option>
+                <option value="demo">Request a Demo</option>
+                <option value="support">Technical Support</option>
+                <option value="billing">Billing</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contact-message" class="form-label">Message</label>
+              <textarea id="contact-message" name="message" rows="5" placeholder="Write your message here…" required
+                aria-required="true" class="form-textarea"></textarea>
+            </div>
+            <button type="submit" id="contact-submit-btn" class="cta-btn cta-primary">Send Message</button>
+          </form>
+        </div>
+        <div id="contact-info-wrapper" class="col-image">
+          <address id="contact-details" class="contact-address">
+            <h3 class="subsection-heading">Get In Touch</h3>
+            <p>
+              <strong>Office:</strong><br />
+              LabMate Technologies Pvt. Ltd.<br />
+              Vishweshwaraya Bhavan, 3rd-Floor<br />
+              Surampalem, AndhraPradesh — 533437<br />
+              India
+            </p>
+            <p>
+              <strong>Email:</strong>
+              <a href="/cdn-cgi/l/email-protection#f79f929b9b98b79b96959a968392d99e99" class="contact-link">
+                <span class="__cf_email__" data-cfemail="e28a878e8e8da28e83808f839687cc8b8c">[email protected]</span>
+              </a>
+            </p>
+            <p>
+              <strong>Phone:</strong>
+              <a href="tel:+914012345678" class="contact-link">+91 40 1234 5678</a>
+            </p>
+            <p>
+              <strong>Hours:</strong>
+              Monday – Friday, 9:00 AM – 6:00 PM IST
+            </p>
+          </address>
+          <div id="map-placeholder" role="img"
+            aria-label="Map showing LabMate office location in HITEC City, Hyderabad">
+            <p class="map-loading-text">[Map loading…]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer" role="contentinfo" aria-label="Site footer">
+    <div id="footer-top" class="footer-grid">
+      <div class="footer-col" id="footer-brand-col">
+        <a href="#home-section" aria-label="LabMate home">
+          <img src="../assets/images/LabMateLogo.png" alt="LabMate" class="footer-logo" />
+        </a>
+        <p class="footer-brand-desc">
+          LabMate — empowering the next generation of scientists and
+          engineers with accessible, immersive virtual laboratory
+          experiences.
+        </p>
+        <div id="footer-social-links" aria-label="LabMate on social media">
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on LinkedIn (opens in new tab)">
+            <img src="assets/icons/linkedin.svg" alt="" class="social-icon" />
+          </a>
+          <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on Twitter/X (opens in new tab)">
+            <img src="assets/icons/twitter.svg" alt="" class="social-icon" />
+          </a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on Instagram (opens in new tab)">
+            <img src="assets/icons/instagram.svg" alt="" class="social-icon" />
+          </a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on YouTube (opens in new tab)">
+            <img src="assets/icons/youtube.svg" alt="" class="social-icon" />
+          </a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on Facebook (opens in new tab)">
+            <img src="assets/icons/facebook.svg" alt="" class="social-icon" />
+          </a>
+        </div>
+      </div>
+      <div class="footer-col" id="footer-quicklinks-col">
+        <h3 class="footer-col-heading">Quick Links</h3>
+        <nav aria-label="Footer quick links">
+          <ul class="footer-link-list" role="list">
+            <li><a href="#home-section" class="footer-link">Home</a></li>
+            <li><a href="#about-section" class="footer-link">About Us</a></li>
+            <li><a href="#courses-section" class="footer-link">Courses</a></li>
+            <li><a href="#colleges-section" class="footer-link">Partner Colleges</a></li>
+            <li><a href="#enews-section" class="footer-link">E-News</a></li>
+            <li><a href="#why-labmate-section" class="footer-link">Why LabMate?</a></li>
+            <li><a href="#contact-section" class="footer-link">Contact Us</a></li>
+            <li><a href="sitemap.html" class="footer-link">Sitemap</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-col" id="footer-resources-col">
+        <h3 class="footer-col-heading">Resources</h3>
+        <nav aria-label="Footer resources and legal links">
+          <ul class="footer-link-list" role="list">
+            <li><a href="blog.html" class="footer-link">Blog</a></li>
+            <li><a href="faq.html" class="footer-link">FAQ</a></li>
+            <li><a href="help.html" class="footer-link">Help Center</a></li>
+            <li><a href="careers.html" class="footer-link">Careers</a></li>
+            <li><a href="privacy-policy.html" class="footer-link">Privacy Policy</a></li>
+            <li><a href="terms.html" class="footer-link">Terms of Service</a></li>
+            <li><a href="refund-policy.html" class="footer-link">Refund Policy</a></li>
+            <li><a href="accessibility.html" class="footer-link">Accessibility</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-col" id="footer-contact-col">
+        <h3 class="footer-col-heading">Contact</h3>
+        <address class="footer-address">
+          <p>
+            LabMate Technologies Pvt. Ltd.<br />
+            Vishweshwaraya Bhavan, 3rd-Floor<br />
+            Surampalem, AndhraPradesh — 533437<br />
+            India
+          </p>
+          <p>
+            <a href="/cdn-cgi/l/email-protection#3159545d5d5e715d50535c5045541f585f" class="footer-link">
+              <span class="__cf_email__" data-cfemail="0e666b6262614e626f6c636f7a6b206760">[email protected]</span>
+            </a>
+          </p>
+          <p>
+            <a href="tel:+917777777777" class="footer-link">+91 40 1234 5678</a>
+          </p>
+        </address>
+      </div>
+    </div>
+    <hr id="footer-divider" aria-hidden="true" />
+    <div id="footer-bottom">
+      <p id="footer-copyright">
+        <small>
+          © <span id="copyright-year">2026</span>
+          LabMate Technologies Pvt. Ltd. All rights reserved.
+        </small>
+      </p>
+      <p id="footer-legal-note">
+        <small>
+          LabMate is a registered trademark. Unauthorised reproduction
+          of any content on this platform is prohibited.
+        </small>
+      </p>
+      <div id="footer-badges" aria-label="Trust and certification badges">
+      </div>
+    </div>
+  </footer>
+  <script src="../js/script.js"></script>
+</body>
+
+</html>
