@@ -8,8 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const splash = document.getElementById('logo-splash');
 
   if (splash) {
-    const hide = () => splash.classList.add('hidden');
-    setTimeout(hide, 2600); // Auto-hide after 2.6s gracefully
+    // Only show the splash screen if it hasn't been shown in this session
+    if (sessionStorage.getItem('splashShown')) {
+      splash.remove(); 
+    } else {
+      const hide = () => {
+        splash.classList.add('hidden');
+        sessionStorage.setItem('splashShown', 'true');
+      };
+      setTimeout(hide, 1500); // Auto-hide after 1.5s gracefully
+    }
   }
 
   /* ----------------------------------------------------------

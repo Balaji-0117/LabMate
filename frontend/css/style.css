@@ -312,7 +312,7 @@ button {
   justify-content: center;
   gap: 20px;
   pointer-events: all;
-  transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease;
+  transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
 }
 
 #logo-splash.hidden {
@@ -325,7 +325,7 @@ button {
   /* Sized larger per user request */
   height: auto;
   object-fit: contain;
-  animation: splashPop 1.2s cubic-bezier(0.16, 1, 0.3, 1) .2s both;
+  animation: splashPop 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
   filter: drop-shadow(0 15px 30px rgba(10, 143, 124, .25));
 }
 
@@ -336,7 +336,7 @@ button {
   font-style: italic;
   font-weight: 600;
   letter-spacing: .03em;
-  animation: fadeUp .9s ease .8s both;
+  animation: fadeUp 0.7s ease 0.5s both;
 }
 
 @keyframes splashPop {
@@ -442,19 +442,23 @@ button {
   background: var(--teal-dim);
 }
 
-.nav-login-btn {
+.nav-login-btn,
+.nav-signup-btn {
   margin-left: 10px;
-  background: var(--teal) !important;
-  color: var(--white) !important;
+  background: transparent !important;
+  color: var(--teal) !important;
+  border: 1.8px solid var(--teal) !important;
   border-radius: 24px !important;
-  padding: 8px 22px !important;
+  padding: 6px 20px !important;
   font-weight: 600 !important;
-  box-shadow: 0 3px 14px rgba(10, 143, 124, .28);
-  transition: background var(--ease), transform var(--ease) !important;
+  transition: background var(--ease), color var(--ease), transform var(--ease) !important;
+  box-shadow: none !important;
 }
 
-.nav-login-btn:hover {
-  background: var(--teal-light) !important;
+.nav-login-btn:hover,
+.nav-signup-btn:hover {
+  background: var(--teal) !important;
+  color: var(--white) !important;
   transform: translateY(-1px) !important;
 }
 
@@ -1635,7 +1639,7 @@ button {
 #footer-copyright small,
 #footer-legal-note small {
   font-size: .78rem;
-  color: rgba(255, 255, 255, .3);
+  color: rgba(255, 255, 255, .6);
 }
 
 #footer-badges {
@@ -1950,10 +1954,7 @@ input:checked+.slider::before {
   background: var(--scale-bg);
 }
 
-.nav-login-btn {
-  color: var(--text-inverse) !important;
-  background: var(--accent-btn) !important;
-}
+/* Removed hardcoded nav-login-btn override to keep it transparent */
 
 #hero-heading {
   color: var(--text-primary);

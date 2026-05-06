@@ -42,8 +42,8 @@
       </div>
 
       <div class="form-wrapper">
-        <h1 class="login-title">Welcome</h1>
-        <p class="login-subtitle">Enter your email to securely configure your account.</p>
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Enter your email to securely log into your account.</p>
 
         <form id="login-form" class="login-form">
           <div class="form-group" id="email-group">
@@ -52,27 +52,33 @@
             <span class="error-message" id="email-error">Please enter a valid email address.</span>
           </div>
 
-          <button type="submit" class="cta-btn cta-primary login-btn" id="submit-btn">
-            Send Secure Link
+          <div class="form-group" id="password-group">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <label for="password-input" class="form-label" style="margin-bottom:0;">Password</label>
+              <a href="#" class="forgot-password" style="font-size:0.8rem; color:var(--teal); font-weight:500;">Forgot Password?</a>
+            </div>
+            <div class="password-wrapper" style="position:relative; margin-top:6px;">
+              <input type="password" id="password-input" class="form-input" placeholder="Enter your password" required style="padding-right:40px;" />
+              <button type="button" class="toggle-password" id="toggle-password" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-soft); font-size:1.1rem; padding:0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <span class="error-message" id="password-error">Incorrect password.</span>
+          </div>
+
+          <button type="submit" class="cta-btn cta-primary login-btn" id="submit-btn" style="width:100%; justify-content:center; margin-top:10px;">
+            Login
           </button>
         </form>
 
         <div class="success-message hidden" id="success-state">
           <div class="success-icon">✓</div>
-          <h2 class="success-title">Check Your Inbox</h2>
-          <p class="success-text">We've securely sent a required password creation link to <strong id="sent-email-display"></strong>.</p>
-          <p class="success-text" style="font-size: 0.85rem; margin-top: 10px;">Please check your email to set your password and access the virtual labs.</p>
-          
-          <button id="redirect-btn" class="cta-btn cta-secondary login-btn" style="margin-top: 24px;">
-            Return to Homepage
-          </button>
-          <button id="direct-to-dashboard" class="cta-btn cta-secondary direct-to-dashboard" style="margin-top: 24px;">
-            Go to Dashboard
-          </button>
+          <h2 class="success-title">Login Successful</h2>
+          <p class="success-text">Redirecting you to your dashboard...</p>
         </div>
         
         <div class="login-footer">
-          <p>Don't have an account? <a href="labmate_landing.html#contact-section" class="login-link">Contact your institution</a></p>
+          <p>Don't have an account? <a href="signup.html" class="login-link">Sign up here</a></p>
         </div>
       </div>
     </div>
