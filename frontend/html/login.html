@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — LabMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+</head>
+<body class="login-body">
+  <div class="login-split-container">
+    
+    <!-- BRANDING / THEME SIDE -->
+    <div class="login-theme-side">
+      <div class="theme-overlay"></div>
+      <div class="theme-content">
+        <a href="labmate_landing.html">
+          <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="theme-logo" />
+        </a>
+        <h2 class="theme-heading">Empowering Science.<br/>Virtually.</h2>
+        <p class="theme-description">
+          Join thousands of students and educators experiencing risk-free, immersive virtual laboratory experiments anywhere in the world.
+        </p>
+      </div>
+    </div>
+    
+    <!-- ENTERING DETAILS / FORM SIDE -->
+    <div class="login-form-side">
+      
+      <!-- Animated Theme Switcher -->
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox" aria-label="Toggle dark mode">
+          <input type="checkbox" id="checkbox" />
+          <div class="slider round">
+            <span class="icon light-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span>
+            <span class="icon dark-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
+          </div>
+        </label>
+      </div>
+
+      <div class="form-wrapper">
+        <h1 class="login-title">Welcome</h1>
+        <p class="login-subtitle">Enter your email to securely configure your account.</p>
+
+        <form id="login-form" class="login-form">
+          <div class="form-group" id="email-group">
+            <label for="email-input" class="form-label">Email Address</label>
+            <input type="email" id="email-input" class="form-input" placeholder="you@institution.edu" required />
+            <span class="error-message" id="email-error">Please enter a valid email address.</span>
+          </div>
+
+          <button type="submit" class="cta-btn cta-primary login-btn" id="submit-btn">
+            Send Secure Link
+          </button>
+        </form>
+
+        <div class="success-message hidden" id="success-state">
+          <div class="success-icon">✓</div>
+          <h2 class="success-title">Check Your Inbox</h2>
+          <p class="success-text">We've securely sent a required password creation link to <strong id="sent-email-display"></strong>.</p>
+          <p class="success-text" style="font-size: 0.85rem; margin-top: 10px;">Please check your email to set your password and access the virtual labs.</p>
+          
+          <button id="redirect-btn" class="cta-btn cta-secondary login-btn" style="margin-top: 24px;">
+            Return to Homepage
+          </button>
+          <button id="direct-to-dashboard" class="cta-btn cta-secondary direct-to-dashboard" style="margin-top: 24px;">
+            Go to Dashboard
+          </button>
+        </div>
+        
+        <div class="login-footer">
+          <p>Don't have an account? <a href="labmate_landing.html#contact-section" class="login-link">Contact your institution</a></p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <script src="../js/login.js"></script>
+</body>
+</html>

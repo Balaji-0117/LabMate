@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experiment — Temperature Conversion | LabMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/portal.css" />
+
+    <style>
+        /* =============================================
+           EXPERIMENT PAGE — Scoped Styles
+        ============================================= */
+        .exp-page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-page);
+        }
+
+        .exp-breadcrumb {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-var);
+            padding: 10px 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-soft);
+        }
+
+        .exp-breadcrumb a {
+            color: var(--accent-btn, var(--teal));
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .exp-breadcrumb a:hover {
+            color: var(--btn-hover, #1270b0);
+            text-decoration: underline;
+        }
+
+        .exp-breadcrumb .sep { opacity: 0.45; margin: 0 2px; }
+        .exp-breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+
+        .exp-banner {
+            background: linear-gradient(120deg, #e8383d 0%, var(--accent-btn, var(--teal)) 100%);
+            color: #fff;
+            padding: 22px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .exp-banner-icon {
+            width: 52px; height: 52px;
+            background: rgba(255,255,255,0.18);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; flex-shrink: 0;
+        }
+
+        .exp-banner-meta { flex: 1; }
+
+        .exp-banner-label {
+            font-size: 0.72rem; font-weight: 600;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            opacity: 0.78; margin-bottom: 4px;
+        }
+
+        .exp-banner-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 700; line-height: 1.2; letter-spacing: -0.01em;
+        }
+
+        .exp-banner-sub { font-size: 0.83rem; opacity: 0.8; margin-top: 4px; }
+
+        .exp-main-body {
+            flex: 1; display: flex; gap: 0;
+            padding: 32px 40px;
+            max-width: 1300px; width: 100%;
+            margin: 0 auto; box-sizing: border-box;
+        }
+
+        .exp-sidebar { width: 220px; flex-shrink: 0; margin-right: 28px; }
+
+        .exp-sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-lg, 20px);
+            box-shadow: var(--sh-card);
+            overflow: hidden;
+            position: sticky; top: 90px;
+        }
+
+        .exp-sidebar-header {
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border-var);
+            font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--text-soft);
+        }
+
+        .exp-nav-list { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+
+        .exp-nav-btn {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 12px 14px;
+            border-radius: var(--r-md, 12px);
+            font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
+            color: var(--text-mid);
+            background: transparent; border: none; cursor: pointer;
+            transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
+            text-align: left; position: relative;
+        }
+
+        .exp-nav-btn:hover {
+            background: var(--scale-bg, var(--teal-dim));
+            color: var(--text-primary); transform: translateX(3px);
+        }
+
+        .exp-nav-btn.active {
+            background: var(--scale-bg, var(--teal-dim));
+            color: var(--accent-btn, var(--teal)); font-weight: 600;
+        }
+
+        .exp-nav-btn.active::before {
+            content: ''; position: absolute; left: 0; top: 50%;
+            transform: translateY(-50%);
+            width: 3px; height: 60%;
+            border-radius: 0 3px 3px 0;
+            background: var(--accent-btn, var(--teal));
+        }
+
+        .exp-nav-icon {
+            width: 28px; height: 28px; border-radius: 8px;
+            background: var(--card-inner);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; flex-shrink: 0;
+            transition: background 0.22s ease;
+        }
+
+        .exp-nav-btn.active .exp-nav-icon {
+            background: var(--accent-btn, var(--teal)); color: #fff;
+        }
+
+        .exp-sidebar-progress { padding: 14px 20px 18px; border-top: 1px solid var(--border-var); }
+
+        .exp-progress-label {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.72rem; color: var(--text-soft); margin-bottom: 8px;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+        }
+
+        .exp-progress-track {
+            height: 5px; background: var(--scale-bg); border-radius: 10px; overflow: hidden;
+        }
+
+        .exp-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 20%;
+        }
+
+        .exp-content-area { flex: 1; min-width: 0; }
+
+        .exp-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-lg, 20px);
+            box-shadow: var(--sh-card);
+            overflow: hidden;
+        }
+
+        .exp-panel-header {
+            padding: 24px 32px 20px;
+            border-bottom: 1px solid var(--border-var);
+            display: flex; align-items: center; gap: 16px;
+        }
+
+        .exp-panel-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: var(--scale-bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; flex-shrink: 0;
+        }
+
+        .exp-panel-title {
+            font-family: var(--font-display);
+            font-size: 1.7rem; font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em; line-height: 1.1;
+        }
+
+        .exp-panel-subtitle { font-size: 0.83rem; color: var(--text-soft); margin-top: 2px; }
+
+        .exp-panel-body { padding: 32px; }
+
+        .exp-section-content {
+            display: none;
+            animation: sectionFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .exp-section-content.visible { display: block; }
+
+        @keyframes sectionFadeIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .exp-body-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.85; }
+        .exp-body-text + .exp-body-text { margin-top: 16px; }
+
+        .exp-highlight-box {
+            background: var(--scale-bg);
+            border-left: 4px solid var(--accent-btn, var(--teal));
+            border-radius: 0 var(--r-md) var(--r-md) 0;
+            padding: 16px 20px; margin: 20px 0;
+            font-size: 0.9rem; color: var(--text-primary); line-height: 1.7;
+        }
+
+        .exp-step-list {
+            counter-reset: steps; list-style: none;
+            padding: 0; margin: 20px 0;
+            display: flex; flex-direction: column; gap: 14px;
+        }
+
+        .exp-step-list li {
+            counter-increment: steps;
+            display: flex; align-items: flex-start; gap: 16px;
+            font-size: 0.92rem; color: var(--text-mid); line-height: 1.7;
+        }
+
+        .exp-step-list li::before {
+            content: counter(steps); flex-shrink: 0;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+            color: #fff; font-size: 0.72rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; margin-top: 2px;
+        }
+
+        .exp-materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px; margin: 20px 0;
+        }
+
+        .exp-material-chip {
+            display: flex; align-items: center; gap: 10px;
+            background: var(--card-inner);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 10px 14px; font-size: 0.83rem;
+            color: var(--text-primary); font-weight: 500;
+        }
+
+        .exp-material-chip-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent-btn, var(--teal)); flex-shrink: 0;
+        }
+
+        .exp-divider { height: 1px; background: var(--border-var); margin: 28px 0; border: none; }
+
+        .exp-tag {
+            display: inline-block;
+            background: var(--scale-bg);
+            color: var(--accent-btn, var(--teal));
+            border: 1px solid var(--border-var);
+            border-radius: 20px;
+            padding: 3px 12px; font-size: 0.75rem; font-weight: 600;
+            letter-spacing: 0.04em; margin: 2px;
+        }
+
+        /* ============================================================
+           THEME SWITCH (portal header)
+        ============================================================ */
+        .theme-switch { display: inline-block; height: 30px; position: relative; width: 64px; }
+        .theme-switch input { display: none; }
+        .slider {
+            background-color: var(--scale-bg);
+            border: 1.5px solid var(--border-var);
+            bottom: 0; cursor: pointer; left: 0;
+            position: absolute; right: 0; top: 0; transition: .4s;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 7px; box-sizing: border-box;
+        }
+        .slider .icon { width: 12px; height: 12px; z-index: 1; display: flex; align-items: center; justify-content: center; }
+        .slider .icon svg { width: 100%; height: 100%; }
+        .light-icon { color: #f39c12; }
+        .dark-icon  { color: #aab; }
+        .slider::before {
+            background-color: var(--bg-card); bottom: 3px; content: ""; height: 22px; left: 4px;
+            position: absolute; transition: transform .4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            width: 22px; z-index: 2; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        input:checked + .slider { border-color: var(--border-strong); }
+        input:checked + .slider::before { transform: translateX(34px); }
+        .slider.round { border-radius: 30px; }
+
+        /* ============================================================
+           RESULT TAB STYLES
+        ============================================================ */
+        .exp-result-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px; margin: 24px 0;
+        }
+
+        .exp-stat-card {
+            background: var(--card-inner);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md, 12px);
+            padding: 18px 16px; text-align: center;
+        }
+
+        .exp-stat-value {
+            font-family: var(--font-display);
+            font-size: 1.6rem; font-weight: 700;
+            color: var(--accent-btn, var(--teal));
+            line-height: 1; margin-bottom: 6px;
+        }
+
+        .exp-stat-label {
+            font-size: 0.72rem; color: var(--text-soft); font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.08em;
+        }
+
+        .exp-conclusion-box {
+            background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md, 12px);
+            padding: 20px 24px; margin-top: 24px;
+        }
+
+        .exp-conclusion-label {
+            font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--accent-btn, var(--teal));
+            margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+        }
+
+        .exp-conclusion-text { font-size: 0.92rem; color: var(--text-primary); line-height: 1.75; }
+
+        /* ============================================================
+           RESULT TAB — CONVERSION HISTORY TABLE
+        ============================================================ */
+        .tc-result-table {
+            width: 100%; border-collapse: collapse;
+            margin: 20px 0; font-size: 0.88rem;
+        }
+
+        .tc-result-table th {
+            background: var(--scale-bg);
+            color: var(--text-primary); font-weight: 600;
+            padding: 12px 16px; text-align: left;
+            border-bottom: 2px solid var(--border-strong);
+            font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em;
+        }
+
+        .tc-result-table td {
+            padding: 11px 16px; color: var(--text-mid);
+            border-bottom: 1px solid var(--border-var); line-height: 1.4;
+        }
+
+        .tc-result-table tr:last-child td { border-bottom: none; }
+        .tc-result-table tr:hover td { background: var(--card-inner); }
+
+        .tc-formula-badge {
+            display: inline-block;
+            background: var(--scale-bg);
+            border: 1px solid var(--border-var);
+            border-radius: 20px;
+            padding: 2px 10px; font-size: 0.78rem;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-btn, var(--teal));
+        }
+
+        .tc-step-highlight {
+            background: var(--scale-bg);
+            border-left: 3px solid var(--accent-btn, var(--teal));
+            border-radius: 0 8px 8px 0;
+            padding: 8px 14px; margin: 6px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem; color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .tc-step-highlight .hl-in  { color: var(--accent-btn, var(--teal)); font-weight: 700; }
+        .tc-step-highlight .hl-out { color: #e8383d; font-weight: 700; }
+        .tc-step-highlight .hl-mid { color: var(--text-primary); font-weight: 600; }
+
+        /* ============================================================
+           SIMULATION WIDGET — SCOPED inside .tc-sim-wrap
+        ============================================================ */
+        .tc-sim-wrap {
+            --tc-accent:        var(--accent-btn, #1a88d0);
+            --tc-accent-glow:   rgba(26,136,208,0.18);
+            --tc-mercury:       #e8383d;
+            --tc-mercury-glow:  rgba(232,56,61,0.35);
+            --tc-scale-bg:      var(--scale-bg, #dceefa);
+            --tc-step-bg:       var(--card-inner, #f7fbff);
+            --tc-step-border:   var(--border-var, #b8ddf5);
+            --tc-step-active:   var(--scale-bg, #e0f2fe);
+            background: var(--card-inner, #f0f8ff);
+            border: 1.5px solid var(--border-var);
+            border-radius: 16px; padding: 24px;
+            position: relative; overflow: hidden;
+        }
+
+        [data-theme="dark"] .tc-sim-wrap {
+            --tc-mercury:       #bf3fff;
+            --tc-mercury-glow:  rgba(191,63,255,0.45);
+        }
+
+        .tc-sim-wrap .tc-sim-title {
+            font-family: var(--font-display);
+            font-size: clamp(13px, 2.5vw, 18px);
+            font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--tc-accent);
+            filter: drop-shadow(0 0 8px color-mix(in srgb, var(--tc-accent) 35%, transparent));
+        }
+
+        .tc-sim-wrap .tc-sim-sub {
+            font-size: 11px; color: var(--text-soft);
+            margin-top: 3px; font-style: italic;
+        }
+
+        /* Controls row */
+        .tc-sim-wrap .tc-controls-row {
+            display: flex; align-items: flex-end; gap: 12px;
+            flex-wrap: wrap; margin: 18px 0 14px;
+        }
+
+        .tc-sim-wrap .tc-field label {
+            font-size: 10px; font-weight: 700; color: var(--text-soft);
+            text-transform: uppercase; letter-spacing: 0.6px;
+            display: block; margin-bottom: 5px;
+        }
+
+        .tc-sim-wrap input[type="number"] {
+            width: 130px; padding: 9px 12px; font-size: 15px;
+            font-family: var(--font-body);
+            background: var(--bg-card); border: 1.5px solid var(--border-var);
+            border-radius: 9px; color: var(--text-primary); outline: none;
+            transition: border 0.2s, background 0.4s;
+        }
+
+        .tc-sim-wrap input[type="number"]:focus { border-color: var(--tc-accent); }
+
+        .tc-sim-wrap select {
+            padding: 9px 12px; font-size: 14px;
+            font-family: var(--font-body);
+            background: var(--bg-card); border: 1.5px solid var(--border-var);
+            border-radius: 9px; color: var(--text-primary); outline: none;
+            cursor: pointer; transition: border 0.2s, background 0.4s; width: 165px;
+        }
+
+        .tc-sim-wrap select:focus { border-color: var(--tc-accent); }
+
+        .tc-sim-wrap .tc-slider-group {
+            display: flex; flex-direction: column; flex: 1; min-width: 140px;
+        }
+
+        .tc-sim-wrap input[type="range"] {
+            -webkit-appearance: none; appearance: none;
+            width: 100%; height: 6px; border-radius: 3px;
+            background: linear-gradient(
+                to right,
+                var(--tc-accent) 0%,
+                var(--tc-accent) var(--slider-pct, 0%),
+                var(--border-var) var(--slider-pct, 0%),
+                var(--border-var) 100%
+            );
+            outline: none; cursor: pointer;
+        }
+
+        .tc-sim-wrap input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: var(--tc-accent);
+            box-shadow: 0 0 0 4px var(--tc-accent-glow);
+            cursor: pointer; transition: transform 0.1s;
+        }
+
+        .tc-sim-wrap input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+        .tc-sim-wrap .tc-slider-labels {
+            display: flex; justify-content: space-between;
+            font-size: 10px; color: var(--text-soft); margin-top: 4px;
+        }
+
+        .tc-sim-wrap .tc-btn-convert {
+            padding: 10px 22px; font-size: 14px; font-weight: 700;
+            font-family: var(--font-body);
+            background: var(--tc-accent); color: #fff;
+            border: none; border-radius: 9px; cursor: pointer;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 2px 10px var(--tc-accent-glow); white-space: nowrap;
+        }
+
+        .tc-sim-wrap .tc-btn-convert:hover  { background: var(--btn-hover); transform: translateY(-1px); }
+        .tc-sim-wrap .tc-btn-convert:active { transform: translateY(0); }
+
+        /* Thermometer */
+        .tc-sim-wrap .tc-thermo-section { margin-bottom: 22px; }
+
+        .tc-sim-wrap .tc-section-label {
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.8px;
+            color: var(--text-soft); margin-bottom: 10px;
+        }
+
+        .tc-sim-wrap .tc-scale-ticks {
+            display: flex; justify-content: space-between;
+            padding: 0 10px; margin-bottom: 3px;
+        }
+
+        .tc-sim-wrap .tc-scale-ticks span {
+            font-size: 10px; color: var(--text-soft);
+            width: 28px; text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tc-sim-wrap .tc-tick-lines {
+            display: flex; justify-content: space-between;
+            padding: 0 18px; margin-bottom: 3px;
+        }
+
+        .tc-sim-wrap .tc-tick-lines span {
+            width: 1px; height: 7px; background: var(--border-var); display: block;
+        }
+
+        .tc-sim-wrap .tc-thermometer {
+            width: 100%; height: 36px;
+            border: 2px solid var(--border-strong);
+            border-radius: 18px; position: relative;
+            background: var(--tc-scale-bg); overflow: hidden;
+        }
+
+        .tc-sim-wrap .tc-mercury {
+            position: absolute; left: 0; top: 0; height: 100%; width: 0%;
+            background: linear-gradient(to right, var(--tc-mercury), color-mix(in srgb, var(--tc-mercury) 80%, white));
+            border-radius: 18px;
+            transition: width 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: inset 0 2px 6px rgba(255,255,255,0.2), 0 0 12px var(--tc-mercury-glow);
+        }
+
+        .tc-sim-wrap .tc-mercury-reading {
+            position: absolute; right: 4px; top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-card); border: 2px solid var(--tc-mercury);
+            border-radius: 20px; padding: 1px 8px;
+            font-size: 11px; font-weight: 700; color: var(--tc-mercury);
+            white-space: nowrap; pointer-events: none; opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .tc-sim-wrap .tc-mercury-reading.visible { opacity: 1; }
+
+        .tc-sim-wrap .tc-scale-below {
+            display: flex; justify-content: space-between;
+            padding: 4px 10px 0;
+        }
+
+        .tc-sim-wrap .tc-scale-below span {
+            font-size: 10px; color: var(--text-muted, var(--text-soft));
+            width: 28px; text-align: center;
+        }
+
+        /* Result display */
+        .tc-sim-wrap .tc-result-display {
+            text-align: center; padding: 14px;
+            background: var(--bg-card);
+            border-radius: 12px; border: 1.5px solid var(--border-var);
+            margin-bottom: 22px; min-height: 58px;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 3px;
+            transition: background 0.4s;
+        }
+
+        .tc-sim-wrap .tc-result-value {
+            font-size: 30px; font-weight: 700;
+            color: var(--tc-accent); line-height: 1.1;
+        }
+
+        .tc-sim-wrap .tc-result-sub  { font-size: 12px; color: var(--text-soft); }
+        .tc-sim-wrap .tc-result-idle { font-size: 14px; color: var(--text-soft); }
+        .tc-sim-wrap .tc-error-msg   { font-size: 14px; color: #e53e3e; font-weight: 600; }
+
+        /* Step breakdown */
+        .tc-sim-wrap .tc-breakdown-header {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+        }
+
+        .tc-sim-wrap .tc-breakdown-title {
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-soft);
+        }
+
+        .tc-sim-wrap .tc-live-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--tc-accent); opacity: 0;
+            transition: opacity 0.3s; animation: tc-pulse 1.4s infinite;
+        }
+
+        .tc-sim-wrap .tc-live-dot.active { opacity: 1; }
+
+        @keyframes tc-pulse {
+            0%, 100% { transform: scale(1);   opacity: 1; }
+            50%       { transform: scale(1.6); opacity: 0.4; }
+        }
+
+        .tc-sim-wrap .tc-steps-grid {
+            display: flex; flex-direction: column; gap: 8px;
+        }
+
+        .tc-sim-wrap .tc-step-card {
+            background: var(--tc-step-bg);
+            border: 1.5px solid var(--tc-step-border);
+            border-radius: 10px; padding: 11px 15px;
+            display: flex; align-items: flex-start; gap: 12px;
+            transition: background 0.3s, border 0.3s, transform 0.25s;
+            opacity: 0.35;
+        }
+
+        .tc-sim-wrap .tc-step-card.active {
+            background: var(--tc-step-active);
+            border-color: var(--tc-accent);
+            opacity: 1; transform: translateX(3px);
+        }
+
+        .tc-sim-wrap .tc-step-num {
+            min-width: 24px; height: 24px;
+            background: var(--border-var); color: var(--text-soft);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; flex-shrink: 0;
+            margin-top: 1px; transition: background 0.3s, color 0.3s;
+        }
+
+        .tc-sim-wrap .tc-step-card.active .tc-step-num {
+            background: var(--tc-accent); color: #fff;
+        }
+
+        .tc-sim-wrap .tc-step-body { flex: 1; }
+
+        .tc-sim-wrap .tc-step-rule {
+            font-size: 11px; color: var(--text-soft); margin-bottom: 4px;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+        }
+
+        .tc-sim-wrap .tc-step-math {
+            font-family: 'Courier New', monospace;
+            font-size: 14px; color: var(--text-mid); line-height: 1.6;
+        }
+
+        .tc-sim-wrap .tc-step-math .val-in  { color: var(--tc-accent); font-weight: 700; font-size: 15px; }
+        .tc-sim-wrap .tc-step-math .val-out { color: var(--tc-mercury); font-weight: 700; font-size: 15px; }
+        .tc-sim-wrap .tc-step-math .val-mid { color: var(--text-primary); font-weight: 600; }
+
+        .tc-sim-wrap .tc-breakdown-idle {
+            text-align: center; padding: 24px 0; color: var(--text-soft);
+            font-size: 13px; border: 1.5px dashed var(--border-var); border-radius: 12px;
+        }
+
+        .tc-sim-wrap .tc-divider { border: none; border-top: 1px solid var(--border-var); margin: 18px 0; }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            .exp-main-body { flex-direction: column; padding: 20px 16px; }
+            .exp-sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
+            .exp-sidebar-card { position: static; }
+            .exp-nav-list { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 10px; }
+            .exp-nav-btn { flex: 1; min-width: calc(50% - 3px); justify-content: center; font-size: 0.8rem; padding: 10px 8px; }
+            .exp-nav-btn.active::before { display: none; }
+            .exp-banner { padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
+            .exp-panel-body { padding: 20px; }
+            .exp-panel-header { padding: 18px 20px; }
+            .exp-breadcrumb { padding: 8px 16px; }
+        }
+
+        @media (max-width: 560px) {
+            .tc-sim-wrap .tc-controls-row { flex-direction: column; align-items: stretch; }
+            .tc-sim-wrap input[type="number"], .tc-sim-wrap select { width: 100%; }
+            .tc-sim-wrap .tc-btn-convert { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+
+<body class="exp-page-wrapper">
+
+    <!-- ===================== HEADER ===================== -->
+    <header class="portal-header">
+        <div class="header-left">
+            <a href="" aria-label="LabMate home">
+                <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+            </a>
+            <div class="college-info">
+                <h1 class="college-name">Aditya University</h1>
+                <span class="stream-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        style="vertical-align:-1px;margin-right:3px">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"></path>
+                        <path d="M4.93 4.93l14.14 14.14"></path>
+                    </svg>
+                    AIML Stream
+                </span>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="search-icon">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="global-search" placeholder="Search experiments & records…"
+                    aria-label="Global Search" />
+            </div>
+        </div>
+
+        <div class="header-right">
+            <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+                <input type="checkbox" id="portal-theme-checkbox" />
+                <div class="slider round">
+                    <span class="icon light-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="icon dark-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </div>
+            </label>
+
+            <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="notification-badge"></span>
+            </button>
+
+            <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+                <div class="notif-panel-header">
+                    <span>Notifications</span>
+                    <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+                </div>
+                <div class="notif-list">
+                    <div class="notif-item notif-unread">
+                        <div class="notif-dot"></div>
+                        <div class="notif-body">
+                            <p>New assignment from <strong>Aditya University</strong></p>
+                            <span>Temperature Conversion experiment due this Friday</span>
+                            <time>2 hours ago</time>
+                        </div>
+                    </div>
+                    <div class="notif-item notif-unread">
+                        <div class="notif-dot"></div>
+                        <div class="notif-body">
+                            <p>Physics Lab Update</p>
+                            <span>Zener Diode Characteristics has been unlocked</span>
+                            <time>Yesterday</time>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-dropdown">
+                <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
+                    <div class="profile-avatar">S</div>
+                    <div class="profile-name-tag">
+                        <span class="prof-name">Santhosh</span>
+                        <span class="prof-roll">24P31A42XX</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="chevron-down">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-header">
+                        <div class="dh-avatar">S</div>
+                        <div>
+                            <strong>Santhosh</strong>
+                            <span>24P31A42XX · AIML</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Progress</a>
+                    <hr>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Help &amp; Support</a>
+                    <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== BREADCRUMB ===================== -->
+    <div class="exp-breadcrumb">
+        <a href="portal.html">Dashboard</a>
+        <span class="sep">›</span>
+        <a href="c_programming_lab.html">C Programming Lab</a>
+        <span class="sep">›</span>
+        <span class="current">Temperature Conversion</span>
+    </div>
+
+    <!-- ===================== BANNER ===================== -->
+    <div class="exp-banner">
+        <div class="exp-banner-icon">🌡️</div>
+        <div class="exp-banner-meta">
+            <div class="exp-banner-label">C Programming · Experiment 02</div>
+            <div class="exp-banner-title">Fahrenheit ↔ Celsius Conversion</div>
+            <div class="exp-banner-sub">Understand temperature scales, their relationship, and bidirectional conversion using mathematical formulas.</div>
+        </div>
+    </div>
+
+    <!-- ===================== MAIN BODY ===================== -->
+    <div class="exp-main-body">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="exp-sidebar" role="complementary" aria-label="Experiment sections">
+            <div class="exp-sidebar-card">
+                <div class="exp-sidebar-header">Sections</div>
+                <nav class="exp-nav-list" aria-label="Experiment navigation">
+                    <button class="exp-nav-btn active" data-section="aim" aria-current="true">
+                        <span class="exp-nav-icon">🎯</span>Aim
+                    </button>
+                    <button class="exp-nav-btn" data-section="description">
+                        <span class="exp-nav-icon">📋</span>Description
+                    </button>
+                    <button class="exp-nav-btn" data-section="procedure">
+                        <span class="exp-nav-icon">📝</span>Procedure
+                    </button>
+                    <button class="exp-nav-btn" data-section="simulation">
+                        <span class="exp-nav-icon">💻</span>Simulation
+                    </button>
+                    <button class="exp-nav-btn" data-section="result">
+                        <span class="exp-nav-icon">📊</span>Result
+                    </button>
+                </nav>
+                <div class="exp-sidebar-progress">
+                    <div class="exp-progress-label">
+                        <span>Progress</span>
+                        <span id="progress-pct">20%</span>
+                    </div>
+                    <div class="exp-progress-track">
+                        <div class="exp-progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT CONTENT AREA -->
+        <main class="exp-content-area" id="exp-content-main" role="main">
+            <div class="exp-panel">
+
+                <!-- ========== AIM ========== -->
+                <div class="exp-section-content visible" id="section-aim">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">🎯</div>
+                        <div>
+                            <div class="exp-panel-title">Aim</div>
+                            <div class="exp-panel-subtitle">Objective of this experiment</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            To write and understand a <strong>C program</strong> that converts temperature values
+                            bidirectionally between <strong>Celsius (°C)</strong> and <strong>Fahrenheit (°F)</strong> scales
+                            using standard mathematical conversion formulas, and to visualise the step-by-step computation
+                            process through an interactive simulation.
+                        </p>
+                        <div class="exp-highlight-box">
+                            <strong>Learning Objective:</strong> Develop an intuitive understanding of how the two most
+                            commonly used temperature scales — Celsius and Fahrenheit — relate to each other through a linear
+                            formula, and how a simple C program can perform both conversions from a single input value.
+                        </div>
+                        <p class="exp-body-text">
+                            By the end of this experiment, you will be able to derive the conversion formulas from first
+                            principles, trace the arithmetic steps for any given temperature, understand the concept of
+                            fixed-point temperature (−40°, where both scales coincide), and apply functions in C to
+                            encapsulate reusable conversion logic.
+                        </p>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject Tags:</strong></p>
+                        <div style="margin-top:8px;">
+                            <span class="exp-tag">Temperature Scales</span>
+                            <span class="exp-tag">Celsius</span>
+                            <span class="exp-tag">Fahrenheit</span>
+                            <span class="exp-tag">C Functions</span>
+                            <span class="exp-tag">Linear Formula</span>
+                            <span class="exp-tag">C Programming Lab</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== DESCRIPTION ========== -->
+                <div class="exp-section-content" id="section-description">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📋</div>
+                        <div>
+                            <div class="exp-panel-title">Description</div>
+                            <div class="exp-panel-subtitle">Theory &amp; background</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            Temperature is a fundamental physical quantity that measures the degree of hotness or coldness of a body.
+                            Two scales are universally used in science and daily life — <strong>Celsius (°C)</strong>, proposed by
+                            Anders Celsius in 1742, where water freezes at 0° and boils at 100°, and <strong>Fahrenheit (°F)</strong>,
+                            proposed by Daniel Fahrenheit in 1724, where water freezes at 32° and boils at 212°.
+                        </p>
+                        <p class="exp-body-text">
+                            Both scales are linearly related. The ratio between the two degree-sizes is <strong>9:5</strong>
+                            (180 Fahrenheit degrees span the same range as 100 Celsius degrees). The offset of 32 accounts for
+                            the difference in the zero point. These two facts together give us both conversion formulas.
+                        </p>
+                        <hr class="exp-divider" />
+
+                        <p class="exp-body-text"><strong>The Two Conversion Formulas:</strong></p>
+                        <div class="exp-materials-grid" style="margin-top:12px;">
+                            <div class="exp-material-chip" style="flex-direction:column;align-items:flex-start;gap:4px;padding:14px 16px;">
+                                <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-soft);font-weight:700;">Celsius → Fahrenheit</div>
+                                <div style="font-family:'Courier New',monospace;font-size:1rem;font-weight:700;color:var(--accent-btn,var(--teal));">°F = (°C × 9/5) + 32</div>
+                            </div>
+                            <div class="exp-material-chip" style="flex-direction:column;align-items:flex-start;gap:4px;padding:14px 16px;">
+                                <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-soft);font-weight:700;">Fahrenheit → Celsius</div>
+                                <div style="font-family:'Courier New',monospace;font-size:1rem;font-weight:700;color:#e8383d;">°C = (°F − 32) × 5/9</div>
+                            </div>
+                        </div>
+
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Notable Reference Points:</strong></p>
+                        <div class="exp-materials-grid">
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Absolute Zero: −273.15°C / −459.67°F</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Water Freezes: 0°C / 32°F</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Body Temperature: 37°C / 98.6°F</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Water Boils: 100°C / 212°F</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Equal Point: −40°C = −40°F</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Room Temp: 25°C / 77°F</div>
+                        </div>
+
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Key Properties of the Conversion:</strong></p>
+                        <div class="exp-materials-grid">
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Relationship: Linear (straight-line)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Degree ratio: 9 °F = 5 °C</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Offset: 32°F at 0°C</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Data type: float (for precision)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Reversible: F→C→F = original</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Space: O(1) — no arrays needed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== PROCEDURE ========== -->
+                <div class="exp-section-content" id="section-procedure">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📝</div>
+                        <div>
+                            <div class="exp-panel-title">Procedure</div>
+                            <div class="exp-panel-subtitle">Step-by-step instructions &amp; C program</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            Follow each step carefully to understand how the temperature conversion program works and how to
+                            execute it manually.
+                        </p>
+
+                        <ol class="exp-step-list">
+                            <li>Read a single floating-point temperature value from the user using <code>scanf("%f", &amp;temp)</code>.</li>
+                            <li>Define function <strong>Celsius_to_Fahrenheit(float c)</strong> — apply the formula
+                                <code>(c × 9 / 5) + 32</code> and return the result as a <code>float</code>.</li>
+                            <li>Define function <strong>Fahrenheit_to_Celsius(float f)</strong> — apply the formula
+                                <code>(f − 32) × 5 / 9</code> and return the result as a <code>float</code>.</li>
+                            <li>In <code>main()</code>, call both functions with the same input value to compute
+                                <strong>c_to_f</strong> and <strong>f_to_c</strong>.</li>
+                            <li>Print both results to 2 decimal places using <code>printf("%.2f\n", ...)</code>.</li>
+                            <li>Verify the output: if input is 100 → C→F gives 212.00, F→C gives 37.78.</li>
+                            <li>Use the Simulation tab to interactively trace each arithmetic step for any temperature.</li>
+                            <li>Switch between °C and °F input modes using the dropdown selector in the simulation.</li>
+                            <li>Record results in the Result tab — all conversions performed during the simulation are automatically logged.</li>
+                        </ol>
+
+                        <hr class="exp-divider" />
+
+                        <p class="exp-body-text"><strong>Program in C Language:</strong></p>
+                        <div class="exp-highlight-box" style="font-family:'Courier New',monospace;font-size:0.85rem;line-height:1.7;background:var(--card-inner);overflow-x:auto;white-space:pre;padding:20px;">
+#include &lt;stdio.h&gt;
+
+// Function to convert Celsius to Fahrenheit
+float Celsius_to_Fahrenheit(float c) {
+    return (c * 9 / 5) + 32;
+}
+
+// Function to convert Fahrenheit to Celsius
+float Fahrenheit_to_Celsius(float f) {
+    return (f - 32) * 5 / 9;
+}
+
+int main() {
+    float temp, c_to_f, f_to_c;
+
+    // Input temperature
+    scanf("%f", &amp;temp);
+
+    // Perform both conversions
+    c_to_f = Celsius_to_Fahrenheit(temp);
+    f_to_c = Fahrenheit_to_Celsius(temp);
+
+    // Print results
+    printf("Celsius to Fahrenheit: %.2f\n", c_to_f);
+    printf("Fahrenheit to Celsius: %.2f\n", f_to_c);
+
+    return 0;
+}</div>
+
+                        <div class="exp-highlight-box" style="margin-top:16px;">
+                            <strong>💡 Tip:</strong> Note that the program reads one value and performs <em>both</em> conversions simultaneously.
+                            This means input 100 is treated as both 100°C (→ 212.00°F) and 100°F (→ 37.78°C) at once.
+                            Use the Simulation tab to explore each direction independently.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== SIMULATION ========== -->
+                <div class="exp-section-content" id="section-simulation">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">💻</div>
+                        <div>
+                            <div class="exp-panel-title">Simulation</div>
+                            <div class="exp-panel-subtitle">Interactive Temperature Converter with live step-by-step formula</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body" style="padding:20px;">
+
+                        <!-- ===== TEMPERATURE CONVERSION WIDGET ===== -->
+                        <div class="tc-sim-wrap" id="tcSimWrap">
+
+                            <div style="margin-bottom:18px;">
+                                <div class="tc-sim-title">🌡️ Temperature Converter</div>
+                                <div class="tc-sim-sub">Enter a temperature value — watch the thermometer react and see each formula step animate live.</div>
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="tc-controls-row">
+                                <div class="tc-field">
+                                    <label for="tcTempInput">Temperature</label>
+                                    <input type="number" id="tcTempInput" placeholder="e.g. 100" oninput="tcOnInputChange()" />
+                                </div>
+                                <div class="tc-field">
+                                    <label for="tcUnit">From Unit</label>
+                                    <select id="tcUnit" onchange="tcOnUnitChange()">
+                                        <option value="C">°C — Celsius</option>
+                                        <option value="F">°F — Fahrenheit</option>
+                                    </select>
+                                </div>
+                                <div class="tc-slider-group">
+                                    <label style="font-size:10px;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:5px;">Quick Slider (0 – 150)</label>
+                                    <input type="range" id="tcSlider" min="0" max="150" value="0"
+                                        oninput="tcOnSliderChange(this.value)" />
+                                    <div class="tc-slider-labels">
+                                        <span>0°</span><span>50°</span><span>100°</span><span>150°</span>
+                                    </div>
+                                </div>
+                                <button class="tc-btn-convert" onclick="tcConvert()">▶ Convert</button>
+                            </div>
+
+                            <!-- Thermometer -->
+                            <div class="tc-thermo-section">
+                                <div class="tc-section-label">🌡 Thermometer Reading</div>
+                                <div class="tc-scale-ticks" id="tcScaleTicks">
+                                    <span>0°C</span><span>25°C</span><span>50°C</span><span>75°C</span><span>100°C</span>
+                                </div>
+                                <div class="tc-tick-lines">
+                                    <span></span><span></span><span></span><span></span>
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                </div>
+                                <div class="tc-thermometer">
+                                    <div class="tc-mercury" id="tcMercury">
+                                        <div class="tc-mercury-reading" id="tcMercuryReading"></div>
+                                    </div>
+                                </div>
+                                <div class="tc-scale-below">
+                                    <span>0°</span><span>25°</span><span>50°</span><span>75°</span><span>100°</span>
+                                </div>
+                            </div>
+
+                            <!-- Result Display -->
+                            <div class="tc-result-display" id="tcResultDisplay">
+                                <div class="tc-result-idle">— awaiting conversion —</div>
+                            </div>
+
+                            <hr class="tc-divider" />
+
+                            <!-- Live Formula Breakdown -->
+                            <div>
+                                <div class="tc-breakdown-header">
+                                    <div class="tc-breakdown-title">📐 Step-by-Step Formula</div>
+                                    <div class="tc-live-dot" id="tcLiveDot"></div>
+                                </div>
+                                <div class="tc-breakdown-idle" id="tcBreakdownIdle">
+                                    Move the slider or enter a value — the formula will walk through each step live.
+                                </div>
+                                <div class="tc-steps-grid" id="tcStepsGrid" style="display:none;"></div>
+                            </div>
+
+                        </div><!-- /.tc-sim-wrap -->
+
+                    </div>
+                </div>
+
+                <!-- ========== RESULT ========== -->
+                <div class="exp-section-content" id="section-result">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📊</div>
+                        <div>
+                            <div class="exp-panel-title">Result</div>
+                            <div class="exp-panel-subtitle">Live conversion history &amp; analysis</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+
+                        <!-- Pending state -->
+                        <div id="tc-result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
+                            <div style="font-size:2.8rem;margin-bottom:14px;">🌡️</div>
+                            <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No conversion data yet</p>
+                            <p style="font-size:0.85rem;line-height:1.7;">Use the <strong>Simulation</strong> tab to perform a conversion. Your results, formula steps, and key reference points will appear here automatically.</p>
+                        </div>
+
+                        <!-- Live results -->
+                        <div id="tc-result-live" style="display:none;">
+
+                            <!-- Conversion History Table -->
+                            <p class="exp-body-text"><strong>Conversion History</strong> — all conversions performed this session:</p>
+                            <table class="tc-result-table" id="tc-history-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Input</th>
+                                        <th>Direction</th>
+                                        <th>Formula Used</th>
+                                        <th>Output</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tc-history-tbody">
+                                    <!-- rows injected dynamically -->
+                                </tbody>
+                            </table>
+
+                            <hr class="exp-divider" />
+
+                            <!-- Last Conversion Formula Steps -->
+                            <p class="exp-body-text"><strong>Latest Conversion — Step-by-Step Breakdown:</strong></p>
+                            <div id="tc-result-steps" style="margin: 14px 0;"></div>
+
+                            <hr class="exp-divider" />
+
+                            <!-- Summary Stats -->
+                            <p class="exp-body-text"><strong>Session Summary:</strong></p>
+                            <div class="exp-result-stats">
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="tc-res-total">0</div>
+                                    <div class="exp-stat-label">Conversions Done</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="tc-res-ctof">0</div>
+                                    <div class="exp-stat-label">°C → °F</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="tc-res-ftoc">0</div>
+                                    <div class="exp-stat-label">°F → °C</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="tc-res-last">—</div>
+                                    <div class="exp-stat-label">Last Result</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value">9:5</div>
+                                    <div class="exp-stat-label">Degree Ratio F:C</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value">−40°</div>
+                                    <div class="exp-stat-label">Equal-Point (F = C)</div>
+                                </div>
+                            </div>
+
+                            <hr class="exp-divider" />
+
+                            <!-- Reference Table -->
+                            <p class="exp-body-text"><strong>Reference Conversion Table:</strong></p>
+                            <table class="tc-result-table" style="margin-top:12px;">
+                                <thead>
+                                    <tr>
+                                        <th>Landmark</th>
+                                        <th>Celsius (°C)</th>
+                                        <th>Fahrenheit (°F)</th>
+                                        <th>Context</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Absolute Zero</td><td>−273.15</td><td>−459.67</td><td>Coldest possible temperature</td></tr>
+                                    <tr><td>Equal Point</td><td>−40</td><td>−40</td><td>Only point where °C = °F</td></tr>
+                                    <tr><td>Water Freezes</td><td>0</td><td>32</td><td>Ice point (standard)</td></tr>
+                                    <tr><td>Room Temperature</td><td>25</td><td>77</td><td>Comfortable indoor climate</td></tr>
+                                    <tr><td>Body Temperature</td><td>37</td><td>98.6</td><td>Normal human body temp</td></tr>
+                                    <tr><td>Water Boils</td><td>100</td><td>212</td><td>Boiling point at sea level</td></tr>
+                                    <tr><td>Oven (Baking)</td><td>180</td><td>356</td><td>Moderate oven temperature</td></tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Conclusion -->
+                            <div class="exp-conclusion-box" style="margin-top:24px;">
+                                <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
+                                <p class="exp-conclusion-text" id="tc-result-conclusion">
+                                    <!-- Filled dynamically -->
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- /.exp-panel -->
+        </main>
+
+    </div><!-- /.exp-main-body -->
+
+    <script>
+    /* =====================================================
+       PAGE NAVIGATION & THEME
+    ===================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Theme toggle (portal header checkbox)
+        const toggle = document.getElementById('portal-theme-checkbox');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') toggle.checked = true;
+        }
+        toggle?.addEventListener('change', () => {
+            const theme = toggle.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Section navigation + progress bar
+        const navBtns   = document.querySelectorAll('.exp-nav-btn');
+        const sections  = document.querySelectorAll('.exp-section-content');
+        const progFill  = document.getElementById('progress-fill');
+        const progPct   = document.getElementById('progress-pct');
+        const total     = navBtns.length;
+
+        let visited = (() => {
+            try { return JSON.parse(sessionStorage.getItem('tcVisitedSections') || '["aim"]'); }
+            catch { return ['aim']; }
+        })();
+
+        function updateProgress(v) {
+            const pct = Math.round((v.length / total) * 100);
+            progFill.style.width = pct + '%';
+            progPct.textContent  = pct + '%';
+
+            // Auto-reset to 0% after reaching 100%
+            if (pct === 100) {
+                setTimeout(() => {
+                    // Animate back to 0
+                    progFill.style.transition = 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                    progFill.style.width = '0%';
+                    progPct.textContent  = '0%';
+                    // After reset animation, restore to actual value smoothly
+                    setTimeout(() => {
+                        progFill.style.width = pct + '%';
+                        progPct.textContent  = pct + '%';
+                    }, 1200);
+                }, 1800); // Wait 1.8s at 100% before reset animation
+            }
+        }
+
+        updateProgress(visited);
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.section;
+                navBtns.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+                btn.classList.add('active'); btn.setAttribute('aria-current', 'true');
+                sections.forEach(s => s.classList.remove('visible'));
+                const sec = document.getElementById('section-' + target);
+                if (sec) {
+                    sec.style.animation = 'none'; sec.offsetHeight;
+                    sec.style.animation = ''; sec.classList.add('visible');
+                }
+                if (!visited.includes(target)) {
+                    visited.push(target);
+                    sessionStorage.setItem('tcVisitedSections', JSON.stringify(visited));
+                }
+                updateProgress(visited);
+            });
+        });
+
+    });
+
+    /* =====================================================
+       TEMPERATURE CONVERSION ENGINE
+    ===================================================== */
+
+    // Session data for Results tab
+    const TCSession = {
+        history: [],    // [{no, input, unit, converted, fromLbl, toLbl, steps}]
+        cToF: 0, fToC: 0,
+
+        record(input, unit, converted, fromLbl, toLbl, steps) {
+            this.history.push({ no: this.history.length + 1, input, unit, converted, fromLbl, toLbl, steps });
+            if (unit === 'C') this.cToF++; else this.fToC++;
+            this.updateResultsTab(steps, converted, toLbl);
+        },
+
+        updateResultsTab(steps, converted, toLbl) {
+            // Show results
+            document.getElementById('tc-result-pending').style.display = 'none';
+            document.getElementById('tc-result-live').style.display    = '';
+
+            // History table
+            const tbody = document.getElementById('tc-history-tbody');
+            tbody.innerHTML = '';
+            this.history.forEach(h => {
+                const dir     = h.unit === 'C' ? '°C → °F' : '°F → °C';
+                const formula = h.unit === 'C' ? '°F = (°C × 9/5) + 32' : '°C = (°F − 32) × 5/9';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${h.no}</td>
+                    <td><strong>${h.input} ${h.fromLbl}</strong></td>
+                    <td>${dir}</td>
+                    <td><span class="tc-formula-badge">${formula}</span></td>
+                    <td><strong style="color:var(--accent-btn,var(--teal))">${h.converted} ${h.toLbl}</strong></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Latest steps breakdown
+            const stepsEl = document.getElementById('tc-result-steps');
+            stepsEl.innerHTML = steps.map((s, i) => {
+                const math = s.math
+                    .replace(/<val-in>/g,   '<span class="hl-in">')
+                    .replace(/<\/val-in>/g, '</span>')
+                    .replace(/<val-out>/g,  '<span class="hl-out">')
+                    .replace(/<\/val-out>/g,'</span>')
+                    .replace(/<val-mid>/g,  '<span class="hl-mid">')
+                    .replace(/<\/val-mid>/g,'</span>');
+                return `<div class="tc-step-highlight"><strong>${i === 0 ? '≡' : i}. ${s.rule}:</strong> ${math}</div>`;
+            }).join('');
+
+            // Summary stats
+            document.getElementById('tc-res-total').textContent = this.history.length;
+            document.getElementById('tc-res-ctof').textContent  = this.cToF;
+            document.getElementById('tc-res-ftoc').textContent  = this.fToC;
+            document.getElementById('tc-res-last').textContent  = converted + ' ' + toLbl;
+
+            // Dynamic conclusion
+            const lastH = this.history[this.history.length - 1];
+            const dir   = lastH.unit === 'C' ? 'Celsius to Fahrenheit' : 'Fahrenheit to Celsius';
+            const eff   = this.history.length > 1
+                ? ` Over this session, a total of <strong>${this.history.length} conversions</strong> were performed (${this.cToF} °C→°F, ${this.fToC} °F→°C).`
+                : '';
+            document.getElementById('tc-result-conclusion').innerHTML =
+                `The C program successfully applied the <strong>${dir}</strong> conversion formula to the input value
+                <strong>${lastH.input} ${lastH.fromLbl}</strong>, computing the result as <strong>${lastH.converted} ${lastH.toLbl}</strong>
+                through a clear sequence of arithmetic steps.${eff}
+                The experiment confirms that Fahrenheit and Celsius are <strong>linearly related</strong> with a slope of
+                <strong>9/5 = 1.8</strong> and a y-intercept offset of <strong>32°F</strong>. The only point at which both
+                scales agree is <strong>−40°</strong>, known as the cross-over point. Using two dedicated C functions
+                — <code>Celsius_to_Fahrenheit()</code> and <code>Fahrenheit_to_Celsius()</code> — the program encapsulates
+                the conversion logic cleanly, demonstrating good software design principles even in a simple C program.`;
+        }
+    };
+
+    /* SLIDER → INPUT */
+    function tcOnSliderChange(val) {
+        document.getElementById('tcTempInput').value = val;
+        tcUpdateSliderFill(val, 0, 150);
+        tcConvert();
+    }
+
+    /* INPUT → SLIDER SYNC */
+    function tcOnInputChange() {
+        const val = parseFloat(document.getElementById('tcTempInput').value);
+        if (!isNaN(val)) {
+            const clamped = Math.max(0, Math.min(val, 150));
+            document.getElementById('tcSlider').value = clamped;
+            tcUpdateSliderFill(clamped, 0, 150);
+        }
+        tcResetDisplay();
+    }
+
+    /* UNIT CHANGE */
+    function tcOnUnitChange() {
+        const val = document.getElementById('tcTempInput').value;
+        if (val !== '') tcConvert(); else tcUpdateScaleTicks(document.getElementById('tcUnit').value);
+    }
+
+    /* SLIDER FILL */
+    function tcUpdateSliderFill(val, min, max) {
+        const pct = Math.max(0, Math.min(((val - min) / (max - min)) * 100, 100));
+        document.getElementById('tcSlider').style.setProperty('--slider-pct', pct + '%');
+    }
+
+    /* RESET DISPLAY */
+    function tcResetDisplay() {
+        document.getElementById('tcResultDisplay').innerHTML = '<div class="tc-result-idle">— awaiting conversion —</div>';
+        document.getElementById('tcLiveDot').classList.remove('active');
+    }
+
+    /* SCALE TICKS */
+    function tcUpdateScaleTicks(unit) {
+        const t = document.getElementById('tcScaleTicks');
+        t.innerHTML = unit === 'C'
+            ? '<span>0°C</span><span>25°C</span><span>50°C</span><span>75°C</span><span>100°C</span>'
+            : '<span>32°F</span><span>77°F</span><span>122°F</span><span>167°F</span><span>212°F</span>';
+    }
+
+    /* MAIN CONVERSION */
+    function tcConvert() {
+        const raw  = document.getElementById('tcTempInput').value;
+        const unit = document.getElementById('tcUnit').value;
+        const disp = document.getElementById('tcResultDisplay');
+
+        if (raw === '') {
+            disp.innerHTML = '<div class="tc-error-msg">⚠ Please enter a temperature value.</div>';
+            return;
+        }
+        const temp = parseFloat(raw);
+        if (isNaN(temp)) {
+            disp.innerHTML = '<div class="tc-error-msg">⚠ Invalid input — please enter a number.</div>';
+            return;
+        }
+
+        let converted, celsiusVal, fromLbl, toLbl;
+        let steps = [];
+
+        if (unit === 'C') {
+            fromLbl    = '°C'; toLbl = '°F';
+            celsiusVal = temp;
+            const s1   = temp * 9;
+            const s2   = s1 / 5;
+            converted  = s2 + 32;
+            steps = [
+                { rule: 'Formula',                       math: '°F = ( °C × 9/5 ) + 32' },
+                { rule: 'Step 1 — Substitute the value', math: '= ( <val-in>' + temp + '</val-in> × 9/5 ) + 32' },
+                { rule: 'Step 2 — Multiply by 9',        math: temp + ' × 9 = <val-mid>' + s1.toFixed(4).replace(/\.?0+$/, '') + '</val-mid>' },
+                { rule: 'Step 3 — Divide by 5',          math: s1.toFixed(4).replace(/\.?0+$/, '') + ' ÷ 5 = <val-mid>' + s2.toFixed(4).replace(/\.?0+$/, '') + '</val-mid>' },
+                { rule: 'Step 4 — Add 32',               math: s2.toFixed(4).replace(/\.?0+$/, '') + ' + 32 = <val-out>' + converted.toFixed(2) + ' °F</val-out>' }
+            ];
+        } else {
+            fromLbl    = '°F'; toLbl = '°C';
+            const s1   = temp - 32;
+            const s2   = s1 * 5;
+            converted  = s2 / 9;
+            celsiusVal = converted;
+            steps = [
+                { rule: 'Formula',                       math: '°C = ( °F − 32 ) × 5/9' },
+                { rule: 'Step 1 — Substitute the value', math: '= ( <val-in>' + temp + '</val-in> − 32 ) × 5/9' },
+                { rule: 'Step 2 — Subtract 32',          math: temp + ' − 32 = <val-mid>' + s1.toFixed(4).replace(/\.?0+$/, '') + '</val-mid>' },
+                { rule: 'Step 3 — Multiply by 5',        math: s1.toFixed(4).replace(/\.?0+$/, '') + ' × 5 = <val-mid>' + s2.toFixed(4).replace(/\.?0+$/, '') + '</val-mid>' },
+                { rule: 'Step 4 — Divide by 9',          math: s2.toFixed(4).replace(/\.?0+$/, '') + ' ÷ 9 = <val-out>' + converted.toFixed(2) + ' °C</val-out>' }
+            ];
+        }
+
+        const roundedResult = Math.round(converted * 100) / 100;
+
+        // Result display
+        disp.innerHTML =
+            '<div class="tc-result-value">' + roundedResult.toFixed(2) + ' ' + toLbl + '</div>' +
+            '<div class="tc-result-sub">' + temp + ' ' + fromLbl + ' → ' + toLbl + '</div>';
+
+        // Thermometer
+        const pct = Math.max(0, Math.min((celsiusVal / 100) * 100, 100));
+        document.getElementById('tcMercury').style.width = pct + '%';
+        const bubble = document.getElementById('tcMercuryReading');
+        bubble.textContent = celsiusVal.toFixed(1) + '°C';
+        bubble.classList.add('visible');
+
+        // Slider sync
+        const sc = Math.max(0, Math.min(temp, 150));
+        document.getElementById('tcSlider').value = sc;
+        tcUpdateSliderFill(sc, 0, 150);
+
+        tcUpdateScaleTicks(unit);
+        tcRenderSteps(steps);
+
+        // Record for Results tab
+        TCSession.record(temp, unit, roundedResult.toFixed(2), fromLbl, toLbl, steps);
+    }
+
+    /* RENDER STEP CARDS (animated) */
+    function tcRenderSteps(steps) {
+        const idle = document.getElementById('tcBreakdownIdle');
+        const grid = document.getElementById('tcStepsGrid');
+        const dot  = document.getElementById('tcLiveDot');
+
+        idle.style.display = 'none';
+        grid.style.display = 'flex';
+        dot.classList.add('active');
+
+        let html = '';
+        steps.forEach((s, i) => {
+            const math = s.math
+                .replace(/<val-in>/g,   '<span class="val-in">')
+                .replace(/<\/val-in>/g, '</span>')
+                .replace(/<val-out>/g,  '<span class="val-out">')
+                .replace(/<\/val-out>/g,'</span>')
+                .replace(/<val-mid>/g,  '<span class="val-mid">')
+                .replace(/<\/val-mid>/g,'</span>');
+
+            html +=
+                '<div class="tc-step-card" id="tcStep_' + i + '">' +
+                    '<div class="tc-step-num">' + (i === 0 ? '≡' : i) + '</div>' +
+                    '<div class="tc-step-body">' +
+                        '<div class="tc-step-rule">' + s.rule + '</div>' +
+                        '<div class="tc-step-math">' + math + '</div>' +
+                    '</div>' +
+                '</div>';
+        });
+
+        grid.innerHTML = html;
+
+        steps.forEach((_, j) => {
+            setTimeout(() => {
+                const card = document.getElementById('tcStep_' + j);
+                if (card) card.classList.add('active');
+            }, j * 140);
+        });
+
+        setTimeout(() => dot.classList.remove('active'), steps.length * 140 + 600);
+    }
+
+    // Enter key shortcut
+    document.addEventListener('DOMContentLoaded', () => {
+        const inp = document.getElementById('tcTempInput');
+        if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') tcConvert(); });
+    });
+    </script>
+    <script src="../js/portal.js"></script>
+
+</body>
+
+</html>
