@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal — LabMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/portal.css" />
+</head>
+
+<body class="portal-body">
+
+  <header class="portal-header">
+    <div class="header-left">
+      <button class="icon-btn sidebar-toggle" id="sidebar-toggle-btn" aria-label="Toggle Sidebar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <a href="" aria-label="LabMate home">
+        <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+      </a>
+      <div class="college-info">
+        <h1 class="college-name">Aditya University</h1>
+        <span class="stream-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            style="vertical-align:-1px;margin-right:3px">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"></path>
+            <path d="M4.93 4.93l14.14 14.14"></path>
+          </svg>
+          AIML Stream
+        </span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="search-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" class="global-search" placeholder="Search experiments & records…"
+          aria-label="Global Search" />
+      </div>
+    </div>
+
+    <div class="header-right">
+      <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+        <input type="checkbox" id="portal-theme-checkbox" />
+        <div class="slider round">
+          <span class="icon light-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="icon dark-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </div>
+      </label>
+
+      <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notification-badge"></span>
+      </button>
+
+      <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+        <div class="notif-panel-header">
+          <span>Notifications</span>
+          <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>New assignment from <strong>Aditya University</strong></p>
+              <span>Bubble Sort experiment is now due this Friday</span>
+              <time>2 hours ago</time>
+            </div>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>Physics Lab Update</p>
+              <span>Zener Diode Characteristics has been unlocked</span>
+              <time>Yesterday</time>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-dropdown">
+        <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
+          <div class="profile-avatar">S</div>
+          <div class="profile-name-tag">
+            <span class="prof-name">Santhosh</span>
+            <span class="prof-roll">24P31A42XX</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+            class="chevron-down">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <div class="dropdown-menu">
+          <div class="dropdown-header">
+            <div class="dh-avatar">S</div>
+            <div>
+              <strong>Santhosh</strong>
+              <span>24P31A42XX · AIML</span>
+            </div>
+          </div>
+          <hr>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+            </svg> My Profile</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg> Settings</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg> My Progress</a>
+          <hr>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg> Help & Support</a>
+          <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg> Log out</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="portal-layout">
+
+    <aside class="portal-sidebar" aria-label="Stream subjects navigation">
+      <div class="sidebar-accordion">
+        <button class="sidebar-accordion-btn" id="my-labs-toggle" aria-expanded="true">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            My Labs
+          </span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <nav class="sidebar-nav accordion-content" id="my-labs-content">
+          <a href="c_programming_lab.html" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+            </span>
+            <span class="subj-label">C Programming</span>
+            <span class="subj-count">1 lab</span>
+          </a>
+
+          <a href="physics_lab.html" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" />
+              </svg>
+            </span>
+            <span class="subj-label">Physics</span>
+            <span class="subj-count">1 lab</span>
+          </a>
+
+          <a href="chemistry_lab.html" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M10 2v7.31M14 2v7.31M8.5 2h7M7 21h10a2 2 0 0 0 2-2v-5.26a1 1 0 0 0-.27-.68L14.4 8.7V2H9.6v6.7l-4.32 4.36a1 1 0 0 0-.28.68V19a2 2 0 0 0 2 2z" />
+              </svg>
+            </span>
+            <span class="subj-label">Chemistry</span>
+            <span class="subj-count">1 lab</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-accordion">
+        <button class="sidebar-accordion-btn" id="lab-tests-toggle" aria-expanded="true">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Lab Tests
+          </span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <nav class="sidebar-nav accordion-content" id="lab-tests-content">
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </span>
+            <span class="subj-label">Internal</span>
+          </a>
+
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </span>
+            <span class="subj-label">External</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-accordion">
+        <button class="sidebar-accordion-btn" id="records-toggle" aria-expanded="true">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Academic Records
+          </span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <nav class="sidebar-nav accordion-content" id="records-content">
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </span>
+            <span class="subj-label">Observation Books</span>
+          </a>
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </span>
+            <span class="subj-label">Final PDFs</span>
+          </a>
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </span>
+            <span class="subj-label">Analytics</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-accordion">
+        <button class="sidebar-accordion-btn" id="notice-toggle" aria-expanded="true">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            Announcements
+          </span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <nav class="sidebar-nav accordion-content" id="notice-content">
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </span>
+            <span class="subj-label">Recent Updates</span>
+          </a>
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </span>
+            <span class="subj-label">Lecturer Notices</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-accordion">
+        <button class="sidebar-accordion-btn" id="activity-toggle" aria-expanded="true">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Recent Activity
+          </span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <nav class="sidebar-nav accordion-content" id="activity-content">
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </span>
+            <span class="subj-label">Last Experiment</span>
+          </a>
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </span>
+            <span class="subj-label">Pending Labs</span>
+          </a>
+          <a href="#" class="subject-link" style="text-decoration:none;">
+            <span class="subj-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </span>
+            <span class="subj-label">Recently Graded</span>
+          </a>
+        </nav>
+      </div>
+
+    </aside>
+
+    <main class="portal-main" id="portal-main">
+
+      <section class="welcome-banner" aria-label="Welcome banner">
+        <div class="welcome-text">
+          <h2>Welcome back, <span class="welcome-name">Santhosh</span> 👋</h2>
+          <p class="welcome-subtitle">
+            Ready to explore your virtual laboratories? You have <strong style="color: #ffeb3b; font-weight: 600;">1
+              pending assignments</strong> this week. Stay curious and let's build something amazing today!
+          </p>
+          <div class="welcome-meta-row">
+            <span class="welcome-meta-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              </svg> Aditya University</span>
+            <span class="welcome-meta-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+              </svg> AIML Stream</span>
+          </div>
+        </div>
+        <div class="welcome-art" aria-hidden="true">
+          <div class="art-ring art-ring-1"></div>
+          <div class="art-ring art-ring-2"></div>
+          <div class="art-ring art-ring-3"></div>
+          <span class="art-icon">⚗️</span>
+        </div>
+      </section>
+
+      <section class="dashboard-overview" aria-label="Dashboard overview">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(26,136,208,0.1);color:var(--teal)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total">—</span>
+            <span class="stat-label">Labs Assigned</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(46,204,113,0.1);color:#2ecc71">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-done">—</span>
+            <span class="stat-label">Completed</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(243,156,18,0.1);color:#f39c12">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-pending">—</span>
+            <span class="stat-label">Pending</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(155,89,182,0.1);color:#9b59b6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-score">—</span>
+            <span class="stat-label">Overall Score</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="portal-content-grid">
+
+        <div class="grid-left">
+
+          <section class="portal-widget" id="labs-section" aria-labelledby="labs-heading">
+            <div class="widget-header">
+              <h3 id="labs-heading">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  style="vertical-align:-2px;margin-right:6px">
+                  <path
+                    d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5a2 2 0 0 1-2-2V5m6 9h10a2 2 0 0 0 2-2V5M9 14v7m0 0H5a2 2 0 0 1-2-2v-3m6 5h10a2 2 0 0 0 2-2v-3" />
+                </svg>
+                My Labs
+              </h3>
+            </div>
+
+            <div class="labs-card-grid">
+
+              <a href="c_programming_lab.html" class="lab-card-link">
+                <div class="lab-card">
+                  <div class="lab-card-top">
+                    <span class="lab-card-emoji">💻</span>
+                  </div>
+                  <div class="lab-card-bottom">
+                    <h4>C Programming Lab</h4>
+                    <span class="lab-card-badge">COMPUTERS</span>
+                    <p>Visualise arrays, strings, pointers, and sorting techniques with interactive step-by-step
+                      simulations.</p>
+
+                  </div>
+                </div>
+              </a>
+
+              <a href="physics_lab.html" class="lab-card-link">
+                <div class="lab-card">
+                  <div class="lab-card-top">
+                    <span class="lab-card-emoji">⚡</span>
+                  </div>
+                  <div class="lab-card-bottom">
+                    <h4>Physics Lab</h4>
+                    <span class="lab-card-badge">BASIC SCIENCE</span>
+                    <p>Build and test circuits, optics, and mechanics experiments in a risk-free virtual environment.
+                    </p>
+
+                  </div>
+                </div>
+              </a>
+
+              <a href="chemistry_lab.html" class="lab-card-link">
+                <div class="lab-card">
+                  <div class="lab-card-top">
+                    <span class="lab-card-emoji">🧪</span>
+                  </div>
+                  <div class="lab-card-bottom">
+                    <h4>Chemistry Lab</h4>
+                    <span class="lab-card-badge">BASIC SCIENCE</span>
+                    <p>Simulate titrations, chemical reactions, and molecular structures with real-time graphs and
+                      safety.</p>
+
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </section>
+
+        </div>
+      </div>
+  </div>
+  </main>
+  </div>
+
+  <footer id="site-footer" role="contentinfo" aria-label="Site footer">
+    <div id="footer-top" class="footer-grid">
+      <div class="footer-col" id="footer-brand-col">
+        <a href="#home-section" aria-label="LabMate home">
+          <img src="../assets/images/LabMateLogo.png" alt="LabMate" class="footer-logo" />
+        </a>
+        <p class="footer-brand-desc">
+          LabMate — empowering the next generation of scientists and
+          engineers with accessible, immersive virtual laboratory
+          experiences.
+        </p>
+        <div id="footer-social-links" aria-label="LabMate on social media">
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on LinkedIn (opens in new tab)">
+            <img src="assets/icons/linkedin.svg" alt="" class="social-icon" />
+          </a>
+          <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on Twitter/X (opens in new tab)">
+            <img src="assets/icons/twitter.svg" alt="" class="social-icon" />
+          </a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on Instagram (opens in new tab)">
+            <img src="assets/icons/instagram.svg" alt="" class="social-icon" />
+          </a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on YouTube (opens in new tab)">
+            <img src="assets/icons/youtube.svg" alt="" class="social-icon" />
+          </a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="social-link"
+            aria-label="LabMate on Facebook (opens in new tab)">
+            <img src="assets/icons/facebook.svg" alt="" class="social-icon" />
+          </a>
+        </div>
+      </div>
+      <div class="footer-col" id="footer-quicklinks-col">
+        <h3 class="footer-col-heading">Quick Links</h3>
+        <nav aria-label="Footer quick links">
+          <ul class="footer-link-list" role="list">
+            <li><a href="labmate_landing.html#home-section" class="footer-link">Home</a></li>
+            <li><a href="labmate_landing.html#about-section" class="footer-link">About Us</a></li>
+            <li><a href="labmate_landing.html#courses-section" class="footer-link">Courses</a></li>
+            <li><a href="labmate_landing.html#colleges-section" class="footer-link">Partner Colleges</a></li>
+            <li><a href="labmate_landing.html#enews-section" class="footer-link">E-News</a></li>
+            <li><a href="labmate_landing.html#why-labmate-section" class="footer-link">Why LabMate?</a></li>
+            <li><a href="labmate_landing.html#contact-section" class="footer-link">Contact Us</a></li>
+            <li><a href="sitemap.html" class="footer-link">Sitemap</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-col" id="footer-resources-col">
+        <h3 class="footer-col-heading">Resources</h3>
+        <nav aria-label="Footer resources and legal links">
+          <ul class="footer-link-list" role="list">
+            <li><a href="blog.html" class="footer-link">Blog</a></li>
+            <li><a href="faq.html" class="footer-link">FAQ</a></li>
+            <li><a href="help.html" class="footer-link">Help Center</a></li>
+            <li><a href="careers.html" class="footer-link">Careers</a></li>
+            <li><a href="privacy-policy.html" class="footer-link">Privacy Policy</a></li>
+            <li><a href="terms.html" class="footer-link">Terms of Service</a></li>
+            <li><a href="refund-policy.html" class="footer-link">Refund Policy</a></li>
+            <li><a href="accessibility.html" class="footer-link">Accessibility</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-col" id="footer-contact-col">
+        <h3 class="footer-col-heading">Contact</h3>
+        <address class="footer-address">
+          <p>
+            LabMate Technologies Pvt. Ltd.<br />
+            Vishweshwaraya Bhavan, 3rd-Floor<br />
+            Surampalem, AndhraPradesh — 533437<br />
+            India
+          </p>
+          <p>
+            <a href="mailto:hello@labmate.in" class="footer-link">hello@labmate.in</a>
+          </p>
+          <p>
+            <a href="tel:+917777777777" class="footer-link">+91 77777 77777</a>
+          </p>
+        </address>
+      </div>
+    </div>
+    <hr id="footer-divider" aria-hidden="true" />
+    <div id="footer-bottom">
+      <p id="footer-copyright">
+        <small>
+          © <span id="copyright-year">2026</span>
+          LabMate Technologies Pvt. Ltd. All rights reserved.
+        </small>
+      </p>
+      <p id="footer-legal-note">
+        <small>
+          LabMate&reg; is a registered trademark. Unauthorised reproduction
+          of any content on this platform is prohibited.
+        </small>
+      </p>
+      <div id="footer-badges" aria-label="Trust and certification badges"></div>
+    </div>
+  </footer>
+
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+  <script src="../js/portal.js"></script>
+</body>
+
+</html>
