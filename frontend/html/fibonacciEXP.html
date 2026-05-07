@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fibonacci Recursion — LabMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       CSS VARIABLES — Light/Dark Theme
+    ============================================= */
+    :root {
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Outfit', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+
+      --bg-page:       #EDF4FB;
+      --bg-card:       #FFFFFF;
+      --card-inner:    #F0F7FF;
+      --border-var:    #C8DFF4;
+      --border-strong: #1A88D0;
+      --scale-bg:      #DCEEFA;
+      --accent-btn:    #1A88D0;
+      --btn-hover:     #1270B0;
+      --accent-2:      #0EC4E0;
+      --teal:          #1A88D0;
+      --teal-dim:      #DCEEFA;
+
+      --text-primary:  #0D2A4A;
+      --text-mid:      #2A5278;
+      --text-soft:     #6A90B0;
+
+      --sh-card: 0 2px 14px rgba(58,155,213,0.10), 0 1px 4px rgba(0,0,0,0.05);
+      --r-lg: 20px;
+      --r-md: 12px;
+    }
+
+    [data-theme="dark"] {
+      --bg-page:       #08081A;
+      --bg-card:       #0E0E22;
+      --card-inner:    #13132E;
+      --border-var:    #2A1F5A;
+      --border-strong: #7B2FBE;
+      --scale-bg:      #0E0E22;
+      --accent-btn:    #9B4DFF;
+      --btn-hover:     #B86AFF;
+      --accent-2:      #C07AFF;
+      --teal:          #9B4DFF;
+      --teal-dim:      #1A1040;
+
+      --text-primary:  #E8E0FF;
+      --text-mid:      #B0A0D8;
+      --text-soft:     #6A5A9A;
+
+      --sh-card: 0 4px 24px rgba(0,0,0,0.5), 0 1px 6px rgba(0,0,0,0.3);
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    a { text-decoration: none; color: inherit; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-card); }
+    ::-webkit-scrollbar-thumb { background: var(--border-var); border-radius: 3px; }
+
+    /* =============================================
+       HEADER
+    ============================================= */
+    .portal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 62px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-var);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background 0.3s ease;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .portal-logo { height: 36px; width: auto; }
+    .logo-placeholder {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--accent-btn);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.3rem; font-weight: 800;
+      box-shadow: 0 0 14px rgba(155,77,255,0.4);
+    }
+    .college-info {}
+    .college-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.1; }
+    .stream-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.68rem; font-weight: 600; color: var(--text-soft);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .header-center { flex: 1; max-width: 380px; margin: 0 24px; }
+    .search-wrapper {
+      position: relative; display: flex; align-items: center;
+    }
+    .search-icon { position: absolute; left: 12px; color: var(--text-soft); }
+    .global-search {
+      width: 100%; padding: 8px 12px 8px 36px;
+      background: var(--card-inner); border: 1.5px solid var(--border-var);
+      border-radius: 10px; font-family: var(--font-body); font-size: 0.85rem;
+      color: var(--text-primary); outline: none;
+      transition: border-color 0.2s;
+    }
+    .global-search:focus { border-color: var(--accent-btn); }
+    .global-search::placeholder { color: var(--text-soft); }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+
+    /* Theme switch */
+    .theme-switch { display: inline-block; height: 30px; position: relative; width: 64px; cursor: pointer; }
+    .theme-switch input { display: none; }
+    .slider {
+      background: var(--scale-bg); border: 1.5px solid var(--border-var);
+      bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0;
+      transition: .4s; display: flex; align-items: center;
+      justify-content: space-between; padding: 0 7px; box-sizing: border-box;
+    }
+    .slider .icon { width: 12px; height: 12px; z-index: 1; display: flex; align-items: center; justify-content: center; }
+    .slider .icon svg { width: 100%; height: 100%; }
+    .light-icon { color: #f39c12; }
+    .dark-icon  { color: #9B4DFF; }
+    .slider::before {
+      background: var(--bg-card); bottom: 3px; content: ""; height: 22px; left: 4px;
+      position: absolute; transition: transform .4s cubic-bezier(0.18,0.89,0.32,1.28);
+      width: 22px; z-index: 2; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider::before { transform: translateX(34px); }
+    .slider.round { border-radius: 30px; }
+    .icon-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-soft); padding: 6px; border-radius: 8px;
+      transition: background 0.2s, color 0.2s; position: relative;
+    }
+    .icon-btn:hover { background: var(--scale-bg); color: var(--text-primary); }
+    .profile-btn {
+      display: flex; align-items: center; gap: 8px; background: none;
+      border: 1px solid var(--border-var); border-radius: 10px;
+      padding: 5px 10px; cursor: pointer; transition: border-color 0.2s;
+    }
+    .profile-btn:hover { border-color: var(--accent-btn); }
+    .profile-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--accent-btn); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700;
+    }
+    .prof-name { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); display: block; line-height: 1.1; }
+    .prof-roll { font-size: 0.68rem; color: var(--text-soft); display: block; }
+
+    /* =============================================
+       EXPERIMENT PAGE LAYOUT
+    ============================================= */
+    .exp-page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .exp-breadcrumb {
+      background: var(--bg-card); border-bottom: 1px solid var(--border-var);
+      padding: 10px 40px; display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: var(--text-soft);
+    }
+    .exp-breadcrumb a { color: var(--accent-btn); font-weight: 500; transition: color 0.2s; }
+    .exp-breadcrumb a:hover { color: var(--btn-hover); text-decoration: underline; }
+    .exp-breadcrumb .sep { opacity: 0.45; margin: 0 2px; }
+    .exp-breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+
+    .exp-banner {
+      background: linear-gradient(120deg, #5B1F9A 0%, var(--accent-btn) 100%);
+      color: #fff; padding: 22px 40px;
+      display: flex; align-items: center; gap: 20px;
+    }
+    .exp-banner-icon {
+      width: 52px; height: 52px; background: rgba(255,255,255,0.18);
+      border-radius: 14px; display: flex; align-items: center;
+      justify-content: center; font-size: 1.6rem; flex-shrink: 0;
+    }
+    .exp-banner-meta { flex: 1; }
+    .exp-banner-label {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; opacity: 0.78; margin-bottom: 4px;
+    }
+    .exp-banner-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      font-weight: 700; line-height: 1.2; letter-spacing: -0.01em;
+    }
+    .exp-banner-sub { font-size: 0.83rem; opacity: 0.8; margin-top: 4px; }
+    .exp-banner-badge {
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px; padding: 5px 14px; font-size: 0.75rem;
+      font-weight: 600; letter-spacing: 0.04em; white-space: nowrap;
+    }
+
+    .exp-main-body {
+      flex: 1; display: flex; gap: 0; padding: 32px 40px;
+      max-width: 1300px; width: 100%; margin: 0 auto; box-sizing: border-box;
+    }
+    .exp-sidebar { width: 220px; flex-shrink: 0; margin-right: 28px; }
+    .exp-sidebar-card {
+      background: var(--bg-card); border: 1px solid var(--border-var);
+      border-radius: var(--r-lg); box-shadow: var(--sh-card);
+      overflow: hidden; position: sticky; top: 90px;
+    }
+    .exp-sidebar-header {
+      padding: 16px 20px 12px; border-bottom: 1px solid var(--border-var);
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-soft);
+    }
+    .exp-nav-list { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .exp-nav-btn {
+      display: flex; align-items: center; gap: 12px; width: 100%;
+      padding: 12px 14px; border-radius: var(--r-md); font-family: var(--font-body);
+      font-size: 0.88rem; font-weight: 500; color: var(--text-mid);
+      background: transparent; border: none; cursor: pointer;
+      transition: background 0.22s, color 0.22s, transform 0.18s;
+      text-align: left; position: relative;
+    }
+    .exp-nav-btn:hover { background: var(--teal-dim); color: var(--text-primary); transform: translateX(3px); }
+    .exp-nav-btn.active { background: var(--teal-dim); color: var(--accent-btn); font-weight: 600; }
+    .exp-nav-btn.active::before {
+      content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--accent-btn);
+    }
+    .exp-nav-icon {
+      width: 28px; height: 28px; border-radius: 8px; background: var(--card-inner);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0; transition: background 0.22s;
+    }
+    .exp-nav-btn.active .exp-nav-icon { background: var(--accent-btn); color: #fff; }
+    .exp-sidebar-progress {
+      padding: 14px 20px 18px; border-top: 1px solid var(--border-var);
+    }
+    .exp-progress-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.72rem; color: var(--text-soft); margin-bottom: 8px;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .exp-progress-track { height: 5px; background: var(--scale-bg); border-radius: 10px; overflow: hidden; }
+    .exp-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-btn), var(--accent-2));
+      border-radius: 10px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 20%;
+    }
+
+    .exp-content-area { flex: 1; min-width: 0; }
+    .exp-panel {
+      background: var(--bg-card); border: 1px solid var(--border-var);
+      border-radius: var(--r-lg); box-shadow: var(--sh-card); overflow: hidden;
+    }
+    .exp-panel-header {
+      padding: 24px 32px 20px; border-bottom: 1px solid var(--border-var);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .exp-panel-icon {
+      width: 44px; height: 44px; border-radius: 12px; background: var(--scale-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .exp-panel-title {
+      font-family: var(--font-display); font-size: 1.7rem; font-weight: 700;
+      color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.1;
+    }
+    .exp-panel-subtitle { font-size: 0.83rem; color: var(--text-soft); margin-top: 2px; }
+    .exp-panel-body { padding: 32px; }
+
+    .exp-section-content { display: none; animation: sectionFadeIn 0.35s cubic-bezier(0.4,0,0.2,1) both; }
+    .exp-section-content.visible { display: block; }
+    @keyframes sectionFadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Content helpers */
+    .exp-body-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.85; }
+    .exp-body-text + .exp-body-text { margin-top: 16px; }
+    .exp-highlight-box {
+      background: var(--scale-bg); border-left: 4px solid var(--accent-btn);
+      border-radius: 0 var(--r-md) var(--r-md) 0;
+      padding: 16px 20px; margin: 20px 0; font-size: 0.9rem;
+      color: var(--text-primary); line-height: 1.7;
+    }
+    .exp-step-list { counter-reset: steps; list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 14px; }
+    .exp-step-list li { counter-increment: steps; display: flex; align-items: flex-start; gap: 16px; font-size: 0.92rem; color: var(--text-mid); line-height: 1.7; }
+    .exp-step-list li::before {
+      content: counter(steps); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
+      color: #fff; font-size: 0.72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; margin-top: 2px;
+    }
+    .exp-materials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
+    .exp-material-chip {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--card-inner); border: 1px solid var(--border-var);
+      border-radius: var(--r-md); padding: 10px 14px;
+      font-size: 0.83rem; color: var(--text-primary); font-weight: 500;
+    }
+    .exp-material-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn); flex-shrink: 0; }
+    .exp-result-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    .exp-result-table th {
+      background: var(--scale-bg); color: var(--text-primary); font-weight: 600;
+      padding: 12px 16px; text-align: left; border-bottom: 2px solid var(--border-var);
+      font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .exp-result-table td { padding: 11px 16px; color: var(--text-mid); border-bottom: 1px solid var(--border-var); line-height: 1.4; }
+    .exp-result-table tr:last-child td { border-bottom: none; }
+    .exp-result-table tr:hover td { background: var(--card-inner); }
+    .exp-result-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin: 24px 0; }
+    .exp-stat-card { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 18px 16px; text-align: center; }
+    .exp-stat-value { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--accent-btn); line-height: 1; margin-bottom: 6px; }
+    .exp-stat-label { font-size: 0.75rem; color: var(--text-soft); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+    .exp-conclusion-box { background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 20px 24px; margin-top: 24px; }
+    .exp-conclusion-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-btn); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .exp-conclusion-text { font-size: 0.92rem; color: var(--text-primary); line-height: 1.75; }
+    .exp-divider { height: 1px; background: var(--border-var); margin: 28px 0; border: none; }
+    .exp-tag {
+      display: inline-block; background: var(--scale-bg); color: var(--accent-btn);
+      border: 1px solid var(--border-var); border-radius: 20px;
+      padding: 3px 12px; font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.04em; margin: 2px;
+    }
+    .code-block-wrapper {
+      background: var(--card-inner); border: 1px solid var(--border-var);
+      border-radius: var(--r-md); overflow: hidden; margin: 20px 0;
+    }
+    .code-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; border-bottom: 1px solid var(--border-var);
+      font-size: 0.75rem; font-weight: 600; color: var(--text-soft);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .code-lang-badge {
+      background: var(--accent-btn); color: #fff;
+      padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700;
+    }
+    .code-block-body {
+      font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.8;
+      padding: 16px 20px; overflow-x: auto; color: var(--text-mid);
+    }
+    .code-kw   { color: var(--accent-btn); font-weight: 600; }
+    .code-fn   { color: var(--accent-2); }
+    .code-num  { color: #E07A30; }
+    .code-cmt  { color: var(--text-soft); font-style: italic; }
+
+    /* =============================================
+       SIMULATION WRAPPER — FibTrace integrated
+    ============================================= */
+    .fib-sim-outer {
+      background: var(--card-inner);
+      border: 1.5px solid var(--border-var);
+      border-radius: 16px;
+      padding: 0;
+      overflow: hidden;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Toolbar */
+    .fib-toolbar {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 14px 20px; border-bottom: 1px solid var(--border-var);
+      background: var(--bg-card);
+    }
+    .fib-toolbar-title {
+      font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--accent-btn);
+      filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent-btn) 40%, transparent));
+      margin-right: 4px; flex-shrink: 0;
+    }
+    .fib-input-wrap { display: flex; align-items: center; gap: 8px; }
+    .fib-n-label { font-size: 0.75rem; font-weight: 600; color: var(--text-soft); text-transform: uppercase; white-space: nowrap; }
+    .fib-n-input {
+      width: 70px; padding: 7px 10px; background: var(--bg-page);
+      border: 1.5px solid var(--border-var); border-radius: 9px;
+      font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700;
+      color: var(--text-primary); outline: none; text-align: center;
+      transition: border-color 0.2s;
+    }
+    .fib-n-input:focus { border-color: var(--accent-btn); }
+    .fib-input-hint { font-size: 0.68rem; color: var(--text-soft); }
+    .fib-btn {
+      display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px;
+      border: none; border-radius: 30px; font-family: var(--font-body);
+      font-size: 0.78rem; font-weight: 600; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+    }
+    .fib-btn:active:not(:disabled) { transform: scale(0.95); }
+    .fib-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .fib-btn-primary { background: var(--accent-btn); color: #fff; box-shadow: 0 2px 10px color-mix(in srgb, var(--accent-btn) 35%, transparent); }
+    .fib-btn-primary:hover:not(:disabled) { background: var(--btn-hover); transform: translateY(-1px); }
+    .fib-btn-ghost { background: var(--bg-page); color: var(--text-mid); border: 1.5px solid var(--border-var); }
+    .fib-btn-ghost:hover:not(:disabled) { background: var(--scale-bg); border-color: var(--accent-btn); }
+    .fib-btn-accent { background: #6B3FD8; color: #fff; }
+    .fib-btn-accent:hover:not(:disabled) { background: #8A5BF5; }
+    .fib-speed-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+    .fib-speed-label { font-size: 0.7rem; color: var(--text-soft); white-space: nowrap; }
+    .fib-speed-slider {
+      -webkit-appearance: none; width: 80px; height: 4px;
+      background: var(--border-var); border-radius: 2px; outline: none; cursor: pointer;
+    }
+    .fib-speed-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+      background: var(--accent-btn); cursor: pointer;
+    }
+    .fib-speed-val { font-size: 0.7rem; font-weight: 700; color: var(--accent-btn); min-width: 36px; }
+
+    /* Error */
+    .fib-error { padding: 6px 20px; font-size: 0.78rem; color: #FF6B9D; background: rgba(255,107,157,0.08); border-bottom: 1px solid rgba(255,107,157,0.25); display: none; }
+    .fib-error.visible { display: block; }
+
+    /* Stat pills row */
+    .fib-stats-row {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 8px 20px; border-bottom: 1px solid var(--border-var);
+      background: var(--bg-card);
+    }
+    .fib-pill {
+      background: var(--card-inner); border: 1px solid var(--border-var);
+      border-radius: 14px; padding: 4px 11px; font-size: 0.73rem; color: var(--text-soft); white-space: nowrap;
+    }
+    .fib-pill .pv { font-weight: 700; color: var(--accent-btn); margin-left: 3px; }
+    .fib-status { margin-left: auto; font-size: 0.78rem; color: var(--text-soft); font-style: italic; }
+    .fib-status.running { color: var(--accent-btn); }
+    .fib-status.done    { color: var(--accent-2); }
+
+    /* Progress */
+    .fib-progress-row { padding: 6px 20px; background: var(--bg-card); border-bottom: 1px solid var(--border-var); }
+    .fib-progress-meta { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-soft); margin-bottom: 4px; }
+    .fib-progress-track { height: 4px; background: var(--scale-bg); border-radius: 2px; overflow: hidden; }
+    .fib-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-btn), var(--accent-2)); border-radius: 2px; width: 0%; transition: width 0.3s ease; }
+
+    /* Main canvas zone */
+    .fib-canvas-zone {
+      display: flex; flex: 1; min-height: 380px; overflow: hidden;
+    }
+
+    /* Left panel inside sim: controls + code */
+    .fib-left-panel {
+      width: 200px; flex-shrink: 0;
+      border-right: 1px solid var(--border-var);
+      display: flex; flex-direction: column; overflow-y: auto;
+    }
+    .fib-panel-sec { padding: 12px 14px; border-bottom: 1px solid var(--border-var); }
+    .fib-panel-head {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-soft); margin-bottom: 10px;
+    }
+    .fib-code-block {
+      background: var(--bg-page); border: 1px solid var(--border-var);
+      border-radius: 8px; padding: 10px; overflow-x: auto;
+      font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.8;
+    }
+    .fib-code-line { display: block; padding: 1px 4px; border-radius: 3px; border-left: 2px solid transparent; transition: background 0.25s, border-color 0.25s; }
+    .fib-code-line.highlighted { background: color-mix(in srgb, var(--accent-btn) 15%, transparent); border-left-color: var(--accent-btn); }
+    .fib-stats-mini { display: flex; flex-direction: column; gap: 6px; }
+    .fib-stat-mini-item { background: var(--bg-page); border: 1px solid var(--border-var); border-radius: 8px; padding: 7px 10px; }
+    .fib-stat-mini-val { font-size: 1.1rem; font-weight: 800; color: var(--accent-btn); font-family: var(--font-mono); line-height: 1; }
+    .fib-stat-mini-lbl { font-size: 0.6rem; color: var(--text-soft); text-transform: uppercase; margin-top: 2px; }
+    .fib-overlap-box { background: var(--bg-page); border: 1px solid var(--border-var); border-radius: 8px; padding: 8px 10px; margin-top: 8px; }
+    .fib-overlap-title { font-size: 0.68rem; font-weight: 700; color: #FF6B9D; margin-bottom: 4px; }
+    .fib-overlap-list { font-size: 0.68rem; color: var(--text-soft); line-height: 1.5; }
+
+    /* Center: recursion tree */
+    .fib-tree-zone {
+      flex: 1; position: relative; overflow: auto; background: var(--bg-page);
+    }
+    .fib-tree-svg { position: absolute; top: 0; left: 0; pointer-events: none; }
+    .fib-tree-nodes { position: absolute; top: 0; left: 0; }
+    .fib-empty-state {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      text-align: center; pointer-events: none;
+    }
+    .fib-empty-icon { font-size: 2.4rem; margin-bottom: 10px; opacity: 0.45; }
+    .fib-empty-state p { color: var(--text-soft); font-size: 0.82rem; line-height: 1.6; }
+    .fib-empty-state p strong { color: var(--accent-btn); }
+    .fib-empty-state.hidden { display: none; }
+
+    /* Tree nodes */
+    .fib-tree-node {
+      position: absolute; transform: translate(-50%,-50%);
+      width: 60px; height: 60px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; cursor: pointer;
+      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700;
+      border: 2px solid var(--border-var); background: var(--card-inner);
+      color: var(--text-mid); transition: all 0.3s ease;
+      opacity: 0;
+    }
+    .fib-tree-node.visible { opacity: 1; }
+    .fib-tree-node .node-label { font-size: 0.55rem; color: var(--text-soft); }
+    .fib-tree-node .node-n    { font-size: 0.78rem; color: var(--text-primary); font-weight: 700; }
+    .fib-tree-node .node-val  { font-size: 0.62rem; color: var(--accent-btn); margin-top: 1px; }
+    .fib-tree-node.state-active {
+      background: var(--accent-btn); border-color: var(--accent-btn); color: #fff;
+      box-shadow: 0 0 20px color-mix(in srgb, var(--accent-btn) 60%, transparent), 0 0 40px color-mix(in srgb, var(--accent-btn) 30%, transparent);
+      animation: fib-pulse 1.5s ease-in-out infinite;
+    }
+    .fib-tree-node.state-active .node-label { color: rgba(255,255,255,0.7); }
+    .fib-tree-node.state-active .node-val   { color: #fff; }
+    .fib-tree-node.state-base {
+      background: var(--accent-2); border-color: var(--accent-2); color: #fff;
+      box-shadow: 0 0 14px color-mix(in srgb, var(--accent-2) 55%, transparent);
+    }
+    .fib-tree-node.state-done {
+      background: var(--scale-bg); border-color: var(--border-var); opacity: 0.88;
+    }
+    .fib-tree-node.state-repeat {
+      background: transparent; border: 2px dashed #FF6B9D; color: #FF6B9D;
+      box-shadow: 0 0 12px rgba(255,107,157,0.45);
+    }
+    .fib-tree-node:hover:not(.state-active) { transform: translate(-50%,-50%) scale(1.1); z-index: 20; }
+    @keyframes fib-pulse {
+      0%,100% { box-shadow: 0 0 20px color-mix(in srgb, var(--accent-btn) 60%, transparent); }
+      50%      { box-shadow: 0 0 32px color-mix(in srgb, var(--accent-btn) 90%, transparent), 0 0 55px color-mix(in srgb, var(--accent-btn) 50%, transparent); }
+    }
+
+    /* SVG edges */
+    .fib-tree-edge {
+      stroke: var(--border-var); stroke-width: 2; fill: none;
+      stroke-dasharray: 300; stroke-dashoffset: 300;
+      transition: stroke 0.4s ease;
+    }
+    .fib-tree-edge.visible { animation: fibDrawEdge 0.5s ease forwards; }
+    .fib-tree-edge.edge-active { stroke: var(--accent-btn); stroke-width: 2.5; filter: drop-shadow(0 0 4px var(--accent-btn)); }
+    .fib-tree-edge.edge-done   { stroke: var(--scale-bg); stroke-dasharray: none; stroke-dashoffset: 0; }
+    @keyframes fibDrawEdge { to { stroke-dashoffset: 0; } }
+
+    /* Value bubbles */
+    .fib-value-bubble {
+      position: absolute; background: var(--accent-btn); color: #fff;
+      border-radius: 10px; padding: 2px 7px; font-size: 0.62rem; font-weight: 700;
+      font-family: var(--font-mono); pointer-events: none; z-index: 50;
+      animation: fibBubbleRise 0.8s ease forwards;
+      box-shadow: 0 0 8px color-mix(in srgb, var(--accent-btn) 50%, transparent);
+    }
+    @keyframes fibBubbleRise {
+      0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.5); }
+      40%  { opacity: 1; transform: translate(-50%,-90%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%,-160%) scale(0.8); }
+    }
+
+    /* Right panel inside sim: explanation + call stack */
+    .fib-right-panel {
+      width: 210px; flex-shrink: 0;
+      border-left: 1px solid var(--border-var);
+      display: flex; flex-direction: column; overflow-y: auto;
+    }
+    .fib-explanation-content {
+      background: var(--bg-page); border: 1px solid var(--accent-btn);
+      border-radius: 8px; padding: 10px; min-height: 54px;
+      font-size: 0.75rem; line-height: 1.5; color: var(--text-primary);
+      margin-bottom: 8px; transition: border-color 0.3s;
+    }
+    .fib-explanation-idle { color: var(--text-soft); font-style: italic; }
+    .fib-highlight { color: var(--accent-btn); font-weight: 700; }
+    .fib-base-hl   { color: var(--accent-2); font-weight: 700; }
+    .fib-ret-hl    { color: var(--accent-btn); font-weight: 700; }
+    .fib-hist-wrap { max-height: 90px; overflow-y: auto; }
+    .fib-hist-item {
+      font-size: 0.67rem; padding: 3px 7px; border-radius: 5px; margin-bottom: 3px;
+      color: var(--text-soft); background: var(--bg-page);
+      border-left: 2px solid var(--border-var); line-height: 1.4;
+    }
+    .fib-stack-list { display: flex; flex-direction: column; gap: 4px; max-height: 200px; overflow-y: auto; }
+    .fib-stack-empty { text-align: center; color: var(--text-soft); font-size: 0.72rem; padding: 14px 0; }
+    .fib-stack-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--card-inner); border: 1px solid var(--border-var);
+      border-radius: 7px; padding: 6px 10px; font-family: var(--font-mono);
+      font-size: 0.72rem; color: var(--text-primary); animation: fibStackPush 0.22s ease;
+    }
+    .fib-stack-item.top { background: var(--accent-btn); color: #fff; border-color: var(--accent-btn); }
+    .fib-stack-depth { font-size: 0.58rem; color: var(--text-soft); }
+    .fib-stack-item.top .fib-stack-depth { color: rgba(255,255,255,0.65); }
+    @keyframes fibStackPush { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; } }
+    .fib-stack-depth-badge {
+      background: var(--accent-btn); color: #fff; width: 18px; height: 18px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; font-weight: 700; margin-left: auto;
+    }
+    .fib-legend {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      padding: 10px 20px; border-top: 1px solid var(--border-var);
+      background: var(--bg-card);
+    }
+    .fib-leg-item { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: var(--text-soft); }
+    .fib-leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .fib-leg-active { background: var(--accent-btn); box-shadow: 0 0 6px color-mix(in srgb, var(--accent-btn) 55%, transparent); }
+    .fib-leg-base   { background: var(--accent-2); }
+    .fib-leg-done   { background: var(--scale-bg); border: 1px solid var(--border-var); }
+    .fib-leg-repeat { background: transparent; border: 2px dashed #FF6B9D; }
+
+    /* Tooltip */
+    .fib-tooltip {
+      position: fixed; background: var(--bg-card); border: 1px solid var(--border-var);
+      border-radius: 8px; padding: 7px 12px; font-size: 0.7rem; color: var(--text-primary);
+      box-shadow: var(--sh-card); pointer-events: none; z-index: 200;
+      opacity: 0; transition: opacity 0.2s ease; font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+    .fib-tooltip.visible { opacity: 1; }
+
+    /* Toast */
+    .fib-toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--bg-card); border: 1px solid var(--border-strong);
+      border-radius: 10px; padding: 10px 20px; font-size: 0.8rem;
+      color: var(--text-primary); box-shadow: var(--sh-card);
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000;
+    }
+    .fib-toast.show { opacity: 1; }
+
+    /* DP Compare */
+    .fib-dp-compare { display: flex; flex-direction: column; gap: 7px; }
+    .fib-dp-item { background: var(--bg-page); border: 1px solid var(--border-var); border-radius: 8px; padding: 8px 10px; }
+    .fib-dp-label { font-size: 0.72rem; font-weight: 700; color: var(--text-soft); margin-bottom: 2px; }
+    .fib-dp-time  { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 800; color: var(--accent-btn); margin-bottom: 3px; }
+    .fib-dp-desc  { font-size: 0.65rem; color: var(--text-soft); margin-bottom: 6px; }
+    .fib-dp-bar-wrap { height: 4px; background: var(--scale-bg); border-radius: 2px; overflow: hidden; }
+    .fib-dp-bar   { height: 100%; border-radius: 2px; }
+    .fib-dp-bad   { background: #FF6B9D; }
+    .fib-dp-ok    { background: var(--accent-btn); }
+    .fib-dp-good  { background: #6BFF9B; }
+
+    /* Backtrack arrows */
+    .fib-bt-arrow  { pointer-events: none; filter: drop-shadow(0 0 3px rgba(255,155,107,0.7)); }
+    .fib-bt-label  { pointer-events: none; paint-order: stroke fill; stroke: var(--bg-page); stroke-width: 3px; }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 900px) {
+      .exp-main-body { flex-direction: column; padding: 20px 16px; }
+      .exp-sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
+      .exp-sidebar-card { position: static; }
+      .exp-nav-list { flex-direction: row; flex-wrap: wrap; padding: 10px; gap: 6px; }
+      .exp-nav-btn { flex: 1; min-width: calc(50% - 3px); justify-content: center; font-size: 0.8rem; padding: 10px 8px; }
+      .exp-nav-btn.active::before { display: none; }
+      .exp-panel-body { padding: 20px; }
+      .exp-panel-header { padding: 18px 20px; }
+      .exp-breadcrumb { padding: 8px 16px; }
+      .exp-banner { padding: 18px 20px; flex-wrap: wrap; }
+      .fib-left-panel, .fib-right-panel { display: none; }
+      .fib-canvas-zone { min-height: 320px; }
+    }
+    @media (max-width: 520px) {
+      .exp-banner-badge { display: none; }
+    }
+  </style>
+</head>
+
+<body class="exp-page-wrapper">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="portal-header">
+    <div class="header-left">
+      <div class="logo-placeholder">L</div>
+      <div class="college-info">
+        <h1 class="college-name">Aditya University</h1>
+        <span class="stream-badge">AIML Stream</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="search-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" class="global-search" placeholder="Search experiments &amp; records…" />
+      </div>
+    </div>
+    <div class="header-right">
+      <label class="theme-switch" for="theme-toggle-chk">
+        <input type="checkbox" id="theme-toggle-chk" />
+        <div class="slider round">
+          <span class="icon light-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            </svg>
+          </span>
+          <span class="icon dark-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </span>
+        </div>
+      </label>
+      <div style="display:flex;align-items:center;gap:8px;border:1px solid var(--border-var);border-radius:10px;padding:5px 10px;">
+        <div class="profile-avatar">S</div>
+        <div>
+          <span class="prof-name">Santhosh</span>
+          <span class="prof-roll">24P31A42XX</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== BREADCRUMB ===================== -->
+  <div class="exp-breadcrumb">
+    <a href="portal.html">Dashboard</a>
+    <span class="sep">›</span>
+    <a href="c_programming_lab.html">C Programming Lab</a>
+    <span class="sep">›</span>
+    <span class="current">Fibonacci Recursion</span>
+  </div>
+
+  <!-- ===================== BANNER ===================== -->
+  <div class="exp-banner">
+    <div class="exp-banner-icon">🌿</div>
+    <div class="exp-banner-meta">
+      <div class="exp-banner-label">C Programming · Experiment 03</div>
+      <div class="exp-banner-title">Fibonacci Sequence using Recursion</div>
+      <div class="exp-banner-sub">Trace the full recursive call tree, understand overlapping subproblems, and compare with memoized DP.</div>
+    </div>
+    <div class="exp-banner-badge">O(2ⁿ) Time · O(n) Space</div>
+  </div>
+
+  <!-- ===================== MAIN BODY ===================== -->
+  <div class="exp-main-body">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="exp-sidebar">
+      <div class="exp-sidebar-card">
+        <div class="exp-sidebar-header">Sections</div>
+        <nav class="exp-nav-list">
+          <button class="exp-nav-btn active" data-section="aim">
+            <span class="exp-nav-icon">🎯</span>Aim
+          </button>
+          <button class="exp-nav-btn" data-section="description">
+            <span class="exp-nav-icon">📋</span>Description
+          </button>
+          <button class="exp-nav-btn" data-section="procedure">
+            <span class="exp-nav-icon">📝</span>Procedure
+          </button>
+          <button class="exp-nav-btn" data-section="simulation">
+            <span class="exp-nav-icon">💻</span>Simulation
+          </button>
+          <button class="exp-nav-btn" data-section="result">
+            <span class="exp-nav-icon">📊</span>Result
+          </button>
+        </nav>
+        <div class="exp-sidebar-progress">
+          <div class="exp-progress-label">
+            <span>Progress</span>
+            <span id="progress-pct">20%</span>
+          </div>
+          <div class="exp-progress-track">
+            <div class="exp-progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT CONTENT AREA -->
+    <main class="exp-content-area">
+      <div class="exp-panel">
+
+        <!-- ========== AIM ========== -->
+        <div class="exp-section-content visible" id="section-aim">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">🎯</div>
+            <div>
+              <div class="exp-panel-title">Aim</div>
+              <div class="exp-panel-subtitle">Objective of this experiment</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">
+              To implement and visualise the <strong>Fibonacci sequence using recursion</strong> in C, and to understand how the recursive call tree grows exponentially — tracing each function call, base case, and return path — while analysing the algorithm's time and space complexity.
+            </p>
+            <div class="exp-highlight-box">
+              <strong>Learning Objective:</strong> Develop a deep intuition for how recursive functions execute by following the Fibonacci call tree level by level. Understand why naive recursion results in <strong>O(2ⁿ)</strong> time complexity due to repeated subproblem computation, and appreciate how Dynamic Programming (memoization and tabulation) reduces this to <strong>O(n)</strong>.
+            </div>
+            <p class="exp-body-text">
+              By the end of this experiment, you will be able to trace all recursive calls for <code>fib(n)</code>, identify overlapping subproblems (e.g., <code>fib(3)</code> computed multiple times), count total function calls, measure maximum recursion depth, and understand the call stack behaviour — all visualised step-by-step in the simulation.
+            </p>
+            <hr class="exp-divider" />
+            <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject Tags:</strong></p>
+            <div style="margin-top:8px;">
+              <span class="exp-tag">Recursion</span>
+              <span class="exp-tag">Fibonacci Sequence</span>
+              <span class="exp-tag">Call Stack</span>
+              <span class="exp-tag">O(2ⁿ) Complexity</span>
+              <span class="exp-tag">Overlapping Subproblems</span>
+              <span class="exp-tag">Dynamic Programming</span>
+              <span class="exp-tag">CS Lab</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== DESCRIPTION ========== -->
+        <div class="exp-section-content" id="section-description">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📋</div>
+            <div>
+              <div class="exp-panel-title">Description</div>
+              <div class="exp-panel-subtitle">Theory &amp; background</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">
+              The <strong>Fibonacci sequence</strong> is a series of numbers where each number is the sum of the two preceding ones, starting from 0 and 1: <code>0, 1, 1, 2, 3, 5, 8, 13, 21, 34…</code>. It was described by Leonardo of Pisa (Fibonacci) in 1202 and models numerous natural phenomena such as spiral patterns in shells, flower petals, and population growth.
+            </p>
+            <p class="exp-body-text">
+              Mathematically, it is defined by the <strong>recurrence relation</strong>:<br /><br />
+              <code style="background:var(--card-inner);padding:4px 10px;border-radius:6px;font-size:0.95rem;display:inline-block;margin-top:4px;">F(n) = F(n−1) + F(n−2), &nbsp; F(0) = 0, &nbsp; F(1) = 1</code>
+            </p>
+            <p class="exp-body-text">
+              This definition maps directly to a recursive C function. However, naive recursion re-computes the same values many times — for example, computing <code>fib(5)</code> calls <code>fib(3)</code> twice and <code>fib(2)</code> three times. This is the classic <strong>overlapping subproblems</strong> problem.
+            </p>
+            <hr class="exp-divider" />
+            <p class="exp-body-text"><strong>Program in C language:</strong></p>
+            <div class="code-block-wrapper">
+              <div class="code-block-header">
+                <span>fibonacci.c</span>
+                <span class="code-lang-badge">C</span>
+              </div>
+              <div class="code-block-body">
+<pre><span class="code-kw">#include</span> &lt;stdio.h&gt;
+
+<span class="code-cmt">// Recursive Fibonacci function</span>
+<span class="code-kw">int</span> <span class="code-fn">fib</span>(<span class="code-kw">int</span> n) {
+    <span class="code-kw">if</span> (n &lt;= <span class="code-num">1</span>)
+        <span class="code-kw">return</span> n;
+    <span class="code-kw">return</span> <span class="code-fn">fib</span>(n - <span class="code-num">1</span>) + <span class="code-fn">fib</span>(n - <span class="code-num">2</span>);
+}
+
+<span class="code-kw">int</span> <span class="code-fn">main</span>() {
+    <span class="code-kw">int</span> n;
+    <span class="code-fn">printf</span>(<span class="code-num">"Enter n: "</span>);
+    <span class="code-fn">scanf</span>(<span class="code-num">"%d"</span>, &n);
+    <span class="code-fn">printf</span>(<span class="code-num">"fib(%d) = %d\n"</span>, n, <span class="code-fn">fib</span>(n));
+    <span class="code-kw">return</span> <span class="code-num">0</span>;
+}</pre>
+              </div>
+            </div>
+            <hr class="exp-divider" />
+            <p class="exp-body-text"><strong>Complexity Analysis:</strong></p>
+            <div class="exp-materials-grid">
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Time: O(2ⁿ) — Exponential</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Space: O(n) — Call Stack depth</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Total Calls for fib(n): ~2ⁿ</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Base Cases: fib(0) = 0, fib(1) = 1</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Memoized DP: O(n) time, O(n) space</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Tabulation DP: O(n) time, O(1) space</div>
+            </div>
+            <hr class="exp-divider" />
+            <p class="exp-body-text"><strong>Fibonacci values at a glance:</strong></p>
+            <table class="exp-result-table">
+              <thead><tr><th>n</th><th>fib(n)</th><th>Total Recursive Calls</th><th>Max Depth</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>2</td><td>1</td><td>3</td><td>1</td></tr>
+                <tr><td>3</td><td>2</td><td>5</td><td>2</td></tr>
+                <tr><td>4</td><td>3</td><td>9</td><td>3</td></tr>
+                <tr><td>5</td><td>5</td><td>15</td><td>4</td></tr>
+                <tr><td>6</td><td>8</td><td>25</td><td>5</td></tr>
+                <tr><td>7</td><td>13</td><td>41</td><td>6</td></tr>
+                <tr><td>10</td><td>55</td><td>177</td><td>9</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ========== PROCEDURE ========== -->
+        <div class="exp-section-content" id="section-procedure">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📝</div>
+            <div>
+              <div class="exp-panel-title">Procedure</div>
+              <div class="exp-panel-subtitle">Step-by-step instructions</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">Follow each step carefully to understand how the recursive Fibonacci algorithm unfolds via a call tree.</p>
+            <ol class="exp-step-list">
+              <li>Enter a non-negative integer <strong>n</strong> (recommended: 4–8 for clear visualisation). The simulation will display the full recursion tree for <code>fib(n)</code>.</li>
+              <li><strong>Call Phase:</strong> The root node <code>fib(n)</code> is placed at the top. It immediately calls <code>fib(n−1)</code> (left child) before calling <code>fib(n−2)</code> (right child). Observe the tree expanding depth-first.</li>
+              <li>This recursion continues until it reaches a <strong>base case</strong>: when <code>n ≤ 1</code>, the function returns <code>n</code> directly without making further calls. Base cases are highlighted in a distinct colour.</li>
+              <li><strong>Return Phase (Backtracking):</strong> Once a base case is reached, the function returns its value to its caller. Watch the animated backtracking arrows that trace the return path up the tree.</li>
+              <li>The parent function receives returned values from both its left and right subtrees, adds them together, and returns the result upward — this continues until <code>fib(n)</code> at the root receives the final answer.</li>
+              <li>Pay attention to the <strong>Call Stack panel</strong> on the right — it mirrors the actual memory stack at each moment, with the most recently called function on top.</li>
+              <li>Note the <strong>overlapping subproblems</strong>: the same <code>fib(k)</code> value is computed independently multiple times in different branches. This is what makes naive recursion inefficient.</li>
+              <li>After the simulation completes, navigate to the <strong>Result</strong> tab to view the total number of calls, max depth, base cases triggered, and a comparison with Dynamic Programming approaches.</li>
+            </ol>
+            <div class="exp-highlight-box">
+              <strong>Tip:</strong> Use the <em>Prev / Next</em> buttons in the simulation for step-by-step manual navigation. The code panel on the left highlights exactly which line of C code is executing at each step, helping you correlate the visual tree with the actual program.
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== SIMULATION ========== -->
+        <div class="exp-section-content" id="section-simulation">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">💻</div>
+            <div>
+              <div class="exp-panel-title">Simulation</div>
+              <div class="exp-panel-subtitle">Interactive Fibonacci Recursion visualiser — FibTrace</div>
+            </div>
+          </div>
+          <div class="exp-panel-body" style="padding: 20px;">
+
+            <div class="fib-sim-outer" id="fibSimOuter">
+
+              <!-- Toolbar -->
+              <div class="fib-toolbar">
+                <span class="fib-toolbar-title">FibTrace</span>
+                <div class="fib-input-wrap">
+                  <span class="fib-n-label">n =</span>
+                  <input type="number" class="fib-n-input" id="fibNInput" min="0" max="20" value="5" />
+                  <span class="fib-input-hint">≤ 20</span>
+                </div>
+                <button class="fib-btn fib-btn-primary" id="fibBtnStart">
+                  <svg width="11" height="11" viewBox="0 0 14 14"><polygon points="3,1 13,7 3,13" fill="currentColor"/></svg>
+                  Start
+                </button>
+                <button class="fib-btn fib-btn-ghost" id="fibBtnPause" disabled>
+                  <svg width="11" height="11" viewBox="0 0 14 14"><rect x="2" y="1" width="4" height="12" fill="currentColor"/><rect x="8" y="1" width="4" height="12" fill="currentColor"/></svg>
+                  Pause
+                </button>
+                <button class="fib-btn fib-btn-ghost" id="fibBtnResume" disabled>
+                  <svg width="11" height="11" viewBox="0 0 14 14"><polygon points="3,1 13,7 3,13" fill="currentColor"/></svg>
+                  Resume
+                </button>
+                <button class="fib-btn fib-btn-ghost" id="fibBtnReset">
+                  <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7 A5 5 0 1 1 7 12"/><polygon points="1,4 4,7 4,1" fill="currentColor" stroke="none"/></svg>
+                  Reset
+                </button>
+                <button class="fib-btn fib-btn-accent" id="fibBtnPrev" disabled>◀ Prev</button>
+                <button class="fib-btn fib-btn-accent" id="fibBtnNext" disabled>Next ▶</button>
+                <div class="fib-speed-wrap">
+                  <span class="fib-speed-label">Speed</span>
+                  <input type="range" class="fib-speed-slider" id="fibSpeedSlider" min="1" max="5" value="3" />
+                  <span class="fib-speed-val" id="fibSpeedVal">Med</span>
+                </div>
+              </div>
+
+              <!-- Error -->
+              <div class="fib-error" id="fibError"></div>
+
+              <!-- Stats row -->
+              <div class="fib-stats-row">
+                <div class="fib-pill">Calls <span class="pv" id="fsPillCalls">0</span></div>
+                <div class="fib-pill">Depth <span class="pv" id="fsPillDepth">0</span></div>
+                <div class="fib-pill">Base Cases <span class="pv" id="fsPillBase">0</span></div>
+                <div class="fib-pill">Result <span class="pv" id="fsPillResult">—</span></div>
+                <div class="fib-status" id="fibStatus">Enter n and press Start</div>
+              </div>
+
+              <!-- Progress -->
+              <div class="fib-progress-row">
+                <div class="fib-progress-meta">
+                  <span id="fibStepLabel">Step 0</span>
+                  <span id="fibTotalLabel">of 0</span>
+                </div>
+                <div class="fib-progress-track">
+                  <div class="fib-progress-fill" id="fibProgressFill"></div>
+                </div>
+              </div>
+
+              <!-- Canvas zone -->
+              <div class="fib-canvas-zone">
+
+                <!-- Left: code + stats -->
+                <div class="fib-left-panel">
+                  <div class="fib-panel-sec">
+                    <div class="fib-panel-head">C Code</div>
+                    <pre class="fib-code-block" id="fibCodeBlock">
+<span class="fib-code-line" data-line="0"><span class="code-kw">int</span> <span class="code-fn">fib</span>(<span class="code-kw">int</span> n) {</span>
+<span class="fib-code-line" data-line="1">  <span class="code-kw">if</span> (n &lt;= <span class="code-num">1</span>)</span>
+<span class="fib-code-line" data-line="2">    <span class="code-kw">return</span> n;</span>
+<span class="fib-code-line" data-line="3">  <span class="code-kw">return</span> <span class="code-fn">fib</span>(n-<span class="code-num">1</span>)</span>
+<span class="fib-code-line" data-line="4">       + <span class="code-fn">fib</span>(n-<span class="code-num">2</span>);</span>
+<span class="fib-code-line" data-line="5">}</span>
+                    </pre>
+                  </div>
+                  <div class="fib-panel-sec">
+                    <div class="fib-panel-head">Analysis</div>
+                    <div class="fib-stats-mini">
+                      <div class="fib-stat-mini-item"><div class="fib-stat-mini-val" id="fsSCalls">0</div><div class="fib-stat-mini-lbl">Total Calls</div></div>
+                      <div class="fib-stat-mini-item"><div class="fib-stat-mini-val" id="fsSDepth">0</div><div class="fib-stat-mini-lbl">Max Depth</div></div>
+                      <div class="fib-stat-mini-item"><div class="fib-stat-mini-val" id="fsSBase">0</div><div class="fib-stat-mini-lbl">Base Cases</div></div>
+                      <div class="fib-stat-mini-item"><div class="fib-stat-mini-val" id="fsSResult">—</div><div class="fib-stat-mini-lbl">Result</div></div>
+                    </div>
+                    <div class="fib-overlap-box">
+                      <div class="fib-overlap-title">⚠ Repeated Calls</div>
+                      <div class="fib-overlap-list" id="fsOverlapList">Run simulation...</div>
+                    </div>
+                  </div>
+                  <div class="fib-panel-sec">
+                    <div class="fib-panel-head">vs DP</div>
+                    <div class="fib-dp-compare">
+                      <div class="fib-dp-item"><div class="fib-dp-label">Recursion</div><div class="fib-dp-time">O(2ⁿ)</div><div class="fib-dp-desc">Recomputes repeatedly</div><div class="fib-dp-bar-wrap"><div class="fib-dp-bar fib-dp-bad" style="width:90%"></div></div></div>
+                      <div class="fib-dp-item"><div class="fib-dp-label">Memoization</div><div class="fib-dp-time">O(n)</div><div class="fib-dp-desc">Caches computed values</div><div class="fib-dp-bar-wrap"><div class="fib-dp-bar fib-dp-ok" style="width:35%"></div></div></div>
+                      <div class="fib-dp-item"><div class="fib-dp-label">Tabulation</div><div class="fib-dp-time">O(n)</div><div class="fib-dp-desc">Builds table bottom-up</div><div class="fib-dp-bar-wrap"><div class="fib-dp-bar fib-dp-good" style="width:18%"></div></div></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Center: recursion tree -->
+                <div class="fib-tree-zone" id="fibTreeWrapper">
+                  <svg id="fibTreeSVG" class="fib-tree-svg"></svg>
+                  <div id="fibTreeNodes" class="fib-tree-nodes"></div>
+                  <div class="fib-empty-state" id="fibEmptyState">
+                    <div class="fib-empty-icon">🌿</div>
+                    <p>Enter a value and press <strong>Start</strong><br/>to grow the recursion tree.</p>
+                  </div>
+                </div>
+
+                <!-- Right: explanation + call stack -->
+                <div class="fib-right-panel">
+                  <div class="fib-panel-sec">
+                    <div class="fib-panel-head">Step Explanation</div>
+                    <div class="fib-explanation-content" id="fibExplanation">
+                      <span class="fib-explanation-idle">Start simulation to see step-by-step explanations.</span>
+                    </div>
+                    <div class="fib-hist-wrap" id="fibHistory"></div>
+                  </div>
+                  <div class="fib-panel-sec">
+                    <div class="fib-panel-head" style="display:flex;align-items:center;justify-content:space-between;">
+                      Call Stack <span class="fib-stack-depth-badge" id="fibStackDepth">0</span>
+                    </div>
+                    <div class="fib-stack-list" id="fibStackList">
+                      <div class="fib-stack-empty">Stack is empty</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div><!-- /.fib-canvas-zone -->
+
+              <!-- Legend -->
+              <div class="fib-legend">
+                <div class="fib-leg-item"><span class="fib-leg-dot fib-leg-active"></span>Active call</div>
+                <div class="fib-leg-item"><span class="fib-leg-dot fib-leg-base"></span>Base case</div>
+                <div class="fib-leg-item"><span class="fib-leg-dot fib-leg-done"></span>Resolved</div>
+                <div class="fib-leg-item"><span class="fib-leg-dot fib-leg-repeat" style="width:10px;height:10px;border-radius:50%;display:inline-block;"></span>Repeated subproblem</div>
+              </div>
+
+            </div><!-- /.fib-sim-outer -->
+
+          </div>
+        </div>
+
+        <!-- ========== RESULT ========== -->
+        <div class="exp-section-content" id="section-result">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📊</div>
+            <div>
+              <div class="exp-panel-title">Result</div>
+              <div class="exp-panel-subtitle">Live observations &amp; analysis from your simulation</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+
+            <div id="result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
+              <div style="font-size:2.8rem;margin-bottom:14px;">🧪</div>
+              <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No simulation data yet</p>
+              <p style="font-size:0.85rem;line-height:1.7;">Run the <strong>Simulation</strong> tab first. Once the recursion tree completes, your full analysis and statistics will appear here automatically.</p>
+            </div>
+
+            <div id="result-live" style="display:none;">
+              <p class="exp-body-text" id="result-input-label"><strong>Observation Table</strong></p>
+              <table class="exp-result-table" id="result-call-table">
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody id="result-call-tbody"></tbody>
+              </table>
+              <hr class="exp-divider" />
+              <p class="exp-body-text"><strong>Summary:</strong></p>
+              <div class="exp-result-stats">
+                <div class="exp-stat-card"><div class="exp-stat-value" id="res-total-calls">—</div><div class="exp-stat-label">Total Calls</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value" id="res-max-depth">—</div><div class="exp-stat-label">Max Depth</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value" id="res-base-cases">—</div><div class="exp-stat-label">Base Cases</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value" id="res-repeated">—</div><div class="exp-stat-label">Repeated Calls</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value">O(2ⁿ)</div><div class="exp-stat-label">Time Complexity</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value">O(n)</div><div class="exp-stat-label">Space (Stack)</div></div>
+              </div>
+              <div class="exp-conclusion-box">
+                <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
+                <p class="exp-conclusion-text" id="result-conclusion-text"></p>
+              </div>
+            </div>
+
+            <div id="result-inprogress" style="display:none;text-align:center;padding:30px 20px;">
+              <div style="font-size:2rem;margin-bottom:12px;animation:sectionFadeIn 1.5s ease-in-out infinite;">🌿</div>
+              <p style="font-size:0.9rem;font-weight:600;color:var(--accent-btn);">Simulation in progress…</p>
+              <p style="font-size:0.82rem;margin-top:6px;color:var(--text-soft);">Results will populate here once the recursion tree completes.</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /.exp-panel -->
+    </main>
+
+  </div><!-- /.exp-main-body -->
+
+  <!-- Tooltip & Toast -->
+  <div class="fib-tooltip" id="fibTooltip"></div>
+  <div class="fib-toast" id="fibToast"></div>
+
+  <script>
+    /* =====================================================
+       THEME & PAGE NAV
+    ===================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggle = document.getElementById('theme-toggle-chk');
+      const saved  = localStorage.getItem('labTheme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+      if (toggle && saved === 'dark') toggle.checked = true;
+      toggle?.addEventListener('change', () => {
+        const t = toggle.checked ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+        localStorage.setItem('labTheme', t);
+      });
+
+      const navBtns  = document.querySelectorAll('.exp-nav-btn');
+      const sections = document.querySelectorAll('.exp-section-content');
+      const fill     = document.getElementById('progress-fill');
+      const pct      = document.getElementById('progress-pct');
+      const total    = navBtns.length;
+      let visited = ['aim'];
+
+      function updateProgress() {
+        const p = Math.round((visited.length / total) * 100);
+        fill.style.width = p + '%'; pct.textContent = p + '%';
+      }
+      updateProgress();
+
+      navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.section;
+          navBtns.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+          btn.classList.add('active'); btn.setAttribute('aria-current', 'true');
+          sections.forEach(s => s.classList.remove('visible'));
+          const sec = document.getElementById('section-' + target);
+          if (sec) { sec.style.animation = 'none'; sec.offsetHeight; sec.style.animation = ''; sec.classList.add('visible'); }
+          if (!visited.includes(target)) visited.push(target);
+          updateProgress();
+        });
+      });
+    });
+
+    /* =====================================================
+       FIBTRACE ENGINE
+    ===================================================== */
+    const FIB_NODE_R   = 28;
+    const FIB_LVL_H    = 90;
+    const FIB_MIN_GAP  = 14;
+    const FIB_SPEED_MAP = [1200, 780, 480, 260, 110];
+
+    /* --- DOM refs --- */
+    const fibNInput      = document.getElementById('fibNInput');
+    const fibError       = document.getElementById('fibError');
+    const fibBtnStart    = document.getElementById('fibBtnStart');
+    const fibBtnPause    = document.getElementById('fibBtnPause');
+    const fibBtnResume   = document.getElementById('fibBtnResume');
+    const fibBtnReset    = document.getElementById('fibBtnReset');
+    const fibBtnPrev     = document.getElementById('fibBtnPrev');
+    const fibBtnNext     = document.getElementById('fibBtnNext');
+    const fibSpeedSlider = document.getElementById('fibSpeedSlider');
+    const fibSpeedVal    = document.getElementById('fibSpeedVal');
+    const fibStatus      = document.getElementById('fibStatus');
+    const fibStepLabel   = document.getElementById('fibStepLabel');
+    const fibTotalLabel  = document.getElementById('fibTotalLabel');
+    const fibProgressFill= document.getElementById('fibProgressFill');
+    const fibTreeSVG     = document.getElementById('fibTreeSVG');
+    const fibTreeNodes   = document.getElementById('fibTreeNodes');
+    const fibTreeWrapper = document.getElementById('fibTreeWrapper');
+    const fibEmptyState  = document.getElementById('fibEmptyState');
+    const fibExplanation = document.getElementById('fibExplanation');
+    const fibHistory     = document.getElementById('fibHistory');
+    const fibStackList   = document.getElementById('fibStackList');
+    const fibStackDepth  = document.getElementById('fibStackDepth');
+    const fibTooltip     = document.getElementById('fibTooltip');
+    const fibToast       = document.getElementById('fibToast');
+
+    const fsPillCalls  = document.getElementById('fsPillCalls');
+    const fsPillDepth  = document.getElementById('fsPillDepth');
+    const fsPillBase   = document.getElementById('fsPillBase');
+    const fsPillResult = document.getElementById('fsPillResult');
+    const fsSCalls     = document.getElementById('fsSCalls');
+    const fsSDepth     = document.getElementById('fsSDepth');
+    const fsSBase      = document.getElementById('fsSBase');
+    const fsSResult    = document.getElementById('fsSResult');
+    const fsOverlapList= document.getElementById('fsOverlapList');
+
+    /* --- State --- */
+    let fibSteps = [], fibCurrentStep = -1, fibIsRunning = false, fibIsPaused = false, fibAnimTimer = null;
+    let fibTreeData = {}, fibEdgeData = {}, fibCallFreq = {}, fibDomNodes = {}, fibSvgEdges = {};
+    let fibCallStack = [], fibExplLog = [];
+
+    /* Speed labels */
+    const SPEED_LABELS = ['Slow','Slower','Medium','Fast','Blazing'];
+    fibSpeedSlider.addEventListener('input', () => {
+      fibSpeedVal.textContent = SPEED_LABELS[fibSpeedSlider.value - 1].slice(0,4);
+    });
+    fibSpeedVal.textContent = 'Med';
+
+    /* --- Validation --- */
+    function fibValidate() {
+      const v = parseInt(fibNInput.value);
+      if (isNaN(v) || v < 0) { showFibError('Please enter a non-negative integer.'); return false; }
+      if (v > 20)            { showFibError('Values above 20 may be very slow. Use ≤ 15 for best experience.'); return false; }
+      hideFibError(); return true;
+    }
+    function showFibError(msg) { fibError.textContent = msg; fibError.classList.add('visible'); }
+    function hideFibError()    { fibError.classList.remove('visible'); }
+
+    /* --- Build simulation --- */
+    function fibBuildSim(n) {
+      fibSteps = []; fibTreeData = {}; fibEdgeData = {}; fibCallFreq = {};
+      let nc = 0;
+      function countFreq(k) { fibCallFreq[k] = (fibCallFreq[k]||0)+1; if(k<=1)return; countFreq(k-1); countFreq(k-2); }
+      countFreq(n);
+      function dfs(k, parentId, depth) {
+        const id = ++nc;
+        const edgeId = parentId ? `e_${parentId}_${id}` : null;
+        fibSteps.push({ type:'call', id, parentId, edgeId, n:k, depth,
+          msg: parentId
+            ? `Calling <span class="fib-highlight">fib(${k})</span> from <span class="fib-highlight">fib(${fibTreeData[parentId]?.n??'?'})</span>`
+            : `Starting <span class="fib-highlight">fib(${k})</span>`,
+          codeLine: k<=1 ? 1 : 3, stackAction:'push' });
+        fibTreeData[id] = { n:k, depth, parentId, value:null, id };
+        if (edgeId) fibEdgeData[edgeId] = { from:parentId, to:id };
+        if (k <= 1) {
+          fibSteps.push({ type:'base', id, n:k, value:k,
+            msg:`Base case: <span class="fib-base-hl">fib(${k}) = ${k}</span>`, codeLine:2, stackAction:null });
+          fibTreeData[id].value = k;
+          fibSteps.push({ type:'return', id, parentId, n:k, value:k,
+            msg:`Returning <span class="fib-ret-hl">${k}</span> from <span class="fib-highlight">fib(${k})</span>`+(parentId?` to <span class="fib-highlight">fib(${fibTreeData[parentId]?.n})</span>`:''),
+            codeLine:2, stackAction:'pop' });
+          return k;
+        }
+        const lv = dfs(k-1, id, depth+1);
+        const rv = dfs(k-2, id, depth+1);
+        const res = lv + rv;
+        fibTreeData[id].value = res;
+        fibSteps.push({ type:'return', id, parentId, n:k, value:res,
+          msg:`<span class="fib-highlight">fib(${k-1})</span> + <span class="fib-highlight">fib(${k-2})</span> = <span class="fib-ret-hl">${lv} + ${rv} = ${res}</span>`,
+          codeLine:3, stackAction:'pop' });
+        return res;
+      }
+      dfs(n, null, 0);
+      fibComputeLayout();
+    }
+
+    /* --- Layout --- */
+    function fibComputeLayout() {
+      const children = {};
+      const rootId = Object.keys(fibTreeData).map(Number).find(id => !fibTreeData[id].parentId);
+      Object.keys(fibTreeData).forEach(id => {
+        const nd = fibTreeData[id];
+        if (nd.parentId) { if (!children[nd.parentId]) children[nd.parentId]=[]; children[nd.parentId].push(+id); }
+      });
+      const sw = {}, nx = {};
+      function calcW(id) {
+        const ch = children[id]||[];
+        if (!ch.length) { sw[id] = FIB_NODE_R*2+FIB_MIN_GAP; return; }
+        ch.forEach(calcW); sw[id] = ch.reduce((s,c)=>s+sw[c],0);
+      }
+      calcW(rootId);
+      function assignX(id, left) {
+        const ch = children[id]||[];
+        let cur = left;
+        ch.forEach(c=>{ assignX(c,cur); cur+=sw[c]; });
+        nx[id] = ch.length ? (nx[ch[0]]+nx[ch[ch.length-1]])/2 : left+sw[id]/2;
+      }
+      assignX(rootId, 0);
+      const PAD = 50;
+      const maxDepth = Math.max(...Object.values(fibTreeData).map(n=>n.depth));
+      const cw = sw[rootId]+PAD*2, ch = (maxDepth+1)*FIB_LVL_H+PAD*2;
+      Object.keys(fibTreeData).forEach(id=>{
+        fibTreeData[id].x = nx[id]+PAD;
+        fibTreeData[id].y = fibTreeData[id].depth*FIB_LVL_H+PAD;
+      });
+      fibTreeSVG.setAttribute('width',cw); fibTreeSVG.setAttribute('height',ch);
+      fibTreeSVG.setAttribute('viewBox',`0 0 ${cw} ${ch}`);
+      fibTreeNodes.style.width=cw+'px'; fibTreeNodes.style.height=ch+'px';
+    }
+
+    /* --- DOM helpers --- */
+    function fibCreateNode(id) {
+      const nd = fibTreeData[id];
+      const el = document.createElement('div');
+      el.className='fib-tree-node'; el.id='fib_node_'+id;
+      el.style.left=nd.x+'px'; el.style.top=nd.y+'px';
+      el.innerHTML=`<span class="node-label">fib</span><span class="node-n">(${nd.n})</span><span class="node-val"></span>`;
+      el.addEventListener('mouseenter', e=>fibShowTip(e,id));
+      el.addEventListener('mouseleave', ()=>fibHideTip());
+      el.addEventListener('mousemove', e=>fibMoveTip(e));
+      fibTreeNodes.appendChild(el); fibDomNodes[id]=el;
+      requestAnimationFrame(()=>el.classList.add('visible'));
+    }
+    function fibCreateEdge(edgeId) {
+      const e = fibEdgeData[edgeId];
+      const f = fibTreeData[e.from], t = fibTreeData[e.to];
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',f.x); line.setAttribute('y1',f.y);
+      line.setAttribute('x2',t.x); line.setAttribute('y2',t.y);
+      const dx=t.x-f.x, dy=t.y-f.y, len=Math.sqrt(dx*dx+dy*dy);
+      line.setAttribute('class','fib-tree-edge'); line.id=edgeId;
+      line.setAttribute('stroke-dasharray',len); line.setAttribute('stroke-dashoffset',len);
+      fibTreeSVG.appendChild(line); fibSvgEdges[edgeId]=line;
+      requestAnimationFrame(()=>{ line.classList.add('visible'); line.style.animationDuration='0.5s'; });
+    }
+    function fibSetNodeState(id, state) {
+      const el = fibDomNodes[id]; if (!el) return;
+      el.className=`fib-tree-node visible state-${state}`;
+      const val = fibTreeData[id].value;
+      const ve = el.querySelector('.node-val');
+      if (ve && val !== null) ve.textContent=`= ${val}`;
+    }
+    function fibSetEdgeState(edgeId, state) {
+      const el = fibSvgEdges[edgeId]; if (!el) return;
+      el.className=`fib-tree-edge visible edge-${state}`;
+      el.style.strokeDasharray='none'; el.style.strokeDashoffset='0';
+    }
+    function fibShowBubble(nodeId, value) {
+      const nd = fibTreeData[nodeId]; if (!nd) return;
+      const bubble = document.createElement('div');
+      bubble.className='fib-value-bubble'; bubble.textContent=`↑ ${value}`;
+      bubble.style.left=nd.x+'px'; bubble.style.top=nd.y+'px';
+      fibTreeNodes.appendChild(bubble); setTimeout(()=>bubble.remove(), 900);
+      if (nd.parentId && fibTreeData[nd.parentId]) {
+        const p = fibTreeData[nd.parentId];
+        fibDrawBacktrackArrow(nd.x, nd.y, p.x, p.y, value);
+      }
+    }
+    function fibDrawBacktrackArrow(x1, y1, x2, y2, value) {
+      const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy)||1;
+      const ux=dx/len, uy=dy/len;
+      const sx=x1+ux*(FIB_NODE_R+4), sy=y1+uy*(FIB_NODE_R+4);
+      const ex=x2-ux*(FIB_NODE_R+4), ey=y2-uy*(FIB_NODE_R+4);
+      const edgeLen=Math.sqrt((ex-sx)**2+(ey-sy)**2);
+      const mid=`bt_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
+      const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+      const mk=document.createElementNS('http://www.w3.org/2000/svg','marker');
+      mk.setAttribute('id',mid); mk.setAttribute('markerWidth','8'); mk.setAttribute('markerHeight','8');
+      mk.setAttribute('refX','6'); mk.setAttribute('refY','3'); mk.setAttribute('orient','auto');
+      const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+      poly.setAttribute('points','0 0, 8 3, 0 6'); poly.setAttribute('fill','#FF9B6B');
+      mk.appendChild(poly); defs.appendChild(mk); fibTreeSVG.appendChild(defs);
+      const arrow=document.createElementNS('http://www.w3.org/2000/svg','line');
+      arrow.setAttribute('x1',sx); arrow.setAttribute('y1',sy);
+      arrow.setAttribute('x2',ex); arrow.setAttribute('y2',ey);
+      arrow.setAttribute('stroke','#FF9B6B'); arrow.setAttribute('stroke-width','2.5');
+      arrow.setAttribute('stroke-dasharray',`7 4`); arrow.setAttribute('stroke-dashoffset',edgeLen+20);
+      arrow.setAttribute('marker-end',`url(#${mid})`); arrow.setAttribute('class','fib-bt-arrow');
+      arrow.style.transition='stroke-dashoffset 0.55s ease';
+      fibTreeSVG.appendChild(arrow);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{ arrow.style.strokeDashoffset='0'; }));
+      const mx=(sx+ex)/2, my=(sy+ey)/2;
+      const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+      lbl.setAttribute('x',mx+8); lbl.setAttribute('y',my-6); lbl.setAttribute('fill','#FF9B6B');
+      lbl.setAttribute('font-size','11'); lbl.setAttribute('font-family','JetBrains Mono,monospace');
+      lbl.setAttribute('font-weight','700'); lbl.setAttribute('class','fib-bt-label'); lbl.setAttribute('opacity','0');
+      lbl.textContent=String(value); fibTreeSVG.appendChild(lbl);
+      setTimeout(()=>{ lbl.setAttribute('opacity','1'); lbl.style.transition='opacity 0.2s'; }, 400);
+      setTimeout(()=>{
+        arrow.style.transition='opacity 0.4s'; lbl.style.transition='opacity 0.4s';
+        arrow.style.opacity='0'; lbl.setAttribute('opacity','0');
+        setTimeout(()=>{ arrow.remove(); lbl.remove(); defs.remove(); }, 450);
+      }, 900);
+    }
+
+    /* --- Call Stack --- */
+    function fibPushStack(id) {
+      const nd = fibTreeData[id];
+      fibCallStack.push({ id, n:nd.n, depth:nd.depth });
+      fibRenderStack();
+    }
+    function fibPopStack() {
+      if (!fibCallStack.length) return;
+      fibCallStack.pop(); fibRenderStack();
+    }
+    function fibRenderStack() {
+      fibStackDepth.textContent = fibCallStack.length;
+      if (!fibCallStack.length) { fibStackList.innerHTML='<div class="fib-stack-empty">Stack is empty</div>'; return; }
+      fibStackList.innerHTML = [...fibCallStack].reverse().map((item,i)=>`
+        <div class="fib-stack-item ${i===0?'top':''}">
+          <span>fib(${item.n})</span>
+          <span class="fib-stack-depth">depth ${item.depth}</span>
+        </div>`).join('');
+    }
+
+    /* --- Code highlight --- */
+    function fibHighlight(line) {
+      document.querySelectorAll('.fib-code-line').forEach(el=>el.classList.remove('highlighted'));
+      const t = document.querySelector(`.fib-code-line[data-line="${line}"]`);
+      if (t) t.classList.add('highlighted');
+    }
+
+    /* --- Explanation --- */
+    function fibSetExplanation(html) {
+      fibExplanation.innerHTML=`<div>${html}</div>`;
+      fibExplLog.push(html); if (fibExplLog.length>20) fibExplLog.shift();
+      fibHistory.innerHTML = fibExplLog.slice(-6,-1).reverse().map(h=>`<div class="fib-hist-item">${h}</div>`).join('');
+    }
+
+    /* --- Stats update --- */
+    function fibUpdateStats() {
+      const all = Object.values(fibTreeData);
+      const calls = all.length;
+      const maxD  = all.length ? Math.max(...all.map(n=>n.depth)) : 0;
+      const bases = all.filter(n=>n.n<=1).length;
+      const res   = fibTreeData[1]?.value ?? null;
+      [fsPillCalls, fsSCalls].forEach(el=>el.textContent=calls);
+      [fsPillDepth, fsSDepth].forEach(el=>el.textContent=maxD);
+      [fsPillBase,  fsSBase].forEach(el=>el.textContent=bases);
+      const rv = res !== null ? res : '—';
+      [fsPillResult, fsSResult].forEach(el=>el.textContent=rv);
+      const overlaps = Object.entries(fibCallFreq).filter(([k,c])=>c>1 && +k>1);
+      fsOverlapList.innerHTML = overlaps.length
+        ? overlaps.map(([k,c])=>`fib(${k}) called <strong>${c}×</strong>`).join(' · ')
+        : 'No overlapping subproblems.';
+    }
+
+    /* --- Scroll to node --- */
+    function fibScrollTo(id) {
+      const nd = fibTreeData[id]; if (!nd) return;
+      const ww=fibTreeWrapper.clientWidth, wh=fibTreeWrapper.clientHeight;
+      fibTreeWrapper.scrollTo({ left:Math.max(0,nd.x-ww/2), top:Math.max(0,nd.y-wh/2), behavior:'smooth' });
+    }
+
+    /* --- Apply step --- */
+    function fibApplyStep(index) {
+      if (index<0||index>=fibSteps.length) return;
+      const step = fibSteps[index];
+      fibEmptyState.classList.add('hidden');
+
+      if (step.type==='call') {
+        if (!fibDomNodes[step.id]) fibCreateNode(step.id);
+        if (step.edgeId && !fibSvgEdges[step.edgeId]) fibCreateEdge(step.edgeId);
+        fibSetNodeState(step.id,'active');
+        if (step.edgeId) fibSetEdgeState(step.edgeId,'active');
+        if (step.parentId && fibDomNodes[step.parentId]) {
+          const pe = fibDomNodes[step.parentId];
+          if (pe.classList.contains('state-active')) pe.className='fib-tree-node visible state-done';
+        }
+        if (step.stackAction==='push') fibPushStack(step.id);
+      } else if (step.type==='base') {
+        fibSetNodeState(step.id,'base');
+        const ve = fibDomNodes[step.id]?.querySelector('.node-val');
+        if (ve) ve.textContent=`= ${step.value}`;
+        fibTreeData[step.id].value=step.value;
+      } else if (step.type==='return') {
+        fibSetNodeState(step.id,'done');
+        fibTreeData[step.id].value=step.value;
+        const ve = fibDomNodes[step.id]?.querySelector('.node-val');
+        if (ve) ve.textContent=`= ${step.value}`;
+        if (step.edgeId) fibSetEdgeState(step.edgeId,'done');
+        fibShowBubble(step.id, step.value);
+        if (step.parentId && fibDomNodes[step.parentId]) fibSetNodeState(step.parentId,'active');
+        if (step.stackAction==='pop') fibPopStack();
+      }
+
+      fibHighlight(step.codeLine);
+      fibSetExplanation(step.msg);
+      fibStepLabel.textContent=`Step ${index+1}`;
+      fibTotalLabel.textContent=`of ${fibSteps.length}`;
+      fibProgressFill.style.width=((index+1)/fibSteps.length*100)+'%';
+      fibUpdateStats();
+      fibScrollTo(step.id);
+    }
+
+    /* --- Clear visual --- */
+    function fibClearVisual() {
+      fibTreeNodes.innerHTML='';
+      while(fibTreeSVG.firstChild) fibTreeSVG.removeChild(fibTreeSVG.firstChild);
+      fibDomNodes={}; fibSvgEdges={}; fibExplLog=[];
+    }
+
+    /* --- Unapply (undo) --- */
+    function fibUnapply(targetIndex) {
+      fibClearVisual(); fibCallStack=[]; fibRenderStack();
+      if (targetIndex<0) {
+        fibEmptyState.classList.remove('hidden');
+        fibStepLabel.textContent='Step 0'; fibTotalLabel.textContent=`of ${fibSteps.length}`;
+        fibProgressFill.style.width='0%';
+        fibExplanation.innerHTML='<span class="fib-explanation-idle">Start simulation to see step-by-step explanations.</span>';
+        fibHistory.innerHTML=''; fibHighlight(-1); return;
+      }
+      for (let i=0; i<=targetIndex; i++) fibApplyStep(i);
+    }
+
+    /* --- Runner --- */
+    function fibGetDelay() { return FIB_SPEED_MAP[fibSpeedSlider.value-1]||500; }
+    async function fibRunSim() {
+      while (fibCurrentStep < fibSteps.length-1 && fibIsRunning && !fibIsPaused) {
+        fibCurrentStep++;
+        fibApplyStep(fibCurrentStep);
+        await fibSleep(fibGetDelay());
+      }
+      if (fibCurrentStep>=fibSteps.length-1 && fibIsRunning) {
+        fibIsRunning=false;
+        fibSetBtnState('done');
+        const finalVal = fibTreeData[1]?.value ?? '?';
+        fibStatus.textContent=`✅ fib(${fibNInput.value}) = ${finalVal}`;
+        fibStatus.className='fib-status done';
+        fsSResult.textContent=finalVal; fsPillResult.textContent=finalVal;
+        fibShowToast(`✅ fib(${fibNInput.value}) = ${finalVal}`);
+        fibFinalizeResult();
+      }
+    }
+    function fibSleep(ms) { return new Promise(r=>{ fibAnimTimer=setTimeout(r,ms); }); }
+
+    /* --- Button state --- */
+    function fibSetBtnState(state) {
+      fibBtnStart.disabled  = state==='running'||state==='paused';
+      fibBtnPause.disabled  = state!=='running';
+      fibBtnResume.disabled = state!=='paused';
+      fibBtnPrev.disabled   = state==='running'||fibCurrentStep<0;
+      fibBtnNext.disabled   = state==='running'||fibCurrentStep>=fibSteps.length-1;
+    }
+
+    /* --- Result finalizer --- */
+    function fibFinalizeResult() {
+      const all = Object.values(fibTreeData);
+      const n = parseInt(fibNInput.value);
+      const calls = all.length;
+      const maxD  = Math.max(...all.map(nd=>nd.depth));
+      const bases = all.filter(nd=>nd.n<=1).length;
+      const res   = fibTreeData[1]?.value ?? '?';
+      const overlaps = Object.entries(fibCallFreq).filter(([k,c])=>c>1&&+k>1);
+      const repeated = overlaps.reduce((s,[,c])=>s+(c-1), 0);
+
+      document.getElementById('result-pending').style.display='none';
+      document.getElementById('result-inprogress').style.display='none';
+      document.getElementById('result-input-label').innerHTML=
+        `<strong>Observation Table</strong> — Input: <code>fib(${n})</code>`;
+
+      const tbody = document.getElementById('result-call-tbody');
+      tbody.innerHTML = [
+        ['Input n', n, ''],
+        ['Result fib(n)', res, `${n}th Fibonacci number`],
+        ['Total Recursive Calls', calls, `~2ⁿ exponential growth`],
+        ['Maximum Recursion Depth', maxD, `Call stack grew this deep`],
+        ['Base Cases Reached', bases, `Calls where n ≤ 1`],
+        ['Repeated Subproblem Calls', repeated, `Calls that were recomputed`],
+        ['Unique Values Computed', overlaps.length+2, `Base cases + unique non-trivial`],
+      ].map(([m,v,n])=>`<tr><td>${m}</td><td><strong>${v}</strong></td><td>${n}</td></tr>`).join('');
+
+      document.getElementById('res-total-calls').textContent=calls;
+      document.getElementById('res-max-depth').textContent=maxD;
+      document.getElementById('res-base-cases').textContent=bases;
+      document.getElementById('res-repeated').textContent=repeated;
+
+      document.getElementById('result-conclusion-text').innerHTML=
+        `The recursive Fibonacci function successfully computed <code>fib(${n}) = ${res}</code>.
+        The recursion tree grew to a depth of <strong>${maxD}</strong> levels and triggered
+        <strong>${calls} total function calls</strong> — with <strong>${repeated} redundant calls</strong>
+        that recalculated values already computed in other branches (overlapping subproblems).
+        This confirms the <strong>O(2ⁿ) exponential time complexity</strong> of naive recursive Fibonacci.
+        By contrast, memoization (caching previously computed values) would reduce this to
+        <strong>O(n) time</strong> with only ${n+1} unique computations — a dramatic improvement.
+        The visualisation clearly shows how the call stack builds up and unwinds, and where
+        repeated subproblems cause inefficiency in the pure recursive approach.`;
+
+      document.getElementById('result-live').style.display='';
+    }
+
+    /* --- Tooltip --- */
+    function fibShowTip(e, id) {
+      const nd=fibTreeData[id]; const freq=fibCallFreq[nd.n]||1;
+      fibTooltip.innerHTML=`fib(${nd.n}) · depth ${nd.depth}${nd.value!==null?` · = ${nd.value}`:''}${freq>1?` · called ${freq}×`:''}`;
+      fibTooltip.classList.add('visible'); fibMoveTip(e);
+    }
+    function fibMoveTip(e) { fibTooltip.style.left=(e.clientX+14)+'px'; fibTooltip.style.top=(e.clientY-30)+'px'; }
+    function fibHideTip()  { fibTooltip.classList.remove('visible'); }
+
+    /* --- Toast --- */
+    let fibToastTimer=null;
+    function fibShowToast(msg) {
+      fibToast.textContent=msg; fibToast.classList.add('show');
+      clearTimeout(fibToastTimer); fibToastTimer=setTimeout(()=>fibToast.classList.remove('show'),2800);
+    }
+
+    /* --- Button handlers --- */
+    fibBtnStart.addEventListener('click', () => {
+      if (!fibValidate()) return;
+      clearTimeout(fibAnimTimer);
+      fibClearVisual(); fibCallStack=[]; fibRenderStack();
+      fibCurrentStep=-1; fibIsRunning=false; fibIsPaused=false;
+      fibEmptyState.classList.add('hidden');
+      fibExplLog=[];
+      fibHighlight(-1);
+      fibExplanation.innerHTML='<span class="fib-explanation-idle">Starting…</span>';
+      fibHistory.innerHTML='';
+      const n = parseInt(fibNInput.value);
+      fibBuildSim(n);
+      // Show stats immediately
+      fibUpdateStats();
+      // Result tab: show in-progress
+      document.getElementById('result-pending').style.display='none';
+      document.getElementById('result-live').style.display='none';
+      document.getElementById('result-inprogress').style.display='';
+      fibIsRunning=true;
+      fibStatus.textContent=`Running fib(${n})…`;
+      fibStatus.className='fib-status running';
+      fibSetBtnState('running');
+      fibRunSim();
+    });
+
+    fibBtnPause.addEventListener('click', () => {
+      fibIsPaused=true; fibIsRunning=false;
+      clearTimeout(fibAnimTimer);
+      fibStatus.textContent='⏸ Paused';
+      fibStatus.className='fib-status';
+      fibSetBtnState('paused');
+    });
+
+    fibBtnResume.addEventListener('click', () => {
+      if (!fibIsPaused) return;
+      fibIsPaused=false; fibIsRunning=true;
+      fibStatus.textContent='▶ Resumed…';
+      fibStatus.className='fib-status running';
+      fibSetBtnState('running');
+      fibRunSim();
+    });
+
+    fibBtnReset.addEventListener('click', () => {
+      clearTimeout(fibAnimTimer);
+      fibIsRunning=false; fibIsPaused=false;
+      fibClearVisual(); fibCallStack=[]; fibRenderStack();
+      fibCurrentStep=-1; fibSteps=[]; fibTreeData={}; fibEdgeData={}; fibCallFreq={}; fibDomNodes={}; fibSvgEdges={};
+      fibEmptyState.classList.remove('hidden');
+      fibStepLabel.textContent='Step 0'; fibTotalLabel.textContent='of 0';
+      fibProgressFill.style.width='0%';
+      fibHighlight(-1);
+      fibExplanation.innerHTML='<span class="fib-explanation-idle">Start simulation to see step-by-step explanations.</span>';
+      fibHistory.innerHTML='';
+      [fsPillCalls,fsSCalls,fsPillDepth,fsSDepth,fsPillBase,fsSBase].forEach(el=>el.textContent='0');
+      [fsPillResult,fsSResult].forEach(el=>el.textContent='—');
+      fsOverlapList.textContent='Run simulation...';
+      fibStatus.textContent='Enter n and press Start'; fibStatus.className='fib-status';
+      document.getElementById('result-inprogress').style.display='none';
+      document.getElementById('result-live').style.display='none';
+      document.getElementById('result-pending').style.display='';
+      fibSetBtnState('idle');
+    });
+
+    fibBtnPrev.addEventListener('click', () => {
+      if (fibCurrentStep<0) return;
+      fibCurrentStep--;
+      fibUnapply(fibCurrentStep);
+      fibSetBtnState('paused');
+    });
+
+    fibBtnNext.addEventListener('click', () => {
+      if (fibCurrentStep>=fibSteps.length-1) return;
+      fibIsPaused=true; fibIsRunning=false;
+      fibCurrentStep++;
+      fibApplyStep(fibCurrentStep);
+      fibSetBtnState('paused');
+      if (fibCurrentStep>=fibSteps.length-1) {
+        fibSetBtnState('done');
+        fibFinalizeResult();
+      }
+    });
+
+    fibNInput.addEventListener('keydown', e=>{ if(e.key==='Enter') fibBtnStart.click(); });
+    fibNInput.addEventListener('input', ()=>{ const v=parseInt(fibNInput.value); if(!isNaN(v)&&v<0)fibNInput.value=0; hideFibError(); });
+
+    /* --- Init --- */
+    fibSetBtnState('idle');
+  </script>
+
+</body>
+</html>

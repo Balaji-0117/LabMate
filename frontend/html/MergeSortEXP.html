@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experiment — LabMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/portal.css" />
+
+    <style>
+        /* =============================================
+           EXPERIMENT PAGE — Scoped Styles
+           ============================================= */
+        .exp-page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-page);
+        }
+
+        .exp-breadcrumb {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-var);
+            padding: 10px 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-soft);
+        }
+
+        .exp-breadcrumb a {
+            color: var(--accent-btn, var(--teal));
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .exp-breadcrumb a:hover {
+            color: var(--btn-hover, #1270b0);
+            text-decoration: underline;
+        }
+
+        .exp-breadcrumb .sep { opacity: 0.45; margin: 0 2px; }
+
+        .exp-breadcrumb .current {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .exp-banner {
+            background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn, var(--teal)) 100%);
+            color: #fff;
+            padding: 22px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .exp-banner-icon {
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .exp-banner-meta { flex: 1; }
+
+        .exp-banner-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.78;
+            margin-bottom: 4px;
+        }
+
+        .exp-banner-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        .exp-banner-sub {
+            font-size: 0.83rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .exp-banner-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+        .exp-main-body {
+            flex: 1;
+            display: flex;
+            gap: 0;
+            padding: 32px 40px;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .exp-sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            margin-right: 28px;
+        }
+
+        .exp-sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-lg, 20px);
+            box-shadow: var(--sh-card);
+            overflow: hidden;
+            position: sticky;
+            top: 90px;
+        }
+
+        .exp-sidebar-header {
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border-var);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+        }
+
+        .exp-nav-list {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .exp-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--r-md, 12px);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-mid);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
+            text-align: left;
+            position: relative;
+        }
+
+        .exp-nav-btn:hover {
+            background: var(--scale-bg, var(--teal-dim));
+            color: var(--text-primary);
+            transform: translateX(3px);
+        }
+
+        .exp-nav-btn.active {
+            background: var(--scale-bg, var(--teal-dim));
+            color: var(--accent-btn, var(--teal));
+            font-weight: 600;
+        }
+
+        .exp-nav-btn.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            border-radius: 0 3px 3px 0;
+            background: var(--accent-btn, var(--teal));
+        }
+
+        .exp-nav-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--card-inner);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: background 0.22s ease;
+        }
+
+        .exp-nav-btn.active .exp-nav-icon {
+            background: var(--accent-btn, var(--teal));
+            color: #fff;
+        }
+
+        .exp-sidebar-progress {
+            padding: 14px 20px 18px;
+            border-top: 1px solid var(--border-var);
+        }
+
+        .exp-progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-soft);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .exp-progress-track {
+            height: 5px;
+            background: var(--scale-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .exp-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 20%;
+        }
+
+        .exp-content-area { flex: 1; min-width: 0; }
+
+        .exp-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-lg, 20px);
+            box-shadow: var(--sh-card);
+            overflow: hidden;
+        }
+
+        .exp-panel-header {
+            padding: 24px 32px 20px;
+            border-bottom: 1px solid var(--border-var);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .exp-panel-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--scale-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .exp-panel-title {
+            font-family: var(--font-display);
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+        }
+
+        .exp-panel-subtitle {
+            font-size: 0.83rem;
+            color: var(--text-soft);
+            margin-top: 2px;
+        }
+
+        .exp-panel-body { padding: 32px; }
+
+        .exp-section-content {
+            display: none;
+            animation: sectionFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .exp-section-content.visible { display: block; }
+
+        @keyframes sectionFadeIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .exp-body-text {
+            font-size: 0.95rem;
+            color: var(--text-mid);
+            line-height: 1.85;
+        }
+
+        .exp-body-text + .exp-body-text { margin-top: 16px; }
+
+        .exp-highlight-box {
+            background: var(--scale-bg);
+            border-left: 4px solid var(--accent-btn, var(--teal));
+            border-radius: 0 var(--r-md) var(--r-md) 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .exp-step-list {
+            counter-reset: steps;
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .exp-step-list li {
+            counter-increment: steps;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            font-size: 0.92rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+        }
+
+        .exp-step-list li::before {
+            content: counter(steps);
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .exp-materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .exp-material-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--card-inner);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 10px 14px;
+            font-size: 0.83rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .exp-material-chip-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-btn, var(--teal));
+            flex-shrink: 0;
+        }
+
+        .exp-result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.88rem;
+        }
+
+        .exp-result-table th {
+            background: var(--scale-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-strong);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .exp-result-table td {
+            padding: 11px 16px;
+            color: var(--text-mid);
+            border-bottom: 1px solid var(--border-var);
+            line-height: 1.4;
+        }
+
+        .exp-result-table tr:last-child td { border-bottom: none; }
+
+        .exp-result-table tr:hover td { background: var(--card-inner); }
+
+        .exp-result-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .exp-stat-card {
+            background: var(--card-inner);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 18px 16px;
+            text-align: center;
+        }
+
+        .exp-stat-value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-btn, var(--teal));
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .exp-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .exp-conclusion-box {
+            background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 20px 24px;
+            margin-top: 24px;
+        }
+
+        .exp-conclusion-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-btn, var(--teal));
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .exp-conclusion-text {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            line-height: 1.75;
+        }
+
+        .exp-divider {
+            height: 1px;
+            background: var(--border-var);
+            margin: 28px 0;
+            border: none;
+        }
+
+        .exp-tag {
+            display: inline-block;
+            background: var(--scale-bg);
+            color: var(--accent-btn, var(--teal));
+            border: 1px solid var(--border-var);
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin: 2px;
+        }
+
+        [data-theme="dark"] #site-header {
+            background: rgba(14, 14, 30, 0.97);
+        }
+
+        /* Theme switch */
+        .theme-switch {
+            display: inline-block;
+            height: 30px;
+            position: relative;
+            width: 64px;
+        }
+
+        .theme-switch input { display: none; }
+
+        .slider {
+            background-color: var(--scale-bg);
+            border: 1.5px solid var(--border-var);
+            bottom: 0; cursor: pointer; left: 0;
+            position: absolute; right: 0; top: 0;
+            transition: .4s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7px;
+            box-sizing: border-box;
+        }
+
+        .slider .icon {
+            width: 12px; height: 12px; z-index: 1;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .slider .icon svg { width: 100%; height: 100%; }
+
+        .light-icon { color: #f39c12; }
+        .dark-icon  { color: #aab; }
+
+        .slider::before {
+            background-color: var(--bg-card);
+            bottom: 3px; content: ""; height: 22px; left: 4px;
+            position: absolute;
+            transition: transform .4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            width: 22px; z-index: 2; border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider { border-color: var(--border-strong); }
+        input:checked + .slider::before { transform: translateX(34px); }
+        .slider.round { border-radius: 30px; }
+
+        /* =============================================
+           MERGE SORT SIMULATION — scoped inside .ms-sim-wrap
+           ============================================= */
+        .ms-sim-wrap {
+            --ms-font-display: 'Orbitron', sans-serif;
+            --ms-font-body: 'DM Sans', sans-serif;
+            background: var(--card-inner);
+            border: 1.5px solid var(--border-var);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ms-sim-wrap .ms-top-bar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .ms-sim-wrap .ms-title {
+            font-family: var(--ms-font-display);
+            font-size: clamp(13px, 2.5vw, 18px);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-btn, var(--teal));
+            filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent));
+        }
+
+        .ms-sim-wrap .ms-subtitle {
+            font-size: 11px;
+            color: var(--text-soft);
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        .ms-sim-wrap .ms-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            padding: 11px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 12px;
+        }
+
+        .ms-sim-wrap .ms-input-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            white-space: nowrap;
+        }
+
+        .ms-sim-wrap .ms-array-input {
+            flex: 1;
+            min-width: 160px;
+            padding: 8px 12px;
+            background: var(--bg-page);
+            border: 1.5px solid var(--border-var);
+            border-radius: 9px;
+            font-family: var(--ms-font-body);
+            font-size: 13px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .ms-sim-wrap .ms-array-input:focus { border-color: var(--accent-btn, var(--teal)); }
+        .ms-sim-wrap .ms-array-input::placeholder { color: var(--text-soft); opacity: 0.7; }
+        .ms-sim-wrap .ms-input-hint { font-size: 10px; color: var(--text-soft); width: 100%; margin-top: 2px; }
+
+        .ms-sim-wrap .ms-btn-sm {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 9px;
+            font-family: var(--ms-font-body);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
+        }
+
+        .ms-sim-wrap .ms-btn-sm:active { transform: scale(0.95); }
+        .ms-sim-wrap .ms-btn-apply { background: var(--accent-btn, var(--teal)); color: #fff; }
+        .ms-sim-wrap .ms-btn-apply:hover { background: var(--btn-hover); }
+        .ms-sim-wrap .ms-btn-random {
+            background: var(--bg-page);
+            color: var(--text-mid);
+            border: 1.5px solid var(--border-var);
+        }
+        .ms-sim-wrap .ms-btn-random:hover { background: var(--border-var); }
+
+        .ms-sim-wrap .ms-controls {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .ms-sim-wrap .ms-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border: none;
+            border-radius: 40px;
+            font-family: var(--ms-font-body);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+            user-select: none;
+        }
+
+        .ms-sim-wrap .ms-btn:active:not(:disabled) { transform: scale(0.95); }
+        .ms-sim-wrap .ms-btn:disabled { opacity: 0.32; cursor: not-allowed; }
+        .ms-sim-wrap .ms-btn-icon { width: 12px; height: 12px; flex-shrink: 0; }
+
+        .ms-sim-wrap .ms-btn-start {
+            background: var(--accent-btn, var(--teal));
+            color: #fff;
+            box-shadow: 0 3px 12px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent);
+        }
+
+        .ms-sim-wrap .ms-btn-start:hover:not(:disabled) {
+            background: var(--btn-hover);
+            transform: translateY(-1px);
+        }
+
+        .ms-sim-wrap .ms-btn-pr { background: #e6a800; color: #fff; }
+        .ms-sim-wrap .ms-btn-pr:hover:not(:disabled) { background: #c48f00; transform: translateY(-1px); }
+        .ms-sim-wrap .ms-btn-pr.is-resume { background: var(--border-strong); color: #fff; }
+        .ms-sim-wrap .ms-btn-pr.is-resume:hover:not(:disabled) { background: var(--btn-hover); }
+
+        .ms-sim-wrap .ms-btn-reset {
+            background: var(--bg-card);
+            color: var(--text-mid);
+            border: 1.5px solid var(--border-var);
+        }
+
+        .ms-sim-wrap .ms-btn-reset:hover:not(:disabled) { background: var(--scale-bg); transform: translateY(-1px); }
+
+        .ms-sim-wrap .ms-speed-group {
+            display: flex; align-items: center; gap: 8px; margin-left: auto;
+        }
+
+        .ms-sim-wrap .ms-speed-label { font-size: 10px; color: var(--text-soft); white-space: nowrap; }
+
+        .ms-sim-wrap .ms-speed-badge {
+            font-size: 10px; font-weight: 700;
+            color: var(--accent-btn, var(--teal));
+            min-width: 48px; text-align: right;
+        }
+
+        .ms-sim-wrap input[type="range"].ms-slider {
+            -webkit-appearance: none; appearance: none;
+            width: 90px; height: 4px;
+            background: var(--border-var); border-radius: 2px;
+            outline: none; cursor: pointer;
+        }
+
+        .ms-sim-wrap input[type="range"].ms-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--accent-btn, var(--teal)); cursor: pointer;
+        }
+
+        .ms-sim-wrap .ms-status-bar {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            align-items: center; margin-bottom: 18px;
+        }
+
+        .ms-sim-wrap .ms-stat-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 16px;
+            padding: 4px 12px;
+            font-size: 11px;
+            color: var(--text-soft);
+            white-space: nowrap;
+        }
+
+        .ms-sim-wrap .ms-stat-pill .val {
+            font-weight: 700;
+            color: var(--accent-btn, var(--teal));
+            margin-left: 3px;
+        }
+
+        .ms-sim-wrap #msStatusMsg { flex: 1; min-width: 150px; text-align: right; font-size: 12px; color: var(--text-soft); font-style: italic; }
+        .ms-sim-wrap #msStatusMsg.dividing  { color: #e6a800; }
+        .ms-sim-wrap #msStatusMsg.merging   { color: #5ba8ff; }
+        .ms-sim-wrap #msStatusMsg.sorted    { color: var(--border-strong); }
+        .ms-sim-wrap #msStatusMsg.done      { color: var(--accent-2, #0EC4E0); }
+        .ms-sim-wrap #msStatusMsg.paused    { color: #e6a800; }
+
+        /* ---- Tree arena ---- */
+        .ms-sim-wrap .ms-arena-wrapper {
+            position: relative; width: 100%; margin-bottom: 20px;
+        }
+
+        .ms-sim-wrap .ms-tree-canvas {
+            width: 100%;
+            min-height: 320px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px 14px;
+            gap: 0;
+            box-sizing: border-box;
+        }
+
+        .ms-sim-wrap .ms-placeholder-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 260px;
+            gap: 12px;
+            color: var(--text-soft);
+        }
+
+        .ms-sim-wrap .ms-ph-icon {
+            font-size: 2.6rem;
+            animation: ms-float-ph 3s ease-in-out infinite;
+        }
+
+        @keyframes ms-float-ph {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-8px); }
+        }
+
+        .ms-sim-wrap .ms-ph-title {
+            font-family: var(--ms-font-display);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent-btn, var(--teal));
+        }
+
+        .ms-sim-wrap .ms-ph-sub {
+            font-size: 11px;
+            color: var(--text-soft);
+            text-align: center;
+            max-width: 320px;
+            line-height: 1.6;
+        }
+
+        /* Tree levels */
+        .ms-sim-wrap .ms-level {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 6px;
+            width: 100%;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .ms-sim-wrap .ms-level-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            width: 100%;
+            text-align: left;
+            padding-left: 4px;
+            margin-bottom: 4px;
+            margin-top: 8px;
+        }
+
+        .ms-sim-wrap .ms-block {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+            background: var(--scale-bg);
+            border: 1.5px solid var(--border-var);
+            border-radius: 10px;
+            padding: 5px 8px;
+            transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+        }
+
+        .ms-sim-wrap .ms-block.dividing {
+            border-color: #FFD166;
+            background: rgba(255, 209, 102, 0.08);
+            box-shadow: 0 0 0 2px rgba(255, 209, 102, 0.2);
+        }
+
+        .ms-sim-wrap .ms-block.merging {
+            border-color: #5ba8ff;
+            background: rgba(91, 168, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(91, 168, 255, 0.2);
+        }
+
+        .ms-sim-wrap .ms-block.sorted {
+            border-color: var(--border-strong);
+            background: color-mix(in srgb, var(--border-strong) 8%, transparent);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--border-strong) 15%, transparent);
+        }
+
+        .ms-sim-wrap .ms-cell {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--ms-font-display);
+            font-size: 11px;
+            font-weight: 700;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border-var);
+            color: var(--text-primary);
+            transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.2s;
+            position: relative;
+        }
+
+        .ms-sim-wrap .ms-cell.active {
+            background: color-mix(in srgb, var(--accent-btn, var(--teal)) 15%, var(--bg-card));
+            border-color: var(--accent-btn, var(--teal));
+            color: var(--accent-btn, var(--teal));
+            transform: translateY(-2px) scale(1.06);
+        }
+
+        .ms-sim-wrap .ms-cell.comparing {
+            background: rgba(255, 209, 102, 0.18);
+            border-color: #FFD166;
+            color: #c47a00;
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 209, 102, 0.55);
+        }
+
+        .ms-sim-wrap .ms-cell.placing {
+            background: rgba(91, 168, 255, 0.18);
+            border-color: #5ba8ff;
+            color: #1a5fbf;
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 0 10px rgba(91, 168, 255, 0.55);
+        }
+
+        .ms-sim-wrap .ms-cell.sorted {
+            background: color-mix(in srgb, var(--border-strong) 12%, var(--bg-card));
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .ms-sim-wrap .ms-cell.comparing { color: #ffe8a0; }
+        [data-theme="dark"] .ms-sim-wrap .ms-cell.placing    { color: #a8ceff; }
+
+        /* Log */
+        .ms-sim-wrap .ms-log-title {
+            font-size: 10px; font-weight: 600; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--text-soft); margin-bottom: 7px;
+        }
+
+        .ms-sim-wrap .ms-log-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 12px;
+            padding: 10px 14px;
+            max-height: 110px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-var) transparent;
+        }
+
+        .ms-sim-wrap .ms-log-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            padding: 3px 0;
+            border-bottom: 1px solid color-mix(in srgb, var(--border-var) 35%, transparent);
+            font-size: 11px;
+            color: var(--text-mid);
+            line-height: 1.5;
+        }
+
+        .ms-sim-wrap .ms-log-entry:last-child { border-bottom: none; }
+
+        .ms-sim-wrap .ms-tag {
+            flex-shrink: 0;
+            font-size: 8px; font-weight: 700; letter-spacing: 0.5px;
+            text-transform: uppercase; padding: 2px 6px; border-radius: 8px; margin-top: 1px;
+        }
+
+        .ms-sim-wrap .tag-divide  { background: rgba(255, 209, 102, 0.18); color: #c47a00; }
+        .ms-sim-wrap .tag-merge   { background: rgba(91, 168, 255, 0.18);  color: #1a5fbf; }
+        .ms-sim-wrap .tag-sorted  { background: color-mix(in srgb, var(--border-strong) 18%, transparent); color: var(--border-strong); }
+        .ms-sim-wrap .tag-done    { background: color-mix(in srgb, var(--accent-2, #0EC4E0) 18%, transparent); color: var(--accent-2, #0EC4E0); }
+        .ms-sim-wrap .tag-info    { background: color-mix(in srgb, var(--accent-btn, var(--teal)) 15%, transparent); color: var(--accent-btn, var(--teal)); }
+        .ms-sim-wrap .tag-paused  { background: rgba(255, 209, 102, 0.18); color: #c47a00; }
+
+        [data-theme="dark"] .ms-sim-wrap .tag-divide { color: #ffe8a0; }
+        [data-theme="dark"] .ms-sim-wrap .tag-merge  { color: #a8ceff; }
+        [data-theme="dark"] .ms-sim-wrap .tag-paused { color: #ffe8a0; }
+
+        /* Legend */
+        .ms-sim-wrap .ms-legend {
+            display: flex; flex-wrap: wrap; gap: 14px;
+            margin-top: 16px; padding-top: 14px;
+            border-top: 1px solid var(--border-var);
+        }
+
+        .ms-sim-wrap .ms-legend-item {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 11px; color: var(--text-soft);
+        }
+
+        .ms-sim-wrap .ms-legend-cell {
+            width: 22px; height: 22px; border-radius: 6px;
+            border: 1.5px solid var(--border-var);
+            background: var(--bg-card); flex-shrink: 0;
+        }
+
+        .ms-sim-wrap .lc-idle    { border-color: var(--border-var); }
+        .ms-sim-wrap .lc-divide  { border-color: #FFD166; background: rgba(255,209,102,0.12); }
+        .ms-sim-wrap .lc-merge   { border-color: #5ba8ff; background: rgba(91,168,255,0.12); }
+        .ms-sim-wrap .lc-sorted  { border-color: var(--border-strong); background: color-mix(in srgb,var(--border-strong) 10%,transparent); }
+
+        /* ---- Responsive ---- */
+        @media (max-width: 800px) {
+            .exp-main-body { flex-direction: column; padding: 20px 16px; }
+            .exp-sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
+            .exp-sidebar-card { position: static; }
+            .exp-nav-list { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 10px; }
+            .exp-nav-btn { flex: 1; min-width: calc(50% - 3px); justify-content: center; font-size: 0.8rem; padding: 10px 8px; }
+            .exp-nav-btn.active::before { display: none; }
+            .exp-banner { padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
+            .exp-panel-body { padding: 20px; }
+            .exp-panel-header { padding: 18px 20px; }
+            .exp-breadcrumb { padding: 8px 16px; }
+        }
+
+        @media (max-width: 520px) {
+            .exp-nav-btn { min-width: calc(50% - 3px); }
+            .exp-result-stats { grid-template-columns: 1fr 1fr; }
+            .exp-banner-badge { display: none; }
+            #msStatusMsg { text-align: left; min-width: unset; width: 100%; }
+        }
+    </style>
+</head>
+
+<body class="exp-page-wrapper">
+
+    <!-- ===================== HEADER ===================== -->
+    <header class="portal-header">
+        <div class="header-left">
+            <a href="" aria-label="LabMate home">
+                <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+            </a>
+            <div class="college-info">
+                <h1 class="college-name">Aditya University</h1>
+                <span class="stream-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        style="vertical-align:-1px;margin-right:3px">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"></path>
+                        <path d="M4.93 4.93l14.14 14.14"></path>
+                    </svg>
+                    AIML Stream
+                </span>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="search-icon">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="global-search" placeholder="Search experiments &amp; records…"
+                    aria-label="Global Search" />
+            </div>
+        </div>
+
+        <div class="header-right">
+            <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+                <input type="checkbox" id="portal-theme-checkbox" />
+                <div class="slider round">
+                    <span class="icon light-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="icon dark-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </div>
+            </label>
+
+            <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="notification-badge"></span>
+            </button>
+
+            <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+                <div class="notif-panel-header">
+                    <span>Notifications</span>
+                    <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+                </div>
+                <div class="notif-list">
+                    <div class="notif-item notif-unread">
+                        <div class="notif-dot"></div>
+                        <div class="notif-body">
+                            <p>New assignment from <strong>Aditya University</strong></p>
+                            <span>Merge Sort experiment is now due this Friday</span>
+                            <time>2 hours ago</time>
+                        </div>
+                    </div>
+                    <div class="notif-item notif-unread">
+                        <div class="notif-dot"></div>
+                        <div class="notif-body">
+                            <p>Physics Lab Update</p>
+                            <span>Zener Diode Characteristics has been unlocked</span>
+                            <time>Yesterday</time>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-dropdown">
+                <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
+                    <div class="profile-avatar">S</div>
+                    <div class="profile-name-tag">
+                        <span class="prof-name">Santhosh</span>
+                        <span class="prof-roll">24P31A42XX</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="chevron-down">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-header">
+                        <div class="dh-avatar">S</div>
+                        <div>
+                            <strong>Santhosh</strong>
+                            <span>24P31A42XX · AIML</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Progress</a>
+                    <hr>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Help &amp; Support</a>
+                    <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== BREADCRUMB ===================== -->
+    <div class="exp-breadcrumb">
+        <a href="portal.html">Dashboard</a>
+        <span class="sep">›</span>
+        <a href="c_programming_lab.html">C Programming Lab</a>
+        <span class="sep">›</span>
+        <span class="current">Merge Sort</span>
+    </div>
+
+    <!-- ===================== BANNER ===================== -->
+    <div class="exp-banner">
+        <div class="exp-banner-icon">🔀</div>
+        <div class="exp-banner-meta">
+            <div class="exp-banner-label">C Programming · Experiment 02</div>
+            <div class="exp-banner-title">Merge Sort</div>
+            <div class="exp-banner-sub">Understand divide-and-conquer sorting through step-by-step visualizations.</div>
+        </div>
+    </div>
+
+    <!-- ===================== MAIN BODY ===================== -->
+    <div class="exp-main-body">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="exp-sidebar" role="complementary" aria-label="Experiment sections">
+            <div class="exp-sidebar-card">
+                <div class="exp-sidebar-header">Sections</div>
+                <nav class="exp-nav-list" aria-label="Experiment navigation">
+                    <button class="exp-nav-btn active" data-section="aim" aria-current="true">
+                        <span class="exp-nav-icon">🎯</span>Aim
+                    </button>
+                    <button class="exp-nav-btn" data-section="description">
+                        <span class="exp-nav-icon">📋</span>Description
+                    </button>
+                    <button class="exp-nav-btn" data-section="procedure">
+                        <span class="exp-nav-icon">📝</span>Procedure
+                    </button>
+                    <a href="MergeSortsimulation.html">
+                    <button class="exp-nav-btn" data-section="simulation">
+                        <span class="exp-nav-icon">💻</span>Simulation
+                    </button>
+                    </a>
+                    <button class="exp-nav-btn" data-section="result">
+                        <span class="exp-nav-icon">📊</span>Result
+                    </button>
+                </nav>
+                <div class="exp-sidebar-progress">
+                    <div class="exp-progress-label">
+                        <span>Progress</span>
+                        <span id="progress-pct">20%</span>
+                    </div>
+                    <div class="exp-progress-track">
+                        <div class="exp-progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT CONTENT AREA -->
+        <main class="exp-content-area" id="exp-content-main" role="main">
+            <div class="exp-panel">
+
+                <!-- ========== AIM ========== -->
+                <div class="exp-section-content visible" id="section-aim">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">🎯</div>
+                        <div>
+                            <div class="exp-panel-title">Aim</div>
+                            <div class="exp-panel-subtitle">Objective of this experiment</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            To understand and visualise the working of the <strong>Merge Sort algorithm</strong> — a
+                            highly efficient, comparison-based, divide-and-conquer sorting technique — and analyse its
+                            step-by-step behaviour, including the divide phase, merge phase, and the reconstruction of
+                            the sorted array.
+                        </p>
+                        <div class="exp-highlight-box">
+                            <strong>Learning Objective:</strong> Develop an intuitive understanding of how Merge Sort
+                            recursively divides an array into halves, sorts each half independently, and then merges
+                            them back together in sorted order — visualising how the divide-and-conquer strategy
+                            guarantees an efficient and stable sort.
+                        </div>
+                        <p class="exp-body-text">
+                            By the end of this experiment, you will be able to trace the full recursive execution of
+                            Merge Sort on any given array, understand the divide and merge steps, count comparisons,
+                            and appreciate its guaranteed <strong>O(n log n)</strong> time complexity across all cases.
+                        </p>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject Tags:</strong></p>
+                        <div style="margin-top:8px;">
+                            <span class="exp-tag">Sorting Algorithm</span>
+                            <span class="exp-tag">Merge Sort</span>
+                            <span class="exp-tag">Divide &amp; Conquer</span>
+                            <span class="exp-tag">O(n log n) Complexity</span>
+                            <span class="exp-tag">Recursive Algorithm</span>
+                            <span class="exp-tag">CS Lab</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== DESCRIPTION ========== -->
+                <div class="exp-section-content" id="section-description">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📋</div>
+                        <div>
+                            <div class="exp-panel-title">Description</div>
+                            <div class="exp-panel-subtitle">Theory &amp; background</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            <strong>Merge Sort</strong> is a divide-and-conquer algorithm that recursively splits an
+                            array into two halves, sorts each half, and then merges the two sorted halves into a single
+                            sorted array. It was invented by John von Neumann in 1945 and remains one of the most
+                            widely used sorting algorithms today.
+                        </p>
+                        <p class="exp-body-text">
+                            The algorithm works in two distinct phases: the <strong>Divide phase</strong>, where the
+                            array is split down to individual elements (which are trivially sorted), and the
+                            <strong>Merge phase</strong>, where sorted sub-arrays are combined by repeatedly picking
+                            the smaller of the two front elements.
+                        </p>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Program in C language:</strong></p>
+                        <div class="exp-highlight-box" style="font-family:'Courier New',monospace;font-size:0.85rem;line-height:1.5;background:var(--card-inner);overflow-x:auto;white-space:pre;padding:20px;">
+<pre><code>
+<pre><code>
+#include &lt;stdio.h&gt;
+
+// Merge two sorted halves: A[low..mid] and A[mid+1..high]
+void Merge(int A[], int n, int low, int mid, int high) {
+    int i = low;
+    int j = mid + 1;
+    int B[high - low + 1];
+    int k = 0;
+
+    while (i &lt;= mid &amp;&amp; j &lt;= high) {
+        if (A[i] &lt; A[j]) {
+            B[k++] = A[i++];
+        } else {
+            B[k++] = A[j++];
+        }
+    }
+
+    while (i &lt;= mid) {
+        B[k++] = A[i++];
+    }
+
+    while (j &lt;= high) {
+        B[k++] = A[j++];
+    }
+
+    k = 0;
+    for (int i = low; i &lt;= high; i++) {
+        A[i] = B[k++];
+    }
+}
+
+// Recursive merge sort function
+void MergeSort(int A[], int n, int low, int high) {
+    if (low &gt;= high) return;
+
+    int mid = (low + high) / 2;
+
+    MergeSort(A, n, low, mid);
+    MergeSort(A, n, mid + 1, high);
+
+    Merge(A, n, low, mid, high);
+}
+
+int main() {
+    int n;
+
+    if (scanf("%d", &amp;n) != 1) return 0;
+
+    int A[n];
+
+    for (int i = 0; i &lt; n; i++) {
+        scanf("%d", &amp;A[i]);
+    }
+
+    MergeSort(A, n, 0, n - 1);
+
+    for (int i = 0; i &lt; n; i++) {
+        printf("%d ", A[i]);
+    }
+
+    return 0;
+}
+</code></pre></div>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Complexity Analysis:</strong></p>
+                        <div class="exp-materials-grid">
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Best Case: O(n log n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Worst Case: O(n log n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Average Case: O(n log n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Space: O(n) — Not In-place</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Stable Sort: ✔ Yes</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Adaptive: ✘ No</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== PROCEDURE ========== -->
+                <div class="exp-section-content" id="section-procedure">
+                    <div class="exp-panel-header">
+                        <div class="exp-nav-icon" style="width:44px;height:44px;border-radius:12px;background:var(--scale-bg);display:flex;align-items:center;justify-content:center;font-size:1.3rem;">📝</div>
+                        <div>
+                            <div class="exp-panel-title">Procedure</div>
+                            <div class="exp-panel-subtitle">Step-by-step instructions</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">Follow each step carefully to understand how Merge Sort divides and merges the array.</p>
+                        <ol class="exp-step-list">
+                            <li>Start with an unsorted array of <strong>n</strong> elements displayed as blocks on screen.</li>
+                            <li><strong>Divide Phase — Step 1:</strong> Find the midpoint of the array and split it into two halves: the left sub-array and the right sub-array.</li>
+                            <li><strong>Divide Phase — Step 2:</strong> Recursively apply the same split to each half. Continue dividing until every sub-array contains exactly <strong>one element</strong> (a single element is always sorted).</li>
+                            <li>Once all sub-arrays are of size 1, the <strong>Merge Phase</strong> begins. Take two adjacent sorted sub-arrays.</li>
+                            <li>Compare the front elements of both sub-arrays. Place the <strong>smaller element</strong> into the merged output array. Advance the pointer in the sub-array from which the element was taken.</li>
+                            <li>Repeat the comparison until all elements from one sub-array are exhausted. Then copy any remaining elements from the other sub-array directly into the output.</li>
+                            <li>The merged sub-array is now sorted. Repeat the merge process for progressively larger sub-arrays, working your way back up the recursion tree.</li>
+                            <li>After <strong>log₂(n) levels</strong> of merging, the entire array is merged into a single fully sorted array.</li>
+                            <li>Record the total number of <strong>comparisons</strong> and <strong>merge levels</strong> in the Result section.</li>
+                        </ol>
+                        <div class="exp-highlight-box">
+                            <strong>Tip:</strong> Unlike Bubble Sort, Merge Sort never actually swaps elements — it
+                            builds a new sorted sequence by selecting and placing elements during the merge step.
+                            Pay close attention to the merge phase in the Simulation to see this clearly.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== SIMULATION ========== -->
+               <div class="exp-section-content" id="section-simulation">
+  <div class="exp-panel-header">
+    <div class="exp-panel-icon">💻</div>
+    <div>
+      <div class="exp-panel-title">Simulation</div>
+      <div class="exp-panel-subtitle">Interactive Merge Sort visualiser</div>
+    </div>
+  </div>
+  <div class="exp-panel-body">
+
+    <div class="ms2-wrap" id="ms2Wrap">
+
+      <!-- Input Row -->
+      <div class="ms2-input-row">
+        <span class="ms2-label">Array</span>
+        <input type="text" class="ms2-array-input" id="ms2Input"
+               placeholder="e.g. 38, 27, 43, 3, 9, 82" />
+        <button class="ms2-btn ms2-btn-ghost" onclick="MS2.randomize()">🎲 Random</button>
+        <button class="ms2-btn ms2-btn-primary" onclick="MS2.applyInput()">✔ Apply</button>
+        <span class="ms2-input-hint">2–8 integers, −999 to 999</span>
+      </div>
+
+      <!-- Controls Row -->
+      <div class="ms2-controls-row">
+        <button class="ms2-btn ms2-btn-primary ms2-btn-icon" id="ms2BtnStart" onclick="MS2.start()">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg>
+          Start
+        </button>
+        <button class="ms2-btn ms2-btn-pause ms2-btn-icon" id="ms2BtnPR" onclick="MS2.togglePause()" disabled>
+          <svg width="12" height="12" id="ms2PRIcon" viewBox="0 0 16 16" fill="currentColor">
+            <rect x="3" y="2" width="4" height="12" rx="1"/>
+            <rect x="9" y="2" width="4" height="12" rx="1"/>
+          </svg>
+          <span id="ms2PRLabel">Pause</span>
+        </button>
+        <button class="ms2-btn ms2-btn-ghost ms2-btn-icon" id="ms2BtnReset" onclick="MS2.reset()">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M13.5 8A5.5 5.5 0 1 1 8 2.5"/><polyline points="11 2.5 8 2.5 8 5.5"/>
+          </svg>
+          Reset
+        </button>
+
+        <div class="ms2-speed-group">
+          <span class="ms2-speed-label">Speed</span>
+          <input type="range" class="ms2-range" id="ms2Speed" min="1" max="5" value="3"
+                 oninput="MS2.setSpeed(this.value)" />
+          <span class="ms2-speed-val" id="ms2SpeedVal">Medium</span>
+        </div>
+      </div>
+
+      <!-- Stat Pills + Status -->
+      <div class="ms2-stats-row">
+        <div class="ms2-pill">Level <span class="ms2-pill-val" id="ms2StatLvl">—</span></div>
+        <div class="ms2-pill">Comparisons <span class="ms2-pill-val" id="ms2StatCmp">0</span></div>
+        <div class="ms2-pill">Merges <span class="ms2-pill-val" id="ms2StatMrg">0</span></div>
+        <div class="ms2-status-msg" id="ms2StatusMsg">Ready — press Start</div>
+      </div>
+
+      <!-- Visualisation Canvas -->
+      <div class="ms2-canvas" id="ms2Canvas">
+        <div class="ms2-placeholder" id="ms2Placeholder">
+          <div class="ms2-ph-emoji">🔀</div>
+          <div class="ms2-ph-title">Merge Sort Visualiser</div>
+          <div class="ms2-ph-sub">Enter an array or click <strong>Random</strong>, then press <strong>Start</strong>.</div>
+        </div>
+      </div>
+
+      <!-- Event Log -->
+      <div class="ms2-log-header">Event Log</div>
+      <div class="ms2-log" id="ms2Log">
+        <div class="ms2-log-entry"><span class="ms2-tag ms2-tag-info">INFO</span><span>Enter an array or click Random, then press Start.</span></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="ms2-legend">
+        <div class="ms2-leg-item"><span class="ms2-leg-dot ms2-leg-idle"></span>Idle</div>
+        <div class="ms2-leg-item"><span class="ms2-leg-dot ms2-leg-div"></span>Dividing</div>
+        <div class="ms2-leg-item"><span class="ms2-leg-dot ms2-leg-mrg"></span>Merging</div>
+        <div class="ms2-leg-item"><span class="ms2-leg-dot ms2-leg-srt"></span>Sorted</div>
+      </div>
+
+    </div><!-- /.ms2-wrap -->
+  </div><!-- /.exp-panel-body -->
+</div><!-- /#section-simulation -->
+
+                <!-- ========== RESULT ========== -->
+                <div class="exp-section-content" id="section-result">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📊</div>
+                        <div>
+                            <div class="exp-panel-title">Result</div>
+                            <div class="exp-panel-subtitle">Live observations &amp; analysis from your simulation</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+
+                        <!-- Pending state -->
+                        <div id="result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
+                            <div style="font-size:2.8rem;margin-bottom:14px;">🧪</div>
+                            <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No simulation data yet</p>
+                            <p style="font-size:0.85rem;line-height:1.7;">Run the <strong>Simulation</strong> tab first. Once sorting completes, your level-by-level merge observations and summary statistics will appear here automatically.</p>
+                        </div>
+
+                        <!-- Live results (after simulation completes) -->
+                        <div id="result-live" style="display:none;">
+                            <p class="exp-body-text" id="result-array-label"><strong>Observation Table</strong> — merge levels will be shown below:</p>
+                            <table class="exp-result-table" id="result-merge-table">
+                                <thead>
+                                    <tr>
+                                        <th>Merge Level</th>
+                                        <th>Sub-arrays Merged</th>
+                                        <th>Comparisons in Level</th>
+                                        <th>Result After Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="result-merge-tbody">
+                                    <!-- Rows added dynamically -->
+                                </tbody>
+                            </table>
+                            <hr class="exp-divider" />
+                            <p class="exp-body-text"><strong>Summary:</strong></p>
+                            <div class="exp-result-stats">
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-total-comp">—</div>
+                                    <div class="exp-stat-label">Total Comparisons</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-total-merge">—</div>
+                                    <div class="exp-stat-label">Total Merges</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-total-levels">—</div>
+                                    <div class="exp-stat-label">Levels (log₂ n)</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-array-size">—</div>
+                                    <div class="exp-stat-label">Array Size (n)</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value">O(n log n)</div>
+                                    <div class="exp-stat-label">Time Complexity</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value">O(n)</div>
+                                    <div class="exp-stat-label">Space Complexity</div>
+                                </div>
+                            </div>
+                            <div class="exp-conclusion-box">
+                                <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
+                                <p class="exp-conclusion-text" id="result-conclusion-text">
+                                    <!-- filled dynamically -->
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- In-progress state -->
+                        <div id="result-inprogress" style="display:none;text-align:center;padding:30px 20px;color:var(--text-soft);">
+                            <div style="font-size:2.2rem;margin-bottom:12px;animation:ms-float-ph 1.5s ease-in-out infinite;">🔀</div>
+                            <p style="font-size:0.9rem;font-weight:600;color:var(--accent-btn,var(--teal));">Simulation in progress…</p>
+                            <p style="font-size:0.82rem;margin-top:6px;">Results will populate here once sorting completes.</p>
+                            <p class="exp-body-text" style="margin-top:18px;">Level <span id="res-live-level">0</span> • Comparisons: <span id="res-live-comp">0</span> • Merges: <span id="res-live-merge">0</span></p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- /.exp-panel -->
+        </main>
+
+    </div><!-- /.exp-main-body -->
+
+
+    <script>
+        /* =====================================================
+           PAGE NAVIGATION & THEME
+        ===================================================== */
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Theme toggle
+            const toggle = document.getElementById('exp-theme-toggle');
+            const saved = localStorage.getItem('theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+                if (toggle && saved === 'dark') toggle.checked = true;
+            }
+            toggle?.addEventListener('change', () => {
+                const t = toggle.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', t);
+                localStorage.setItem('theme', t);
+            });
+
+            // Portal theme checkbox
+            const portalToggle = document.getElementById('portal-theme-checkbox');
+            if (saved === 'dark' && portalToggle) portalToggle.checked = true;
+            portalToggle?.addEventListener('change', () => {
+                const t = portalToggle.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', t);
+                localStorage.setItem('theme', t);
+            });
+
+            // Section navigation
+            const navBtns  = document.querySelectorAll('.exp-nav-btn');
+            const sections = document.querySelectorAll('.exp-section-content');
+            const progFill = document.getElementById('progress-fill');
+            const progPct  = document.getElementById('progress-pct');
+            const total    = navBtns.length;
+
+            let visited = (() => {
+                try { return JSON.parse(sessionStorage.getItem('msVisited') || '["aim"]'); }
+                catch { return ['aim']; }
+            })();
+
+            function updateProgress(v) {
+                const pct = Math.round((v.length / total) * 100);
+                progFill.style.width = pct + '%';
+                progPct.textContent  = pct + '%';
+            }
+            updateProgress(visited);
+
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.dataset.section;
+                    navBtns.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+                    btn.classList.add('active'); btn.setAttribute('aria-current', 'true');
+                    sections.forEach(s => s.classList.remove('visible'));
+                    const sec = document.getElementById('section-' + target);
+                    if (sec) { sec.style.animation = 'none'; sec.offsetHeight; sec.style.animation = ''; sec.classList.add('visible'); }
+                    if (!visited.includes(target)) { visited.push(target); sessionStorage.setItem('msVisited', JSON.stringify(visited)); }
+                    updateProgress(visited);
+                });
+            });
+        });
+
+
+        /* =====================================================
+           MERGE SORT ENGINE
+        ===================================================== */
+        const MSConfig = {
+            speedMap: { 1: { ms: 1400, label: 'Slow' }, 2: { ms: 900, label: 'Slower' }, 3: { ms: 560, label: 'Medium' }, 4: { ms: 260, label: 'Fast' }, 5: { ms: 110, label: 'Blazing' } },
+            current: 3,
+            get ms() { return this.speedMap[this.current].ms; },
+        };
+
+        const MSStats = {
+            level: 0, comp: 0, merge: 0,
+            reset()    { this.level = 0; this.comp = 0; this.merge = 0; this.render(); },
+            incComp()  { this.comp++;  this.render(); },
+            incMerge() { this.merge++; this.render(); },
+            setLevel(l){ this.level = l; this.render(); },
+            render() {
+                document.getElementById('msStatLevel').textContent  = this.level || '—';
+                document.getElementById('msStatComp').textContent   = this.comp;
+                document.getElementById('msStatMerge').textContent  = this.merge;
+                const ll = document.getElementById('res-live-level');
+                const lc = document.getElementById('res-live-comp');
+                const lm = document.getElementById('res-live-merge');
+                if (ll) ll.textContent = this.level;
+                if (lc) lc.textContent = this.comp;
+                if (lm) lm.textContent = this.merge;
+            },
+        };
+
+        const MSStatus = {
+            set(msg, cls = '') { const el = document.getElementById('msStatusMsg'); el.textContent = msg; el.className = cls; },
+        };
+
+        const MSLogger = {
+            clear() { document.getElementById('msLogPanel').innerHTML = ''; },
+            add(tag, cls, msg) {
+                const p = document.getElementById('msLogPanel');
+                const e = document.createElement('div'); e.className = 'ms-log-entry';
+                e.innerHTML = `<span class="ms-tag ${cls}">${tag}</span><span>${msg}</span>`;
+                p.appendChild(e); p.scrollTop = p.scrollHeight;
+            },
+            divide(arr, l, r)    { this.add('DIVIDE', 'tag-divide', `Splitting [${arr.join(', ')}] → [${arr.slice(0,Math.ceil(arr.length/2)).join(', ')}] | [${arr.slice(Math.ceil(arr.length/2)).join(', ')}]`); },
+            merge(left, right, result) { this.add('MERGE',  'tag-merge',  `Merging [${left.join(', ')}] + [${right.join(', ')}] → [${result.join(', ')}]`); },
+            done()               { this.add('DONE',   'tag-done',   '🎉 Array fully sorted!'); },
+            paused()             { this.add('PAUSED', 'tag-paused', '⏸ Paused.'); },
+            resumed()            { this.add('INFO',   'tag-info',   '▶ Resumed.'); },
+        };
+
+        /* ---- Results Tab ---- */
+        const MSResults = {
+            initialArray: [],
+            levelData: [],
+
+            reset(arr) {
+                this.initialArray = [...arr];
+                this.levelData    = [];
+                document.getElementById('result-pending').style.display    = 'none';
+                document.getElementById('result-live').style.display       = 'none';
+                document.getElementById('result-inprogress').style.display = '';
+                document.getElementById('result-merge-tbody').innerHTML    = '';
+            },
+
+            recordLevel(levelNum, mergesInLevel, compsInLevel, snapshot) {
+                this.levelData.push({ levelNum, mergesInLevel, compsInLevel, snapshot: [...snapshot] });
+            },
+
+            finalize(totalComp, totalMerge, totalLevels, sortedArr) {
+                document.getElementById('result-inprogress').style.display = 'none';
+                document.getElementById('result-pending').style.display    = 'none';
+
+                document.getElementById('result-array-label').innerHTML =
+                    `<strong>Observation Table</strong> — Input: <code>[${this.initialArray.join(', ')}]</code>`;
+
+                const tbody = document.getElementById('result-merge-tbody');
+                tbody.innerHTML = '';
+                this.levelData.forEach(({ levelNum, mergesInLevel, compsInLevel, snapshot }) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>Level ${levelNum}</td><td>${mergesInLevel}</td><td>${compsInLevel}</td><td>${snapshot.join(', ')}</td>`;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('res-total-comp').textContent   = totalComp;
+                document.getElementById('res-total-merge').textContent  = totalMerge;
+                document.getElementById('res-total-levels').textContent = totalLevels;
+                document.getElementById('res-array-size').textContent   = sortedArr.length;
+
+                document.getElementById('result-conclusion-text').innerHTML =
+                    `The Merge Sort algorithm successfully sorted the array <code>[${this.initialArray.join(', ')}]</code>
+                    into <code>[${sortedArr.join(', ')}]</code> across <strong>${totalLevels} merge level${totalLevels !== 1 ? 's' : ''}</strong>
+                    with <strong>${totalComp} comparisons</strong> and <strong>${totalMerge} merge operation${totalMerge !== 1 ? 's' : ''}</strong>.
+                    This confirms Merge Sort's guaranteed <strong>O(n log n)</strong> time complexity regardless of
+                    input order — unlike Bubble Sort, Merge Sort's performance does not degrade for worst-case inputs.
+                    The additional <strong>O(n)</strong> auxiliary space is the trade-off for this efficiency.
+                    The visualisation clearly demonstrates the recursive divide-and-conquer strategy, where the array
+                    is split down to individual elements and merged back level by level into a fully sorted sequence.`;
+
+                document.getElementById('result-live').style.display = '';
+            },
+
+            abort() {
+                document.getElementById('result-inprogress').style.display = 'none';
+                document.getElementById('result-pending').style.display    = '';
+            },
+        };
+
+        /* ---- Tree Canvas Renderer ---- */
+        const MSRenderer = {
+            _canvas: null,
+
+            getCanvas() {
+                if (!this._canvas) this._canvas = document.getElementById('msTreeCanvas');
+                return this._canvas;
+            },
+
+            showPlaceholder() {
+                const c = this.getCanvas(); c.innerHTML = '';
+                const ph = document.createElement('div'); ph.className = 'ms-placeholder-state'; ph.id = 'msPlaceholder';
+                ph.innerHTML = `<div class="ms-ph-icon">🔀</div>
+                    <div class="ms-ph-title">Merge Sort Visualiser</div>
+                    <div class="ms-ph-sub">Enter an array (or click Random), then press <strong>Start</strong> to watch the divide-and-conquer tree unfold level by level.</div>`;
+                c.appendChild(ph);
+            },
+
+            buildTree(array) {
+                const c = this.getCanvas(); c.innerHTML = '';
+                this._renderLevel(c, [array], 'idle', 0);
+            },
+
+            _renderLevel(canvas, groups, state, levelNum) {
+                if (levelNum > 0) {
+                    const lbl = document.createElement('div'); lbl.className = 'ms-level-label';
+                    lbl.textContent = levelNum === 0 ? 'Original' : `Level ${levelNum}`;
+                    canvas.appendChild(lbl);
+                }
+                const row = document.createElement('div'); row.className = 'ms-level';
+                groups.forEach(group => {
+                    const block = document.createElement('div'); block.className = 'ms-block ' + state;
+                    group.forEach(val => {
+                        const cell = document.createElement('div'); cell.className = 'ms-cell ' + state;
+                        cell.textContent = val;
+                        block.appendChild(cell);
+                    });
+                    row.appendChild(block);
+                });
+                canvas.appendChild(row);
+                return row;
+            },
+
+            addLevel(groups, state, label) {
+                const c = this.getCanvas();
+                const lbl = document.createElement('div'); lbl.className = 'ms-level-label';
+                lbl.textContent = label;
+                c.appendChild(lbl);
+                const row = document.createElement('div'); row.className = 'ms-level';
+                row.style.opacity = '0'; row.style.transform = 'translateY(8px)';
+                row.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+                groups.forEach(group => {
+                    const block = document.createElement('div'); block.className = 'ms-block ' + state;
+                    group.forEach(val => {
+                        const cell = document.createElement('div'); cell.className = 'ms-cell ' + state;
+                        cell.textContent = val;
+                        block.appendChild(cell);
+                    });
+                    row.appendChild(block);
+                });
+                c.appendChild(row);
+                c.scrollTop = c.scrollHeight;
+                requestAnimationFrame(() => {
+                    row.style.opacity   = '1';
+                    row.style.transform = 'translateY(0)';
+                });
+                return row;
+            },
+        };
+
+        /* ---- Main MS Controller ---- */
+        const MS = (() => {
+            let running = false, stopFlag = false, paused = false;
+            const SPEED_LABELS = { 1: 'Slow', 2: 'Slower', 3: 'Medium', 4: 'Fast', 5: 'Blazing' };
+
+            function setSpeed(v) {
+                MSConfig.current = +v;
+                document.getElementById('msSpeedBadge').textContent = SPEED_LABELS[v];
+            }
+
+            function randomArray() {
+                const n = 4 + Math.floor(Math.random() * 5);
+                return Array.from({ length: n }, () => {
+                    const c = Math.random();
+                    if (c < 0.4)  return Math.floor(Math.random() * 20) + 1;
+                    if (c < 0.75) return Math.floor(Math.random() * 90) + 10;
+                    return Math.floor(Math.random() * 900) + 100;
+                });
+            }
+
+            function applyInput() {
+                if (running) return;
+                const raw = document.getElementById('msArrayInput').value.trim();
+                if (!raw) { randomize(); return; }
+                const parsed = raw.split(/[,\s]+/).map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n) && n >= -999 && n <= 999);
+                if (parsed.length < 2 || parsed.length > 8) { alert('Please enter 2–8 integers between −999 and 999.'); return; }
+                _init(parsed);
+            }
+
+            function randomize() {
+                if (running) return;
+                const arr = randomArray();
+                document.getElementById('msArrayInput').value = arr.join(', ');
+                _init(arr);
+            }
+
+            function _init(arr) {
+                stopFlag = true; running = false; paused = false;
+                setUI('idle'); MSStats.reset(); MSLogger.clear();
+                MSStatus.set('Ready — press Start', '');
+                MSRenderer.buildTree(arr);
+                document.getElementById('result-pending').style.display    = '';
+                document.getElementById('result-live').style.display       = 'none';
+                document.getElementById('result-inprogress').style.display = 'none';
+                window._msInitArray = [...arr];
+            }
+
+            function reset() { randomize(); }
+
+            function togglePause() {
+                if (!running) return;
+                if (paused) {
+                    paused = false; setUI('running');
+                    MSStatus.set('▶ Resumed…', ''); MSLogger.resumed();
+                } else {
+                    paused = true; setUI('paused');
+                    MSStatus.set('⏸ Paused — press Resume to continue', 'paused'); MSLogger.paused();
+                }
+            }
+
+            function setPRBtn(isPaused) {
+                const btn = document.getElementById('msBtnPR');
+                const icon = document.getElementById('msPRIcon');
+                const label = document.getElementById('msPRLabel');
+                if (isPaused) {
+                    btn.classList.add('is-resume'); label.textContent = 'Resume';
+                    icon.innerHTML = '<path d="M3 2.5l10 5.5-10 5.5V2.5z"/>';
+                } else {
+                    btn.classList.remove('is-resume'); label.textContent = 'Pause';
+                    icon.innerHTML = '<rect x="3" y="2" width="4" height="12" rx="1"/><rect x="9" y="2" width="4" height="12" rx="1"/>';
+                }
+            }
+
+            function setUI(state) {
+                const isR = state === 'running', isP = state === 'paused';
+                document.getElementById('msBtnStart').disabled = isR || isP;
+                document.getElementById('msBtnPR').disabled    = !(isR || isP);
+                document.getElementById('msBtnReset').disabled = false;
+                setPRBtn(isP);
+            }
+
+            function delay(ms) {
+                return new Promise(resolve => {
+                    const check = () => {
+                        if (stopFlag)   { resolve(); return; }
+                        if (paused)     { setTimeout(check, 55); return; }
+                        setTimeout(resolve, ms);
+                    };
+                    check();
+                });
+            }
+
+            /* ---- Iterative BFS-style merge sort to expose levels ---- */
+            async function start() {
+                if (running) return;
+                running = true; stopFlag = false; paused = false;
+                setUI('running'); MSLogger.clear(); MSStats.reset();
+
+                const original = [...(window._msInitArray || [])];
+                MSResults.reset(original);
+
+                const canvas = document.getElementById('msTreeCanvas');
+                canvas.innerHTML = '';
+
+                // Show original
+                MSRenderer.addLevel([original], 'idle', 'Original Array');
+                await delay(MSConfig.ms * 0.5);
+
+                /* BFS level-by-level division */
+                let currentGroups = [original];
+                let divideLevel   = 1;
+
+                // ---- DIVIDE PHASE ----
+                while (currentGroups.some(g => g.length > 1)) {
+                    if (stopFlag) break;
+                    while (paused && !stopFlag) await new Promise(r => setTimeout(r, 55));
+                    if (stopFlag) break;
+
+                    const nextGroups = [];
+                    currentGroups.forEach(g => {
+                        if (g.length > 1) {
+                            const mid = Math.ceil(g.length / 2);
+                            nextGroups.push(g.slice(0, mid));
+                            nextGroups.push(g.slice(mid));
+                            MSLogger.divide(g);
+                        } else {
+                            nextGroups.push(g);
+                        }
+                    });
+
+                    MSStats.setLevel(divideLevel);
+                    MSStatus.set(`Dividing — Level ${divideLevel}`, 'dividing');
+                    MSRenderer.addLevel(nextGroups, 'dividing', `Divide — Level ${divideLevel}`);
+                    await delay(MSConfig.ms * 0.65);
+                    divideLevel++;
+                    currentGroups = nextGroups;
+                }
+
+                if (stopFlag) { running = false; setUI('idle'); MSResults.abort(); return; }
+
+                // ---- MERGE PHASE ----
+                let mergeLevel = 1;
+                let totalLevels = divideLevel - 1;
+
+                // Start with single-element groups and merge bottom-up
+                let merging = [...currentGroups];
+
+                while (merging.length > 1) {
+                    if (stopFlag) break;
+                    while (paused && !stopFlag) await new Promise(r => setTimeout(r, 55));
+                    if (stopFlag) break;
+
+                    const merged = [];
+                    let levelComp = 0;
+                    let levelMerges = 0;
+
+                    for (let i = 0; i < merging.length; i += 2) {
+                        if (i + 1 >= merging.length) { merged.push(merging[i]); continue; }
+                        const left = merging[i], right = merging[i + 1];
+                        const result = [];
+                        let li = 0, ri = 0;
+                        while (li < left.length && ri < right.length) {
+                            MSStats.incComp(); levelComp++;
+                            if (left[li] <= right[ri]) { result.push(left[li++]); }
+                            else                       { result.push(right[ri++]); }
+                        }
+                        while (li < left.length)  result.push(left[li++]);
+                        while (ri < right.length) result.push(right[ri++]);
+                        MSStats.incMerge(); levelMerges++;
+                        MSLogger.merge(left, right, result);
+                        merged.push(result);
+                    }
+
+                    MSStats.setLevel(totalLevels + mergeLevel);
+                    MSStatus.set(`Merging — Level ${mergeLevel}`, 'merging');
+                    MSRenderer.addLevel(merged, 'merging', `Merge — Level ${mergeLevel}`);
+
+                    // Snap flattened snapshot for results tab
+                    const snapshot = merged.flat();
+                    MSResults.recordLevel(mergeLevel, levelMerges, levelComp, snapshot);
+                    await delay(MSConfig.ms * 0.7);
+
+                    mergeLevel++;
+                    merging = merged;
+                }
+
+                if (!stopFlag) {
+                    const sorted = merging[0] || [];
+                    MSStatus.set('✅  All elements sorted!', 'done');
+                    MSLogger.done();
+                    // Mark final row as sorted
+                    const allBlocks = document.querySelectorAll('#msTreeCanvas .ms-block:last-of-type');
+                    allBlocks.forEach(b => {
+                        b.className = 'ms-block sorted';
+                        b.querySelectorAll('.ms-cell').forEach(c => c.className = 'ms-cell sorted');
+                    });
+                    MSResults.finalize(MSStats.comp, MSStats.merge, mergeLevel - 1, sorted);
+                } else {
+                    MSStatus.set('⏹  Stopped.', '');
+                    MSResults.abort();
+                }
+
+                running = false; setUI('idle');
+            }
+
+            function init() {
+                const arr = randomArray();
+                document.getElementById('msArrayInput').value = arr.join(', ');
+                window._msInitArray = [...arr];
+                MSRenderer.buildTree(arr);
+                setUI('idle');
+            }
+
+            return { start, togglePause, reset, randomize, applyInput, setSpeed, init };
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => { MS.init(); });
+    </script>
+    <script src="../js/portal.js"></script>
+
+</body>
+</html>
