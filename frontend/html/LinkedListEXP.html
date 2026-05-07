@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experiment — LabMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/portal.css" />
+
+    <style>
+        /* =============================================
+       EXPERIMENT PAGE — Scoped Styles
+       ============================================= */
+        .exp-page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-page);
+        }
+
+        .exp-breadcrumb {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-var);
+            padding: 10px 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-soft);
+        }
+
+        .exp-breadcrumb a {
+            color: var(--accent-btn, var(--teal));
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .exp-breadcrumb a:hover {
+            color: var(--btn-hover, #1270b0);
+            text-decoration: underline;
+        }
+
+        .exp-breadcrumb .sep {
+            opacity: 0.45;
+            margin: 0 2px;
+        }
+
+        .exp-breadcrumb .current {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .exp-banner {
+            background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn, var(--teal)) 100%);
+            color: #fff;
+            padding: 22px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .exp-banner-icon {
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .exp-banner-meta { flex: 1; }
+
+        .exp-banner-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.78;
+            margin-bottom: 4px;
+        }
+
+        .exp-banner-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        .exp-banner-sub {
+            font-size: 0.83rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .exp-banner-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+        .exp-main-body {
+            flex: 1;
+            display: flex;
+            gap: 0;
+            padding: 32px 40px;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .exp-sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            margin-right: 28px;
+        }
+
+        .exp-sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-lg, 20px);
+            box-shadow: var(--sh-card);
+            overflow: hidden;
+            position: sticky;
+            top: 90px;
+        }
+
+        .exp-sidebar-header {
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border-var);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+        }
+
+        .exp-nav-list {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .exp-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--r-md, 12px);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-mid);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
+            text-align: left;
+            position: relative;
+        }
+
+        .exp-nav-btn:hover {
+            background: var(--scale-bg, var(--teal-dim));
+            color: var(--text-primary);
+            transform: translateX(3px);
+        }
+
+        .exp-nav-btn.active {
+            background: var(--scale-bg, var(--teal-dim));
+            color: var(--accent-btn, var(--teal));
+            font-weight: 600;
+        }
+
+        .exp-nav-btn.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            border-radius: 0 3px 3px 0;
+            background: var(--accent-btn, var(--teal));
+        }
+
+        .exp-nav-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--card-inner);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: background 0.22s ease;
+        }
+
+        .exp-nav-btn.active .exp-nav-icon {
+            background: var(--accent-btn, var(--teal));
+            color: #fff;
+        }
+
+        .exp-sidebar-progress {
+            padding: 14px 20px 18px;
+            border-top: 1px solid var(--border-var);
+        }
+
+        .exp-progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-soft);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .exp-progress-track {
+            height: 5px;
+            background: var(--scale-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .exp-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 20%;
+        }
+
+        .exp-content-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .exp-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-lg, 20px);
+            box-shadow: var(--sh-card);
+            overflow: hidden;
+        }
+
+        .exp-panel-header {
+            padding: 24px 32px 20px;
+            border-bottom: 1px solid var(--border-var);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .exp-panel-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--scale-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .exp-panel-title {
+            font-family: var(--font-display);
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+        }
+
+        .exp-panel-subtitle {
+            font-size: 0.83rem;
+            color: var(--text-soft);
+            margin-top: 2px;
+        }
+
+        .exp-panel-body { padding: 32px; }
+
+        .exp-section-content {
+            display: none;
+            animation: sectionFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .exp-section-content.visible { display: block; }
+
+        @keyframes sectionFadeIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .exp-body-text {
+            font-size: 0.95rem;
+            color: var(--text-mid);
+            line-height: 1.85;
+        }
+
+        .exp-body-text + .exp-body-text { margin-top: 16px; }
+
+        .exp-highlight-box {
+            background: var(--scale-bg);
+            border-left: 4px solid var(--accent-btn, var(--teal));
+            border-radius: 0 var(--r-md) var(--r-md) 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .exp-step-list {
+            counter-reset: steps;
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .exp-step-list li {
+            counter-increment: steps;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            font-size: 0.92rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+        }
+
+        .exp-step-list li::before {
+            content: counter(steps);
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .exp-materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .exp-material-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--card-inner);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 10px 14px;
+            font-size: 0.83rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .exp-material-chip-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-btn, var(--teal));
+            flex-shrink: 0;
+        }
+
+        .exp-result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.88rem;
+        }
+
+        .exp-result-table th {
+            background: var(--scale-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-strong);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .exp-result-table td {
+            padding: 11px 16px;
+            color: var(--text-mid);
+            border-bottom: 1px solid var(--border-var);
+            line-height: 1.4;
+        }
+
+        .exp-result-table tr:last-child td { border-bottom: none; }
+        .exp-result-table tr:hover td { background: var(--card-inner); }
+
+        .exp-result-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .exp-stat-card {
+            background: var(--card-inner);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 18px 16px;
+            text-align: center;
+        }
+
+        .exp-stat-value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-btn, var(--teal));
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .exp-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-soft);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .exp-conclusion-box {
+            background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%);
+            border: 1px solid var(--border-var);
+            border-radius: var(--r-md);
+            padding: 20px 24px;
+            margin-top: 24px;
+        }
+
+        .exp-conclusion-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-btn, var(--teal));
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .exp-conclusion-text {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            line-height: 1.75;
+        }
+
+        .exp-divider {
+            height: 1px;
+            background: var(--border-var);
+            margin: 28px 0;
+            border: none;
+        }
+
+        .exp-tag {
+            display: inline-block;
+            background: var(--scale-bg);
+            color: var(--accent-btn, var(--teal));
+            border: 1px solid var(--border-var);
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin: 2px;
+        }
+
+        [data-theme="dark"] #site-header { background: rgba(14, 14, 30, 0.97); }
+
+        .theme-switch {
+            display: inline-block;
+            height: 30px;
+            position: relative;
+            width: 64px;
+        }
+
+        .theme-switch input { display: none; }
+
+        .slider {
+            background-color: var(--scale-bg);
+            border: 1.5px solid var(--border-var);
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7px;
+            box-sizing: border-box;
+        }
+
+        .slider .icon {
+            width: 12px; height: 12px; z-index: 1;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .slider .icon svg { width: 100%; height: 100%; }
+        .light-icon { color: #f39c12; }
+        .dark-icon  { color: #aab; }
+
+        .slider::before {
+            background-color: var(--bg-card);
+            bottom: 3px;
+            content: "";
+            height: 22px;
+            left: 4px;
+            position: absolute;
+            transition: transform .4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            width: 22px;
+            z-index: 2;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider { border-color: var(--border-strong); }
+        input:checked + .slider::before { transform: translateX(34px); }
+        .slider.round { border-radius: 30px; }
+
+        /* =============================================
+           LINKED LIST SIMULATION — Scoped inside .ll-wrap
+           ============================================= */
+        .ll-wrap {
+            --ll-node-w: 72px;
+            --ll-node-h: 64px;
+            --ll-font-display: 'Orbitron', sans-serif;
+            --ll-font-body: 'DM Sans', sans-serif;
+            background: var(--card-inner);
+            border: 1.5px solid var(--border-var);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ll-wrap .ll-top-bar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .ll-wrap .ll-title {
+            font-family: var(--ll-font-display);
+            font-size: clamp(13px, 2.5vw, 18px);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-btn, var(--teal));
+            filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent));
+        }
+
+        .ll-wrap .ll-subtitle {
+            font-size: 11px;
+            color: var(--text-soft);
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        /* Input row */
+        .ll-wrap .ll-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            padding: 11px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 12px;
+        }
+
+        .ll-wrap .ll-input-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            white-space: nowrap;
+        }
+
+        .ll-wrap .ll-val-input {
+            width: 90px;
+            padding: 8px 12px;
+            background: var(--bg-page);
+            border: 1.5px solid var(--border-var);
+            border-radius: 9px;
+            font-family: var(--ll-font-body);
+            font-size: 13px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .ll-wrap .ll-val-input:focus { border-color: var(--accent-btn, var(--teal)); }
+        .ll-wrap .ll-val-input::placeholder { color: var(--text-soft); opacity: 0.7; }
+
+        .ll-wrap .ll-pos-input {
+            width: 70px;
+            padding: 8px 12px;
+            background: var(--bg-page);
+            border: 1.5px solid var(--border-var);
+            border-radius: 9px;
+            font-family: var(--ll-font-body);
+            font-size: 13px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .ll-wrap .ll-pos-input:focus { border-color: var(--accent-btn, var(--teal)); }
+        .ll-wrap .ll-input-hint {
+            font-size: 10px;
+            color: var(--text-soft);
+            width: 100%;
+            margin-top: 2px;
+        }
+
+        .ll-wrap .ll-btn-sm {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 9px;
+            font-family: var(--ll-font-body);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
+        }
+
+        .ll-wrap .ll-btn-sm:active { transform: scale(0.95); }
+        .ll-wrap .ll-btn-sm:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .ll-wrap .ll-btn-insert-head { background: var(--accent-btn, var(--teal)); color: #fff; }
+        .ll-wrap .ll-btn-insert-head:hover:not(:disabled) { background: var(--btn-hover); }
+
+        .ll-wrap .ll-btn-insert-tail { background: #6c47ff; color: #fff; }
+        .ll-wrap .ll-btn-insert-tail:hover:not(:disabled) { background: #5535e0; }
+
+        .ll-wrap .ll-btn-insert-pos { background: #e6a800; color: #fff; }
+        .ll-wrap .ll-btn-insert-pos:hover:not(:disabled) { background: #c48f00; }
+
+        .ll-wrap .ll-btn-delete-val { background: #FF6B6B; color: #fff; }
+        .ll-wrap .ll-btn-delete-val:hover:not(:disabled) { background: #e04545; }
+
+        .ll-wrap .ll-btn-search { background: var(--bg-page); color: var(--text-mid); border: 1.5px solid var(--border-var); }
+        .ll-wrap .ll-btn-search:hover:not(:disabled) { background: var(--border-var); }
+
+        .ll-wrap .ll-btn-reset { background: var(--bg-page); color: var(--text-mid); border: 1.5px solid var(--border-var); }
+        .ll-wrap .ll-btn-reset:hover:not(:disabled) { background: var(--scale-bg); }
+
+        /* Status bar */
+        .ll-wrap .ll-status-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .ll-wrap .ll-stat-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 16px;
+            padding: 4px 12px;
+            font-size: 11px;
+            color: var(--text-soft);
+            white-space: nowrap;
+        }
+
+        .ll-wrap .ll-stat-pill .val {
+            font-weight: 700;
+            color: var(--accent-btn, var(--teal));
+            margin-left: 3px;
+        }
+
+        .ll-wrap #llStatusMsg {
+            flex: 1;
+            min-width: 150px;
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-soft);
+            font-style: italic;
+        }
+
+        .ll-wrap #llStatusMsg.inserting { color: var(--accent-btn, var(--teal)); }
+        .ll-wrap #llStatusMsg.deleting  { color: #FF6B6B; }
+        .ll-wrap #llStatusMsg.searching { color: #e6a800; }
+        .ll-wrap #llStatusMsg.found     { color: var(--border-strong); }
+        .ll-wrap #llStatusMsg.notfound  { color: #FF6B6B; }
+        .ll-wrap #llStatusMsg.done      { color: var(--accent-2, #0EC4E0); }
+
+        /* Arena */
+        .ll-wrap .ll-arena-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+            min-height: 140px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .ll-wrap .ll-arena {
+            display: flex;
+            align-items: center;
+            padding: 24px 20px;
+            gap: 0;
+            min-width: max-content;
+            min-height: 140px;
+            position: relative;
+        }
+
+        .ll-wrap .ll-empty-msg {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--text-soft);
+            font-style: italic;
+            pointer-events: none;
+        }
+
+        /* Node */
+        .ll-wrap .ll-node {
+            display: flex;
+            align-items: stretch;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .ll-wrap .ll-node-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: var(--ll-node-w);
+            height: var(--ll-node-h);
+            background: var(--bg-page);
+            border: 2.5px solid var(--border-strong);
+            border-radius: 12px;
+            position: relative;
+            transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+            cursor: default;
+            user-select: none;
+            will-change: transform;
+            z-index: 1;
+        }
+
+        .ll-wrap .ll-node-box::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 8px; width: 10px; height: 6px;
+            background: rgba(255,255,255,0.35);
+            border-radius: 50%;
+            transform: rotate(-20deg);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .ll-wrap .ll-node-val {
+            font-family: var(--ll-font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .ll-wrap .ll-node-label {
+            font-size: 9px;
+            color: var(--text-soft);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .ll-wrap .ll-node-ptr {
+            width: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        /* Arrow SVG between nodes */
+        .ll-wrap .ll-arrow {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ll-wrap .ll-arrow svg { overflow: visible; }
+
+        /* NULL terminator */
+        .ll-wrap .ll-null {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .ll-wrap .ll-null-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: var(--ll-node-h);
+            background: transparent;
+            border: 2px dashed var(--border-var);
+            border-radius: 10px;
+            font-family: var(--ll-font-display);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-soft);
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        /* Node states */
+        .ll-wrap .ll-node-box.state-inserting {
+            border-color: var(--accent-btn, var(--teal));
+            border-width: 3px;
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn, var(--teal)) 20%, transparent),
+                        0 0 18px color-mix(in srgb, var(--accent-btn, var(--teal)) 55%, transparent);
+            transform: translateY(-8px) scale(1.08);
+        }
+
+        .ll-wrap .ll-node-box.state-deleting {
+            border-color: #FF6B6B;
+            border-width: 3px;
+            box-shadow: 0 0 0 3px rgba(255,107,107,0.2), 0 0 18px rgba(255,107,107,0.6);
+            transform: translateY(-6px) scale(1.05);
+        }
+
+        .ll-wrap .ll-node-box.state-found {
+            border-color: #FFD166;
+            border-width: 3px;
+            box-shadow: 0 0 0 3px rgba(255,209,102,0.2), 0 0 18px rgba(255,209,102,0.7);
+            transform: translateY(-8px) scale(1.08);
+        }
+
+        .ll-wrap .ll-node-box.state-traversing {
+            border-color: #e6a800;
+            border-width: 3px;
+            box-shadow: 0 0 0 3px rgba(230,168,0,0.15), 0 0 14px rgba(230,168,0,0.5);
+            transform: translateY(-5px) scale(1.04);
+        }
+
+        /* HEAD / TAIL badges on node */
+        .ll-wrap .ll-node-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 6px;
+            white-space: nowrap;
+            z-index: 2;
+        }
+
+        .ll-wrap .badge-head {
+            background: color-mix(in srgb, var(--accent-btn, var(--teal)) 18%, transparent);
+            color: var(--accent-btn, var(--teal));
+            border: 1px solid color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent);
+        }
+
+        .ll-wrap .badge-tail {
+            background: color-mix(in srgb, #6c47ff 18%, transparent);
+            color: #6c47ff;
+            border: 1px solid color-mix(in srgb, #6c47ff 35%, transparent);
+        }
+
+        .ll-wrap .badge-headtail {
+            background: color-mix(in srgb, #e6a800 18%, transparent);
+            color: #c47a00;
+            border: 1px solid color-mix(in srgb, #e6a800 35%, transparent);
+        }
+
+        /* index badge below node */
+        .ll-wrap .ll-node-index {
+            font-size: 9px;
+            color: var(--text-soft);
+            letter-spacing: 0.3px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Full node wrapper for index below */
+        .ll-wrap .ll-node-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* Animations */
+        @keyframes ll-node-enter {
+            0%   { opacity: 0; transform: scale(0.4) translateY(-30px); }
+            60%  { opacity: 1; transform: scale(1.12) translateY(4px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes ll-node-exit {
+            0%   { opacity: 1; transform: scale(1); }
+            40%  { opacity: 0.7; transform: scale(1.1) translateY(-12px); }
+            100% { opacity: 0; transform: scale(0) translateY(-40px); }
+        }
+
+        @keyframes ll-bounce {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-5px); }
+        }
+
+        .ll-wrap .ll-node-box.bounce {
+            animation: ll-bounce 0.5s ease-in-out;
+        }
+
+        /* Log */
+        .ll-wrap .ll-log-title {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            margin-bottom: 7px;
+        }
+
+        .ll-wrap .ll-log-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-var);
+            border-radius: 12px;
+            padding: 10px 14px;
+            max-height: 110px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-var) transparent;
+        }
+
+        .ll-wrap .ll-log-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            padding: 3px 0;
+            border-bottom: 1px solid color-mix(in srgb, var(--border-var) 35%, transparent);
+            font-size: 11px;
+            color: var(--text-mid);
+            line-height: 1.5;
+        }
+
+        .ll-wrap .ll-log-entry:last-child { border-bottom: none; }
+
+        .ll-wrap .ll-tag {
+            flex-shrink: 0;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-top: 1px;
+        }
+
+        .ll-wrap .tag-insert { background: color-mix(in srgb, var(--accent-btn, var(--teal)) 15%, transparent); color: var(--accent-btn, var(--teal)); }
+        .ll-wrap .tag-delete { background: rgba(255,107,107,0.18); color: #cc2b2b; }
+        .ll-wrap .tag-search { background: rgba(255,209,102,0.18); color: #c47a00; }
+        .ll-wrap .tag-found  { background: color-mix(in srgb, var(--border-strong) 18%, transparent); color: var(--border-strong); }
+        .ll-wrap .tag-info   { background: color-mix(in srgb, var(--accent-2, #0EC4E0) 15%, transparent); color: var(--accent-2, #0EC4E0); }
+        .ll-wrap .tag-error  { background: rgba(255,107,107,0.18); color: #cc2b2b; }
+        .ll-wrap .tag-traverse { background: rgba(230,168,0,0.18); color: #c47a00; }
+
+        [data-theme="dark"] .ll-wrap .tag-delete  { color: #ffb0b0; }
+        [data-theme="dark"] .ll-wrap .tag-search  { color: #ffe8a0; }
+        [data-theme="dark"] .ll-wrap .tag-traverse { color: #ffe8a0; }
+
+        /* Legend */
+        .ll-wrap .ll-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-var);
+        }
+
+        .ll-wrap .ll-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-soft);
+        }
+
+        .ll-wrap .ll-legend-node {
+            width: 20px; height: 20px; border-radius: 6px; flex-shrink: 0;
+            background: transparent; position: relative;
+        }
+
+        .ll-wrap .ln-idle     { border: 2.5px solid var(--border-strong); }
+        .ll-wrap .ln-insert   { border: 2.5px solid var(--accent-btn, var(--teal)); box-shadow: 0 0 6px color-mix(in srgb, var(--accent-btn, var(--teal)) 50%, transparent); }
+        .ll-wrap .ln-delete   { border: 2.5px solid #FF6B6B; box-shadow: 0 0 6px rgba(255,107,107,0.6); }
+        .ll-wrap .ln-traverse { border: 2.5px solid #FFD166; box-shadow: 0 0 6px rgba(255,209,102,0.6); }
+        .ll-wrap .ln-found    { border: 2.5px solid var(--border-strong); box-shadow: 0 0 6px color-mix(in srgb, var(--border-strong) 45%, transparent); }
+
+        /* Speed controls (reuse from bubble sort style) */
+        .ll-wrap .ll-speed-group {
+            display: flex; align-items: center; gap: 8px; margin-left: auto;
+        }
+        .ll-wrap .ll-speed-label { font-size: 10px; color: var(--text-soft); white-space: nowrap; }
+        .ll-wrap .ll-speed-badge { font-size: 10px; font-weight: 700; color: var(--accent-btn, var(--teal)); min-width: 48px; text-align: right; }
+        .ll-wrap input[type="range"].ll-slider {
+            -webkit-appearance: none; appearance: none;
+            width: 90px; height: 4px; background: var(--border-var); border-radius: 2px; outline: none; cursor: pointer;
+        }
+        .ll-wrap input[type="range"].ll-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+            background: var(--accent-btn, var(--teal)); cursor: pointer;
+        }
+
+        .ll-wrap .ll-controls {
+            display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-bottom: 16px;
+        }
+
+        /* ---- Responsive ---- */
+        @media (max-width: 800px) {
+            .exp-main-body { flex-direction: column; padding: 20px 16px; }
+            .exp-sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
+            .exp-sidebar-card { position: static; }
+            .exp-nav-list { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 10px; }
+            .exp-nav-btn { flex: 1; min-width: calc(50% - 3px); justify-content: center; font-size: 0.8rem; padding: 10px 8px; }
+            .exp-nav-btn.active::before { display: none; }
+            .exp-banner { padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
+            .exp-panel-body { padding: 20px; }
+            .exp-panel-header { padding: 18px 20px; }
+            .exp-breadcrumb { padding: 8px 16px; }
+        }
+
+        @media (max-width: 520px) {
+            .exp-nav-btn { min-width: calc(50% - 3px); }
+            .exp-result-stats { grid-template-columns: 1fr 1fr; }
+            .exp-banner-badge { display: none; }
+            #llStatusMsg { text-align: left; min-width: unset; width: 100%; }
+        }
+    </style>
+</head>
+
+<body class="exp-page-wrapper">
+
+    <!-- ===================== HEADER ===================== -->
+    <header class="portal-header">
+        <div class="header-left">
+            <a href="" aria-label="LabMate home">
+                <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+            </a>
+            <div class="college-info">
+                <h1 class="college-name">Aditya University</h1>
+                <span class="stream-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        style="vertical-align:-1px;margin-right:3px">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"></path>
+                        <path d="M4.93 4.93l14.14 14.14"></path>
+                    </svg>
+                    AIML Stream
+                </span>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="search-icon">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="global-search" placeholder="Search experiments & records…"
+                    aria-label="Global Search" />
+            </div>
+        </div>
+
+        <div class="header-right">
+            <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+                <input type="checkbox" id="portal-theme-checkbox" />
+                <div class="slider round">
+                    <span class="icon light-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="icon dark-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </div>
+            </label>
+
+            <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="notification-badge"></span>
+            </button>
+
+            <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+                <div class="notif-panel-header">
+                    <span>Notifications</span>
+                    <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+                </div>
+                <div class="notif-list">
+                    <div class="notif-item notif-unread">
+                        <div class="notif-dot"></div>
+                        <div class="notif-body">
+                            <p>New assignment from <strong>Aditya University</strong></p>
+                            <span>Linked List experiment is now due this Friday</span>
+                            <time>2 hours ago</time>
+                        </div>
+                    </div>
+                    <div class="notif-item notif-unread">
+                        <div class="notif-dot"></div>
+                        <div class="notif-body">
+                            <p>C Lab Update</p>
+                            <span>Stack using Arrays has been unlocked</span>
+                            <time>Yesterday</time>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-dropdown">
+                <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
+                    <div class="profile-avatar">S</div>
+                    <div class="profile-name-tag">
+                        <span class="prof-name">Santhosh</span>
+                        <span class="prof-roll">24P31A42XX</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="chevron-down">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <div class="dropdown-menu">
+                    <div class="dropdown-header">
+                        <div class="dh-avatar">S</div>
+                        <div>
+                            <strong>Santhosh</strong>
+                            <span>24P31A42XX · AIML</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Progress</a>
+                    <hr>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Help & Support</a>
+                    <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== BREADCRUMB ===================== -->
+    <div class="exp-breadcrumb">
+        <a href="portal.html">Dashboard</a>
+        <span class="sep">›</span>
+        <a href="c_programming_lab.html">C Programming Lab</a>
+        <span class="sep">›</span>
+        <span class="current">Linked List</span>
+    </div>
+
+    <!-- ===================== BANNER ===================== -->
+    <div class="exp-banner">
+        <div class="exp-banner-icon">🔗</div>
+        <div class="exp-banner-meta">
+            <div class="exp-banner-label">C Programming · Experiment 02</div>
+            <div class="exp-banner-title">Singly Linked List</div>
+            <div class="exp-banner-sub">Visualise insert, delete, and search operations on a dynamic linked structure.</div>
+        </div>
+    </div>
+
+    <!-- ===================== MAIN BODY ===================== -->
+    <div class="exp-main-body">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="exp-sidebar" role="complementary" aria-label="Experiment sections">
+            <div class="exp-sidebar-card">
+                <div class="exp-sidebar-header">Sections</div>
+                <nav class="exp-nav-list" aria-label="Experiment navigation">
+                    <button class="exp-nav-btn active" data-section="aim" aria-current="true">
+                        <span class="exp-nav-icon">🎯</span>Aim
+                    </button>
+                    <button class="exp-nav-btn" data-section="description">
+                        <span class="exp-nav-icon">📋</span>Description
+                    </button>
+                    <button class="exp-nav-btn" data-section="procedure">
+                        <span class="exp-nav-icon">📝</span>Procedure
+                    </button>
+                    <button class="exp-nav-btn" data-section="simulation">
+                        <span class="exp-nav-icon">💻</span>Simulation
+                    </button>
+                    <button class="exp-nav-btn" data-section="result">
+                        <span class="exp-nav-icon">📊</span>Result
+                    </button>
+                </nav>
+                <div class="exp-sidebar-progress">
+                    <div class="exp-progress-label">
+                        <span>Progress</span>
+                        <span id="progress-pct">20%</span>
+                    </div>
+                    <div class="exp-progress-track">
+                        <div class="exp-progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT CONTENT AREA -->
+        <main class="exp-content-area" id="exp-content-main" role="main">
+            <div class="exp-panel">
+
+                <!-- ========== AIM ========== -->
+                <div class="exp-section-content visible" id="section-aim">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">🎯</div>
+                        <div>
+                            <div class="exp-panel-title">Aim</div>
+                            <div class="exp-panel-subtitle">Objective of this experiment</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            To understand and visualise the fundamental operations of a <strong>Singly Linked List</strong> — a
+                            dynamic data structure where each node stores a value and a pointer to the next node — and
+                            analyse insertions at the head, tail, and arbitrary positions, as well as deletion and search
+                            operations step-by-step.
+                        </p>
+                        <div class="exp-highlight-box">
+                            <strong>Learning Objective:</strong> Develop an intuitive understanding of how nodes are
+                            linked through pointers, how the <em>head</em> pointer anchors the list, and how dynamic
+                            memory allocation enables flexible list growth — unlike fixed-size arrays.
+                        </div>
+                        <p class="exp-body-text">
+                            By the end of this experiment, you will be able to trace insertions and deletions on any
+                            linked list, understand pointer re-assignment, and appreciate the <strong>O(n)</strong>
+                            traversal cost versus the <strong>O(1)</strong> head-insertion advantage of linked lists.
+                        </p>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject Tags:</strong></p>
+                        <div style="margin-top:8px;">
+                            <span class="exp-tag">Linked List</span>
+                            <span class="exp-tag">Singly Linked</span>
+                            <span class="exp-tag">Dynamic Memory</span>
+                            <span class="exp-tag">Pointer Manipulation</span>
+                            <span class="exp-tag">O(n) Traversal</span>
+                            <span class="exp-tag">CS Lab</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== DESCRIPTION ========== -->
+                <div class="exp-section-content" id="section-description">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📋</div>
+                        <div>
+                            <div class="exp-panel-title">Description</div>
+                            <div class="exp-panel-subtitle">Theory &amp; background</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            A <strong>Singly Linked List</strong> is a linear data structure where each element (called
+                            a <em>node</em>) contains two parts: a <strong>data</strong> field that stores the value,
+                            and a <strong>next</strong> pointer that holds the address of the subsequent node. The list
+                            is anchored by a <em>head</em> pointer; the last node's <em>next</em> pointer is
+                            <strong>NULL</strong>, signalling the end of the list.
+                        </p>
+                        <p class="exp-body-text">
+                            Unlike arrays, linked lists do not require contiguous memory. Nodes are dynamically
+                            allocated and connected purely through pointers, making insertions and deletions at the head
+                            extremely efficient — O(1) — while random access still requires O(n) traversal.
+                        </p>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Program in C language:</strong></p>
+                        <div class="exp-highlight-box" style="font-family: 'Courier New', monospace; font-size: 0.85rem; line-height: 1.5; background: var(--card-inner); overflow-x: auto; white-space: pre; padding: 20px;">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Insert at head
+void insertHead(struct Node** head, int val) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode-&gt;data = val;
+    newNode-&gt;next = *head;
+    *head = newNode;
+}
+
+// Insert at tail
+void insertTail(struct Node** head, int val) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode-&gt;data = val;
+    newNode-&gt;next = NULL;
+    if (*head == NULL) { *head = newNode; return; }
+    struct Node* temp = *head;
+    while (temp-&gt;next != NULL) temp = temp-&gt;next;
+    temp-&gt;next = newNode;
+}
+
+// Delete by value
+void deleteNode(struct Node** head, int val) {
+    struct Node* temp = *head, *prev = NULL;
+    while (temp != NULL &amp;&amp; temp-&gt;data != val) {
+        prev = temp; temp = temp-&gt;next;
+    }
+    if (temp == NULL) { printf("Value not found\n"); return; }
+    if (prev == NULL) *head = temp-&gt;next;
+    else prev-&gt;next = temp-&gt;next;
+    free(temp);
+}
+
+// Search by value — returns index (0-based) or -1
+int search(struct Node* head, int val) {
+    int idx = 0;
+    while (head != NULL) {
+        if (head-&gt;data == val) return idx;
+        head = head-&gt;next; idx++;
+    }
+    return -1;
+}
+
+// Display list
+void display(struct Node* head) {
+    while (head != NULL) {
+        printf("%d -&gt; ", head-&gt;data);
+        head = head-&gt;next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    struct Node* head = NULL;
+    insertTail(&amp;head, 10);
+    insertTail(&amp;head, 20);
+    insertTail(&amp;head, 30);
+    insertHead(&amp;head, 5);
+    display(head);       // 5 -&gt; 10 -&gt; 20 -&gt; 30 -&gt; NULL
+    deleteNode(&amp;head, 20);
+    display(head);       // 5 -&gt; 10 -&gt; 30 -&gt; NULL
+    printf("Search 10: index %d\n", search(head, 10));
+    return 0;
+}
+</div>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Complexity Analysis:</strong></p>
+                        <div class="exp-materials-grid">
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Insert Head: O(1)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Insert Tail: O(n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Insert at Pos: O(n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Delete: O(n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Search: O(n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Space: O(n)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== PROCEDURE ========== -->
+                <div class="exp-section-content" id="section-procedure">
+                    <div class="exp-panel-header">
+                        <div class="exp-nav-icon"
+                            style="width:44px;height:44px;border-radius:12px;background:var(--scale-bg);display:flex;align-items:center;justify-content:center;font-size:1.3rem;">
+                            📝</div>
+                        <div>
+                            <div class="exp-panel-title">Procedure</div>
+                            <div class="exp-panel-subtitle">Step-by-step instructions</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">Follow each step carefully to understand how a Singly Linked List responds to insertions, deletions, and searches.</p>
+                        <ol class="exp-step-list">
+                            <li>Observe the initial state — an empty list shown with only a <strong>NULL</strong> terminator and no head node.</li>
+                            <li>Use <strong>Insert at Head</strong> to add a node. Notice the new node becomes the head and its <em>next</em> pointer links to the former head.</li>
+                            <li>Use <strong>Insert at Tail</strong> to append a node. Observe the traversal to the last node before the new node is attached.</li>
+                            <li>Use <strong>Insert at Position</strong> by specifying a value and an index. Watch the list traverse to position <em>i−1</em>, then re-wire pointers to splice the new node in.</li>
+                            <li>Use <strong>Delete by Value</strong>. Observe the traversal that locates the target node, then the pointer bypass that removes it from the chain.</li>
+                            <li>Use <strong>Search</strong> to find a value. Watch the traversal node-by-node and note the index when the value is found (or "Not Found").</li>
+                            <li>Observe the <strong>Event Log</strong> throughout — it records every insertion, deletion, traversal step, and pointer update.</li>
+                            <li>After each operation, check the <strong>Result</strong> tab for an updated operations summary table and the current list state.</li>
+                        </ol>
+                        <div class="exp-highlight-box">
+                            <strong>Tip:</strong> Use the Speed slider to slow down the animation so you can clearly see pointer re-assignment happening node by node during traversal.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== SIMULATION ========== -->
+                <div class="exp-section-content" id="section-simulation">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">💻</div>
+                        <div>
+                            <div class="exp-panel-title">Simulation</div>
+                            <div class="exp-panel-subtitle">Interactive Singly Linked List visualiser</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body" style="padding:20px;">
+
+                        <!-- ===== LINKED LIST WIDGET ===== -->
+                        <div class="ll-wrap" id="llWrap">
+
+                            <div class="ll-top-bar">
+                                <div>
+                                    <div class="ll-title">🔗 Linked List</div>
+                                    <div class="ll-subtitle">Insert, delete, and search — watch pointers rewire in real time</div>
+                                </div>
+                                <div class="ll-speed-group">
+                                    <span class="ll-speed-label">Speed:</span>
+                                    <input type="range" class="ll-slider" id="llSpeedSlider" min="1" max="5" value="3"
+                                        oninput="LL.setSpeed(this.value)" />
+                                    <span class="ll-speed-badge" id="llSpeedBadge">Medium</span>
+                                </div>
+                            </div>
+
+                            <!-- INSERT ROW -->
+                            <div class="ll-input-row">
+                                <span class="ll-input-label">Value:</span>
+                                <input type="number" class="ll-val-input" id="llValInput" placeholder="e.g. 42" min="-999" max="999" />
+                                <span class="ll-input-label" style="margin-left:6px;">Pos:</span>
+                                <input type="number" class="ll-pos-input" id="llPosInput" placeholder="index" min="0" />
+                                <button class="ll-btn-sm ll-btn-insert-head" onclick="LL.insertHead()">⊕ Head</button>
+                                <button class="ll-btn-sm ll-btn-insert-tail" onclick="LL.insertTail()">⊕ Tail</button>
+                                <button class="ll-btn-sm ll-btn-insert-pos"  onclick="LL.insertAt()">⊕ At Pos</button>
+                                <div class="ll-input-hint">Enter a value (−999 to 999). For "At Pos", also fill in the index.</div>
+                            </div>
+
+                            <!-- DELETE / SEARCH ROW -->
+                            <div class="ll-input-row" style="margin-top:-6px;">
+                                <span class="ll-input-label">Value:</span>
+                                <input type="number" class="ll-val-input" id="llDelInput" placeholder="e.g. 42" min="-999" max="999" />
+                                <button class="ll-btn-sm ll-btn-delete-val" onclick="LL.deleteVal()">✕ Delete</button>
+                                <button class="ll-btn-sm ll-btn-search"     onclick="LL.search()">🔍 Search</button>
+                                <button class="ll-btn-sm ll-btn-reset"      onclick="LL.reset()">↺ Reset</button>
+                                <div class="ll-input-hint">Enter a value to delete or search in the current list.</div>
+                            </div>
+
+                            <!-- STATUS BAR -->
+                            <div class="ll-status-bar">
+                                <div class="ll-stat-pill">Nodes <span class="val" id="llStatNodes">0</span></div>
+                                <div class="ll-stat-pill">Insertions <span class="val" id="llStatIns">0</span></div>
+                                <div class="ll-stat-pill">Deletions <span class="val" id="llStatDel">0</span></div>
+                                <div class="ll-stat-pill">Searches <span class="val" id="llStatSearch">0</span></div>
+                                <div id="llStatusMsg">Ready — use the controls above</div>
+                            </div>
+
+                            <!-- ARENA -->
+                            <div class="ll-arena-wrapper">
+                                <div class="ll-arena" id="llArena">
+                                    <div class="ll-empty-msg" id="llEmptyMsg">List is empty — insert a node to begin</div>
+                                </div>
+                            </div>
+
+                            <!-- LOG -->
+                            <div>
+                                <div class="ll-log-title">Event Log</div>
+                                <div class="ll-log-panel" id="llLogPanel">
+                                    <div class="ll-log-entry">
+                                        <span class="ll-tag tag-info">INFO</span>
+                                        <span>List initialised — HEAD → NULL</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- LEGEND -->
+                            <div class="ll-legend">
+                                <div class="ll-legend-item"><div class="ll-legend-node ln-idle"></div>Idle</div>
+                                <div class="ll-legend-item"><div class="ll-legend-node ln-insert"></div>Inserting</div>
+                                <div class="ll-legend-item"><div class="ll-legend-node ln-delete"></div>Deleting</div>
+                                <div class="ll-legend-item"><div class="ll-legend-node ln-traverse"></div>Traversing</div>
+                                <div class="ll-legend-item"><div class="ll-legend-node ln-found"></div>Found</div>
+                            </div>
+
+                        </div><!-- /.ll-wrap -->
+
+                    </div>
+                </div>
+
+                <!-- ========== RESULT ========== -->
+                <div class="exp-section-content" id="section-result">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📊</div>
+                        <div>
+                            <div class="exp-panel-title">Result</div>
+                            <div class="exp-panel-subtitle">Live observations &amp; analysis from your simulation</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+
+                        <!-- Pending -->
+                        <div id="result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
+                            <div style="font-size:2.8rem;margin-bottom:14px;">🔗</div>
+                            <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No operations performed yet</p>
+                            <p style="font-size:0.85rem;line-height:1.7;">Use the <strong>Simulation</strong> tab to insert, delete, or search nodes. Your operation history and summary statistics will appear here automatically.</p>
+                        </div>
+
+                        <!-- Live results -->
+                        <div id="result-live" style="display:none;">
+                            <p class="exp-body-text"><strong>Operations Log Table</strong> — each operation performed on the list:</p>
+                            <table class="exp-result-table" id="result-ops-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Operation</th>
+                                        <th>Value</th>
+                                        <th>Steps Taken</th>
+                                        <th>Result</th>
+                                        <th>List After</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="result-ops-tbody"></tbody>
+                            </table>
+                            <hr class="exp-divider" />
+                            <p class="exp-body-text"><strong>Summary:</strong></p>
+                            <div class="exp-result-stats">
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-total-ins">0</div>
+                                    <div class="exp-stat-label">Insertions</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-total-del">0</div>
+                                    <div class="exp-stat-label">Deletions</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-total-srch">0</div>
+                                    <div class="exp-stat-label">Searches</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value" id="res-cur-nodes">0</div>
+                                    <div class="exp-stat-label">Current Nodes</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value">O(1)</div>
+                                    <div class="exp-stat-label">Insert Head</div>
+                                </div>
+                                <div class="exp-stat-card">
+                                    <div class="exp-stat-value">O(n)</div>
+                                    <div class="exp-stat-label">Search / Delete</div>
+                                </div>
+                            </div>
+                            <div class="exp-conclusion-box">
+                                <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
+                                <p class="exp-conclusion-text" id="result-conclusion-text"></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- /.exp-panel -->
+        </main>
+
+    </div><!-- /.exp-main-body -->
+
+
+    <script>
+        /* =====================================================
+           PAGE NAVIGATION & THEME
+        ===================================================== */
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('exp-theme-toggle');
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                if (savedTheme === 'dark' && toggle) toggle.checked = true;
+            }
+            toggle?.addEventListener('change', () => {
+                const theme = toggle.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            });
+
+            const navBtns = document.querySelectorAll('.exp-nav-btn');
+            const sections = document.querySelectorAll('.exp-section-content');
+            const progFill = document.getElementById('progress-fill');
+            const progPct  = document.getElementById('progress-pct');
+            const total = navBtns.length;
+
+            let visited = (() => { try { return JSON.parse(sessionStorage.getItem('visitedSectionsLL') || '["aim"]'); } catch { return ['aim']; } })();
+
+            function updateProgress(v) {
+                const pct = Math.round((v.length / total) * 100);
+                progFill.style.width = pct + '%';
+                progPct.textContent = pct + '%';
+            }
+            updateProgress(visited);
+
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.dataset.section;
+                    navBtns.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+                    btn.classList.add('active'); btn.setAttribute('aria-current', 'true');
+                    sections.forEach(s => s.classList.remove('visible'));
+                    const sec = document.getElementById('section-' + target);
+                    if (sec) { sec.style.animation = 'none'; sec.offsetHeight; sec.style.animation = ''; sec.classList.add('visible'); }
+                    if (!visited.includes(target)) { visited.push(target); sessionStorage.setItem('visitedSectionsLL', JSON.stringify(visited)); }
+                    updateProgress(visited);
+                });
+            });
+        });
+
+
+        /* =====================================================
+           LINKED LIST ENGINE
+        ===================================================== */
+        const LLConfig = {
+            speedMap: { 1: { ms: 1200, label: 'Slow' }, 2: { ms: 800, label: 'Slower' }, 3: { ms: 480, label: 'Medium' }, 4: { ms: 220, label: 'Fast' }, 5: { ms: 90, label: 'Blazing' } },
+            current: 3,
+            get ms() { return this.speedMap[this.current].ms; },
+        };
+
+        const LLAudio = (() => {
+            let ctx = null;
+            const getCtx = () => { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); return ctx; };
+            const tone = (freq, dur, vol = 0.05) => {
+                try {
+                    const c = getCtx(), osc = c.createOscillator(), g = c.createGain();
+                    osc.connect(g); g.connect(c.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, c.currentTime);
+                    g.gain.setValueAtTime(vol, c.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+                    osc.start(); osc.stop(c.currentTime + dur);
+                } catch (_) { }
+            };
+            return {
+                insert:   () => tone(560, 0.09, 0.05),
+                traverse: () => tone(380, 0.06, 0.03),
+                found:    () => { tone(700, 0.12, 0.06); setTimeout(() => tone(900, 0.16, 0.05), 140); },
+                notFound: () => tone(200, 0.18, 0.06),
+                delete:   () => tone(320, 0.14, 0.06),
+            };
+        })();
+
+        const LLStats = {
+            nodes: 0, ins: 0, del: 0, search: 0,
+            reset() { this.nodes = 0; this.ins = 0; this.del = 0; this.search = 0; this.render(); },
+            render() {
+                document.getElementById('llStatNodes').textContent  = this.nodes;
+                document.getElementById('llStatIns').textContent    = this.ins;
+                document.getElementById('llStatDel').textContent    = this.del;
+                document.getElementById('llStatSearch').textContent = this.search;
+            },
+        };
+
+        const LLStatus = {
+            set(msg, cls = '') {
+                const el = document.getElementById('llStatusMsg');
+                el.textContent = msg; el.className = cls;
+            },
+        };
+
+        const LLLogger = {
+            clear() { document.getElementById('llLogPanel').innerHTML = ''; },
+            add(tag, cls, msg) {
+                const p = document.getElementById('llLogPanel');
+                const e = document.createElement('div'); e.className = 'll-log-entry';
+                e.innerHTML = `<span class="ll-tag ${cls}">${tag}</span><span>${msg}</span>`;
+                p.appendChild(e); p.scrollTop = p.scrollHeight;
+            },
+        };
+
+        /* ---- Results Tab ---- */
+        const LLResults = {
+            ops: [],
+            _opNum: 0,
+
+            reset() {
+                this.ops = []; this._opNum = 0;
+                document.getElementById('result-pending').style.display = '';
+                document.getElementById('result-live').style.display = 'none';
+                document.getElementById('result-ops-tbody').innerHTML = '';
+                ['res-total-ins','res-total-del','res-total-srch','res-cur-nodes'].forEach(id => {
+                    document.getElementById(id).textContent = '0';
+                });
+            },
+
+            record(opType, val, steps, outcome, listSnapshot) {
+                this._opNum++;
+                this.ops.push({ n: this._opNum, opType, val, steps, outcome, list: listSnapshot });
+                this._refresh();
+            },
+
+            _refresh() {
+                document.getElementById('result-pending').style.display = 'none';
+                document.getElementById('result-live').style.display = '';
+
+                const tbody = document.getElementById('result-ops-tbody');
+                tbody.innerHTML = '';
+                this.ops.forEach(({ n, opType, val, steps, outcome, list }) => {
+                    const listStr = list.length ? list.join(' → ') + ' → NULL' : 'NULL';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${n}</td><td>${opType}</td><td>${val}</td><td>${steps}</td><td>${outcome}</td><td style="font-family:monospace;font-size:0.82rem;">${listStr}</td>`;
+                    tbody.appendChild(tr);
+                });
+
+                const ins    = this.ops.filter(o => o.opType.includes('Insert')).length;
+                const del    = this.ops.filter(o => o.opType === 'Delete').length;
+                const srch   = this.ops.filter(o => o.opType === 'Search').length;
+                const nodes  = LLStats.nodes;
+                document.getElementById('res-total-ins').textContent  = ins;
+                document.getElementById('res-total-del').textContent  = del;
+                document.getElementById('res-total-srch').textContent = srch;
+                document.getElementById('res-cur-nodes').textContent  = nodes;
+
+                const lastList = this.ops.length ? this.ops[this.ops.length-1].list : [];
+                const listDisp = lastList.length ? lastList.join(' → ') + ' → NULL' : 'NULL';
+                document.getElementById('result-conclusion-text').innerHTML =
+                    `After <strong>${this.ops.length} operation${this.ops.length !== 1 ? 's' : ''}</strong>
+                    (<strong>${ins}</strong> insertion${ins!==1?'s':''}, <strong>${del}</strong> deletion${del!==1?'s':''}, <strong>${srch}</strong> search${srch!==1?'es':''}),
+                    the list currently contains <strong>${nodes}</strong> node${nodes!==1?'s':''}: <code>${listDisp}</code>.
+                    This experiment demonstrates that singly linked lists enable dynamic memory usage with
+                    <strong>O(1) head insertion</strong> and <strong>O(n) traversal</strong>, making them ideal for
+                    applications requiring frequent insertions or deletions at the front of a sequence.`;
+            },
+        };
+
+        /* ---- Renderer ---- */
+        const LLRenderer = {
+            nodes: [],  // array of {val, el (wrapper), box}
+
+            _delay(ms) { return new Promise(r => setTimeout(r, ms)); },
+
+            _updateEmptyMsg() {
+                const em = document.getElementById('llEmptyMsg');
+                if (em) em.style.display = this.nodes.length ? 'none' : '';
+            },
+
+            _buildArrow() {
+                const wrap = document.createElement('div');
+                wrap.className = 'll-arrow';
+                wrap.innerHTML = `<svg width="28" height="18" viewBox="0 0 28 18">
+                    <line x1="0" y1="9" x2="22" y2="9" stroke="var(--border-strong)" stroke-width="2"/>
+                    <polyline points="17,4 24,9 17,14" fill="none" stroke="var(--border-strong)" stroke-width="2" stroke-linejoin="round"/>
+                </svg>`;
+                return wrap;
+            },
+
+            _buildNull() {
+                const wrap = document.createElement('div');
+                wrap.className = 'll-null';
+                const arrow = this._buildArrow();
+                const box = document.createElement('div'); box.className = 'll-null-box'; box.textContent = 'NULL';
+                wrap.appendChild(arrow); wrap.appendChild(box);
+                return wrap;
+            },
+
+            _redraw() {
+                const arena = document.getElementById('llArena');
+                arena.innerHTML = '';
+                if (this.nodes.length === 0) {
+                    const em = document.createElement('div'); em.className = 'll-empty-msg'; em.id = 'llEmptyMsg';
+                    em.textContent = 'List is empty — insert a node to begin';
+                    arena.appendChild(em);
+                    return;
+                }
+                this.nodes.forEach((nd, i) => {
+                    // Re-build badge
+                    const oldBadge = nd.box.querySelector('.ll-node-badge');
+                    if (oldBadge) oldBadge.remove();
+                    if (i === 0 && i === this.nodes.length - 1) {
+                        const b = document.createElement('div'); b.className = 'll-node-badge badge-headtail'; b.textContent = 'HEAD / TAIL';
+                        nd.box.appendChild(b);
+                    } else if (i === 0) {
+                        const b = document.createElement('div'); b.className = 'll-node-badge badge-head'; b.textContent = 'HEAD';
+                        nd.box.appendChild(b);
+                    } else if (i === this.nodes.length - 1) {
+                        const b = document.createElement('div'); b.className = 'll-node-badge badge-tail'; b.textContent = 'TAIL';
+                        nd.box.appendChild(b);
+                    }
+                    // Update index label
+                    const idxLabel = nd.wrapper.querySelector('.ll-node-index');
+                    if (idxLabel) idxLabel.textContent = `[${i}]`;
+
+                    arena.appendChild(nd.wrapper);
+                    if (i < this.nodes.length - 1) arena.appendChild(this._buildArrow());
+                });
+                arena.appendChild(this._buildNull());
+            },
+
+            _makeNodeWrapper(val, i) {
+                const wrapper = document.createElement('div'); wrapper.className = 'll-node-wrapper';
+                const box = document.createElement('div'); box.className = 'll-node-box';
+                const valSpan = document.createElement('div'); valSpan.className = 'll-node-val'; valSpan.textContent = val;
+                const lbl = document.createElement('div'); lbl.className = 'll-node-label'; lbl.textContent = 'data | next→';
+                box.appendChild(valSpan); box.appendChild(lbl);
+                const idxLabel = document.createElement('div'); idxLabel.className = 'll-node-index'; idxLabel.textContent = `[${i}]`;
+                wrapper.appendChild(box); wrapper.appendChild(idxLabel);
+                return { wrapper, box, val };
+            },
+
+            getValues() { return this.nodes.map(n => n.val); },
+
+            async highlightNode(i, state, ms) {
+                if (!this.nodes[i]) return;
+                this.nodes[i].box.className = 'll-node-box state-' + state;
+                await this._delay(ms);
+                this.nodes[i].box.className = 'll-node-box';
+            },
+
+            async traverseTo(target, ms) {
+                // Animate traversal from head to target index
+                for (let i = 0; i <= target && i < this.nodes.length; i++) {
+                    if (this.nodes[i]) {
+                        this.nodes[i].box.className = 'll-node-box state-traversing';
+                        LLAudio.traverse();
+                        await this._delay(ms * 0.55);
+                        if (i < target) this.nodes[i].box.className = 'll-node-box';
+                    }
+                }
+            },
+
+            async insertHead(val, ms) {
+                const nd = this._makeNodeWrapper(val, 0);
+                this.nodes.unshift(nd);
+                this._redraw();
+                nd.box.style.animation = 'none'; nd.box.offsetHeight;
+                nd.wrapper.style.animation = 'none'; nd.wrapper.offsetHeight;
+                nd.box.className = 'll-node-box state-inserting';
+                LLAudio.insert();
+                await this._delay(ms * 0.9);
+                nd.box.className = 'll-node-box';
+                this._redraw();
+            },
+
+            async insertTail(val, ms) {
+                const idx = this.nodes.length;
+                // Traverse to last node
+                if (this.nodes.length > 0) await this.traverseTo(this.nodes.length - 1, ms);
+                const nd = this._makeNodeWrapper(val, idx);
+                this.nodes.push(nd);
+                this._redraw();
+                nd.box.className = 'll-node-box state-inserting';
+                LLAudio.insert();
+                await this._delay(ms * 0.9);
+                nd.box.className = 'll-node-box';
+                this._redraw();
+            },
+
+            async insertAt(val, pos, ms) {
+                const clamp = Math.max(0, Math.min(pos, this.nodes.length));
+                if (clamp === 0) return this.insertHead(val, ms);
+                if (clamp >= this.nodes.length) return this.insertTail(val, ms);
+                await this.traverseTo(clamp - 1, ms);
+                const nd = this._makeNodeWrapper(val, clamp);
+                this.nodes.splice(clamp, 0, nd);
+                this._redraw();
+                nd.box.className = 'll-node-box state-inserting';
+                LLAudio.insert();
+                await this._delay(ms * 0.9);
+                nd.box.className = 'll-node-box';
+                this._redraw();
+            },
+
+            async deleteVal(val, ms) {
+                const idx = this.nodes.findIndex(n => n.val === val);
+                if (idx === -1) return false;
+                await this.traverseTo(idx, ms);
+                this.nodes[idx].box.className = 'll-node-box state-deleting';
+                LLAudio.delete();
+                await this._delay(ms * 0.9);
+                this.nodes.splice(idx, 1);
+                this._redraw();
+                return true;
+            },
+
+            async searchVal(val, ms) {
+                for (let i = 0; i < this.nodes.length; i++) {
+                    this.nodes[i].box.className = 'll-node-box state-traversing';
+                    LLAudio.traverse();
+                    await this._delay(ms * 0.6);
+                    if (this.nodes[i].val === val) {
+                        this.nodes[i].box.className = 'll-node-box state-found';
+                        LLAudio.found();
+                        await this._delay(ms * 1.1);
+                        this.nodes[i].box.className = 'll-node-box';
+                        return i;
+                    }
+                    this.nodes[i].box.className = 'll-node-box';
+                }
+                LLAudio.notFound();
+                return -1;
+            },
+
+            reset() { this.nodes = []; this._redraw(); },
+        };
+
+        /* ---- Main LL Controller ---- */
+        const LL = (() => {
+            let busy = false;
+            const SPEED_LABELS = { 1:'Slow',2:'Slower',3:'Medium',4:'Fast',5:'Blazing' };
+
+            function setSpeed(v) {
+                LLConfig.current = +v;
+                document.getElementById('llSpeedBadge').textContent = SPEED_LABELS[v];
+            }
+
+            function _val(id) { return parseInt(document.getElementById(id).value, 10); }
+            function _lock()   { busy = true;  document.querySelectorAll('.ll-btn-sm').forEach(b => b.disabled = true); }
+            function _unlock() { busy = false; document.querySelectorAll('.ll-btn-sm').forEach(b => b.disabled = false); }
+
+            async function insertHead() {
+                if (busy) return;
+                if (LLRenderer.nodes.length >= 10) { LLLogger.add('ERROR','tag-error','List is full (max 10 nodes).'); return; }
+                const v = _val('llValInput');
+                if (isNaN(v) || v < -999 || v > 999) { LLLogger.add('ERROR','tag-error','Enter a valid value (−999 to 999).'); return; }
+                _lock();
+                LLStatus.set(`Inserting ${v} at head…`, 'inserting');
+                LLLogger.add('INSERT','tag-insert',`insertHead(${v}) — new node becomes HEAD`);
+                await LLRenderer.insertHead(v, LLConfig.ms);
+                LLStats.nodes++; LLStats.ins++; LLStats.render();
+                LLStatus.set(`✅ ${v} inserted at HEAD`, 'done');
+                LLResults.record('Insert Head', v, 1, 'Success ✔', LLRenderer.getValues());
+                _unlock();
+            }
+
+            async function insertTail() {
+                if (busy) return;
+                if (LLRenderer.nodes.length >= 10) { LLLogger.add('ERROR','tag-error','List is full (max 10 nodes).'); return; }
+                const v = _val('llValInput');
+                if (isNaN(v) || v < -999 || v > 999) { LLLogger.add('ERROR','tag-error','Enter a valid value (−999 to 999).'); return; }
+                _lock();
+                const steps = LLRenderer.nodes.length;
+                LLStatus.set(`Inserting ${v} at tail…`, 'inserting');
+                LLLogger.add('INSERT','tag-insert',`insertTail(${v}) — traversing ${steps} node${steps!==1?'s':''} to tail`);
+                await LLRenderer.insertTail(v, LLConfig.ms);
+                LLStats.nodes++; LLStats.ins++; LLStats.render();
+                LLStatus.set(`✅ ${v} inserted at TAIL`, 'done');
+                LLResults.record('Insert Tail', v, steps + 1, 'Success ✔', LLRenderer.getValues());
+                _unlock();
+            }
+
+            async function insertAt() {
+                if (busy) return;
+                if (LLRenderer.nodes.length >= 10) { LLLogger.add('ERROR','tag-error','List is full (max 10 nodes).'); return; }
+                const v = _val('llValInput');
+                const pos = _val('llPosInput');
+                if (isNaN(v) || v < -999 || v > 999) { LLLogger.add('ERROR','tag-error','Enter a valid value.'); return; }
+                if (isNaN(pos) || pos < 0) { LLLogger.add('ERROR','tag-error','Enter a valid position ≥ 0.'); return; }
+                const clamp = Math.max(0, Math.min(pos, LLRenderer.nodes.length));
+                _lock();
+                LLStatus.set(`Inserting ${v} at position ${clamp}…`, 'inserting');
+                LLLogger.add('INSERT','tag-insert',`insertAt(${v}, ${clamp}) — traversing to index ${clamp}`);
+                await LLRenderer.insertAt(v, clamp, LLConfig.ms);
+                LLStats.nodes++; LLStats.ins++; LLStats.render();
+                LLStatus.set(`✅ ${v} inserted at [${clamp}]`, 'done');
+                LLResults.record(`Insert @[${clamp}]`, v, clamp + 1, 'Success ✔', LLRenderer.getValues());
+                _unlock();
+            }
+
+            async function deleteVal() {
+                if (busy) return;
+                const v = _val('llDelInput');
+                if (isNaN(v)) { LLLogger.add('ERROR','tag-error','Enter a value to delete.'); return; }
+                _lock();
+                LLStatus.set(`Searching for ${v} to delete…`, 'deleting');
+                LLLogger.add('DELETE','tag-delete',`deleteNode(${v}) — traversing to find value`);
+                const found = await LLRenderer.deleteVal(v, LLConfig.ms);
+                LLStats.del++; LLStats.render();
+                if (found) {
+                    LLStats.nodes--; LLStats.render();
+                    LLStatus.set(`✅ ${v} deleted`, 'done');
+                    LLLogger.add('DELETE','tag-delete',`${v} removed — pointers rewired`);
+                    LLResults.record('Delete', v, LLRenderer.nodes.length + 1, 'Deleted ✔', LLRenderer.getValues());
+                } else {
+                    LLStatus.set(`⚠ ${v} not found in list`, 'notfound');
+                    LLLogger.add('ERROR','tag-error',`${v} not found in list`);
+                    LLResults.record('Delete', v, LLRenderer.nodes.length, 'Not Found ✘', LLRenderer.getValues());
+                }
+                _unlock();
+            }
+
+            async function search() {
+                if (busy) return;
+                const v = _val('llDelInput');
+                if (isNaN(v)) { LLLogger.add('ERROR','tag-error','Enter a value to search.'); return; }
+                _lock();
+                LLStats.search++; LLStats.render();
+                LLStatus.set(`Searching for ${v}…`, 'searching');
+                LLLogger.add('SEARCH','tag-search',`search(${v}) — traversing list`);
+                const idx = await LLRenderer.searchVal(v, LLConfig.ms);
+                if (idx !== -1) {
+                    LLStatus.set(`✅ ${v} found at index [${idx}]`, 'found');
+                    LLLogger.add('FOUND','tag-found',`${v} found at [${idx}]`);
+                    LLResults.record('Search', v, idx + 1, `Found at [${idx}] ✔`, LLRenderer.getValues());
+                } else {
+                    LLStatus.set(`⚠ ${v} not found`, 'notfound');
+                    LLLogger.add('ERROR','tag-error',`${v} not found`);
+                    LLResults.record('Search', v, LLRenderer.nodes.length, 'Not Found ✘', LLRenderer.getValues());
+                }
+                _unlock();
+            }
+
+            function reset() {
+                if (busy) return;
+                LLRenderer.reset();
+                LLStats.reset();
+                LLLogger.clear();
+                LLLogger.add('INFO','tag-info','List reset — HEAD → NULL');
+                LLStatus.set('Ready — use the controls above', '');
+                LLResults.reset();
+            }
+
+            return { insertHead, insertTail, insertAt, deleteVal, search, reset, setSpeed };
+        })();
+    </script>
+    <script src="../js/portal.js"></script>
+
+</body>
+</html>
