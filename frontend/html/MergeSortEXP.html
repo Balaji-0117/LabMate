@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experiment — LabMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet" />
+
+    <!-- ============================================================
+         EXPERIMENT PAGE BASE STYLES  (your original portal/style CSS)
+         ============================================================ -->
+    <style>
+        /* ---- CSS custom properties matching YOUR exact colour palette ---- */
+        :root {
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --r-lg: 20px;
+            --r-md: 12px;
+        }
+
+        /* LIGHT MODE — your exact swatches from the image */
+        [data-theme="light"] {
+            --bg-page:       #E8F4FD;
+            --bg-card:       #FFFFFF;
+            --card-inner:    #F0F8FF;
+            --border-var:    #87CEEB;
+            --border-strong: #3A9BD5;
+            --accent-btn:    #1A88D0;
+            --accent-2:      #0EC4E0;
+            --btn-hover:     #1270B0;
+            --text-primary:  #0A2540;
+            --text-mid:      #2D5F8A;
+            --text-soft:     #6A9EBF;
+            --scale-bg:      #DCEEFA;
+            --teal:          #1A88D0;
+            --teal-dim:      rgba(26,136,208,0.10);
+            --sh-card:       0 4px 24px rgba(0,0,0,0.08);
+        }
+
+        /* DARK MODE — your exact swatches from the image */
+        [data-theme="dark"] {
+            --bg-page:       #050510;
+            --bg-card:       #0E0E1E;
+            --card-inner:    #13132A;
+            --border-var:    #2A1F5A;
+            --border-strong: #7B2FBE;
+            --accent-btn:    #9B4DFF;
+            --accent-2:      #C07AFF;
+            --btn-hover:     #7B2FBE;
+            --text-primary:  #E8E0FF;
+            --text-mid:      #A89CC8;
+            --text-soft:     #5A4F7A;
+            --scale-bg:      #0E0E22;
+            --teal:          #9B4DFF;
+            --teal-dim:      rgba(155,77,255,0.10);
+            --sh-card:       0 4px 24px rgba(0,0,0,0.45);
+        }
+
+        /* default theme */
+        html { color-scheme: dark; }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background 0.35s, color 0.35s;
+        }
+        a { text-decoration: none; color: inherit; }
+        button { font-family: var(--font-body); }
+
+        /* ---- HEADER ---- */
+        .portal-header {
+            position: sticky; top: 0; z-index: 200;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 64px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-var);
+            box-shadow: var(--sh-card);
+            gap: 16px;
+            transition: background 0.35s;
+        }
+        [data-theme="dark"] .portal-header { background: rgba(14,14,30,0.97); backdrop-filter: blur(16px); }
+        .header-left  { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+        .header-center{ flex: 1; max-width: 380px; }
+        .header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+        .portal-logo  { height: 34px; width: auto; }
+        .college-info { display: flex; flex-direction: column; gap: 1px; }
+        .college-name { font-size: 0.92rem; font-weight: 700; color: var(--text-primary); line-height: 1.1; }
+        .stream-badge {
+            font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em;
+            color: var(--accent-btn); background: var(--teal-dim);
+            padding: 2px 7px; border-radius: 8px;
+            display: inline-flex; align-items: center; gap: 3px; width: fit-content;
+        }
+        .search-wrapper { position: relative; display: flex; align-items: center; }
+        .search-icon   { position: absolute; left: 12px; color: var(--text-soft); pointer-events: none; }
+        .global-search {
+            width: 100%; padding: 8px 12px 8px 36px;
+            background: var(--bg-page); border: 1.5px solid var(--border-var);
+            border-radius: 10px; font-size: 0.84rem; color: var(--text-primary); outline: none;
+            transition: border-color 0.2s;
+        }
+        .global-search:focus { border-color: var(--accent-btn); }
+        .global-search::placeholder { color: var(--text-soft); }
+
+        .icon-btn {
+            background: var(--card-inner); border: 1px solid var(--border-var);
+            color: var(--text-primary); padding: 7px 9px; border-radius: 9px;
+            cursor: pointer; display: flex; align-items: center; transition: all 0.2s; position: relative;
+        }
+        .icon-btn:hover { border-color: var(--accent-btn); }
+        .notification-badge {
+            position: absolute; top: 4px; right: 4px; width: 7px; height: 7px;
+            background: #e84040; border-radius: 50%; border: 1.5px solid var(--bg-card);
+        }
+
+        /* Notification panel */
+        .notif-panel {
+            position: absolute; top: calc(100% + 8px); right: 0; width: 300px;
+            background: var(--bg-card); border: 1px solid var(--border-var);
+            border-radius: var(--r-lg); box-shadow: var(--sh-card); z-index: 300;
+            display: none; overflow: hidden;
+        }
+        .notif-panel.open { display: block; }
+        .notif-panel-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 16px; border-bottom: 1px solid var(--border-var);
+            font-size: 0.82rem; font-weight: 700;
+        }
+        .notif-clear-btn { font-size: 0.72rem; color: var(--accent-btn); background: none; border: none; cursor: pointer; }
+        .notif-list { max-height: 220px; overflow-y: auto; }
+        .notif-item { display: flex; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border-var); }
+        .notif-dot  { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn); flex-shrink: 0; margin-top: 4px; }
+        .notif-body p    { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); }
+        .notif-body span { font-size: 0.77rem; color: var(--text-soft); }
+        .notif-body time { font-size: 0.70rem; color: var(--text-soft); display: block; margin-top: 2px; }
+
+        /* Profile dropdown */
+        .profile-dropdown { position: relative; }
+        .profile-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--card-inner); border: 1px solid var(--border-var);
+            padding: 6px 12px 6px 6px; border-radius: 10px; cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .profile-btn:hover { border-color: var(--accent-btn); }
+        .profile-avatar {
+            width: 30px; height: 30px; border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
+            color: #fff; font-weight: 700; font-size: 0.88rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .profile-name-tag { display: flex; flex-direction: column; gap: 1px; text-align: left; }
+        .prof-name { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); }
+        .prof-roll { font-size: 0.68rem; color: var(--text-soft); }
+        .dropdown-menu {
+            position: absolute; top: calc(100% + 6px); right: 0; width: 220px;
+            background: var(--bg-card); border: 1px solid var(--border-var);
+            border-radius: var(--r-lg); box-shadow: var(--sh-card); z-index: 300;
+            padding: 8px; display: none; overflow: hidden;
+        }
+        .dropdown-menu.open { display: block; }
+        .dropdown-header { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 4px; }
+        .dh-avatar {
+            width: 34px; height: 34px; border-radius: 9px;
+            background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
+            color: #fff; font-weight: 700; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .dropdown-header strong { font-size: 0.86rem; display: block; }
+        .dropdown-header span   { font-size: 0.72rem; color: var(--text-soft); }
+        .dropdown-menu hr  { border: none; border-top: 1px solid var(--border-var); margin: 6px 0; }
+        .dropdown-menu a {
+            display: flex; align-items: center; gap: 9px;
+            padding: 9px 12px; border-radius: 9px; font-size: 0.83rem;
+            color: var(--text-mid); transition: background 0.18s, color 0.18s;
+        }
+        .dropdown-menu a:hover { background: var(--teal-dim); color: var(--text-primary); }
+        .logout-link { color: var(--text-soft) !important; }
+
+        /* Theme switch */
+        .theme-switch { display: inline-block; height: 30px; position: relative; width: 64px; }
+        .theme-switch input { display: none; }
+        .slider {
+            background-color: var(--scale-bg); border: 1.5px solid var(--border-var);
+            bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0;
+            transition: .4s; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 7px; box-sizing: border-box;
+        }
+        .slider .icon { width: 12px; height: 12px; z-index: 1; display: flex; align-items: center; justify-content: center; }
+        .slider .icon svg { width: 100%; height: 100%; }
+        .light-icon { color: #f39c12; }
+        .dark-icon  { color: #aab; }
+        .slider::before {
+            background-color: var(--bg-card); bottom: 3px; content: ""; height: 22px; left: 4px;
+            position: absolute; transition: transform .4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            width: 22px; z-index: 2; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        input:checked + .slider { border-color: var(--border-strong); }
+        input:checked + .slider::before { transform: translateX(34px); }
+        .slider.round { border-radius: 30px; }
+
+        /* ---- BREADCRUMB ---- */
+        .exp-breadcrumb {
+            background: var(--bg-card); border-bottom: 1px solid var(--border-var);
+            padding: 10px 40px; display: flex; align-items: center; gap: 8px;
+            font-size: 0.82rem; color: var(--text-soft);
+        }
+        .exp-breadcrumb a   { color: var(--accent-btn); font-weight: 500; transition: color 0.2s; }
+        .exp-breadcrumb a:hover { color: var(--btn-hover); text-decoration: underline; }
+        .exp-breadcrumb .sep     { opacity: 0.45; margin: 0 2px; }
+        .exp-breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+
+        /* ---- BANNER ---- */
+        .exp-banner {
+            background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn) 100%);
+            color: #fff; padding: 22px 40px;
+            display: flex; align-items: center; gap: 20px;
+        }
+        .exp-banner-icon {
+            width: 52px; height: 52px; background: rgba(255,255,255,0.18);
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; flex-shrink: 0;
+        }
+        .exp-banner-meta   { flex: 1; }
+        .exp-banner-label  { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.78; margin-bottom: 4px; }
+        .exp-banner-title  { font-family: var(--font-display); font-size: clamp(1.3rem,2.5vw,1.8rem); font-weight: 700; line-height: 1.2; }
+        .exp-banner-sub    { font-size: 0.83rem; opacity: 0.8; margin-top: 4px; }
+
+        /* ---- PAGE LAYOUT ---- */
+        .exp-page-wrapper  { display: flex; flex-direction: column; min-height: 100vh; background: var(--bg-page); }
+        .exp-main-body {
+            flex: 1; display: flex; gap: 0; padding: 32px 40px;
+            max-width: 1300px; width: 100%; margin: 0 auto; box-sizing: border-box;
+        }
+        .exp-sidebar { width: 220px; flex-shrink: 0; margin-right: 28px; }
+        .exp-sidebar-card {
+            background: var(--bg-card); border: 1px solid var(--border-var);
+            border-radius: var(--r-lg); box-shadow: var(--sh-card);
+            overflow: hidden; position: sticky; top: 80px;
+        }
+        .exp-sidebar-header {
+            padding: 16px 20px 12px; border-bottom: 1px solid var(--border-var);
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--text-soft);
+        }
+        .exp-nav-list { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+        .exp-nav-btn {
+            display: flex; align-items: center; gap: 12px; width: 100%;
+            padding: 12px 14px; border-radius: var(--r-md);
+            font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
+            color: var(--text-mid); background: transparent; border: none;
+            cursor: pointer; transition: background 0.22s, color 0.22s, transform 0.18s;
+            text-align: left; position: relative;
+        }
+        .exp-nav-btn:hover  { background: var(--teal-dim); color: var(--text-primary); transform: translateX(3px); }
+        .exp-nav-btn.active { background: var(--teal-dim); color: var(--accent-btn); font-weight: 600; }
+        .exp-nav-btn.active::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+            width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--accent-btn);
+        }
+        .exp-nav-icon {
+            width: 28px; height: 28px; border-radius: 8px; background: var(--card-inner);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; flex-shrink: 0; transition: background 0.22s;
+        }
+        .exp-nav-btn.active .exp-nav-icon { background: var(--accent-btn); color: #fff; }
+        .exp-sidebar-progress { padding: 14px 20px 18px; border-top: 1px solid var(--border-var); }
+        .exp-progress-label {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.72rem; color: var(--text-soft); margin-bottom: 8px;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+        }
+        .exp-progress-track  { height: 5px; background: var(--scale-bg); border-radius: 10px; overflow: hidden; }
+        .exp-progress-fill   {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-btn), var(--accent-2));
+            border-radius: 10px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 20%;
+        }
+        .exp-content-area { flex: 1; min-width: 0; }
+        .exp-panel {
+            background: var(--bg-card); border: 1px solid var(--border-var);
+            border-radius: var(--r-lg); box-shadow: var(--sh-card); overflow: hidden;
+        }
+        .exp-panel-header {
+            padding: 24px 32px 20px; border-bottom: 1px solid var(--border-var);
+            display: flex; align-items: center; gap: 16px;
+        }
+        .exp-panel-icon {
+            width: 44px; height: 44px; border-radius: 12px; background: var(--scale-bg);
+            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+        }
+        .exp-panel-title    { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.1; }
+        .exp-panel-subtitle { font-size: 0.83rem; color: var(--text-soft); margin-top: 2px; }
+        .exp-panel-body     { padding: 32px; }
+
+        .exp-section-content { display: none; animation: sectionFadeIn 0.35s cubic-bezier(0.4,0,0.2,1) both; }
+        .exp-section-content.visible { display: block; }
+        @keyframes sectionFadeIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .exp-body-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.85; }
+        .exp-body-text + .exp-body-text { margin-top: 16px; }
+        .exp-highlight-box {
+            background: var(--scale-bg); border-left: 4px solid var(--accent-btn);
+            border-radius: 0 var(--r-md) var(--r-md) 0;
+            padding: 16px 20px; margin: 20px 0; font-size: 0.9rem; color: var(--text-primary); line-height: 1.7;
+        }
+        .exp-step-list { counter-reset: steps; list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 14px; }
+        .exp-step-list li { counter-increment: steps; display: flex; align-items: flex-start; gap: 16px; font-size: 0.92rem; color: var(--text-mid); line-height: 1.7; }
+        .exp-step-list li::before {
+            content: counter(steps); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
+            color: #fff; font-size: 0.72rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; margin-top: 2px;
+        }
+        .exp-materials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px; margin: 20px 0; }
+        .exp-material-chip  {
+            display: flex; align-items: center; gap: 10px;
+            background: var(--card-inner); border: 1px solid var(--border-var);
+            border-radius: var(--r-md); padding: 10px 14px; font-size: 0.83rem; color: var(--text-primary); font-weight: 500;
+        }
+        .exp-material-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn); flex-shrink: 0; }
+        .exp-result-table  { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+        .exp-result-table th {
+            background: var(--scale-bg); color: var(--text-primary); font-weight: 600;
+            padding: 12px 16px; text-align: left; border-bottom: 2px solid var(--border-strong);
+            font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em;
+        }
+        .exp-result-table td { padding: 11px 16px; color: var(--text-mid); border-bottom: 1px solid var(--border-var); line-height: 1.4; }
+        .exp-result-table tr:last-child td { border-bottom: none; }
+        .exp-result-table tr:hover td { background: var(--card-inner); }
+        .exp-result-stats  { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 16px; margin: 24px 0; }
+        .exp-stat-card     { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 18px 16px; text-align: center; }
+        .exp-stat-value    { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--accent-btn); line-height: 1; margin-bottom: 6px; }
+        .exp-stat-label    { font-size: 0.75rem; color: var(--text-soft); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+        .exp-conclusion-box  { background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 20px 24px; margin-top: 24px; }
+        .exp-conclusion-label{ font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-btn); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .exp-conclusion-text { font-size: 0.92rem; color: var(--text-primary); line-height: 1.75; }
+        .exp-divider { height: 1px; background: var(--border-var); margin: 28px 0; border: none; }
+        .exp-tag {
+            display: inline-block; background: var(--scale-bg); color: var(--accent-btn);
+            border: 1px solid var(--border-var); border-radius: 20px;
+            padding: 3px 12px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; margin: 2px;
+        }
+
+        /* ============================================================
+           SIMULATION SECTION — YOUR ORIGINAL MergeSortSimulation styles
+           Scoped under .sim-embed to avoid conflicts with experiment page
+           ============================================================ */
+
+        /* All simulation CSS variables mapped to experiment page vars */
+        .sim-embed {
+            --bg-page-s:       var(--bg-page);
+            --bg-card-s:       var(--bg-card);
+            --card-inner-s:    var(--card-inner);
+            --border-s:        var(--border-var);
+            --border-strong-s: var(--border-strong);
+            --accent-s:        var(--accent-btn);
+            --accent-2-s:      var(--accent-2);
+            --btn-bg-s:        var(--btn-hover);
+            --text-primary-s:  var(--text-primary);
+            --text-secondary-s:var(--text-mid);
+            --text-muted-s:    var(--text-soft);
+            --glow-s:          rgba(155,77,255,0.4);
+            --glow-2-s:        rgba(192,122,255,0.2);
+            --node-idle-s:     var(--card-inner);
+            --node-idle-bdr-s: var(--border-var);
+            --node-split-s:    var(--bg-card);
+            --node-split-bdr-s:var(--accent-btn);
+            --node-compare-s:  #2A1A00;
+            --node-cmp-bdr-s:  #FFD700;
+            --node-merge-s:    #2A0A1A;
+            --node-merge-bdr-s:#FF6B9D;
+            --node-sorted-s:   #002A18;
+            --node-sort-bdr-s: #00FF88;
+            --cell-bg-s:       var(--scale-bg);
+            --cell-text-s:     var(--text-primary);
+            --edge-idle-s:     var(--border-var);
+            --canvas-bg-s:     var(--bg-page);
+            --signal-red-s:    #FF3B3B;
+            --signal-yellow-s: #FFD700;
+            --signal-green-s:  #00FF88;
+        }
+
+        [data-theme="light"] .sim-embed {
+            --glow-s:          rgba(26,136,208,0.3);
+            --glow-2-s:        rgba(14,196,224,0.15);
+            --node-compare-s:  #FFF8E0;
+            --node-cmp-bdr-s:  #E87A00;
+            --node-merge-s:    #FFE8F0;
+            --node-merge-bdr-s:#D0306A;
+            --node-sorted-s:   #E0FFF0;
+            --node-sort-bdr-s: #00A858;
+            --signal-red-s:    #E83030;
+            --signal-yellow-s: #E8A800;
+            --signal-green-s:  #00A858;
+        }
+
+        /* Simulation container reset */
+        .sim-embed * { box-sizing: border-box; }
+
+        /* Control Panel */
+        .sim-embed .sim-control-panel {
+            display: flex; align-items: center; flex-wrap: wrap;
+            gap: 0.6rem; padding: 0.9rem 1.2rem; margin-bottom: 1.2rem;
+            background: var(--bg-card); border: 1px solid var(--border-var);
+            border-radius: 16px;
+        }
+        .sim-embed .ctrl-btn {
+            padding: 0.45rem 1rem; background: var(--card-inner);
+            border: 1px solid var(--border-s); color: var(--text-primary-s);
+            font-size: 0.68rem; border-radius: 8px; cursor: pointer;
+            font-family: 'Orbitron', monospace; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; transition: all 0.22s;
+        }
+        .sim-embed .ctrl-btn:hover { background: var(--btn-bg-s); border-color: var(--accent-s); color: #fff; }
+        .sim-embed .ctrl-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .sim-embed .speed-control {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-left: auto; font-size: 0.78rem; color: var(--text-secondary-s);
+            font-family: 'Share Tech Mono', monospace;
+        }
+        .sim-embed .speed-control input[type=range] { accent-color: var(--accent-s); width: 90px; }
+
+        /* Signal lights */
+        .sim-embed .status-light {
+            display: flex; flex-direction: column; gap: 4px;
+            padding: 5px 8px; background: #000; border-radius: 20px; border: 2px solid #333;
+        }
+        .sim-embed .light { width: 11px; height: 11px; border-radius: 50%; opacity: 0.2; transition: opacity 0.3s, box-shadow 0.3s; }
+        .sim-embed .light.red    { background: var(--signal-red-s); }
+        .sim-embed .light.yellow { background: var(--signal-yellow-s); }
+        .sim-embed .light.green  { background: var(--signal-green-s); }
+        .sim-embed .light.active { opacity: 1; }
+        .sim-embed .light.red.active    { box-shadow: 0 0 8px var(--signal-red-s); }
+        .sim-embed .light.yellow.active { box-shadow: 0 0 8px var(--signal-yellow-s); }
+        .sim-embed .light.green.active  { box-shadow: 0 0 8px var(--signal-green-s); }
+
+        /* Sim layout */
+        .sim-embed .sim-layout { display: grid; grid-template-columns: 1fr 300px; gap: 1.2rem; align-items: start; }
+        @media(max-width:900px) { .sim-embed .sim-layout { grid-template-columns: 1fr; } }
+
+        /* Viz area */
+        .sim-embed .viz-area {
+            background: var(--bg-card-s); border: 1px solid var(--border-s);
+            border-radius: 16px; padding: 1.2rem;
+        }
+        .sim-embed .phase-label {
+            font-family: 'Orbitron', monospace; font-size: 0.7rem;
+            letter-spacing: 0.18em; color: var(--accent-2-s); text-align: center;
+            margin-bottom: 1rem; padding: 0.35rem 0.8rem;
+            border: 1px solid var(--border-s); border-radius: 20px;
+            display: block; width: 100%;
+        }
+
+        /* Canvas */
+        .sim-embed #sim-tree-canvas-wrap {
+            width: 100%; overflow: auto; border-radius: 10px;
+            background: var(--canvas-bg-s); border: 1px solid var(--border-s);
+            min-height: 300px;
+        }
+        .sim-embed #sim-tree-canvas { display: block; cursor: default; }
+
+        /* Legend */
+        .sim-embed .tree-legend {
+            display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+            margin-top: 0.8rem; font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem; color: var(--text-secondary-s);
+        }
+        .sim-embed .leg-item { display: flex; align-items: center; gap: 0.35rem; }
+        .sim-embed .leg-dot  { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+        /* Step log */
+        .sim-embed .step-log {
+            margin-top: 0.8rem; padding: 0.7rem 1rem;
+            background: var(--canvas-bg-s); border: 1px solid var(--border-s);
+            border-radius: 8px; font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem; color: var(--accent-2-s); min-height: 36px; transition: color 0.3s;
+        }
+
+        /* Info Panel */
+        .sim-embed .info-panel { padding: 1rem; position: sticky; top: 5rem; }
+        .sim-embed .info-panel h3 { font-family: 'Orbitron', monospace; font-size: 0.76rem; color: var(--accent-s); margin-bottom: 0.7rem; letter-spacing: 0.08em; }
+        .sim-embed .stat-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.35rem 0; border-bottom: 1px solid var(--border-s);
+            font-size: 0.76rem; color: var(--text-secondary-s);
+        }
+        .sim-embed .stat-row.accent { color: var(--accent-2-s); border-bottom: none; }
+        .sim-embed .stat-val { font-family: 'Share Tech Mono', monospace; color: var(--text-primary-s); font-weight: 600; }
+        .sim-embed .divider  { border: none; border-top: 1px solid var(--border-strong-s); margin: 0.8rem 0; }
+
+        .sim-embed .pseudocode {
+            font-family: 'Share Tech Mono', monospace; font-size: 0.7rem;
+            line-height: 2; background: var(--bg-page-s); border-radius: 8px;
+            padding: 0.7rem; border: 1px solid var(--border-s);
+        }
+        .sim-embed .code-line { padding: 0 0.4rem; border-radius: 4px; color: var(--text-muted-s); transition: all 0.3s; cursor: default; }
+        .sim-embed .code-line.active {
+            background: rgba(155,77,255,0.18); color: var(--accent-2-s);
+            border-left: 3px solid var(--accent-s); padding-left: 0.5rem;
+        }
+        [data-theme="light"] .sim-embed .code-line.active { background: rgba(26,136,208,0.12); }
+
+        /* Info panel glass card */
+        .sim-embed .glass-card-inner {
+            background: var(--bg-card-s); border: 1px solid var(--border-s);
+            border-radius: 16px; backdrop-filter: blur(12px);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .sim-embed .glass-card-inner:hover { border-color: var(--border-strong-s); box-shadow: 0 0 24px var(--glow-2-s); }
+
+        /* Celebration */
+        .sim-celebrate {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+            text-align: center; pointer-events: none;
+        }
+        .sim-celebrate-text {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            color: #00FF88; text-shadow: 0 0 30px #00FF88;
+            animation: simCelIn 0.5s ease-out, simCelOut 0.5s 2.5s ease-in forwards;
+            padding: 1.5rem;
+        }
+        @keyframes simCelIn  { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes simCelOut { to   { transform: translateY(-50px); opacity: 0; } }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 800px) {
+            .exp-main-body  { flex-direction: column; padding: 20px 16px; }
+            .exp-sidebar    { width: 100%; margin-right: 0; margin-bottom: 20px; }
+            .exp-sidebar-card { position: static; }
+            .exp-nav-list   { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 10px; }
+            .exp-nav-btn    { flex: 1; min-width: calc(50% - 3px); justify-content: center; font-size: 0.8rem; padding: 10px 8px; }
+            .exp-nav-btn.active::before { display: none; }
+            .exp-banner     { padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
+            .exp-panel-body { padding: 20px; }
+            .exp-panel-header { padding: 18px 20px; }
+            .exp-breadcrumb { padding: 8px 16px; }
+        }
+        @media (max-width: 520px) {
+            .exp-nav-btn    { min-width: calc(50% - 3px); }
+            .exp-result-stats { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<body class="exp-page-wrapper">
+
+    <!-- ===================== HEADER ===================== -->
+    <header class="portal-header">
+        <div class="header-left">
+            <div style="width:34px;height:34px;background:linear-gradient(135deg,var(--accent-btn),var(--accent-2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#fff;font-weight:700;">L</div>
+            <div class="college-info">
+                <h1 class="college-name">Aditya University</h1>
+                <span class="stream-badge">AIML Stream</span>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+                    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="global-search" placeholder="Search experiments &amp; records…" />
+            </div>
+        </div>
+
+        <div class="header-right">
+            <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+                <input type="checkbox" id="portal-theme-checkbox" />
+                <div class="slider round">
+                    <span class="icon light-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                    </span>
+                    <span class="icon dark-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </span>
+                </div>
+            </label>
+
+            <div style="position:relative;">
+                <button class="icon-btn" id="notif-btn" aria-label="Notifications">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="notification-badge"></span>
+                </button>
+                <div class="notif-panel" id="notif-panel">
+                    <div class="notif-panel-header">
+                        <span>Notifications</span>
+                        <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+                    </div>
+                    <div class="notif-list">
+                        <div class="notif-item">
+                            <div class="notif-dot"></div>
+                            <div class="notif-body">
+                                <p>New assignment from <strong>Aditya University</strong></p>
+                                <span>Merge Sort experiment is now due this Friday</span>
+                                <time>2 hours ago</time>
+                            </div>
+                        </div>
+                        <div class="notif-item">
+                            <div class="notif-dot"></div>
+                            <div class="notif-body">
+                                <p>Physics Lab Update</p>
+                                <span>Zener Diode Characteristics has been unlocked</span>
+                                <time>Yesterday</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-dropdown">
+                <button class="profile-btn" id="profile-btn">
+                    <div class="profile-avatar">S</div>
+                    <div class="profile-name-tag">
+                        <span class="prof-name">Santhosh</span>
+                        <span class="prof-roll">24P31A42XX</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <div class="dropdown-header">
+                        <div class="dh-avatar">S</div>
+                        <div><strong>Santhosh</strong><span>24P31A42XX · AIML</span></div>
+                    </div>
+                    <hr>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Progress</a>
+                    <hr>
+                    <a href="#" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== BREADCRUMB ===================== -->
+    <div class="exp-breadcrumb">
+        <a href="portal.html">Dashboard</a>
+        <span class="sep">›</span>
+        <a href="data_structures_lab.html">Data Structures Lab</a>
+        <span class="sep">›</span>
+        <span class="current">Merge Sort</span>
+    </div>
+
+    <!-- ===================== BANNER ===================== -->
+    <div class="exp-banner">
+        <div class="exp-banner-icon">🔀</div>
+        <div class="exp-banner-meta">
+            <div class="exp-banner-label">Data Structures · Experiment 02</div>
+            <div class="exp-banner-title">Merge Sort</div>
+            <div class="exp-banner-sub">Understand divide-and-conquer sorting through step-by-step visualizations.</div>
+        </div>
+    </div>
+
+    <!-- ===================== MAIN BODY ===================== -->
+    <div class="exp-main-body">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="exp-sidebar" role="complementary" aria-label="Experiment sections">
+            <div class="exp-sidebar-card">
+                <div class="exp-sidebar-header">Sections</div>
+                <nav class="exp-nav-list" aria-label="Experiment navigation">
+                    <button class="exp-nav-btn active" data-section="aim" aria-current="true">
+                        <span class="exp-nav-icon">🎯</span>Aim
+                    </button>
+                    <button class="exp-nav-btn" data-section="description">
+                        <span class="exp-nav-icon">📋</span>Description
+                    </button>
+                    <button class="exp-nav-btn" data-section="procedure">
+                        <span class="exp-nav-icon">📝</span>Procedure
+                    </button>
+                    <button class="exp-nav-btn" data-section="simulation">
+                        <span class="exp-nav-icon">💻</span>Simulation
+                    </button>
+                    <button class="exp-nav-btn" data-section="result">
+                        <span class="exp-nav-icon">📊</span>Result
+                    </button>
+                </nav>
+                <div class="exp-sidebar-progress">
+                    <div class="exp-progress-label">
+                        <span>Progress</span>
+                        <span id="progress-pct">20%</span>
+                    </div>
+                    <div class="exp-progress-track">
+                        <div class="exp-progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT CONTENT AREA -->
+        <main class="exp-content-area" id="exp-content-main" role="main">
+            <div class="exp-panel">
+
+                <!-- ========== AIM ========== -->
+                <div class="exp-section-content visible" id="section-aim">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">🎯</div>
+                        <div>
+                            <div class="exp-panel-title">Aim</div>
+                            <div class="exp-panel-subtitle">Objective of this experiment</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            To understand and visualise the working of the <strong>Merge Sort algorithm</strong> — a
+                            highly efficient, comparison-based, divide-and-conquer sorting technique — and analyse its
+                            step-by-step behaviour, including the divide phase, merge phase, and the reconstruction of
+                            the sorted array.
+                        </p>
+                        <div class="exp-highlight-box">
+                            <strong>Learning Objective:</strong> Develop an intuitive understanding of how Merge Sort
+                            recursively divides an array into halves, sorts each half independently, and then merges
+                            them back together in sorted order — visualising how the divide-and-conquer strategy
+                            guarantees an efficient and stable sort.
+                        </div>
+                        <p class="exp-body-text">
+                            By the end of this experiment, you will be able to trace the full recursive execution of
+                            Merge Sort on any given array, understand the divide and merge steps, count comparisons,
+                            and appreciate its guaranteed <strong>O(n log n)</strong> time complexity across all cases.
+                        </p>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject Tags:</strong></p>
+                        <div style="margin-top:8px;">
+                            <span class="exp-tag">Sorting Algorithm</span>
+                            <span class="exp-tag">Merge Sort</span>
+                            <span class="exp-tag">Divide &amp; Conquer</span>
+                            <span class="exp-tag">O(n log n) Complexity</span>
+                            <span class="exp-tag">Recursive Algorithm</span>
+                            <span class="exp-tag">CS Lab</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== DESCRIPTION ========== -->
+                <div class="exp-section-content" id="section-description">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📋</div>
+                        <div>
+                            <div class="exp-panel-title">Description</div>
+                            <div class="exp-panel-subtitle">Theory &amp; background</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">
+                            <strong>Merge Sort</strong> is a divide-and-conquer algorithm that recursively splits an
+                            array into two halves, sorts each half, and then merges the two sorted halves into a single
+                            sorted array. It was invented by John von Neumann in 1945 and remains one of the most
+                            widely used sorting algorithms today.
+                        </p>
+                        <p class="exp-body-text">
+                            The algorithm works in two distinct phases: the <strong>Divide phase</strong>, where the
+                            array is split down to individual elements (which are trivially sorted), and the
+                            <strong>Merge phase</strong>, where sorted sub-arrays are combined by repeatedly picking
+                            the smaller of the two front elements.
+                        </p>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Program in C language:</strong></p>
+                        <div class="exp-highlight-box" style="font-family:'Share Tech Mono',monospace;font-size:0.82rem;line-height:1.6;overflow-x:auto;white-space:pre;padding:20px;">
+#include &lt;stdio.h&gt;
+
+void Merge(int A[], int n, int low, int mid, int high) {
+    int i = low, j = mid + 1;
+    int B[high - low + 1];
+    int k = 0;
+    while (i &lt;= mid &amp;&amp; j &lt;= high) {
+        if (A[i] &lt; A[j]) B[k++] = A[i++];
+        else               B[k++] = A[j++];
+    }
+    while (i &lt;= mid)  B[k++] = A[i++];
+    while (j &lt;= high) B[k++] = A[j++];
+    k = 0;
+    for (int i = low; i &lt;= high; i++) A[i] = B[k++];
+}
+
+void MergeSort(int A[], int n, int low, int high) {
+    if (low &gt;= high) return;
+    int mid = (low + high) / 2;
+    MergeSort(A, n, low, mid);
+    MergeSort(A, n, mid + 1, high);
+    Merge(A, n, low, mid, high);
+}
+
+int main() {
+    int n;
+    scanf("%d", &amp;n);
+    int A[n];
+    for (int i = 0; i &lt; n; i++) scanf("%d", &amp;A[i]);
+    MergeSort(A, n, 0, n - 1);
+    for (int i = 0; i &lt; n; i++) printf("%d ", A[i]);
+    return 0;
+}</div>
+                        <hr class="exp-divider" />
+                        <p class="exp-body-text"><strong>Complexity Analysis:</strong></p>
+                        <div class="exp-materials-grid">
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Best Case: O(n log n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Worst Case: O(n log n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Average Case: O(n log n)</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Space: O(n) — Not In-place</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Stable Sort: ✔ Yes</div>
+                            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Adaptive: ✘ No</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== PROCEDURE ========== -->
+                <div class="exp-section-content" id="section-procedure">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📝</div>
+                        <div>
+                            <div class="exp-panel-title">Procedure</div>
+                            <div class="exp-panel-subtitle">Step-by-step instructions</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <p class="exp-body-text">Follow each step carefully to understand how Merge Sort divides and merges the array.</p>
+                        <ol class="exp-step-list">
+                            <li>Start with an unsorted array of <strong>n</strong> elements displayed as blocks on screen.</li>
+                            <li><strong>Divide Phase — Step 1:</strong> Find the midpoint of the array and split it into two halves: the left sub-array and the right sub-array.</li>
+                            <li><strong>Divide Phase — Step 2:</strong> Recursively apply the same split to each half. Continue dividing until every sub-array contains exactly <strong>one element</strong> (a single element is always sorted).</li>
+                            <li>Once all sub-arrays are of size 1, the <strong>Merge Phase</strong> begins. Take two adjacent sorted sub-arrays.</li>
+                            <li>Compare the front elements of both sub-arrays. Place the <strong>smaller element</strong> into the merged output array. Advance the pointer in the sub-array from which the element was taken.</li>
+                            <li>Repeat the comparison until all elements from one sub-array are exhausted. Then copy any remaining elements from the other sub-array directly into the output.</li>
+                            <li>The merged sub-array is now sorted. Repeat the merge process for progressively larger sub-arrays, working your way back up the recursion tree.</li>
+                            <li>After <strong>log₂(n) levels</strong> of merging, the entire array is merged into a single fully sorted array.</li>
+                            <li>Record the total number of <strong>comparisons</strong> and <strong>merge levels</strong> in the Result section.</li>
+                        </ol>
+                        <div class="exp-highlight-box">
+                            <strong>Tip:</strong> Unlike Bubble Sort, Merge Sort never actually swaps elements — it
+                            builds a new sorted sequence by selecting and placing elements during the merge step.
+                            Pay close attention to the merge phase in the Simulation to see this clearly.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== SIMULATION — YOUR ORIGINAL CODE EMBEDDED ========== -->
+                <div class="exp-section-content" id="section-simulation">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">💻</div>
+                        <div>
+                            <div class="exp-panel-title">Simulation</div>
+                            <div class="exp-panel-subtitle">Interactive Merge Sort visualiser</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+
+                        <!-- ═══════════════════════════════════════════════
+                             YOUR ORIGINAL SIMULATION UI — unchanged markup
+                             Wrapped in .sim-embed for CSS scoping only
+                        ═══════════════════════════════════════════════ -->
+                        <div class="sim-embed">
+
+                            <!-- Input row -->
+                            <div style="margin-bottom:1rem;">
+                                <div style="font-size:0.75rem;color:var(--text-soft);margin-bottom:0.4rem;font-family:'Share Tech Mono',monospace;letter-spacing:0.08em;">
+                                    Custom Array (comma-separated, max 10):
+                                </div>
+                                <div style="display:flex;gap:0.5rem;">
+                                    <input type="text" id="sim-custom-input"
+                                        placeholder="e.g. 38, 27, 43, 3, 9, 82"
+                                        style="flex:1;background:var(--card-inner);border:1px solid var(--border-var);color:var(--text-primary);padding:0.55rem 0.9rem;border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:0.88rem;outline:none;transition:border-color 0.2s;"
+                                        onfocus="this.style.borderColor='var(--accent-btn)'"
+                                        onblur="this.style.borderColor='var(--border-var)'" />
+                                    <button onclick="simUseCustom()"
+                                        style="background:var(--card-inner);color:var(--accent-btn);border:1px solid var(--border-strong);padding:0.5rem 0.9rem;border-radius:8px;cursor:pointer;font-family:'Orbitron',monospace;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s;"
+                                        onmouseover="this.style.background='var(--btn-hover)';this.style.color='#fff'"
+                                        onmouseout="this.style.background='var(--card-inner)';this.style.color='var(--accent-btn)'">
+                                        Use Input
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Quick-action buttons -->
+                            <div style="display:flex;flex-wrap:wrap;gap:0.8rem;margin-bottom:1.4rem;">
+                                <button onclick="simStart()"
+                                    style="padding:0.72rem 1.6rem;border-radius:10px;font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;border:none;text-transform:uppercase;background:var(--accent-btn);color:#fff;box-shadow:0 4px 20px var(--teal-dim);transition:all 0.22s;"
+                                    onmouseover="this.style.transform='translateY(-2px)';this.style.opacity='0.9'"
+                                    onmouseout="this.style.transform='translateY(0)';this.style.opacity='1'">
+                                    🚀 Start Simulation
+                                </button>
+                                <button onclick="simRandom()"
+                                    style="padding:0.72rem 1.6rem;border-radius:10px;font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;border:none;text-transform:uppercase;background:var(--accent-2);color:#fff;transition:all 0.22s;"
+                                    onmouseover="this.style.transform='translateY(-2px)';this.style.opacity='0.88'"
+                                    onmouseout="this.style.transform='translateY(0)';this.style.opacity='1'">
+                                    🎲 Random Array
+                                </button>
+                            </div>
+
+                            <!-- Control panel -->
+                            <div class="sim-control-panel">
+                                <button class="ctrl-btn" id="sim-play-btn"  onclick="simPlay()">▶ Play</button>
+                                <button class="ctrl-btn" id="sim-pause-btn" onclick="simPause()">⏸ Pause</button>
+                                <button class="ctrl-btn" id="sim-step-btn"  onclick="simStep()">⏭ Step</button>
+                                <button class="ctrl-btn" id="sim-reset-btn" onclick="simReset()">↺ Reset</button>
+                                <div class="speed-control">
+                                    <label>Speed:</label>
+                                    <input type="range" id="sim-speed-slider" min="1" max="10" value="5"
+                                        oninput="simSpeedChange(this.value)" />
+                                    <span id="sim-speed-val">5x</span>
+                                </div>
+                                <div class="status-light" id="sim-status-light">
+                                    <div class="light red"></div>
+                                    <div class="light yellow"></div>
+                                    <div class="light green active"></div>
+                                </div>
+                            </div>
+
+                            <!-- Sim layout -->
+                            <div class="sim-layout">
+                                <!-- Viz area -->
+                                <div class="viz-area">
+                                    <span class="phase-label" id="sim-phase-label">READY</span>
+                                    <div id="sim-tree-canvas-wrap">
+                                        <canvas id="sim-tree-canvas"></canvas>
+                                    </div>
+                                    <div class="tree-legend">
+                                        <span class="leg-item"><span class="leg-dot" style="background:#9B4DFF"></span>Splitting</span>
+                                        <span class="leg-item"><span class="leg-dot" style="background:#FFD700"></span>Comparing</span>
+                                        <span class="leg-item"><span class="leg-dot" style="background:#FF6B9D"></span>Merging</span>
+                                        <span class="leg-item"><span class="leg-dot" style="background:#00FF88"></span>Sorted</span>
+                                        <span class="leg-item"><span class="leg-dot" style="background:#555"></span>Idle</span>
+                                    </div>
+                                    <div class="step-log" id="sim-step-log">Press Start Simulation or load an array to begin.</div>
+                                </div>
+
+                                <!-- Info panel -->
+                                <div class="info-panel glass-card-inner">
+                                    <h3>📊 Live Stats</h3>
+                                    <div class="stat-row"><span>Depth:</span><span id="sim-stat-depth" class="stat-val">0</span></div>
+                                    <div class="stat-row"><span>Comparisons:</span><span id="sim-stat-comp" class="stat-val">0</span></div>
+                                    <div class="stat-row"><span>Merges:</span><span id="sim-stat-merge" class="stat-val">0</span></div>
+                                    <div class="stat-row"><span>Step:</span><span id="sim-stat-step" class="stat-val">0/0</span></div>
+                                    <div class="stat-row accent"><span>Time:</span><span class="stat-val">O(n log n)</span></div>
+                                    <div class="stat-row accent"><span>Space:</span><span class="stat-val">O(n)</span></div>
+                                    <hr class="divider" />
+                                    <h3>📋 Pseudocode</h3>
+                                    <div class="pseudocode" id="sim-pseudocode">
+                                        <div class="code-line" data-line="0">mergeSort(arr):</div>
+                                        <div class="code-line" data-line="1">  if len ≤ 1: return arr</div>
+                                        <div class="code-line" data-line="2">  mid = len / 2</div>
+                                        <div class="code-line" data-line="3">  left  = mergeSort(arr[:mid])</div>
+                                        <div class="code-line" data-line="4">  right = mergeSort(arr[mid:])</div>
+                                        <div class="code-line" data-line="5">  return merge(left, right)</div>
+                                        <div class="code-line" data-line="6">merge(left, right):</div>
+                                        <div class="code-line" data-line="7">  result = []</div>
+                                        <div class="code-line" data-line="8">  while both not empty:</div>
+                                        <div class="code-line" data-line="9">    if left[0] ≤ right[0]:</div>
+                                        <div class="code-line" data-line="10">      result += left.pop(0)</div>
+                                        <div class="code-line" data-line="11">    else:</div>
+                                        <div class="code-line" data-line="12">      result += right.pop(0)</div>
+                                        <div class="code-line" data-line="13">  return result + rest</div>
+                                    </div>
+                                </div>
+                            </div><!-- /.sim-layout -->
+
+                        </div><!-- /.sim-embed -->
+
+                    </div><!-- /.exp-panel-body -->
+                </div><!-- /#section-simulation -->
+
+                <!-- ========== RESULT ========== -->
+                <div class="exp-section-content" id="section-result">
+                    <div class="exp-panel-header">
+                        <div class="exp-panel-icon">📊</div>
+                        <div>
+                            <div class="exp-panel-title">Result</div>
+                            <div class="exp-panel-subtitle">Live observations &amp; analysis from your simulation</div>
+                        </div>
+                    </div>
+                    <div class="exp-panel-body">
+                        <div id="result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
+                            <div style="font-size:2.8rem;margin-bottom:14px;">🧪</div>
+                            <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No simulation data yet</p>
+                            <p style="font-size:0.85rem;line-height:1.7;">Run the <strong>Simulation</strong> tab first. Once sorting completes, your level-by-level merge observations and summary statistics will appear here automatically.</p>
+                        </div>
+                        <div id="result-live" style="display:none;">
+                            <p class="exp-body-text" id="result-array-label"><strong>Observation Table</strong></p>
+                            <table class="exp-result-table">
+                                <thead>
+                                    <tr>
+                                        <th>Merge Level</th>
+                                        <th>Sub-arrays Merged</th>
+                                        <th>Comparisons in Level</th>
+                                        <th>Result After Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="result-merge-tbody"></tbody>
+                            </table>
+                            <hr class="exp-divider" />
+                            <p class="exp-body-text"><strong>Summary:</strong></p>
+                            <div class="exp-result-stats">
+                                <div class="exp-stat-card"><div class="exp-stat-value" id="res-total-comp">—</div><div class="exp-stat-label">Total Comparisons</div></div>
+                                <div class="exp-stat-card"><div class="exp-stat-value" id="res-total-merge">—</div><div class="exp-stat-label">Total Merges</div></div>
+                                <div class="exp-stat-card"><div class="exp-stat-value" id="res-total-levels">—</div><div class="exp-stat-label">Levels (log₂ n)</div></div>
+                                <div class="exp-stat-card"><div class="exp-stat-value" id="res-array-size">—</div><div class="exp-stat-label">Array Size (n)</div></div>
+                                <div class="exp-stat-card"><div class="exp-stat-value">O(n log n)</div><div class="exp-stat-label">Time Complexity</div></div>
+                                <div class="exp-stat-card"><div class="exp-stat-value">O(n)</div><div class="exp-stat-label">Space Complexity</div></div>
+                            </div>
+                            <div class="exp-conclusion-box">
+                                <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
+                                <p class="exp-conclusion-text" id="result-conclusion-text"></p>
+                            </div>
+                        </div>
+                        <div id="result-inprogress" style="display:none;text-align:center;padding:30px 20px;color:var(--text-soft);">
+                            <div style="font-size:2.2rem;margin-bottom:12px;">🔀</div>
+                            <p style="font-size:0.9rem;font-weight:600;color:var(--accent-btn);">Simulation in progress…</p>
+                            <p style="font-size:0.82rem;margin-top:6px;">Results will populate here once sorting completes.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /.exp-panel -->
+        </main>
+
+    </div><!-- /.exp-main-body -->
+
+
+    <!-- =====================================================================
+         JAVASCRIPT
+         1. Page navigation & theme  — your original experiment page JS
+         2. Simulation engine        — your EXACT original MergeSort JS
+            (all IDs prefixed with "sim-" to avoid collisions)
+    ===================================================================== -->
+    <script>
+    /* =====================================================
+       1. PAGE: THEME, NAV, DROPDOWNS
+    ===================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+
+        /* Theme */
+        const portalToggle = document.getElementById('portal-theme-checkbox');
+        const saved = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        if (saved === 'light' && portalToggle) portalToggle.checked = true;
+        portalToggle?.addEventListener('change', () => {
+            const t = portalToggle.checked ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme', t);
+            // Redraw simulation canvas on theme change
+            if (typeof simResizeDraw === 'function') simResizeDraw();
+        });
+
+        /* Notification panel */
+        const notifBtn   = document.getElementById('notif-btn');
+        const notifPanel = document.getElementById('notif-panel');
+        notifBtn?.addEventListener('click', e => { e.stopPropagation(); notifPanel.classList.toggle('open'); });
+        document.getElementById('notif-clear')?.addEventListener('click', () => {
+            notifPanel.querySelector('.notif-list').innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-soft);font-size:0.82rem;">No notifications</div>';
+            notifPanel.classList.remove('open');
+        });
+
+        /* Profile dropdown */
+        document.getElementById('profile-btn')?.addEventListener('click', e => {
+            e.stopPropagation();
+            document.getElementById('dropdown-menu').classList.toggle('open');
+        });
+        document.addEventListener('click', () => {
+            notifPanel?.classList.remove('open');
+            document.getElementById('dropdown-menu')?.classList.remove('open');
+        });
+
+        /* Section navigation */
+        const navBtns  = document.querySelectorAll('.exp-nav-btn');
+        const sections = document.querySelectorAll('.exp-section-content');
+        const progFill = document.getElementById('progress-fill');
+        const progPct  = document.getElementById('progress-pct');
+        const total    = navBtns.length;
+
+        let visited = (() => {
+            try { return JSON.parse(sessionStorage.getItem('msVisited') || '["aim"]'); }
+            catch { return ['aim']; }
+        })();
+
+        function updateProgress(v) {
+            const pct = Math.round((v.length / total) * 100);
+            if (progFill) progFill.style.width = pct + '%';
+            if (progPct)  progPct.textContent  = pct + '%';
+        }
+        updateProgress(visited);
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.section;
+                if (!target) return;
+                navBtns.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+                btn.classList.add('active');
+                btn.setAttribute('aria-current', 'true');
+                sections.forEach(s => s.classList.remove('visible'));
+                const sec = document.getElementById('section-' + target);
+                if (sec) {
+                    sec.style.animation = 'none';
+                    sec.offsetHeight;
+                    sec.style.animation = '';
+                    sec.classList.add('visible');
+                }
+                // When simulation section becomes visible, resize the canvas
+                if (target === 'simulation' && typeof simResizeDraw === 'function') {
+                    setTimeout(simResizeDraw, 50);
+                }
+                if (!visited.includes(target)) {
+                    visited.push(target);
+                    sessionStorage.setItem('msVisited', JSON.stringify(visited));
+                }
+                updateProgress(visited);
+            });
+        });
+
+        // Initialise simulation
+        simInit();
+    });
+
+    /* =====================================================
+       2. SIMULATION — YOUR EXACT ORIGINAL CODE
+          Only changes:
+          • canvas/element IDs prefixed with "sim-"
+          • helper function names prefixed with "sim"
+          • No logic changes whatsoever
+    ===================================================== */
+
+    /* ── State ── */
+    const simS = {
+        array:[], steps:[], stepIdx:0,
+        isPlaying:false, isPaused:false,
+        speed:5, soundOn:true,
+        comparisons:0, merges:0,
+        playTimer:null,
+        nodes:new Map(),
+        splitRoot:null,
+        mergeRoot:null,
+        root:null,
+    };
+
+    const simCanvas = document.getElementById('sim-tree-canvas');
+    const simWrap   = document.getElementById('sim-tree-canvas-wrap');
+    const simCtx    = simCanvas.getContext('2d');
+
+    /* ── Audio ── */
+    let simAudioCtx = null;
+    function simSnd(type) {
+        if (!simS.soundOn) return;
+        try {
+            if (!simAudioCtx) simAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const o = simAudioCtx.createOscillator(), g = simAudioCtx.createGain();
+            o.connect(g); g.connect(simAudioCtx.destination);
+            const map = {
+                click:   {f:440,  t:'sine',     d:0.08},
+                compare: {f:660,  t:'square',   d:0.12},
+                merge:   {f:880,  t:'sine',     d:0.18},
+                split:   {f:330,  t:'triangle', d:0.15},
+                done:    {f:1047, t:'sine',     d:0.6},
+                wrong:   {f:220,  t:'sawtooth', d:0.3},
+            };
+            const s = map[type] || map.click;
+            o.type = s.t; o.frequency.setValueAtTime(s.f, simAudioCtx.currentTime);
+            g.gain.setValueAtTime(0.14, simAudioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, simAudioCtx.currentTime + s.d);
+            o.start(simAudioCtx.currentTime); o.stop(simAudioCtx.currentTime + s.d);
+        } catch(e) {}
+    }
+
+    /* ── Array helpers ── */
+    function simRandArray(n=8) {
+        const a=[], used=new Set();
+        while(a.length<n){ const v=Math.floor(Math.random()*98)+1; if(!used.has(v)){a.push(v);used.add(v);} }
+        return a;
+    }
+
+    function simRandom() {
+        simResetSim(); simS.array = simRandArray(8);
+        simBuildTree(simS.array); simLayoutTree();
+        simS.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
+        simResizeDraw();
+        simSetPhase('🎲 NEW ARRAY — READY'); simSnd('click');
+    }
+
+    function simUseCustom() {
+        const raw = document.getElementById('sim-custom-input').value.trim();
+        if (!raw) return;
+        const parsed = raw.split(/[\s,]+/).map(Number).filter(n=>!isNaN(n)&&n>0);
+        if (parsed.length < 2) { alert('Need at least 2 numbers.'); return; }
+        if (parsed.length > 10){ alert('Max 10 numbers.'); return; }
+        simResetSim(); simS.array = parsed;
+        simBuildTree(simS.array); simLayoutTree();
+        simS.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
+        simResizeDraw();
+        simSetPhase('✏️ CUSTOM ARRAY — READY'); simSnd('click');
+    }
+
+    /* ── Node factory ── */
+    let _simNid = 0;
+    function simMakeNode(values, depth, parent=null, treeType='split') {
+        return {
+            id:_simNid++, values:[...values], display:[...values],
+            depth, parent, left:null, right:null,
+            state:'hidden', highlightL:-1, highlightR:-1,
+            treeType, x:0, y:0, w:0, h:0, mirrorId:null,
+        };
+    }
+
+    /* ── Build diamond tree ── */
+    function simBuildTree(arr) {
+        _simNid = 0; simS.nodes.clear();
+        simS.splitRoot = simBuildSplitNode([...arr], 0, null);
+        simS.root      = simS.splitRoot;
+        let maxDepth   = 0;
+        simS.nodes.forEach(n=>{ if(n.treeType==='split') maxDepth=Math.max(maxDepth,n.depth); });
+        simS._maxDepth = maxDepth;
+        simS.mergeRoot = simBuildMergeNode(simS.splitRoot, maxDepth, null);
+    }
+
+    function simBuildSplitNode(arr, depth, parent) {
+        if (!arr||!arr.length) return null;
+        const node = simMakeNode(arr, depth, parent, 'split');
+        simS.nodes.set(node.id, node);
+        if (arr.length > 1) {
+            const m = Math.floor(arr.length/2);
+            node.left  = simBuildSplitNode(arr.slice(0,m), depth+1, node);
+            node.right = simBuildSplitNode(arr.slice(m),   depth+1, node);
+        }
+        return node;
+    }
+
+    function simBuildMergeNode(splitNode, maxDepth, parent) {
+        if (!splitNode) return null;
+        if (splitNode.values.length <= 1) { splitNode.mirrorId = splitNode.id; return null; }
+        const mergeDepth = maxDepth - splitNode.depth;
+        const node = simMakeNode([...splitNode.values], mergeDepth, parent, 'merge');
+        node.state = 'hidden'; node.display = [];
+        simS.nodes.set(node.id, node);
+        splitNode.mirrorId = node.id; node.mirrorId = splitNode.id;
+        node.left  = simBuildMergeNode(splitNode.left,  maxDepth, node);
+        node.right = simBuildMergeNode(splitNode.right, maxDepth, node);
+        return node;
+    }
+
+    /* ── Layout ── */
+    const SIM_CELL=36, SIM_CGAP=2, SIM_NPAD=6, SIM_VGAP=72, SIM_HGAP=14, SIM_TPAD=30;
+
+    function simNodeWidth(node)  { const n=Math.max(1,node.values.length); return n*SIM_CELL+(n-1)*SIM_CGAP+SIM_NPAD*2; }
+    function simNodeHeight()     { return SIM_CELL+SIM_NPAD*2; }
+
+    function simCalcSubtreeWidth(node) {
+        if (!node) return 0;
+        const nw = simNodeWidth(node);
+        if (!node.left&&!node.right){ node._sw=nw; return nw; }
+        const lw=simCalcSubtreeWidth(node.left), rw=simCalcSubtreeWidth(node.right);
+        node._sw=Math.max(nw, lw+SIM_HGAP+rw); return node._sw;
+    }
+
+    function simAssignPos(node, x, y) {
+        if (!node) return;
+        const nw=simNodeWidth(node), nh=simNodeHeight();
+        node.x=x+(node._sw-nw)/2; node.y=y; node.w=nw; node.h=nh;
+        const childY=y+nh+SIM_VGAP;
+        if (node.left&&node.right){ simAssignPos(node.left,x,childY); simAssignPos(node.right,x+node.left._sw+SIM_HGAP,childY); }
+        else if (node.left)  simAssignPos(node.left, x, childY);
+        else if (node.right) simAssignPos(node.right,x, childY);
+    }
+
+    function simAssignMergePosByMirror(mNode, waistY) {
+        if (!mNode) return;
+        const nh=simNodeHeight();
+        if (!mNode.left&&!mNode.right) {
+            const splitNode=simS.nodes.get(mNode.mirrorId);
+            const splitL=splitNode?.left, splitR=splitNode?.right;
+            const nw=simNodeWidth(mNode);
+            const leftEdge=splitL?splitL.x:SIM_TPAD, rightEdge=splitR?splitR.x+splitR.w:leftEdge+nw;
+            mNode.x=(leftEdge+rightEdge)/2-nw/2; mNode.y=waistY; mNode.w=nw; mNode.h=nh; return;
+        }
+        simAssignMergePosByMirror(mNode.left,  waistY);
+        simAssignMergePosByMirror(mNode.right, waistY);
+        const lc=mNode.left, rc=mNode.right;
+        const childBottom=Math.max(lc?lc.y+lc.h:0, rc?rc.y+rc.h:0);
+        const nw=simNodeWidth(mNode);
+        const leftEdge =lc?lc.x:(rc?rc.x:SIM_TPAD);
+        const rightEdge=rc?rc.x+rc.w:(lc?lc.x+lc.w:SIM_TPAD+nw);
+        mNode.x=(leftEdge+rightEdge)/2-nw/2; mNode.y=childBottom+SIM_VGAP; mNode.w=nw; mNode.h=nh;
+    }
+
+    function simLayoutTree() {
+        if (!simS.splitRoot) return;
+        simCalcSubtreeWidth(simS.splitRoot);
+        simAssignPos(simS.splitRoot, SIM_TPAD, SIM_TPAD);
+        let leafY=0;
+        simS.nodes.forEach(n=>{ if(n.treeType==='split') leafY=Math.max(leafY,n.y+n.h); });
+        if (simS.mergeRoot) simAssignMergePosByMirror(simS.mergeRoot, leafY+SIM_VGAP);
+        let minX=Infinity, maxX=0;
+        simS.nodes.forEach(n=>{ minX=Math.min(minX,n.x); maxX=Math.max(maxX,n.x+n.w); });
+        const totalW=maxX-minX;
+        const canvasW=Math.max(simWrap.clientWidth||700, totalW+SIM_TPAD*2);
+        const offsetX=(canvasW-totalW)/2-minX;
+        simS.nodes.forEach(n=>{ n.x+=offsetX; });
+    }
+
+    /* ── Canvas drawing ── */
+    function simCv(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+    function simResizeDraw() {
+        if (!simS.splitRoot){ simCanvas.width=600; simCanvas.height=300; simCtx.clearRect(0,0,600,300); return; }
+        let maxX=0, maxY=0;
+        simS.nodes.forEach(n=>{ maxX=Math.max(maxX,n.x+n.w); maxY=Math.max(maxY,n.y+n.h); });
+        const W=Math.max(maxX+SIM_TPAD, simWrap.clientWidth||600);
+        const H=maxY+SIM_TPAD;
+        simCanvas.width=W; simCanvas.height=H;
+        simDraw();
+    }
+    window.addEventListener('resize', simResizeDraw);
+
+    function simDraw() {
+        simCtx.clearRect(0,0,simCanvas.width,simCanvas.height);
+        simS.nodes.forEach(n=>{ if(n.treeType==='split') simDrawEdges(n); });
+        simS.nodes.forEach(n=>{ if(n.treeType==='merge') simDrawMergeEdges(n); });
+        simS.nodes.forEach(n=>simDrawNode(n));
+    }
+
+    function simDrawEdges(node) {
+        if (node.state==='hidden') return;
+        function edge(child) {
+            if (!child||child.state==='hidden') return;
+            const px=node.x+node.w/2, py=node.y+node.h;
+            const cx=child.x+child.w/2, cy=child.y;
+            const isActive=child.state!=='idle';
+            simCtx.beginPath();
+            simCtx.moveTo(px,py);
+            simCtx.bezierCurveTo(px,py+SIM_VGAP*0.45,cx,cy-SIM_VGAP*0.45,cx,cy);
+            simCtx.strokeStyle=isActive?simEdgeColor(child.state):simCv('--border-var');
+            simCtx.lineWidth=isActive?2.2:1.2;
+            simCtx.globalAlpha=isActive?0.9:0.45;
+            simCtx.stroke(); simCtx.globalAlpha=1;
+        }
+        edge(node.left); edge(node.right);
+    }
+
+    function simDrawMergeEdges(node) {
+        if (node.state==='hidden') return;
+        const splitNode=simS.nodes.get(node.mirrorId);
+        function edgeFrom(child, splitChild) {
+            const src=(child&&child.state!=='hidden')?child:(splitChild&&splitChild.state!=='hidden')?splitChild:null;
+            if (!src) return;
+            const cx=src.x+src.w/2, cy=src.y+src.h;
+            const px=node.x+node.w/2, py=node.y;
+            const isActive=node.state!=='idle';
+            simCtx.beginPath();
+            simCtx.moveTo(cx,cy);
+            simCtx.bezierCurveTo(cx,cy+SIM_VGAP*0.45,px,py-SIM_VGAP*0.45,px,py);
+            simCtx.strokeStyle=isActive?simEdgeColor(node.state):simCv('--border-var');
+            simCtx.lineWidth=isActive?2.2:1.2;
+            simCtx.globalAlpha=isActive?0.9:0.35;
+            simCtx.stroke(); simCtx.globalAlpha=1;
+        }
+        edgeFrom(node.left,  splitNode?.left);
+        edgeFrom(node.right, splitNode?.right);
+    }
+
+    function simEdgeColor(state) {
+        const m={
+            splitting:simCv('--accent-btn'), comparing:'#FFD700',
+            merging:'#FF6B9D', sorted:'#00FF88', active:simCv('--accent-btn'),
+        };
+        return m[state]||simCv('--border-strong');
+    }
+
+    function simNodeColors(state) {
+        const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+        const m={
+            idle:     {bg:simCv('--card-inner'),  bdr:simCv('--border-var'),    cell:simCv('--scale-bg'),  txt:simCv('--text-primary')},
+            active:   {bg:isDark?'#1A1535':'#EAF4FF', bdr:simCv('--accent-btn'), cell:isDark?'#2A1F50':'#D0E8FF', txt:simCv('--accent-2')},
+            splitting:{bg:isDark?'#1A0A35':'#EAE0FF', bdr:simCv('--accent-btn'), cell:isDark?'#220A45':'#C8D8FF', txt:simCv('--accent-2')},
+            comparing:{bg:isDark?'#2A1A00':'#FFF8E0', bdr:'#FFD700',            cell:isDark?'#2A2000':'#FFEF99', txt:isDark?'#FFE066':'#9A6000'},
+            merging:  {bg:isDark?'#2A0A1A':'#FFE8F0', bdr:'#FF6B9D',            cell:isDark?'#2A0A18':'#FFD0E0', txt:isDark?'#FF9EC0':'#A02050'},
+            sorted:   {bg:isDark?'#002A18':'#E0FFF0', bdr:'#00FF88',            cell:isDark?'#003820':'#AAFFDD', txt:isDark?'#00FF88':'#007040'},
+        };
+        return m[state]||m.idle;
+    }
+
+    function simDrawNode(node) {
+        if (node.state==='hidden') return;
+        const {x,y,w,h,state,display,highlightL,highlightR}=node;
+        const col=simNodeColors(state);
+        const r=9;
+        if (state!=='idle') { simCtx.shadowColor=col.bdr; simCtx.shadowBlur=state==='sorted'?14:20; }
+        simCtx.beginPath(); simRrect(simCtx,x,y,w,h,r);
+        simCtx.fillStyle=col.bg; simCtx.fill();
+        simCtx.lineWidth=state==='idle'?1.5:2.5; simCtx.strokeStyle=col.bdr; simCtx.stroke();
+        simCtx.shadowBlur=0;
+        const vals=display.length>0?display:node.values;
+        vals.forEach((v,i)=>{
+            const cx=x+SIM_NPAD+i*(SIM_CELL+SIM_CGAP), cy=y+SIM_NPAD;
+            const isHL=(state==='comparing'&&(i===highlightL||i===highlightR));
+            simCtx.beginPath(); simRrect(simCtx,cx,cy,SIM_CELL,SIM_CELL,5);
+            simCtx.fillStyle=isHL?col.bdr:col.cell; simCtx.fill();
+            if (isHL){ simCtx.shadowColor=col.bdr; simCtx.shadowBlur=10; simCtx.strokeStyle='#fff'; simCtx.lineWidth=1.5; simCtx.stroke(); simCtx.shadowBlur=0; }
+            const fsize=v>=100?11:13;
+            simCtx.font=`bold ${fsize}px 'Share Tech Mono', monospace`;
+            simCtx.fillStyle=isHL?'#fff':col.txt;
+            simCtx.textAlign='center'; simCtx.textBaseline='middle';
+            simCtx.fillText(String(v),cx+SIM_CELL/2,cy+SIM_CELL/2);
+        });
+    }
+
+    function simRrect(c,x,y,w,h,r){
+        c.beginPath();
+        c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arcTo(x+w,y,x+w,y+r,r);
+        c.lineTo(x+w,y+h-r);c.arcTo(x+w,y+h,x+w-r,y+h,r);
+        c.lineTo(x+r,y+h);c.arcTo(x,y+h,x,y+h-r,r);
+        c.lineTo(x,y+r);c.arcTo(x,y,x+r,y,r);
+        c.closePath();
+    }
+
+    /* ── Pre-compute steps ── */
+    function simPrecompute(arr) {
+        const steps=[]; let comps=0, merges=0;
+        _simNid=0; simS.nodes.clear();
+        simBuildTree([...arr]); simLayoutTree();
+        simS.nodes.forEach(n=>{ n.state='hidden'; n.display=[...n.values]; });
+
+        steps.push({type:'phase-banner',nodeId:simS.splitRoot.id,phase:'⬇ PHASE 1: SPLITTING — Dividing array into smaller pieces',pseudoLine:0,depth:0});
+
+        function doSplits(sNode){
+            if(!sNode) return;
+            steps.push({type:'reveal-split',nodeId:sNode.id,
+                state:sNode.values.length<=1?'sorted':'splitting',
+                display:[...sNode.values],
+                pseudoLine:sNode.values.length<=1?1:2,
+                phase:sNode.values.length<=1?`Base case ✓ [${sNode.values}] — single element`:`Splitting [${sNode.values.join(', ')}] → [${sNode.left?.values.join(', ')}] + [${sNode.right?.values.join(', ')}]`,
+                depth:sNode.depth});
+            if(sNode.values.length>1){
+                if(sNode.left)  steps.push({type:'reveal-split',nodeId:sNode.left.id, state:'active',display:[...sNode.left.values], pseudoLine:3,phase:`Left: [${sNode.left.values.join(', ')}]`,depth:sNode.left.depth});
+                if(sNode.right) steps.push({type:'reveal-split',nodeId:sNode.right.id,state:'active',display:[...sNode.right.values],pseudoLine:4,phase:`Right: [${sNode.right.values.join(', ')}]`,depth:sNode.right.depth});
+                doSplits(sNode.left); doSplits(sNode.right);
+            }
+        }
+        doSplits(simS.splitRoot);
+
+        steps.push({type:'phase-banner',nodeId:simS.splitRoot.id,phase:'⬆ PHASE 2: MERGING — Conquering & combining sorted subarrays',pseudoLine:5,depth:0});
+
+        function doMerges(sNode){
+            if(!sNode) return [];
+            if(sNode.values.length<=1) return [...sNode.values];
+            const sl=doMerges(sNode.left), sr=doMerges(sNode.right);
+            const mNode=simS.nodes.get(sNode.mirrorId);
+            const leftRef =sNode.left ?(sNode.left.mirrorId!=null&&simS.nodes.get(sNode.left.mirrorId)?.treeType==='merge'?simS.nodes.get(sNode.left.mirrorId):sNode.left):null;
+            const rightRef=sNode.right?(sNode.right.mirrorId!=null&&simS.nodes.get(sNode.right.mirrorId)?.treeType==='merge'?simS.nodes.get(sNode.right.mirrorId):sNode.right):null;
+            const lc=[...sl],rc=[...sr];let i=0,j=0,result=[];
+            if(mNode) steps.push({type:'reveal-merge',nodeId:mNode.id,state:'merging',display:[],pseudoLine:6,phase:`↑ Merging [${lc.join(', ')}] + [${rc.join(', ')}]`,depth:mNode.depth});
+            while(i<lc.length&&j<rc.length){
+                comps++;
+                steps.push({type:'compare',nodeId:mNode?.id,state:'comparing',display:[...result],leftChildId:leftRef?.id,leftHighlight:i,rightChildId:rightRef?.id,rightHighlight:j,pseudoLine:9,phase:`Compare ${lc[i]} vs ${rc[j]}`,depth:mNode?.depth??0});
+                if(lc[i]<=rc[j]){
+                    result.push(lc[i++]);
+                    steps.push({type:'pick',nodeId:mNode?.id,state:'merging',display:[...result],leftChildId:leftRef?.id,leftHighlight:-1,rightChildId:rightRef?.id,rightHighlight:-1,pseudoLine:10,phase:`Picked ${result[result.length-1]} from left → [${result.join(', ')}]`,depth:mNode?.depth??0});
+                } else {
+                    result.push(rc[j++]);
+                    steps.push({type:'pick',nodeId:mNode?.id,state:'merging',display:[...result],leftChildId:leftRef?.id,leftHighlight:-1,rightChildId:rightRef?.id,rightHighlight:-1,pseudoLine:12,phase:`Picked ${result[result.length-1]} from right → [${result.join(', ')}]`,depth:mNode?.depth??0});
+                }
+            }
+            while(i<lc.length) result.push(lc[i++]);
+            while(j<rc.length) result.push(rc[j++]);
+            merges++;
+            if(mNode){ steps.push({type:'merged',nodeId:mNode.id,state:'sorted',display:[...result],leftChildId:leftRef?.id,rightChildId:rightRef?.id,pseudoLine:13,phase:`✅ Merged → [${result.join(', ')}]`,depth:mNode.depth}); mNode.values=[...result]; }
+            return result;
+        }
+        doMerges(simS.splitRoot);
+        steps.push({type:'done',nodeId:simS.mergeRoot?.id??simS.splitRoot.id,state:'sorted',display:[...(steps[steps.length-1]?.display||arr)],pseudoLine:5,phase:'🏆 Sorting complete! Final sorted array at the bottom.',depth:0,totalComps:comps,totalMerges:merges});
+        return steps;
+    }
+
+    /* ── Controls ── */
+    function simStart() {
+        if (!simS.array.length){ alert('Load an array first!'); return; }
+        simResetSim(true);
+        simS.steps=simPrecompute([...simS.array]);
+        simS.stepIdx=0; simS.comparisons=0; simS.merges=0; simS.isPlaying=false;
+        simS.nodes.forEach(n=>{ n.state='hidden'; n.display=[...n.values]; n.highlightL=-1; n.highlightR=-1; });
+        simResizeDraw();
+        simSetPhase('🌳 READY — Press PLAY or STEP');
+        simSetSignal('yellow'); simSnd('click');
+        document.getElementById('section-simulation').scrollIntoView({behavior:'smooth', block:'nearest'});
+        simUpdateStepCounter();
+
+        // Show result in-progress
+        document.getElementById('result-pending').style.display    = 'none';
+        document.getElementById('result-live').style.display       = 'none';
+        document.getElementById('result-inprogress').style.display = '';
+    }
+
+    function simPlay() {
+        if (!simS.steps.length){ simStart(); return; }
+        if (simS.isPlaying) return;
+        simS.isPlaying=true; simS.isPaused=false;
+        simSetSignal('green'); simSnd('click');
+        simAutoStep();
+    }
+    function simAutoStep() {
+        if (!simS.isPlaying||simS.isPaused) return;
+        if (simS.stepIdx>=simS.steps.length){ simS.isPlaying=false; return; }
+        simApplyStep(simS.steps[simS.stepIdx++]);
+        const delay=1600-simS.speed*150;
+        simS.playTimer=setTimeout(simAutoStep,delay);
+    }
+    function simPause() {
+        simS.isPlaying=false; simS.isPaused=true;
+        clearTimeout(simS.playTimer);
+        simSetSignal('yellow'); simSetPhase('⏸ PAUSED'); simSnd('click');
+    }
+    function simStep() {
+        if (!simS.steps.length){ simStart(); return; }
+        if (simS.isPlaying) simPause();
+        if (simS.stepIdx>=simS.steps.length) return;
+        simApplyStep(simS.steps[simS.stepIdx++]); simSnd('click');
+    }
+    function simReset() { simResetSim(); simSnd('click'); }
+    function simSpeedChange(v) {
+        simS.speed=+v;
+        document.getElementById('sim-speed-val').textContent=v+'x';
+    }
+
+    function simResetSim(keepArr=false) {
+        clearTimeout(simS.playTimer);
+        simS.isPlaying=false; simS.isPaused=false;
+        simS.steps=[]; simS.stepIdx=0; simS.comparisons=0; simS.merges=0;
+        simS.nodes.forEach(n=>{ n.state='idle'; n.display=[...n.values]; n.highlightL=-1; n.highlightR=-1; });
+        simUpdateStats({depth:0,comparisons:0,merges:0});
+        simHlCode(-1); simSetSignal('green'); simSetPhase('READY');
+        if (!keepArr&&simS.array.length) {
+            simBuildTree(simS.array); simLayoutTree();
+            simS.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
+        }
+        simResizeDraw(); simUpdateStepCounter();
+        document.getElementById('sim-step-log').textContent='Press Start Simulation or load an array to begin.';
+    }
+
+    /* ── Apply step ── */
+    function simApplyStep(step) {
+        if (step.type==='phase-banner') {
+            simSetPhase(step.phase);
+            document.getElementById('sim-step-log').textContent=step.phase;
+            if (step.pseudoLine!==undefined) simHlCode(step.pseudoLine);
+            simUpdateStepCounter(); simDraw(); return;
+        }
+        const node=step.nodeId!=null?simS.nodes.get(step.nodeId):null;
+        if (!node) return;
+
+        if (step.type==='reveal-split') {
+            node.state=step.state; node.display=[...step.display]; node.highlightL=-1; node.highlightR=-1;
+            if (step.pseudoLine!==undefined) simHlCode(step.pseudoLine);
+            if (step.phase){ simSetPhase(step.phase); document.getElementById('sim-step-log').textContent=step.phase; }
+            simSetSignal(step.state==='sorted'?'green':'red');
+            if (step.state==='splitting') simSnd('split');
+            simUpdateStats({depth:step.depth||0,comparisons:simS.comparisons,merges:simS.merges});
+            simUpdateStepCounter(); simDraw(); return;
+        }
+        if (step.type==='reveal-merge') {
+            node.state=step.state; node.display=[...step.display]; node.highlightL=-1; node.highlightR=-1;
+            if (step.pseudoLine!==undefined) simHlCode(step.pseudoLine);
+            if (step.phase){ simSetPhase(step.phase); document.getElementById('sim-step-log').textContent=step.phase; }
+            simSetSignal(step.state==='sorted'?'green':'yellow');
+            simUpdateStats({depth:step.depth||0,comparisons:simS.comparisons,merges:simS.merges});
+            simUpdateStepCounter(); simDraw(); return;
+        }
+
+        node.state=step.state; node.display=[...step.display]; node.highlightL=-1; node.highlightR=-1;
+
+        if (step.type==='compare'||step.type==='pick') {
+            const lc=step.leftChildId!=null?simS.nodes.get(step.leftChildId):null;
+            const rc=step.rightChildId!=null?simS.nodes.get(step.rightChildId):null;
+            if (step.type==='compare') {
+                if(lc){lc.state='comparing';lc.highlightL=step.leftHighlight;lc.highlightR=-1;}
+                if(rc){rc.state='comparing';rc.highlightL=step.rightHighlight;rc.highlightR=-1;}
+            } else {
+                if(lc){lc.state='merging';lc.highlightL=-1;}
+                if(rc){rc.state='merging';rc.highlightL=-1;}
+            }
+            node.display=[...step.display];
+        }
+        if (step.type==='merged') {
+            const lc=step.leftChildId!=null?simS.nodes.get(step.leftChildId):null;
+            const rc=step.rightChildId!=null?simS.nodes.get(step.rightChildId):null;
+            if(lc){lc.state='sorted';lc.highlightL=-1;lc.highlightR=-1;}
+            if(rc){rc.state='sorted';rc.highlightL=-1;rc.highlightR=-1;}
+        }
+        if (step.type==='done') {
+            simS.nodes.forEach(n=>{ if(n.state!=='hidden'){n.state='sorted';n.highlightL=-1;n.highlightR=-1;} });
+            simCelebrate();
+            // Populate result tab
+            simPopulateResult(step);
+        }
+
+        if (step.type==='compare') simS.comparisons++;
+        if (step.type==='merged')  simS.merges++;
+        simUpdateStats({depth:step.depth||0,comparisons:simS.comparisons,merges:simS.merges});
+        if (step.pseudoLine!==undefined) simHlCode(step.pseudoLine);
+        if (step.phase){ simSetPhase(step.phase); document.getElementById('sim-step-log').textContent=step.phase; }
+
+        if (step.type==='compare')     simSetSignal('yellow');
+        else if (step.type==='merged') { simSetSignal('green'); simSnd('merge'); }
+        else if (step.type==='done')   { simSetSignal('green'); simSnd('done'); }
+
+        simUpdateStepCounter(); simDraw();
+    }
+
+    function simPopulateResult(doneStep) {
+        // Build result table from steps
+        const tbody = document.getElementById('result-merge-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        let mergeLevel=0, levelComps=0, levelMerges=0;
+        const mergedSteps = simS.steps.filter(s=>s.type==='merged');
+        mergedSteps.forEach((s,idx)=>{
+            const tr=document.createElement('tr');
+            tr.innerHTML=`<td>Level ${idx+1}</td><td>1</td><td>—</td><td>[${(s.display||[]).join(', ')}]</td>`;
+            tbody.appendChild(tr);
+        });
+        document.getElementById('result-array-label').innerHTML =
+            `<strong>Observation Table</strong> — Input: <code>[${simS.array.join(', ')}]</code>`;
+        document.getElementById('res-total-comp').textContent   = simS.comparisons;
+        document.getElementById('res-total-merge').textContent  = simS.merges;
+        document.getElementById('res-total-levels').textContent = Math.ceil(Math.log2(simS.array.length));
+        document.getElementById('res-array-size').textContent   = simS.array.length;
+        const sortedArr = doneStep.display||[];
+        document.getElementById('result-conclusion-text').innerHTML =
+            `The Merge Sort algorithm successfully sorted the array <code>[${simS.array.join(', ')}]</code>
+             into <code>[${sortedArr.join(', ')}]</code> with <strong>${simS.comparisons} comparisons</strong>
+             and <strong>${simS.merges} merge operations</strong>, confirming its guaranteed
+             <strong>O(n log n)</strong> time complexity.`;
+        document.getElementById('result-inprogress').style.display = 'none';
+        document.getElementById('result-live').style.display       = '';
+    }
+
+    /* ── UI helpers ── */
+    function simSetPhase(t)  { document.getElementById('sim-phase-label').textContent=t; }
+    function simHlCode(n) {
+        document.querySelectorAll('#sim-pseudocode .code-line').forEach(el=>el.classList.remove('active'));
+        if (n>=0){ const t=document.querySelector(`#sim-pseudocode .code-line[data-line="${n}"]`); if(t) t.classList.add('active'); }
+    }
+    function simUpdateStats({depth,comparisons,merges}) {
+        document.getElementById('sim-stat-depth').textContent = depth;
+        document.getElementById('sim-stat-comp').textContent  = comparisons;
+        document.getElementById('sim-stat-merge').textContent = merges;
+    }
+    function simUpdateStepCounter() {
+        document.getElementById('sim-stat-step').textContent=`${simS.stepIdx}/${simS.steps.length}`;
+    }
+    function simSetSignal(c) {
+        document.querySelectorAll('.sim-embed .light').forEach(l=>l.classList.remove('active'));
+        const t=document.querySelector(`.sim-embed .light.${c}`); if(t) t.classList.add('active');
+    }
+    function simCelebrate() {
+        const el=document.createElement('div'); el.className='sim-celebrate';
+        el.innerHTML='<div class="sim-celebrate-text">🏆 ARRAY SORTED! MERGE COMPLETE! 🌳</div>';
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(),3200);
+    }
+
+    /* ── Init ── */
+    function simInit() {
+        simS.array=simRandArray(8);
+        simBuildTree(simS.array); simLayoutTree();
+        simS.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
+        simResizeDraw();
+    }
+
+    /* Keyboard shortcuts (only when not in an input) */
+    document.addEventListener('keydown', e=>{
+        if (e.target.tagName==='INPUT') return;
+        if (e.key===' '){e.preventDefault(); simS.isPlaying?simPause():simPlay();}
+        else if (e.key==='ArrowRight') simStep();
+        else if (e.key==='r'||e.key==='R') simReset();
+        else if (e.key==='s'||e.key==='S') simStart();
+    });
+    </script>
+</body>
+</html>

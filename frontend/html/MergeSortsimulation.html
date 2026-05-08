@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MergeSort Visualizer</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+/* ════════════════════════════════════════
+   CSS VARIABLES
+════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg-page:       #050510;
+  --bg-card:       #0E0E1E;
+  --card-inner:    #13132A;
+  --border:        #2A1F5A;
+  --border-strong: #7B2FBE;
+  --accent:        #9B4DFF;
+  --accent-2:      #C07AFF;
+  --btn-bg:        #7B2FBE;
+  --text-primary:  #E8E0FF;
+  --text-secondary:#A89CC8;
+  --text-muted:    #5A4F7A;
+  --glow:          rgba(155,77,255,0.4);
+  --glow-2:        rgba(192,122,255,0.2);
+  --node-idle:     #1A1535;
+  --node-idle-bdr: #3A2A6A;
+  --node-split:    #1A0A35;
+  --node-split-bdr:#9B4DFF;
+  --node-compare:  #2A1A00;
+  --node-cmp-bdr:  #FFD700;
+  --node-merge:    #2A0A1A;
+  --node-merge-bdr:#FF6B9D;
+  --node-sorted:   #002A18;
+  --node-sort-bdr: #00FF88;
+  --cell-bg:       #1E1540;
+  --cell-text:     #C8B8FF;
+  --edge-idle:     rgba(58,42,106,0.5);
+  --canvas-bg:     #07071A;
+  --signal-red:    #FF3B3B;
+  --signal-yellow: #FFD700;
+  --signal-green:  #00FF88;
+}
+[data-theme="light"] {
+  --bg-page:       #E8F4FD;
+  --bg-card:       #FFFFFF;
+  --card-inner:    #F0F8FF;
+  --border:        #87CEEB;
+  --border-strong: #3A9BD5;
+  --accent:        #1A88D0;
+  --accent-2:      #0EC4E0;
+  --btn-bg:        #1A88D0;
+  --text-primary:  #0A2540;
+  --text-secondary:#2D5F8A;
+  --text-muted:    #6A9EBF;
+  --glow:          rgba(26,136,208,0.3);
+  --glow-2:        rgba(14,196,224,0.15);
+  --node-idle:     #EAF4FF;
+  --node-idle-bdr: #87CEEB;
+  --node-split:    #EAE0FF;
+  --node-split-bdr:#1A88D0;
+  --node-compare:  #FFF8E0;
+  --node-cmp-bdr:  #E87A00;
+  --node-merge:    #FFE8F0;
+  --node-merge-bdr:#D0306A;
+  --node-sorted:   #E0FFF0;
+  --node-sort-bdr: #00A858;
+  --cell-bg:       #D0E8FF;
+  --cell-text:     #0A2540;
+  --edge-idle:     rgba(135,206,235,0.5);
+  --canvas-bg:     #F0F8FF;
+  --signal-red:    #E83030;
+  --signal-yellow: #E8A800;
+  --signal-green:  #00A858;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Exo 2',sans-serif;
+  background:var(--bg-page);
+  color:var(--text-primary);
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background 0.4s,color 0.4s;
+}
+
+/* ════════════════════════════════════════
+   LOADING SCREEN
+════════════════════════════════════════ */
+#loading-screen{
+  position:fixed;inset:0;
+  background:var(--bg-page);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  z-index:9999;transition:opacity 0.8s;
+}
+#loading-screen.fade-out{opacity:0;pointer-events:none}
+.loading-icon-emoji{
+  font-size:3rem;margin-bottom:1rem;
+  animation:loadPulse 1.2s ease-in-out infinite;
+}
+.loading-title{
+  font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;
+  letter-spacing:0.25em;color:var(--accent);
+  text-shadow:0 0 30px var(--glow);
+  animation:loadPulse 1.5s ease-in-out infinite;
+}
+.loading-sub{
+  color:var(--text-secondary);font-family:'Share Tech Mono',monospace;
+  margin:0.8rem 0 1.5rem;letter-spacing:0.1em;font-size:0.85rem;
+}
+.loading-bar-wrap{width:260px;height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+.loading-bar{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  border-radius:4px;animation:loadBar 2.5s ease-out forwards;
+}
+@keyframes loadBar{from{width:0}to{width:100%}}
+@keyframes loadPulse{0%,100%{opacity:1}50%{opacity:0.65}}
+
+/* ════════════════════════════════════════
+   NAVBAR
+════════════════════════════════════════ */
+#navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.9rem 2rem;
+  background:rgba(5,5,16,0.88);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  transition:background 0.4s;
+}
+[data-theme="light"] #navbar{background:rgba(232,244,253,0.92)}
+.nav-logo{
+  font-family:'Orbitron',monospace;font-weight:700;font-size:1.15rem;
+  color:var(--accent);letter-spacing:0.08em;
+}
+.nav-logo span{color:var(--text-primary)}
+.nav-links{display:flex;gap:1.8rem}
+.nav-links a{
+  color:var(--text-secondary);text-decoration:none;
+  font-size:0.88rem;font-weight:600;letter-spacing:0.04em;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--accent)}
+.nav-controls{display:flex;gap:0.5rem}
+.icon-btn{
+  background:var(--card-inner);border:1px solid var(--border);
+  color:var(--text-primary);padding:0.4rem 0.65rem;
+  border-radius:8px;cursor:pointer;font-size:1rem;transition:all 0.2s;
+}
+.icon-btn:hover{border-color:var(--accent);background:var(--btn-bg)}
+
+/* ════════════════════════════════════════
+   HERO (compact)
+════════════════════════════════════════ */
+#hero{
+  padding:5.5rem 2rem 1.5rem;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.particles{position:absolute;inset:0;pointer-events:none}
+.particle{
+  position:absolute;width:3px;height:3px;border-radius:50%;
+  background:var(--accent);opacity:0;
+  animation:floatUp var(--dur) ease-in infinite var(--delay);
+  left:var(--x);
+}
+@keyframes floatUp{
+  0%{opacity:0;transform:translateY(80px)}
+  20%{opacity:0.5}
+  100%{opacity:0;transform:translateY(-160px)}
+}
+.hero-content{
+  position:relative;z-index:2;text-align:center;
+  max-width:700px;width:100%;
+}
+.hero-badge{
+  display:inline-block;
+  font-family:'Share Tech Mono',monospace;font-size:0.72rem;
+  letter-spacing:0.18em;color:var(--accent-2);
+  border:1px solid var(--border-strong);padding:0.28rem 0.9rem;
+  border-radius:20px;background:var(--card-inner);margin-bottom:1rem;
+}
+.hero-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(2.8rem,8vw,5.5rem);font-weight:900;
+  line-height:1;margin-bottom:0.6rem;letter-spacing:0.04em;
+}
+.title-rail{color:var(--text-primary)}
+.title-merge{
+  color:var(--accent);
+  text-shadow:0 0 40px var(--glow),0 0 80px var(--glow-2);
+  animation:titleGlow 3s ease-in-out infinite;
+}
+@keyframes titleGlow{
+  0%,100%{text-shadow:0 0 40px var(--glow),0 0 80px var(--glow-2)}
+  50%{text-shadow:0 0 70px var(--glow),0 0 140px var(--glow-2)}
+}
+.hero-sub{
+  font-size:1rem;color:var(--text-secondary);
+  margin-bottom:1.5rem;letter-spacing:0.04em;
+}
+.hero-input-group{
+  margin:0 auto 1.2rem;max-width:500px;padding:1rem 1.2rem;text-align:left;
+}
+.hero-input-group label{
+  display:block;font-size:0.75rem;color:var(--text-muted);
+  margin-bottom:0.4rem;letter-spacing:0.08em;
+  font-family:'Share Tech Mono',monospace;
+}
+.input-row{display:flex;gap:0.5rem}
+.input-row input{
+  flex:1;background:var(--card-inner);border:1px solid var(--border);
+  color:var(--text-primary);padding:0.55rem 0.9rem;border-radius:8px;
+  font-family:'Share Tech Mono',monospace;font-size:0.88rem;
+  outline:none;transition:border-color 0.2s;
+}
+.input-row input:focus{border-color:var(--accent)}
+.hero-buttons{display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center}
+
+/* Buttons */
+.btn-primary,.btn-accent,.btn-outline,.btn-secondary,.ctrl-btn{
+  padding:0.72rem 1.6rem;border-radius:10px;
+  font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:700;
+  letter-spacing:0.1em;cursor:pointer;border:none;
+  transition:all 0.22s;text-transform:uppercase;
+}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 20px var(--glow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--glow);opacity:0.9}
+.btn-accent{background:var(--accent-2);color:#fff}
+.btn-accent:hover{transform:translateY(-2px);opacity:0.88}
+.btn-outline{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.btn-outline:hover{background:var(--accent);color:#fff}
+.btn-secondary{
+  background:var(--card-inner);color:var(--accent);
+  border:1px solid var(--border-strong);
+  padding:0.5rem 0.9rem;font-size:0.68rem;
+}
+.btn-secondary:hover{background:var(--btn-bg);color:#fff}
+
+/* Glass card */
+.glass-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:16px;backdrop-filter:blur(12px);
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.glass-card:hover{border-color:var(--border-strong);box-shadow:0 0 24px var(--glow-2)}
+
+/* ════════════════════════════════════════
+   SIMULATOR SECTION
+════════════════════════════════════════ */
+#simulator{padding:1rem 1.5rem 4rem;max-width:1400px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:1.5rem}
+.section-header h2{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(1.3rem,3vw,1.9rem);
+  font-weight:700;color:var(--accent);margin-bottom:0.3rem;
+}
+.section-header p{color:var(--text-secondary);font-size:0.88rem}
+
+/* Control Panel */
+.control-panel{
+  display:flex;align-items:center;flex-wrap:wrap;
+  gap:0.6rem;padding:0.9rem 1.2rem;margin-bottom:1.2rem;
+}
+.ctrl-btn{
+  padding:0.45rem 1rem;background:var(--card-inner);
+  border:1px solid var(--border);color:var(--text-primary);font-size:0.68rem;
+  border-radius:8px;
+}
+.ctrl-btn:hover{background:var(--btn-bg);border-color:var(--accent);color:#fff}
+.ctrl-btn:disabled{opacity:0.35;cursor:not-allowed}
+
+.speed-control{
+  display:flex;align-items:center;gap:0.5rem;
+  margin-left:auto;font-size:0.78rem;color:var(--text-secondary);
+  font-family:'Share Tech Mono',monospace;
+}
+.speed-control input[type=range]{accent-color:var(--accent);width:90px}
+
+/* Signal lights */
+.status-light{
+  display:flex;flex-direction:column;gap:4px;
+  padding:5px 8px;background:#000;border-radius:20px;border:2px solid #333;
+}
+.light{width:11px;height:11px;border-radius:50%;opacity:0.2;transition:opacity 0.3s,box-shadow 0.3s}
+.light.red{background:var(--signal-red)}
+.light.yellow{background:var(--signal-yellow)}
+.light.green{background:var(--signal-green)}
+.light.active{opacity:1}
+.light.red.active{box-shadow:0 0 8px var(--signal-red)}
+.light.yellow.active{box-shadow:0 0 8px var(--signal-yellow)}
+.light.green.active{box-shadow:0 0 8px var(--signal-green)}
+
+/* Sim layout */
+.sim-layout{display:grid;grid-template-columns:1fr 300px;gap:1.2rem;align-items:start}
+@media(max-width:900px){.sim-layout{grid-template-columns:1fr}}
+
+/* Viz area */
+.viz-area{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:16px;padding:1.2rem;
+}
+.phase-label{
+  font-family:'Orbitron',monospace;font-size:0.7rem;
+  letter-spacing:0.18em;color:var(--accent-2);text-align:center;
+  margin-bottom:1rem;padding:0.35rem 0.8rem;
+  border:1px solid var(--border);border-radius:20px;
+  display:block;width:100%;
+}
+
+/* Canvas */
+#tree-canvas-wrap{
+  width:100%;overflow:auto;border-radius:10px;
+  background:var(--canvas-bg);border:1px solid var(--border);
+  min-height:300px;
+}
+#tree-canvas{display:block;cursor:default}
+
+/* Legend */
+.tree-legend{
+  display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;
+  margin-top:0.8rem;font-family:'Share Tech Mono',monospace;
+  font-size:0.7rem;color:var(--text-secondary);
+}
+.leg-item{display:flex;align-items:center;gap:0.35rem}
+.leg-dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+/* Step log */
+.step-log{
+  margin-top:0.8rem;padding:0.7rem 1rem;
+  background:var(--canvas-bg);border:1px solid var(--border);
+  border-radius:8px;font-family:'Share Tech Mono',monospace;
+  font-size:0.75rem;color:var(--accent-2);min-height:36px;
+  transition:color 0.3s;
+}
+
+/* ════════════════════════════════════════
+   INFO PANEL
+════════════════════════════════════════ */
+.info-panel{padding:1rem;position:sticky;top:5rem}
+.info-panel h3{
+  font-family:'Orbitron',monospace;font-size:0.76rem;
+  color:var(--accent);margin-bottom:0.7rem;letter-spacing:0.08em;
+}
+.stat-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0.35rem 0;border-bottom:1px solid var(--border);
+  font-size:0.76rem;color:var(--text-secondary);
+}
+.stat-row.accent{color:var(--accent-2);border-bottom:none}
+.stat-val{font-family:'Share Tech Mono',monospace;color:var(--text-primary);font-weight:600}
+.divider{border:none;border-top:1px solid var(--border-strong);margin:0.8rem 0}
+.pseudocode{
+  font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+  line-height:2;background:var(--bg-page);border-radius:8px;
+  padding:0.7rem;border:1px solid var(--border);
+}
+.code-line{
+  padding:0 0.4rem;border-radius:4px;color:var(--text-muted);
+  transition:all 0.3s;cursor:default;
+}
+.code-line.active{
+  background:rgba(155,77,255,0.18);color:var(--accent-2);
+  border-left:3px solid var(--accent);padding-left:0.5rem;
+}
+[data-theme="light"] .code-line.active{background:rgba(26,136,208,0.12)}
+
+/* ════════════════════════════════════════
+   PRACTICE MODAL
+════════════════════════════════════════ */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:500;
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;backdrop-filter:blur(6px);
+}
+.modal.hidden{display:none}
+.modal-content{
+  padding:1.8rem;max-width:520px;width:100%;position:relative;
+  animation:modalPop 0.3s ease-out;
+}
+@keyframes modalPop{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-close{
+  position:absolute;top:1rem;right:1rem;background:none;
+  border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;
+}
+.modal-close:hover{color:var(--text-primary)}
+.modal-content h2{
+  font-family:'Orbitron',monospace;font-size:1.1rem;
+  color:var(--accent);margin-bottom:0.5rem;
+}
+.practice-desc{color:var(--text-secondary);font-size:0.88rem;margin-bottom:0.7rem}
+#practice-score-display{
+  font-family:'Share Tech Mono',monospace;font-size:0.82rem;
+  color:var(--text-muted);margin-bottom:1rem;
+}
+#practice-score-display span{color:var(--accent-2);font-weight:700}
+#practice-area{min-height:80px}
+.practice-coach{
+  width:60px;height:52px;border-radius:10px;
+  border:2px solid var(--border-strong);background:var(--card-inner);
+  font-family:'Orbitron',monospace;font-weight:700;font-size:1rem;
+  color:var(--text-primary);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:all 0.2s;margin:0.3rem;
+}
+.practice-coach:hover{border-color:var(--accent);transform:translateY(-3px)}
+.practice-coach.correct{border-color:var(--signal-green);background:rgba(0,255,136,0.12)}
+.practice-coach.wrong{border-color:var(--signal-red);background:rgba(255,59,59,0.12);animation:shake 0.4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.practice-feedback{
+  text-align:center;padding:0.7rem;border-radius:8px;
+  font-family:'Orbitron',monospace;font-size:0.78rem;margin-top:0.5rem;
+}
+.practice-feedback.correct-fb{
+  background:rgba(0,255,136,0.1);color:var(--signal-green);
+  border:1px solid var(--signal-green);
+}
+.practice-feedback.wrong-fb{
+  background:rgba(255,59,59,0.1);color:var(--signal-red);
+  border:1px solid var(--signal-red);
+}
+.practice-feedback.hidden{display:none}
+
+/* ════════════════════════════════════════
+   COMPARE TABLE
+════════════════════════════════════════ */
+#compare{padding:4rem 2rem;max-width:1000px;margin:0 auto}
+.table-wrap{overflow-x:auto;padding:0}
+.compare-table{width:100%;border-collapse:collapse;font-size:0.83rem}
+.compare-table th{
+  font-family:'Orbitron',monospace;font-size:0.68rem;letter-spacing:0.08em;
+  color:var(--accent);padding:0.9rem 1rem;text-align:left;
+  border-bottom:2px solid var(--border-strong);white-space:nowrap;
+}
+.compare-table td{
+  padding:0.85rem 1rem;border-bottom:1px solid var(--border);
+  color:var(--text-secondary);font-family:'Share Tech Mono',monospace;font-size:0.78rem;
+}
+.compare-table tr:last-child td{border-bottom:none}
+.highlight-row td{color:var(--accent-2);font-weight:600}
+.highlight-row td:first-child{color:var(--accent)}
+.rating-bar{
+  display:inline-block;height:7px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  border-radius:4px;width:var(--w);min-width:16px;
+  vertical-align:middle;box-shadow:0 0 5px var(--glow);
+}
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+footer{
+  padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
+}
+.footer-logo{
+  font-family:'Orbitron',monospace;font-size:1.1rem;
+  color:var(--accent);margin-bottom:0.6rem;
+}
+footer p{color:var(--text-muted);font-size:0.82rem;line-height:1.8}
+
+/* ════════════════════════════════════════
+   CELEBRATION
+════════════════════════════════════════ */
+.celebration{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  text-align:center;pointer-events:none;
+}
+.celebration-text{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(1.2rem,4vw,2.5rem);
+  color:var(--signal-green);text-shadow:0 0 30px var(--signal-green);
+  animation:celIn 0.5s ease-out,celOut 0.5s 2.5s ease-in forwards;
+  padding:1.5rem;
+}
+@keyframes celIn{from{transform:translateY(-50px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes celOut{to{transform:translateY(-50px);opacity:0}}
+
+/* Responsive */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hero-buttons{flex-direction:column;align-items:center}
+  .control-panel{justify-content:center}
+  .speed-control{margin-left:0;width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loading-icon-emoji">🌳</div>
+  <div class="loading-title">MERGESORT</div>
+  <div class="loading-sub">Initializing Visualization Engine...</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">⚡ <span>MergeSort</span></div>
+  <div class="nav-links">
+    <a href="#hero">Home</a>
+    <a href="#simulator">Simulator</a>
+    <a href="#compare">Compare</a>
+  </div>
+  <div class="nav-controls">
+    <button id="sound-btn" class="icon-btn" title="Toggle Sound">🔊</button>
+    <button id="theme-btn" class="icon-btn" title="Toggle Theme">🌙</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="particles" id="particles"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🌳 ALGORITHM VISUALIZER</div>
+    <h1 class="hero-title">
+      <span class="title-rail">Merge</span><span class="title-merge">Sort</span>
+    </h1>
+    <p class="hero-sub">Watch arrays split, compare and merge — step by step</p>
+    <div class="hero-input-group glass-card">
+      <label>Custom Array (comma-separated, max 10):</label>
+      <div class="input-row">
+        <input type="text" id="custom-input" placeholder="e.g. 38, 27, 43, 3, 9, 82"/>
+        <button class="btn-secondary" id="use-custom-btn">Use Input</button>
+      </div>
+    </div>
+    <div class="hero-buttons">
+      <button class="btn-primary" id="start-btn">🚀 Start Simulation</button>
+      <button class="btn-accent"  id="random-btn">🎲 Random Array</button>
+      <button class="btn-outline" id="practice-btn">🎮 Practice Mode</button>
+    </div>
+  </div>
+</section>
+
+<!-- SIMULATOR -->
+<section id="simulator">
+  <div class="section-header">
+    <h2>🌳 Merge Sort Visualizer</h2>
+    <p>Watch the algorithm divide, compare and merge in real time</p>
+  </div>
+
+  <div class="control-panel glass-card">
+    <button class="ctrl-btn" id="play-btn">▶ Play</button>
+    <button class="ctrl-btn" id="pause-btn">⏸ Pause</button>
+    <button class="ctrl-btn" id="step-btn">⏭ Step</button>
+    <button class="ctrl-btn" id="reset-btn">↺ Reset</button>
+    <div class="speed-control">
+      <label>Speed:</label>
+      <input type="range" id="speed-slider" min="1" max="10" value="5"/>
+      <span id="speed-val">5x</span>
+    </div>
+    <div class="status-light" id="status-light">
+      <div class="light red"></div>
+      <div class="light yellow"></div>
+      <div class="light green active"></div>
+    </div>
+  </div>
+
+  <div class="sim-layout">
+    <div class="viz-area">
+      <span class="phase-label" id="phase-label">READY</span>
+      <div id="tree-canvas-wrap">
+        <canvas id="tree-canvas"></canvas>
+      </div>
+      <div class="tree-legend">
+        <span class="leg-item"><span class="leg-dot" style="background:#9B4DFF"></span>Splitting</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#FFD700"></span>Comparing</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#FF6B9D"></span>Merging</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#00FF88"></span>Sorted</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#555"></span>Idle</span>
+      </div>
+      <div class="step-log" id="step-log">Press Start Simulation or load an array to begin.</div>
+    </div>
+
+    <div class="info-panel glass-card">
+      <h3>📊 Live Stats</h3>
+      <div class="stat-row"><span>Depth:</span><span id="stat-depth" class="stat-val">0</span></div>
+      <div class="stat-row"><span>Comparisons:</span><span id="stat-comp" class="stat-val">0</span></div>
+      <div class="stat-row"><span>Merges:</span><span id="stat-merge" class="stat-val">0</span></div>
+      <div class="stat-row"><span>Step:</span><span id="stat-step" class="stat-val">0/0</span></div>
+      <div class="stat-row accent"><span>Time:</span><span class="stat-val">O(n log n)</span></div>
+      <div class="stat-row accent"><span>Space:</span><span class="stat-val">O(n)</span></div>
+      <hr class="divider"/>
+      <h3>📋 Pseudocode</h3>
+      <div class="pseudocode" id="pseudocode">
+        <div class="code-line" data-line="0">mergeSort(arr):</div>
+        <div class="code-line" data-line="1">  if len ≤ 1: return arr</div>
+        <div class="code-line" data-line="2">  mid = len / 2</div>
+        <div class="code-line" data-line="3">  left  = mergeSort(arr[:mid])</div>
+        <div class="code-line" data-line="4">  right = mergeSort(arr[mid:])</div>
+        <div class="code-line" data-line="5">  return merge(left, right)</div>
+        <div class="code-line" data-line="6">merge(left, right):</div>
+        <div class="code-line" data-line="7">  result = []</div>
+        <div class="code-line" data-line="8">  while both not empty:</div>
+        <div class="code-line" data-line="9">    if left[0] ≤ right[0]:</div>
+        <div class="code-line" data-line="10">      result += left.pop(0)</div>
+        <div class="code-line" data-line="11">    else:</div>
+        <div class="code-line" data-line="12">      result += right.pop(0)</div>
+        <div class="code-line" data-line="13">  return result + rest</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRACTICE MODAL -->
+<div id="practice-modal" class="modal hidden">
+  <div class="modal-content glass-card">
+    <button class="modal-close" id="close-practice">✕</button>
+    <h2>🎮 Practice Mode</h2>
+    <p class="practice-desc">Which value merges first? Click the correct one!</p>
+    <div id="practice-score-display">
+      Score: <span id="practice-score">0</span> | Streak: <span id="practice-streak">0</span>
+    </div>
+    <div id="practice-area"></div>
+    <div id="practice-feedback" class="practice-feedback hidden"></div>
+    <button class="btn-primary" id="next-practice-btn" style="margin-top:1rem">Next Round</button>
+  </div>
+</div>
+
+<!-- COMPARE TABLE -->
+<section id="compare">
+  <div class="section-header">
+    <h2>📊 Algorithm Comparison</h2>
+    <p>How Merge Sort stacks up</p>
+  </div>
+  <div class="table-wrap glass-card">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Algorithm</th><th>Best</th><th>Average</th>
+          <th>Worst</th><th>Space</th><th>Stable?</th><th>Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight-row">
+          <td>🌳 Merge Sort</td><td>O(n log n)</td><td>O(n log n)</td>
+          <td>O(n log n)</td><td>O(n)</td><td>✅</td>
+          <td><span class="rating-bar" style="--w:90%"></span></td>
+        </tr>
+        <tr>
+          <td>⚡ Quick Sort</td><td>O(n log n)</td><td>O(n log n)</td>
+          <td>O(n²)</td><td>O(log n)</td><td>❌</td>
+          <td><span class="rating-bar" style="--w:82%"></span></td>
+        </tr>
+        <tr>
+          <td>🐌 Bubble Sort</td><td>O(n)</td><td>O(n²)</td>
+          <td>O(n²)</td><td>O(1)</td><td>✅</td>
+          <td><span class="rating-bar" style="--w:30%"></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">⚡ MergeSort</div>
+  <p>An interactive visualizer that teaches Merge Sort through animated trees.</p>
+  <p style="font-size:0.75rem;margin-top:0.3rem">Built for hackathons · College exhibitions · Portfolio projects</p>
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   MERGESORT VISUALIZER — Diamond Tree Engine
+   
+   Visual layout mirrors the NxtWave diagram:
+   • TOP HALF  (split tree):  root → children → ... → leaves
+   • BOTTOM HALF (merge tree): leaves → parents → ... → root result
+   
+   Two separate node sets share the same canvas:
+     S.splitNodes  — the splitting tree (top half, built upfront)
+     S.mergeNodes  — the merge-result tree (bottom half, revealed during merge phase)
+   
+   During simulation:
+     Phase 1: Animate split nodes lighting up top-down
+     Phase 2: Animate merge nodes appearing bottom-up with compare/pick steps
+════════════════════════════════════════════════════════ */
+
+/* ── State ── */
+const S = {
+  array:[],steps:[],stepIdx:0,
+  isPlaying:false,isPaused:false,
+  speed:5,soundOn:true,
+  comparisons:0,merges:0,
+  playTimer:null,
+  nodes:new Map(),   // id → NodeDef  (ALL nodes: split + merge)
+  splitRoot:null,    // root of the split (top) tree
+  mergeRoot:null,    // root of the merge (bottom) tree (same structure, different node ids)
+  root:null,         // alias for splitRoot (legacy compat)
+};
+
+/* ── DOM ── */
+const $ = id => document.getElementById(id);
+const canvas  = $('tree-canvas');
+const wrap    = $('tree-canvas-wrap');
+const ctx     = canvas.getContext('2d');
+
+/* ══════════════════════════════════════════════════════
+   LOADING
+══════════════════════════════════════════════════════ */
+window.addEventListener('load',()=>{
+  spawnParticles();
+  setTimeout(()=>{
+    $('loading-screen').classList.add('fade-out');
+    setTimeout(()=>$('loading-screen').style.display='none',800);
+  },2600);
+  const th = localStorage.getItem('ms-theme')||'dark';
+  document.documentElement.setAttribute('data-theme',th);
+  $('theme-btn').textContent = th==='dark'?'☀️':'🌙';
+
+  S.array = randArray(8);
+  buildTree(S.array);
+  layoutTree();
+  S.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
+  resizeDraw();
+});
+window.addEventListener('resize', resizeDraw);
+
+/* ══════════════════════════════════════════════════════
+   PARTICLES
+══════════════════════════════════════════════════════ */
+function spawnParticles(){
+  const c = $('particles');
+  for(let i=0;i<35;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.setProperty('--x',Math.random()*100+'%');
+    p.style.setProperty('--dur',(Math.random()*6+4)+'s');
+    p.style.setProperty('--delay',(Math.random()*6)+'s');
+    c.appendChild(p);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   THEME / SOUND
+══════════════════════════════════════════════════════ */
+$('theme-btn').addEventListener('click',()=>{
+  const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  $('theme-btn').textContent=next==='dark'?'☀️':'🌙';
+  localStorage.setItem('ms-theme',next);
+  resizeDraw(); snd('click');
+});
+
+let audioCtx=null;
+function snd(type){
+  if(!S.soundOn)return;
+  try{
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.connect(g);g.connect(audioCtx.destination);
+    const map={click:{f:440,t:'sine',d:0.08},compare:{f:660,t:'square',d:0.12},
+               merge:{f:880,t:'sine',d:0.18},split:{f:330,t:'triangle',d:0.15},
+               done:{f:1047,t:'sine',d:0.6},wrong:{f:220,t:'sawtooth',d:0.3}};
+    const s=map[type]||map.click;
+    o.type=s.t;o.frequency.setValueAtTime(s.f,audioCtx.currentTime);
+    g.gain.setValueAtTime(0.14,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+s.d);
+    o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+s.d);
+  }catch(e){}
+}
+$('sound-btn').addEventListener('click',()=>{
+  S.soundOn=!S.soundOn;
+  $('sound-btn').textContent=S.soundOn?'🔊':'🔇';
+});
+
+/* ══════════════════════════════════════════════════════
+   ARRAY HELPERS
+══════════════════════════════════════════════════════ */
+function randArray(n=8){
+  const a=[],used=new Set();
+  while(a.length<n){const v=Math.floor(Math.random()*98)+1;if(!used.has(v)){a.push(v);used.add(v);}}
+  return a;
+}
+$('random-btn').addEventListener('click',()=>{
+  resetSim(); S.array=randArray(8);
+  buildTree(S.array); layoutTree();
+  S.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
+  resizeDraw();
+  setPhase('🎲 NEW ARRAY — READY'); snd('click');
+});
+$('use-custom-btn').addEventListener('click',()=>{
+  const raw=$('custom-input').value.trim();
+  if(!raw)return;
+  const parsed=raw.split(/[\s,]+/).map(Number).filter(n=>!isNaN(n)&&n>0);
+  if(parsed.length<2){alert('Need at least 2 numbers.');return;}
+  if(parsed.length>10){alert('Max 10 numbers.');return;}
+  resetSim(); S.array=parsed;
+  buildTree(S.array); layoutTree();
+  S.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
+  resizeDraw();
+  setPhase('✏️ CUSTOM ARRAY — READY'); snd('click');
+});
+
+/* ══════════════════════════════════════════════════════
+   NODE DEFINITION
+══════════════════════════════════════════════════════ */
+let _nid=0;
+function makeNode(values,depth,parent=null,treeType='split'){
+  return {
+    id:_nid++, values:[...values], display:[...values],
+    depth, parent, left:null, right:null,
+    state:'hidden',   // hidden until revealed by step
+    highlightL:-1, highlightR:-1,
+    treeType,          // 'split' | 'merge'
+    x:0,y:0,w:0,h:0,
+    mirrorId:null,     // cross-link: split node ↔ corresponding merge node
+  };
+}
+
+/* ══════════════════════════════════════════════════════
+   BUILD DIAMOND TREE
+   Top half  = split tree  (values[] = original subarray)
+   Bottom half = merge tree (values[] = sorted result, hidden initially)
+   
+   The merge tree is a mirror image positionally:
+     mergeDepth = (maxDepth - splitDepth) reversed
+   so leaves share the middle row, and merge root is at bottom.
+══════════════════════════════════════════════════════ */
+function buildTree(arr){
+  _nid=0; S.nodes.clear();
+
+  // 1. Build split tree
+  S.splitRoot = buildSplitNode([...arr], 0, null);
+  S.root = S.splitRoot;
+
+  // 2. Find max depth
+  let maxDepth=0;
+  S.nodes.forEach(n=>{ if(n.treeType==='split') maxDepth=Math.max(maxDepth,n.depth); });
+  S._maxDepth = maxDepth;
+
+  // 3. Build merge tree (mirrored structure, sorted values)
+  S.mergeRoot = buildMergeNode(S.splitRoot, maxDepth, null);
+}
+
+function buildSplitNode(arr, depth, parent){
+  if(!arr||!arr.length) return null;
+  const node = makeNode(arr, depth, parent, 'split');
+  S.nodes.set(node.id, node);
+  if(arr.length > 1){
+    const m = Math.floor(arr.length/2);
+    node.left  = buildSplitNode(arr.slice(0,m), depth+1, node);
+    node.right = buildSplitNode(arr.slice(m),   depth+1, node);
+  }
+  return node;
+}
+
+function buildMergeNode(splitNode, maxDepth, parent){
+  if(!splitNode) return null;
+
+  // LEAF: single element — no separate merge node needed.
+  // The split leaf node itself acts as the base. We just cross-link it to itself.
+  if(splitNode.values.length <= 1){
+    splitNode.mirrorId = splitNode.id; // points to itself
+    return null; // no merge node created for leaves
+  }
+
+  const mergeDepth = maxDepth - splitNode.depth;
+  const node = makeNode([...splitNode.values], mergeDepth, parent, 'merge');
+  node.state = 'hidden';
+  node.display = [];
+  S.nodes.set(node.id, node);
+
+  splitNode.mirrorId = node.id;
+  node.mirrorId = splitNode.id;
+
+  node.left  = buildMergeNode(splitNode.left,  maxDepth, node);
+  node.right = buildMergeNode(splitNode.right, maxDepth, node);
+  return node;
+}
+
+/* ══════════════════════════════════════════════════════
+   LAYOUT — Diamond layout
+   Split tree occupies top half (depth 0 = top)
+   Merge tree mirrors it below (leaves shared in middle, merge root at bottom)
+   
+   We layout split tree normally, then position merge tree
+   below the leaf row, mirroring the split structure.
+══════════════════════════════════════════════════════ */
+const CELL  = 36;
+const CGAP  = 2;
+const NPAD  = 6;
+const VGAP  = 72;
+const HGAP  = 14;
+const TPAD  = 30;
+
+function nodeWidth(node){
+  const n = Math.max(1, node.values.length);
+  return n*CELL+(n-1)*CGAP+NPAD*2;
+}
+function nodeHeight(){ return CELL+NPAD*2; }
+
+function calcSubtreeWidth(node){
+  if(!node) return 0;
+  const nw = nodeWidth(node);
+  if(!node.left && !node.right){ node._sw=nw; return nw; }
+  const lw = calcSubtreeWidth(node.left);
+  const rw = calcSubtreeWidth(node.right);
+  node._sw = Math.max(nw, lw+HGAP+rw);
+  return node._sw;
+}
+
+function assignPos(node, x, y){
+  if(!node) return;
+  const nw = nodeWidth(node);
+  const nh = nodeHeight();
+  node.x = x + (node._sw-nw)/2;
+  node.y = y;
+  node.w = nw;
+  node.h = nh;
+  const childY = y+nh+VGAP;
+  if(node.left && node.right){
+    assignPos(node.left,  x, childY);
+    assignPos(node.right, x+node.left._sw+HGAP, childY);
+  } else if(node.left){
+    assignPos(node.left, x, childY);
+  } else if(node.right){
+    assignPos(node.right, x, childY);
+  }
+}
+
+// Merge leaves (mNode.left===null) connect upward from split leaves.
+// We use the split children's X positions to anchor the merge node centre.
+function assignMergePosByMirror(mNode, waistY){
+  if(!mNode) return;
+  const nh = nodeHeight();
+
+  if(!mNode.left && !mNode.right){
+    // This merge node's inputs are split leaf nodes — get their split mirror
+    const splitNode = S.nodes.get(mNode.mirrorId);
+    const splitL = splitNode?.left;
+    const splitR = splitNode?.right;
+    const nw = nodeWidth(mNode);
+    const leftEdge  = splitL ? splitL.x : TPAD;
+    const rightEdge = splitR ? splitR.x + splitR.w : leftEdge + nw;
+    mNode.x = (leftEdge + rightEdge) / 2 - nw / 2;
+    mNode.y = waistY;
+    mNode.w = nw;
+    mNode.h = nh;
+    return;
+  }
+
+  // Recurse children first
+  assignMergePosByMirror(mNode.left,  waistY);
+  assignMergePosByMirror(mNode.right, waistY);
+
+  const lc = mNode.left, rc = mNode.right;
+  const childBottom = Math.max(
+    lc ? lc.y + lc.h : 0,
+    rc ? rc.y + rc.h : 0
+  );
+  const nw = nodeWidth(mNode);
+  const leftEdge  = lc ? lc.x : (rc ? rc.x : TPAD);
+  const rightEdge = rc ? rc.x + rc.w : (lc ? lc.x + lc.w : TPAD+nw);
+  mNode.x = (leftEdge + rightEdge) / 2 - nw / 2;
+  mNode.y = childBottom + VGAP;
+  mNode.w = nw;
+  mNode.h = nh;
+}
+
+function layoutTree(){
+  if(!S.splitRoot) return;
+
+  // 1. Layout split tree
+  calcSubtreeWidth(S.splitRoot);
+  assignPos(S.splitRoot, TPAD, TPAD);
+
+  // 2. Find Y bottom of deepest split nodes (waist)
+  let leafY = 0;
+  S.nodes.forEach(n=>{
+    if(n.treeType==='split') leafY = Math.max(leafY, n.y + n.h);
+  });
+
+  // 3. Layout merge tree below waist
+  if(S.mergeRoot){
+    assignMergePosByMirror(S.mergeRoot, leafY + VGAP);
+  }
+
+  // 4. Centre the entire diamond horizontally in the canvas
+  let minX = Infinity, maxX = 0;
+  S.nodes.forEach(n=>{ minX=Math.min(minX,n.x); maxX=Math.max(maxX,n.x+n.w); });
+  const totalW = maxX - minX;
+  const canvasW = Math.max(wrap.clientWidth || 700, totalW + TPAD*2);
+  const offsetX = (canvasW - totalW) / 2 - minX;
+  S.nodes.forEach(n=>{ n.x += offsetX; });
+}
+
+/* ══════════════════════════════════════════════════════
+   CANVAS DRAW
+══════════════════════════════════════════════════════ */
+function cv(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+function resizeDraw(){
+  if(!S.splitRoot){canvas.width=600;canvas.height=300;ctx.clearRect(0,0,600,300);return;}
+  let maxX=0,maxY=0;
+  S.nodes.forEach(n=>{maxX=Math.max(maxX,n.x+n.w);maxY=Math.max(maxY,n.y+n.h);});
+  const W=Math.max(maxX+TPAD, wrap.clientWidth||600);
+  const H=maxY+TPAD;
+  canvas.width=W; canvas.height=H;
+  draw();
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Draw split tree edges
+  S.nodes.forEach(n=>{ if(n.treeType==='split') drawEdges(n); });
+  // Draw merge tree edges (child→parent, going upward visually = downward in tree)
+  S.nodes.forEach(n=>{ if(n.treeType==='merge') drawMergeEdges(n); });
+  // Draw all nodes
+  S.nodes.forEach(n=>drawNode(n));
+}
+
+/* ── Split tree edges (parent → children, downward) ── */
+function drawEdges(node){
+  if(node.state==='hidden') return;
+  function edge(child){
+    if(!child||child.state==='hidden') return;
+    const px=node.x+node.w/2, py=node.y+node.h;
+    const cx=child.x+child.w/2, cy=child.y;
+    const isActive=child.state!=='idle';
+    ctx.beginPath();
+    ctx.moveTo(px,py);
+    ctx.bezierCurveTo(px,py+VGAP*0.45,cx,cy-VGAP*0.45,cx,cy);
+    ctx.strokeStyle=isActive?edgeColor(child.state):cv('--edge-idle');
+    ctx.lineWidth=isActive?2.2:1.2;
+    ctx.globalAlpha=isActive?0.9:0.45;
+    ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+  edge(node.left);
+  edge(node.right);
+}
+
+/* ── Merge tree edges: from child (top) converging down to parent (bottom) ── */
+function drawMergeEdges(node){
+  if(node.state==='hidden') return;
+
+  // Determine what to draw edges FROM:
+  // If merge node has merge children → use them
+  // If merge node has no children → its inputs are split leaf nodes (look up via mirrorId → split → split.left/right)
+  const splitNode = S.nodes.get(node.mirrorId);
+
+  function edgeFrom(child, splitChild){
+    const src = (child && child.state!=='hidden') ? child
+              : (splitChild && splitChild.state!=='hidden') ? splitChild
+              : null;
+    if(!src) return;
+    const cx = src.x + src.w/2, cy = src.y + src.h;
+    const px = node.x + node.w/2, py = node.y;
+    const isActive = node.state!=='idle';
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.bezierCurveTo(cx, cy+VGAP*0.45, px, py-VGAP*0.45, px, py);
+    ctx.strokeStyle = isActive ? edgeColor(node.state) : cv('--edge-idle');
+    ctx.lineWidth   = isActive ? 2.2 : 1.2;
+    ctx.globalAlpha = isActive ? 0.9 : 0.35;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  edgeFrom(node.left,  splitNode?.left);
+  edgeFrom(node.right, splitNode?.right);
+}
+
+function edgeColor(state){
+  const m={splitting:cv('--accent'),comparing:cv('--node-cmp-bdr'),
+           merging:cv('--node-merge-bdr'),sorted:cv('--node-sort-bdr'),
+           active:cv('--accent')};
+  return m[state]||cv('--border-strong');
+}
+
+/* ── Node drawing ── */
+function nodeColors(state){
+  const m={
+    idle:     {bg:cv('--node-idle'),    bdr:cv('--node-idle-bdr'),  cell:cv('--cell-bg'),   txt:cv('--cell-text')},
+    active:   {bg:cv('--node-split'),   bdr:cv('--accent'),         cell:'#2A1F50',          txt:cv('--accent-2')},
+    splitting:{bg:cv('--node-split'),   bdr:cv('--node-split-bdr'), cell:'#220A45',          txt:cv('--accent-2')},
+    comparing:{bg:cv('--node-compare'), bdr:cv('--node-cmp-bdr'),   cell:'#2A2000',          txt:'#FFE066'},
+    merging:  {bg:cv('--node-merge'),   bdr:cv('--node-merge-bdr'), cell:'#2A0A18',          txt:'#FF9EC0'},
+    sorted:   {bg:cv('--node-sorted'),  bdr:cv('--node-sort-bdr'),  cell:'#003820',          txt:'#00FF88'},
+  };
+  return m[state]||m.idle;
+}
+
+function drawNode(node){
+  if(node.state==='hidden') return;  // not yet revealed
+  const {x,y,w,h,state,display,highlightL,highlightR}=node;
+  const col=nodeColors(state);
+  const r=9;
+
+  // Glow shadow
+  if(state!=='idle'){
+    ctx.shadowColor=col.bdr;
+    ctx.shadowBlur=state==='sorted'?14:20;
+  }
+
+  // Node background
+  ctx.beginPath();
+  rrect(ctx,x,y,w,h,r);
+  ctx.fillStyle=col.bg;
+  ctx.fill();
+  ctx.lineWidth=state==='idle'?1.5:2.5;
+  ctx.strokeStyle=col.bdr;
+  ctx.stroke();
+  ctx.shadowBlur=0;
+
+  // Draw each value cell
+  const vals=display.length>0?display:node.values;
+  vals.forEach((v,i)=>{
+    const cx=x+NPAD+i*(CELL+CGAP);
+    const cy=y+NPAD;
+    const isHL=(state==='comparing'&&(i===highlightL||i===highlightR));
+
+    // Cell background
+    ctx.beginPath();
+    rrect(ctx,cx,cy,CELL,CELL,5);
+    ctx.fillStyle=isHL?col.bdr:col.cell;
+    ctx.fill();
+
+    if(isHL){
+      ctx.shadowColor=col.bdr;ctx.shadowBlur=10;
+      ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.shadowBlur=0;
+    }
+
+    // Value text
+    const fsize=v>=100?11:13;
+    ctx.font=`bold ${fsize}px 'Share Tech Mono', monospace`;
+    ctx.fillStyle=isHL?'#fff':col.txt;
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(String(v),cx+CELL/2,cy+CELL/2);
+  });
+}
+
+function rrect(c,x,y,w,h,r){
+  c.beginPath();
+  c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arcTo(x+w,y,x+w,y+r,r);
+  c.lineTo(x+w,y+h-r);c.arcTo(x+w,y+h,x+w-r,y+h,r);
+  c.lineTo(x+r,y+h);c.arcTo(x,y+h,x,y+h-r,r);
+  c.lineTo(x,y+r);c.arcTo(x,y,x+r,y,r);
+  c.closePath();
+}
+
+/* ══════════════════════════════════════════════════════
+   PRE-COMPUTE ALL STEPS — Diamond Two-Phase Approach
+   
+   Phase 1 (SPLIT): Animate splitNodes top-down
+     - Each node lights up as 'splitting', then children appear
+     - Leaf nodes (single elements) become 'sorted'
+   
+   Phase 2 (MERGE): Animate mergeNodes bottom-up
+     - Corresponding merge nodes appear and show merge logic
+     - Each merge node built up with compare/pick steps
+     - mergeRoot (bottom node) is the final sorted result
+══════════════════════════════════════════════════════ */
+function precompute(arr){
+  const steps=[];
+  let comps=0,merges=0;
+
+  // Rebuild diamond tree
+  _nid=0; S.nodes.clear();
+  buildTree([...arr]);
+  layoutTree();
+
+  // Initially ALL nodes hidden except split root will be shown on step 1
+  S.nodes.forEach(n=>{ n.state='hidden'; n.display=[...n.values]; });
+
+  /* ── PHASE 1: SPLIT ── */
+  steps.push({type:'phase-banner', nodeId:S.splitRoot.id,
+    phase:'⬇ PHASE 1: SPLITTING — Dividing array into smaller pieces',
+    pseudoLine:0, depth:0});
+
+  function doSplits(sNode){
+    if(!sNode) return;
+
+    // Reveal this split node
+    steps.push({type:'reveal-split', nodeId:sNode.id,
+      state: sNode.values.length<=1 ? 'sorted' : 'splitting',
+      display:[...sNode.values],
+      pseudoLine: sNode.values.length<=1 ? 1 : 2,
+      phase: sNode.values.length<=1
+        ? `Base case ✓ [${sNode.values}] — single element`
+        : `Splitting [${sNode.values.join(', ')}] → [${sNode.left?.values.join(', ')}] + [${sNode.right?.values.join(', ')}]`,
+      depth: sNode.depth});
+
+    if(sNode.values.length > 1){
+      // Reveal children
+      if(sNode.left) steps.push({type:'reveal-split', nodeId:sNode.left.id,
+        state:'active', display:[...sNode.left.values],
+        pseudoLine:3, phase:`Left: [${sNode.left.values.join(', ')}]`, depth:sNode.left.depth});
+      if(sNode.right) steps.push({type:'reveal-split', nodeId:sNode.right.id,
+        state:'active', display:[...sNode.right.values],
+        pseudoLine:4, phase:`Right: [${sNode.right.values.join(', ')}]`, depth:sNode.right.depth});
+
+      doSplits(sNode.left);
+      doSplits(sNode.right);
+    }
+  }
+  doSplits(S.splitRoot);
+
+  /* ── Phase transition banner ── */
+  steps.push({type:'phase-banner', nodeId:S.splitRoot.id,
+    phase:'⬆ PHASE 2: MERGING — Conquering & combining sorted subarrays',
+    pseudoLine:5, depth:0});
+
+  /* ── PHASE 2: MERGE ── 
+     Post-order recursion on splitTree structure,
+     but we push steps for the MERGE TREE nodes.
+  */
+  function doMerges(sNode){
+    if(!sNode) return [];
+    if(sNode.values.length <= 1){
+      // Leaf split node doubles as the merge base — no separate node, no reveal needed
+      return [...sNode.values];
+    }
+
+    const sl = doMerges(sNode.left);
+    const sr = doMerges(sNode.right);
+
+    const mNode = S.nodes.get(sNode.mirrorId);
+    // For highlighting during compare: use merge children if they exist, else split leaves
+    const leftRef  = sNode.left  ? (sNode.left.mirrorId  != null && S.nodes.get(sNode.left.mirrorId)?.treeType==='merge'
+                        ? S.nodes.get(sNode.left.mirrorId)  : sNode.left)  : null;
+    const rightRef = sNode.right ? (sNode.right.mirrorId != null && S.nodes.get(sNode.right.mirrorId)?.treeType==='merge'
+                        ? S.nodes.get(sNode.right.mirrorId) : sNode.right) : null;
+
+    const lc=[...sl], rc=[...sr];
+    let i=0, j=0, result=[];
+
+    if(mNode){
+      steps.push({type:'reveal-merge', nodeId:mNode.id,
+        state:'merging', display:[],
+        pseudoLine:6,
+        phase:`↑ Merging [${lc.join(', ')}] + [${rc.join(', ')}]`,
+        depth: mNode.depth});
+    }
+
+    while(i<lc.length && j<rc.length){
+      comps++;
+      steps.push({type:'compare',
+        nodeId: mNode?.id, state:'comparing', display:[...result],
+        leftChildId:  leftRef?.id,  leftHighlight:i,
+        rightChildId: rightRef?.id, rightHighlight:j,
+        pseudoLine:9,
+        phase:`Compare ${lc[i]} vs ${rc[j]}`,
+        depth: mNode?.depth ?? 0});
+
+      if(lc[i]<=rc[j]){
+        result.push(lc[i++]);
+        steps.push({type:'pick', nodeId:mNode?.id, state:'merging',
+          display:[...result],
+          leftChildId: leftRef?.id, leftHighlight:-1,
+          rightChildId:rightRef?.id,rightHighlight:-1,
+          pseudoLine:10,
+          phase:`Picked ${result[result.length-1]} from left → [${result.join(', ')}]`,
+          depth: mNode?.depth??0});
+      } else {
+        result.push(rc[j++]);
+        steps.push({type:'pick', nodeId:mNode?.id, state:'merging',
+          display:[...result],
+          leftChildId: leftRef?.id, leftHighlight:-1,
+          rightChildId:rightRef?.id,rightHighlight:-1,
+          pseudoLine:12,
+          phase:`Picked ${result[result.length-1]} from right → [${result.join(', ')}]`,
+          depth: mNode?.depth??0});
+      }
+    }
+    while(i<lc.length) result.push(lc[i++]);
+    while(j<rc.length) result.push(rc[j++]);
+    merges++;
+
+    if(mNode){
+      steps.push({type:'merged', nodeId:mNode.id,
+        state:'sorted', display:[...result],
+        leftChildId:  leftRef?.id,
+        rightChildId: rightRef?.id,
+        pseudoLine:13,
+        phase:`✅ Merged → [${result.join(', ')}]`,
+        depth: mNode.depth});
+      mNode.values = [...result];
+    }
+
+    return result;
+  }
+
+  doMerges(S.splitRoot);
+
+  steps.push({type:'done', nodeId: S.mergeRoot?.id ?? S.splitRoot.id,
+    state:'sorted',
+    display:[...(steps[steps.length-1]?.display||arr)],
+    pseudoLine:5, phase:'🏆 Sorting complete! Final sorted array at the bottom.',
+    depth:0, totalComps:comps, totalMerges:merges});
+
+  return steps;
+}
+
+/* ══════════════════════════════════════════════════════
+   SIMULATION CONTROLS
+══════════════════════════════════════════════════════ */
+$('start-btn').addEventListener('click', startSim);
+$('play-btn').addEventListener('click',  playSim);
+$('pause-btn').addEventListener('click', pauseSim);
+$('step-btn').addEventListener('click',  stepSim);
+$('reset-btn').addEventListener('click', ()=>{resetSim();snd('click');});
+$('speed-slider').addEventListener('input',()=>{
+  S.speed=+$('speed-slider').value;
+  $('speed-val').textContent=S.speed+'x';
+});
+
+function startSim(){
+  if(!S.array.length){alert('Load an array first!');return;}
+  resetSim(true);
+  S.steps=precompute([...S.array]);
+  S.stepIdx=0; S.comparisons=0; S.merges=0;
+  S.isPlaying=false;
+  // All nodes start hidden — steps will reveal them
+  S.nodes.forEach(n=>{n.state='hidden';n.display=[...n.values];n.highlightL=-1;n.highlightR=-1;});
+  resizeDraw();
+  setPhase('🌳 READY — Press PLAY or STEP');
+  setSignal('yellow'); snd('click');
+  document.getElementById('simulator').scrollIntoView({behavior:'smooth'});
+  updateStepCounter();
+}
+
+function playSim(){
+  if(!S.steps.length){startSim();return;}
+  if(S.isPlaying)return;
+  S.isPlaying=true; S.isPaused=false;
+  setSignal('green'); snd('click');
+  autoStep();
+}
+function autoStep(){
+  if(!S.isPlaying||S.isPaused)return;
+  if(S.stepIdx>=S.steps.length){S.isPlaying=false;return;}
+  applyStep(S.steps[S.stepIdx++]);
+  const delay=1600-S.speed*150;
+  S.playTimer=setTimeout(autoStep,delay);
+}
+function pauseSim(){
+  S.isPlaying=false; S.isPaused=true;
+  clearTimeout(S.playTimer);
+  setSignal('yellow'); setPhase('⏸ PAUSED'); snd('click');
+}
+function stepSim(){
+  if(!S.steps.length){startSim();return;}
+  if(S.isPlaying)pauseSim();
+  if(S.stepIdx>=S.steps.length)return;
+  applyStep(S.steps[S.stepIdx++]);
+  snd('click');
+}
+function resetSim(keepArr=false){
+  clearTimeout(S.playTimer);
+  S.isPlaying=false; S.isPaused=false;
+  S.steps=[]; S.stepIdx=0; S.comparisons=0; S.merges=0;
+  S.nodes.forEach(n=>{n.state='idle';n.display=[...n.values];n.highlightL=-1;n.highlightR=-1;});
+  updateStats({depth:0,comparisons:0,merges:0});
+  hlCode(-1); setSignal('green'); setPhase('READY');
+  if(!keepArr&&S.array.length){
+    buildTree(S.array); layoutTree();
+    // On reset (not during sim start), show split tree idle, hide merge tree
+    S.nodes.forEach(n=>{
+      if(n.treeType==='split') n.state='idle';
+      else n.state='hidden';
+    });
+  }
+  resizeDraw();
+  updateStepCounter();
+  $('step-log').textContent='Press Start Simulation or load an array to begin.';
+}
+
+/* ══════════════════════════════════════════════════════
+   APPLY A STEP
+══════════════════════════════════════════════════════ */
+function applyStep(step){
+
+  // Phase banner — just update UI
+  if(step.type==='phase-banner'){
+    setPhase(step.phase);
+    $('step-log').textContent=step.phase;
+    if(step.pseudoLine!==undefined) hlCode(step.pseudoLine);
+    updateStepCounter(); draw(); return;
+  }
+
+  const node = step.nodeId!=null ? S.nodes.get(step.nodeId) : null;
+  if(!node) return;
+
+  // Reveal a split node
+  if(step.type==='reveal-split'){
+    node.state = step.state;
+    node.display = [...step.display];
+    node.highlightL=-1; node.highlightR=-1;
+    if(step.pseudoLine!==undefined) hlCode(step.pseudoLine);
+    if(step.phase){ setPhase(step.phase); $('step-log').textContent=step.phase; }
+    setSignal(step.state==='sorted'?'green':'red');
+    if(step.state==='splitting') snd('split');
+    updateStats({depth:step.depth||0,comparisons:S.comparisons,merges:S.merges});
+    updateStepCounter(); draw(); return;
+  }
+
+  // Reveal a merge node
+  if(step.type==='reveal-merge'){
+    node.state = step.state;
+    node.display = [...step.display];
+    node.highlightL=-1; node.highlightR=-1;
+    if(step.pseudoLine!==undefined) hlCode(step.pseudoLine);
+    if(step.phase){ setPhase(step.phase); $('step-log').textContent=step.phase; }
+    setSignal(step.state==='sorted'?'green':'yellow');
+    updateStats({depth:step.depth||0,comparisons:S.comparisons,merges:S.merges});
+    updateStepCounter(); draw(); return;
+  }
+
+  // Update main node state/display
+  node.state=step.state;
+  node.display=[...step.display];
+  node.highlightL=-1; node.highlightR=-1;
+
+  // Compare/pick — highlight cells inside child merge nodes
+  if(step.type==='compare'||step.type==='pick'){
+    const lc=step.leftChildId!=null?S.nodes.get(step.leftChildId):null;
+    const rc=step.rightChildId!=null?S.nodes.get(step.rightChildId):null;
+    if(step.type==='compare'){
+      if(lc){lc.state='comparing';lc.highlightL=step.leftHighlight;lc.highlightR=-1;}
+      if(rc){rc.state='comparing';rc.highlightL=step.rightHighlight;rc.highlightR=-1;}
+    } else {
+      if(lc){lc.state='merging';lc.highlightL=-1;}
+      if(rc){rc.state='merging';rc.highlightL=-1;}
+    }
+    node.display=[...step.display];
+  }
+
+  // Merged — mark children sorted
+  if(step.type==='merged'){
+    const lc=step.leftChildId!=null?S.nodes.get(step.leftChildId):null;
+    const rc=step.rightChildId!=null?S.nodes.get(step.rightChildId):null;
+    if(lc){lc.state='sorted';lc.highlightL=-1;lc.highlightR=-1;}
+    if(rc){rc.state='sorted';rc.highlightL=-1;rc.highlightR=-1;}
+  }
+
+  // Done
+  if(step.type==='done'){
+    S.nodes.forEach(n=>{
+      if(n.state!=='hidden'){n.state='sorted';n.highlightL=-1;n.highlightR=-1;}
+    });
+    celebrate();
+  }
+
+  if(step.type==='compare') S.comparisons++;
+  if(step.type==='merged')  S.merges++;
+  updateStats({depth:step.depth||0,comparisons:S.comparisons,merges:S.merges});
+  if(step.pseudoLine!==undefined) hlCode(step.pseudoLine);
+  if(step.phase){ setPhase(step.phase); $('step-log').textContent=step.phase; }
+
+  if(step.type==='compare')     setSignal('yellow');
+  else if(step.type==='merged') {setSignal('green');snd('merge');}
+  else if(step.type==='done')   {setSignal('green');snd('done');}
+
+  updateStepCounter(); draw();
+}
+
+/* ══════════════════════════════════════════════════════
+   UI HELPERS
+══════════════════════════════════════════════════════ */
+function setPhase(t){$('phase-label').textContent=t}
+function hlCode(n){
+  document.querySelectorAll('.code-line').forEach(el=>el.classList.remove('active'));
+  if(n>=0){const t=document.querySelector(`.code-line[data-line="${n}"]`);if(t)t.classList.add('active');}
+}
+function updateStats({depth,comparisons,merges}){
+  $('stat-depth').textContent=depth;
+  $('stat-comp').textContent=comparisons;
+  $('stat-merge').textContent=merges;
+}
+function updateStepCounter(){
+  $('stat-step').textContent=`${S.stepIdx}/${S.steps.length}`;
+}
+function setSignal(c){
+  document.querySelectorAll('.light').forEach(l=>l.classList.remove('active'));
+  const t=document.querySelector(`.light.${c}`);if(t)t.classList.add('active');
+}
+
+/* ══════════════════════════════════════════════════════
+   CELEBRATION
+══════════════════════════════════════════════════════ */
+function celebrate(){
+  const el=document.createElement('div');
+  el.className='celebration';
+  el.innerHTML='<div class="celebration-text">🏆 ARRAY SORTED! MERGE COMPLETE! 🌳</div>';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),3200);
+}
+
+/* ══════════════════════════════════════════════════════
+   PRACTICE MODE
+══════════════════════════════════════════════════════ */
+$('practice-btn').addEventListener('click',()=>{$('practice-modal').classList.remove('hidden');loadRound();});
+$('close-practice').addEventListener('click',()=>$('practice-modal').classList.add('hidden'));
+$('next-practice-btn').addEventListener('click',loadRound);
+
+let pScore=0,pStreak=0;
+function loadRound(){
+  const lArr=randArray(Math.floor(Math.random()*3)+1).sort((a,b)=>a-b);
+  const rArr=randArray(Math.floor(Math.random()*3)+1).sort((a,b)=>a-b);
+  $('practice-area').innerHTML='';
+  $('practice-feedback').className='practice-feedback hidden';
+  const desc=document.createElement('div');
+  desc.style.cssText='font-family:Share Tech Mono,monospace;font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.8rem;';
+  desc.innerHTML=`Left: <b>[${lArr.join(', ')}]</b> &nbsp; Right: <b>[${rArr.join(', ')}]</b><br><br>Which value merges first?`;
+  $('practice-area').appendChild(desc);
+  const correct=Math.min(lArr[0],rArr[0]);
+  const opts=[...new Set([lArr[0],rArr[0]])];
+  const row=document.createElement('div');
+  row.style.cssText='display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:0.5rem;';
+  opts.forEach(v=>{
+    const b=document.createElement('button');
+    b.className='practice-coach'; b.textContent=v;
+    b.addEventListener('click',()=>{
+      row.querySelectorAll('.practice-coach').forEach(c=>c.disabled=true);
+      if(v===correct){b.classList.add('correct');pScore++;pStreak++;showFB(true,v);snd('merge');}
+      else{b.classList.add('wrong');pStreak=0;showFB(false,v,correct);snd('wrong');}
+      $('practice-score').textContent=pScore;
+      $('practice-streak').textContent=pStreak;
+    });
+    row.appendChild(b);
+  });
+  $('practice-area').appendChild(row);
+}
+function showFB(ok,chosen,expected){
+  const el=$('practice-feedback');
+  el.classList.remove('hidden','correct-fb','wrong-fb');
+  el.textContent=ok?`✅ Correct! ${chosen} merges first.`:`❌ Wrong! ${expected} should go first.`;
+  el.classList.add(ok?'correct-fb':'wrong-fb');
+}
+
+/* ══════════════════════════════════════════════════════
+   NAV SCROLL
+══════════════════════════════════════════════════════ */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+/* ══════════════════════════════════════════════════════
+   TABLE SCROLL ANIMATION
+══════════════════════════════════════════════════════ */
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('tr').forEach((r,i)=>{
+        r.style.opacity='0';
+        setTimeout(()=>{r.style.transition=`opacity 0.4s ease ${i*0.1}s`;r.style.opacity='1';},50);
+      });
+    }
+  });
+},{threshold:0.2}).observe(document.querySelector('.compare-table'));
+
+/* ══════════════════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+══════════════════════════════════════════════════════ */
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  if(e.key===' '){e.preventDefault();S.isPlaying?pauseSim():playSim();}
+  else if(e.key==='ArrowRight')stepSim();
+  else if(e.key==='r'||e.key==='R')resetSim();
+  else if(e.key==='s'||e.key==='S')startSim();
+});
+</script>
+</body>
+</html>
