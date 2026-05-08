@@ -1,21 +1,21 @@
-# LabMate AI 🧪⚡
+# LabMate AI
 
-> An AI-powered virtual laboratory ecosystem that transforms engineering practical learning into an interactive digital experience.
+An AI-powered virtual laboratory ecosystem that transforms engineering practical learning into an interactive digital experience.
 
 ---
 
-# 🚀 What is LabMate AI?
+# What is LabMate AI?
 
 LabMate AI is a smart EdTech platform built for engineering students and faculty.
 
 It combines:
 
-* 🔬 Interactive virtual lab simulations
-* ⚡ AI viva & doubt assistance
-* 📊 Dynamic graph plotting
-* 📋 Smart observation tables
-* 📄 Instant PDF record generation
-* 👨‍🏫 Faculty management & analytics
+* Interactive virtual lab simulations
+* AI viva & doubt assistance
+* Dynamic graph plotting
+* Smart observation tables
+* Instant PDF record generation
+* Faculty management & analytics
 
 —all in one unified platform.
 
@@ -23,37 +23,37 @@ Instead of depending on physical labs and manual records, students can perform e
 
 ---
 
-# ✨ Key Features
+# Key Features
 
-## 🔬 Virtual Lab Simulations
+## Virtual Lab Simulations
 
 * Real-time experiment interaction
 * Adjustable parameters (Voltage, Current, Resistance, etc.)
 * Dynamic graph generation
 * Replay & reset functionality
 
-## ⚡ AI-Powered Assistance
+## AI-Powered Assistance
 
 * AI Viva Question Generator
 * AI Doubt Solver
 * Step-by-step concept explanations
 * Formula & circuit guidance
 
-## 📋 Smart Record Automation
+## Smart Record Automation
 
 * Auto-generated observation tables
 * Real-time calculations
 * Editable experiment values
 * Instant PDF lab records
 
-## 👨‍🎓 Student Dashboard
+## Student Dashboard
 
 * Experiment progress tracking
 * Completed & pending labs
 * Submission monitoring
 * Personalized activity widgets
 
-## 👨‍🏫 Professor Dashboard
+## Professor Dashboard
 
 * Experiment management
 * Student evaluation
@@ -62,7 +62,7 @@ Instead of depending on physical labs and manual records, students can perform e
 
 ---
 
-# 🏗️ Tech Stack
+# Tech Stack
 
 ### Frontend
 
@@ -103,7 +103,7 @@ Instead of depending on physical labs and manual records, students can perform e
 
 ---
 
-# 🎯 Problem Statement
+# Problem Statement
 
 Engineering students often struggle with:
 
@@ -116,7 +116,7 @@ LabMate AI solves this by creating a centralized intelligent laboratory ecosyste
 
 ---
 
-# 🚀 Future Enhancements
+# Future Enhancements
 
 * Achievement badges & leaderboards
 * AI-generated experiment summaries
@@ -126,15 +126,14 @@ LabMate AI solves this by creating a centralized intelligent laboratory ecosyste
 
 ---
 
-# 🌐 GitHub Repository
+# GitHub Repository
 
-🔗 [https://github.com/Balaji-0117/LabMate.git](https://github.com/Balaji-0117/LabMate.git)
-
----
+[https://github.com/Balaji-0117/LabMate.git](https://github.com/Balaji-0117/LabMate.git)
 
 ---
 
-# 💡 Vision
+---
+
+# Vision
 
 > “Making engineering practical learning smarter, visual, and accessible from anywhere.”
-
