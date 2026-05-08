@@ -663,12 +663,19 @@ footer p{color:var(--text-muted);font-size:0.82rem;line-height:1.8}
 
 <script>
 /* ════════════════════════════════════════════════════════
-   MERGESORT VISUALIZER — Complete Engine
-   Key idea: Every node holds an ARRAY of values displayed
-   as individual cells side-by-side (like the reference image).
-   Splitting  = parent node fades dim, two child nodes appear.
-   Merging    = child values animate into parent node one-by-one.
-   The full tree is always visible; only states change.
+   MERGESORT VISUALIZER — Diamond Tree Engine
+   
+   Visual layout mirrors the NxtWave diagram:
+   • TOP HALF  (split tree):  root → children → ... → leaves
+   • BOTTOM HALF (merge tree): leaves → parents → ... → root result
+   
+   Two separate node sets share the same canvas:
+     S.splitNodes  — the splitting tree (top half, built upfront)
+     S.mergeNodes  — the merge-result tree (bottom half, revealed during merge phase)
+   
+   During simulation:
+     Phase 1: Animate split nodes lighting up top-down
+     Phase 2: Animate merge nodes appearing bottom-up with compare/pick steps
 ════════════════════════════════════════════════════════ */
 
 /* ── State ── */
@@ -678,8 +685,10 @@ const S = {
   speed:5,soundOn:true,
   comparisons:0,merges:0,
   playTimer:null,
-  nodes:new Map(),   // id → NodeDef
-  root:null,
+  nodes:new Map(),   // id → NodeDef  (ALL nodes: split + merge)
+  splitRoot:null,    // root of the split (top) tree
+  mergeRoot:null,    // root of the merge (bottom) tree (same structure, different node ids)
+  root:null,         // alias for splitRoot (legacy compat)
 };
 
 /* ── DOM ── */
@@ -704,6 +713,7 @@ window.addEventListener('load',()=>{
   S.array = randArray(8);
   buildTree(S.array);
   layoutTree();
+  S.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
   resizeDraw();
 });
 window.addEventListener('resize', resizeDraw);
@@ -766,7 +776,9 @@ function randArray(n=8){
 }
 $('random-btn').addEventListener('click',()=>{
   resetSim(); S.array=randArray(8);
-  buildTree(S.array); layoutTree(); resizeDraw();
+  buildTree(S.array); layoutTree();
+  S.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
+  resizeDraw();
   setPhase('🎲 NEW ARRAY — READY'); snd('click');
 });
 $('use-custom-btn').addEventListener('click',()=>{
@@ -776,94 +788,130 @@ $('use-custom-btn').addEventListener('click',()=>{
   if(parsed.length<2){alert('Need at least 2 numbers.');return;}
   if(parsed.length>10){alert('Max 10 numbers.');return;}
   resetSim(); S.array=parsed;
-  buildTree(S.array); layoutTree(); resizeDraw();
+  buildTree(S.array); layoutTree();
+  S.nodes.forEach(n=>{ if(n.treeType==='split') n.state='idle'; else n.state='hidden'; });
+  resizeDraw();
   setPhase('✏️ CUSTOM ARRAY — READY'); snd('click');
 });
 
 /* ══════════════════════════════════════════════════════
    NODE DEFINITION
-   Each node stores:
-     values[]  - original subarray at this tree position
-     display[] - what to show right now (changes during merge anim)
-     state     - 'idle'|'active'|'splitting'|'comparing'|'merging'|'sorted'
-     highlight - index inside display[] to glow (comparing)
 ══════════════════════════════════════════════════════ */
 let _nid=0;
-function makeNode(values,depth,parent=null){
+function makeNode(values,depth,parent=null,treeType='split'){
   return {
     id:_nid++, values:[...values], display:[...values],
     depth, parent, left:null, right:null,
-    state:'idle', highlightL:-1, highlightR:-1,
-    x:0,y:0,w:0,h:0,  // set by layoutTree
+    state:'hidden',   // hidden until revealed by step
+    highlightL:-1, highlightR:-1,
+    treeType,          // 'split' | 'merge'
+    x:0,y:0,w:0,h:0,
+    mirrorId:null,     // cross-link: split node ↔ corresponding merge node
   };
 }
 
 /* ══════════════════════════════════════════════════════
-   BUILD FULL TREE (structure only, no animation data yet)
+   BUILD DIAMOND TREE
+   Top half  = split tree  (values[] = original subarray)
+   Bottom half = merge tree (values[] = sorted result, hidden initially)
+   
+   The merge tree is a mirror image positionally:
+     mergeDepth = (maxDepth - splitDepth) reversed
+   so leaves share the middle row, and merge root is at bottom.
 ══════════════════════════════════════════════════════ */
 function buildTree(arr){
   _nid=0; S.nodes.clear();
-  S.root=buildNode([...arr],0,null);
+
+  // 1. Build split tree
+  S.splitRoot = buildSplitNode([...arr], 0, null);
+  S.root = S.splitRoot;
+
+  // 2. Find max depth
+  let maxDepth=0;
+  S.nodes.forEach(n=>{ if(n.treeType==='split') maxDepth=Math.max(maxDepth,n.depth); });
+  S._maxDepth = maxDepth;
+
+  // 3. Build merge tree (mirrored structure, sorted values)
+  S.mergeRoot = buildMergeNode(S.splitRoot, maxDepth, null);
 }
-function buildNode(arr,depth,parent){
-  if(!arr||!arr.length)return null;
-  const node=makeNode(arr,depth,parent);
-  S.nodes.set(node.id,node);
-  if(arr.length>1){
-    const m=Math.floor(arr.length/2);
-    node.left =buildNode(arr.slice(0,m),depth+1,node);
-    node.right=buildNode(arr.slice(m),  depth+1,node);
+
+function buildSplitNode(arr, depth, parent){
+  if(!arr||!arr.length) return null;
+  const node = makeNode(arr, depth, parent, 'split');
+  S.nodes.set(node.id, node);
+  if(arr.length > 1){
+    const m = Math.floor(arr.length/2);
+    node.left  = buildSplitNode(arr.slice(0,m), depth+1, node);
+    node.right = buildSplitNode(arr.slice(m),   depth+1, node);
   }
   return node;
 }
 
+function buildMergeNode(splitNode, maxDepth, parent){
+  if(!splitNode) return null;
+
+  // LEAF: single element — no separate merge node needed.
+  // The split leaf node itself acts as the base. We just cross-link it to itself.
+  if(splitNode.values.length <= 1){
+    splitNode.mirrorId = splitNode.id; // points to itself
+    return null; // no merge node created for leaves
+  }
+
+  const mergeDepth = maxDepth - splitNode.depth;
+  const node = makeNode([...splitNode.values], mergeDepth, parent, 'merge');
+  node.state = 'hidden';
+  node.display = [];
+  S.nodes.set(node.id, node);
+
+  splitNode.mirrorId = node.id;
+  node.mirrorId = splitNode.id;
+
+  node.left  = buildMergeNode(splitNode.left,  maxDepth, node);
+  node.right = buildMergeNode(splitNode.right, maxDepth, node);
+  return node;
+}
+
 /* ══════════════════════════════════════════════════════
-   LAYOUT — assign pixel positions to every node
-   Each VALUE CELL is a fixed square; node width = cells side by side.
+   LAYOUT — Diamond layout
+   Split tree occupies top half (depth 0 = top)
+   Merge tree mirrors it below (leaves shared in middle, merge root at bottom)
+   
+   We layout split tree normally, then position merge tree
+   below the leaf row, mirroring the split structure.
 ══════════════════════════════════════════════════════ */
-const CELL  = 36;   // px per value cell (square)
-const CGAP  = 2;    // gap between cells inside node
-const NPAD  = 6;    // padding inside node box
-const VGAP  = 70;   // vertical gap between tree levels
-const HGAP  = 14;   // horizontal gap between sibling nodes
-const TPAD  = 30;   // canvas edge padding
+const CELL  = 36;
+const CGAP  = 2;
+const NPAD  = 6;
+const VGAP  = 72;
+const HGAP  = 14;
+const TPAD  = 30;
 
 function nodeWidth(node){
-  const n=node.values.length;
+  const n = Math.max(1, node.values.length);
   return n*CELL+(n-1)*CGAP+NPAD*2;
 }
 function nodeHeight(){ return CELL+NPAD*2; }
 
-function layoutTree(){
-  if(!S.root)return;
-  // 1. Compute subtree widths bottom-up
-  calcSubtreeWidth(S.root);
-  // 2. Assign x,y top-down starting from centre
-  assignPos(S.root, TPAD, TPAD);
-}
-
 function calcSubtreeWidth(node){
-  if(!node)return 0;
-  const nw=nodeWidth(node);
-  if(!node.left&&!node.right){node._sw=nw;return nw;}
-  const lw=calcSubtreeWidth(node.left);
-  const rw=calcSubtreeWidth(node.right);
-  node._sw=Math.max(nw, lw+HGAP+rw);
+  if(!node) return 0;
+  const nw = nodeWidth(node);
+  if(!node.left && !node.right){ node._sw=nw; return nw; }
+  const lw = calcSubtreeWidth(node.left);
+  const rw = calcSubtreeWidth(node.right);
+  node._sw = Math.max(nw, lw+HGAP+rw);
   return node._sw;
 }
 
 function assignPos(node, x, y){
-  if(!node)return;
-  const nw=nodeWidth(node);
-  const nh=nodeHeight();
-  // Centre node over its subtree width
+  if(!node) return;
+  const nw = nodeWidth(node);
+  const nh = nodeHeight();
   node.x = x + (node._sw-nw)/2;
   node.y = y;
   node.w = nw;
   node.h = nh;
-
   const childY = y+nh+VGAP;
-  if(node.left&&node.right){
+  if(node.left && node.right){
     assignPos(node.left,  x, childY);
     assignPos(node.right, x+node.left._sw+HGAP, childY);
   } else if(node.left){
@@ -873,14 +921,79 @@ function assignPos(node, x, y){
   }
 }
 
+// Merge leaves (mNode.left===null) connect upward from split leaves.
+// We use the split children's X positions to anchor the merge node centre.
+function assignMergePosByMirror(mNode, waistY){
+  if(!mNode) return;
+  const nh = nodeHeight();
+
+  if(!mNode.left && !mNode.right){
+    // This merge node's inputs are split leaf nodes — get their split mirror
+    const splitNode = S.nodes.get(mNode.mirrorId);
+    const splitL = splitNode?.left;
+    const splitR = splitNode?.right;
+    const nw = nodeWidth(mNode);
+    const leftEdge  = splitL ? splitL.x : TPAD;
+    const rightEdge = splitR ? splitR.x + splitR.w : leftEdge + nw;
+    mNode.x = (leftEdge + rightEdge) / 2 - nw / 2;
+    mNode.y = waistY;
+    mNode.w = nw;
+    mNode.h = nh;
+    return;
+  }
+
+  // Recurse children first
+  assignMergePosByMirror(mNode.left,  waistY);
+  assignMergePosByMirror(mNode.right, waistY);
+
+  const lc = mNode.left, rc = mNode.right;
+  const childBottom = Math.max(
+    lc ? lc.y + lc.h : 0,
+    rc ? rc.y + rc.h : 0
+  );
+  const nw = nodeWidth(mNode);
+  const leftEdge  = lc ? lc.x : (rc ? rc.x : TPAD);
+  const rightEdge = rc ? rc.x + rc.w : (lc ? lc.x + lc.w : TPAD+nw);
+  mNode.x = (leftEdge + rightEdge) / 2 - nw / 2;
+  mNode.y = childBottom + VGAP;
+  mNode.w = nw;
+  mNode.h = nh;
+}
+
+function layoutTree(){
+  if(!S.splitRoot) return;
+
+  // 1. Layout split tree
+  calcSubtreeWidth(S.splitRoot);
+  assignPos(S.splitRoot, TPAD, TPAD);
+
+  // 2. Find Y bottom of deepest split nodes (waist)
+  let leafY = 0;
+  S.nodes.forEach(n=>{
+    if(n.treeType==='split') leafY = Math.max(leafY, n.y + n.h);
+  });
+
+  // 3. Layout merge tree below waist
+  if(S.mergeRoot){
+    assignMergePosByMirror(S.mergeRoot, leafY + VGAP);
+  }
+
+  // 4. Centre the entire diamond horizontally in the canvas
+  let minX = Infinity, maxX = 0;
+  S.nodes.forEach(n=>{ minX=Math.min(minX,n.x); maxX=Math.max(maxX,n.x+n.w); });
+  const totalW = maxX - minX;
+  const canvasW = Math.max(wrap.clientWidth || 700, totalW + TPAD*2);
+  const offsetX = (canvasW - totalW) / 2 - minX;
+  S.nodes.forEach(n=>{ n.x += offsetX; });
+}
+
 /* ══════════════════════════════════════════════════════
    CANVAS DRAW
 ══════════════════════════════════════════════════════ */
 function cv(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
 function resizeDraw(){
-  if(!S.root){canvas.width=600;canvas.height=300;ctx.clearRect(0,0,600,300);return;}
-  // Measure needed size
+  if(!S.splitRoot){canvas.width=600;canvas.height=300;ctx.clearRect(0,0,600,300);return;}
   let maxX=0,maxY=0;
   S.nodes.forEach(n=>{maxX=Math.max(maxX,n.x+n.w);maxY=Math.max(maxY,n.y+n.h);});
   const W=Math.max(maxX+TPAD, wrap.clientWidth||600);
@@ -891,16 +1004,19 @@ function resizeDraw(){
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  // Draw edges first
-  S.nodes.forEach(n=>drawEdges(n));
-  // Draw nodes
+  // Draw split tree edges
+  S.nodes.forEach(n=>{ if(n.treeType==='split') drawEdges(n); });
+  // Draw merge tree edges (child→parent, going upward visually = downward in tree)
+  S.nodes.forEach(n=>{ if(n.treeType==='merge') drawMergeEdges(n); });
+  // Draw all nodes
   S.nodes.forEach(n=>drawNode(n));
 }
 
-/* ── Edge drawing ── */
+/* ── Split tree edges (parent → children, downward) ── */
 function drawEdges(node){
+  if(node.state==='hidden') return;
   function edge(child){
-    if(!child)return;
+    if(!child||child.state==='hidden') return;
     const px=node.x+node.w/2, py=node.y+node.h;
     const cx=child.x+child.w/2, cy=child.y;
     const isActive=child.state!=='idle';
@@ -916,6 +1032,38 @@ function drawEdges(node){
   edge(node.left);
   edge(node.right);
 }
+
+/* ── Merge tree edges: from child (top) converging down to parent (bottom) ── */
+function drawMergeEdges(node){
+  if(node.state==='hidden') return;
+
+  // Determine what to draw edges FROM:
+  // If merge node has merge children → use them
+  // If merge node has no children → its inputs are split leaf nodes (look up via mirrorId → split → split.left/right)
+  const splitNode = S.nodes.get(node.mirrorId);
+
+  function edgeFrom(child, splitChild){
+    const src = (child && child.state!=='hidden') ? child
+              : (splitChild && splitChild.state!=='hidden') ? splitChild
+              : null;
+    if(!src) return;
+    const cx = src.x + src.w/2, cy = src.y + src.h;
+    const px = node.x + node.w/2, py = node.y;
+    const isActive = node.state!=='idle';
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.bezierCurveTo(cx, cy+VGAP*0.45, px, py-VGAP*0.45, px, py);
+    ctx.strokeStyle = isActive ? edgeColor(node.state) : cv('--edge-idle');
+    ctx.lineWidth   = isActive ? 2.2 : 1.2;
+    ctx.globalAlpha = isActive ? 0.9 : 0.35;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  edgeFrom(node.left,  splitNode?.left);
+  edgeFrom(node.right, splitNode?.right);
+}
+
 function edgeColor(state){
   const m={splitting:cv('--accent'),comparing:cv('--node-cmp-bdr'),
            merging:cv('--node-merge-bdr'),sorted:cv('--node-sort-bdr'),
@@ -937,6 +1085,7 @@ function nodeColors(state){
 }
 
 function drawNode(node){
+  if(node.state==='hidden') return;  // not yet revealed
   const {x,y,w,h,state,display,highlightL,highlightR}=node;
   const col=nodeColors(state);
   const r=9;
@@ -996,114 +1145,154 @@ function rrect(c,x,y,w,h,r){
 }
 
 /* ══════════════════════════════════════════════════════
-   PRE-COMPUTE ALL STEPS
-   Each step is an object describing what to mutate:
-     { type, nodeId, state, display[], highlightL, highlightR,
-       pseudoLine, phase, depth }
+   PRE-COMPUTE ALL STEPS — Diamond Two-Phase Approach
+   
+   Phase 1 (SPLIT): Animate splitNodes top-down
+     - Each node lights up as 'splitting', then children appear
+     - Leaf nodes (single elements) become 'sorted'
+   
+   Phase 2 (MERGE): Animate mergeNodes bottom-up
+     - Corresponding merge nodes appear and show merge logic
+     - Each merge node built up with compare/pick steps
+     - mergeRoot (bottom node) is the final sorted result
 ══════════════════════════════════════════════════════ */
 function precompute(arr){
   const steps=[];
   let comps=0,merges=0;
 
-  // Rebuild tree with fresh ids so ids match S.nodes
+  // Rebuild diamond tree
   _nid=0; S.nodes.clear();
-  S.root=buildNode([...arr],0,null);
+  buildTree([...arr]);
   layoutTree();
 
-  function ms(node){
-    if(!node)return[];
+  // Initially ALL nodes hidden except split root will be shown on step 1
+  S.nodes.forEach(n=>{ n.state='hidden'; n.display=[...n.values]; });
 
-    // Show this node as active
-    steps.push({type:'visit',nodeId:node.id,state:'active',
-      display:[...node.values],hL:-1,hR:-1,
-      pseudoLine:node.values.length<=1?1:2,
-      phase:`Visiting [${node.values.join(', ')}]`,depth:node.depth});
+  /* ── PHASE 1: SPLIT ── */
+  steps.push({type:'phase-banner', nodeId:S.splitRoot.id,
+    phase:'⬇ PHASE 1: SPLITTING — Dividing array into smaller pieces',
+    pseudoLine:0, depth:0});
 
-    if(node.values.length<=1){
-      steps.push({type:'base',nodeId:node.id,state:'sorted',
-        display:[...node.values],hL:-1,hR:-1,
-        pseudoLine:1,phase:`Base case: [${node.values}] already sorted`,depth:node.depth});
-      return[...node.values];
+  function doSplits(sNode){
+    if(!sNode) return;
+
+    // Reveal this split node
+    steps.push({type:'reveal-split', nodeId:sNode.id,
+      state: sNode.values.length<=1 ? 'sorted' : 'splitting',
+      display:[...sNode.values],
+      pseudoLine: sNode.values.length<=1 ? 1 : 2,
+      phase: sNode.values.length<=1
+        ? `Base case ✓ [${sNode.values}] — single element`
+        : `Splitting [${sNode.values.join(', ')}] → [${sNode.left?.values.join(', ')}] + [${sNode.right?.values.join(', ')}]`,
+      depth: sNode.depth});
+
+    if(sNode.values.length > 1){
+      // Reveal children
+      if(sNode.left) steps.push({type:'reveal-split', nodeId:sNode.left.id,
+        state:'active', display:[...sNode.left.values],
+        pseudoLine:3, phase:`Left: [${sNode.left.values.join(', ')}]`, depth:sNode.left.depth});
+      if(sNode.right) steps.push({type:'reveal-split', nodeId:sNode.right.id,
+        state:'active', display:[...sNode.right.values],
+        pseudoLine:4, phase:`Right: [${sNode.right.values.join(', ')}]`, depth:sNode.right.depth});
+
+      doSplits(sNode.left);
+      doSplits(sNode.right);
+    }
+  }
+  doSplits(S.splitRoot);
+
+  /* ── Phase transition banner ── */
+  steps.push({type:'phase-banner', nodeId:S.splitRoot.id,
+    phase:'⬆ PHASE 2: MERGING — Conquering & combining sorted subarrays',
+    pseudoLine:5, depth:0});
+
+  /* ── PHASE 2: MERGE ── 
+     Post-order recursion on splitTree structure,
+     but we push steps for the MERGE TREE nodes.
+  */
+  function doMerges(sNode){
+    if(!sNode) return [];
+    if(sNode.values.length <= 1){
+      // Leaf split node doubles as the merge base — no separate node, no reveal needed
+      return [...sNode.values];
     }
 
-    // Split
-    steps.push({type:'split',nodeId:node.id,state:'splitting',
-      display:[...node.values],hL:-1,hR:-1,
-      pseudoLine:2,
-      phase:`Splitting [${node.values.join(', ')}] → [${node.left?.values.join(', ')}] + [${node.right?.values.join(', ')}]`,
-      depth:node.depth});
+    const sl = doMerges(sNode.left);
+    const sr = doMerges(sNode.right);
 
-    // Reveal children (mark them active so edges glow)
-    if(node.left) steps.push({type:'show-child',nodeId:node.left.id,state:'active',
-      display:[...node.left.values],hL:-1,hR:-1,pseudoLine:3,phase:'',depth:node.left.depth});
-    if(node.right) steps.push({type:'show-child',nodeId:node.right.id,state:'active',
-      display:[...node.right.values],hL:-1,hR:-1,pseudoLine:4,phase:'',depth:node.right.depth});
+    const mNode = S.nodes.get(sNode.mirrorId);
+    // For highlighting during compare: use merge children if they exist, else split leaves
+    const leftRef  = sNode.left  ? (sNode.left.mirrorId  != null && S.nodes.get(sNode.left.mirrorId)?.treeType==='merge'
+                        ? S.nodes.get(sNode.left.mirrorId)  : sNode.left)  : null;
+    const rightRef = sNode.right ? (sNode.right.mirrorId != null && S.nodes.get(sNode.right.mirrorId)?.treeType==='merge'
+                        ? S.nodes.get(sNode.right.mirrorId) : sNode.right) : null;
 
-    const sl=ms(node.left);
-    const sr=ms(node.right);
+    const lc=[...sl], rc=[...sr];
+    let i=0, j=0, result=[];
 
-    // Merge
-    const lc=[...sl],rc=[...sr];
-    let i=0,j=0,result=[];
+    if(mNode){
+      steps.push({type:'reveal-merge', nodeId:mNode.id,
+        state:'merging', display:[],
+        pseudoLine:6,
+        phase:`↑ Merging [${lc.join(', ')}] + [${rc.join(', ')}]`,
+        depth: mNode.depth});
+    }
 
-    steps.push({type:'merge-start',nodeId:node.id,state:'merging',
-      display:[...node.values],hL:-1,hR:-1,
-      pseudoLine:6,
-      phase:`Merging [${lc.join(', ')}] + [${rc.join(', ')}]`,
-      depth:node.depth});
-
-    while(i<lc.length&&j<rc.length){
+    while(i<lc.length && j<rc.length){
       comps++;
-      // Compare step: show both children with highlight, show partial result in parent
       steps.push({type:'compare',
-        nodeId:node.id,state:'comparing',display:[...result],hL:-1,hR:-1,
-        leftChildId:node.left?.id,  leftHighlight:i,
-        rightChildId:node.right?.id,rightHighlight:j,
+        nodeId: mNode?.id, state:'comparing', display:[...result],
+        leftChildId:  leftRef?.id,  leftHighlight:i,
+        rightChildId: rightRef?.id, rightHighlight:j,
         pseudoLine:9,
-        phase:`Compare ${lc[i]} vs ${rc[j]}`,depth:node.depth,
-        compL:lc[i],compR:rc[j]});
+        phase:`Compare ${lc[i]} vs ${rc[j]}`,
+        depth: mNode?.depth ?? 0});
 
       if(lc[i]<=rc[j]){
         result.push(lc[i++]);
-        steps.push({type:'pick',nodeId:node.id,state:'merging',
-          display:[...result],hL:-1,hR:-1,
-          leftChildId:node.left?.id,  leftHighlight:-1,
-          rightChildId:node.right?.id,rightHighlight:-1,
+        steps.push({type:'pick', nodeId:mNode?.id, state:'merging',
+          display:[...result],
+          leftChildId: leftRef?.id, leftHighlight:-1,
+          rightChildId:rightRef?.id,rightHighlight:-1,
           pseudoLine:10,
           phase:`Picked ${result[result.length-1]} from left → [${result.join(', ')}]`,
-          depth:node.depth});
+          depth: mNode?.depth??0});
       } else {
         result.push(rc[j++]);
-        steps.push({type:'pick',nodeId:node.id,state:'merging',
-          display:[...result],hL:-1,hR:-1,
-          leftChildId:node.left?.id,  leftHighlight:-1,
-          rightChildId:node.right?.id,rightHighlight:-1,
+        steps.push({type:'pick', nodeId:mNode?.id, state:'merging',
+          display:[...result],
+          leftChildId: leftRef?.id, leftHighlight:-1,
+          rightChildId:rightRef?.id,rightHighlight:-1,
           pseudoLine:12,
           phase:`Picked ${result[result.length-1]} from right → [${result.join(', ')}]`,
-          depth:node.depth});
+          depth: mNode?.depth??0});
       }
     }
-    while(i<lc.length)result.push(lc[i++]);
-    while(j<rc.length)result.push(rc[j++]);
+    while(i<lc.length) result.push(lc[i++]);
+    while(j<rc.length) result.push(rc[j++]);
     merges++;
 
-    // Show final merged result in parent, fade children to sorted
-    steps.push({type:'merged',nodeId:node.id,state:'sorted',
-      display:[...result],hL:-1,hR:-1,
-      leftChildId:node.left?.id,
-      rightChildId:node.right?.id,
-      pseudoLine:13,
-      phase:`Merged → [${result.join(', ')}]`,depth:node.depth});
+    if(mNode){
+      steps.push({type:'merged', nodeId:mNode.id,
+        state:'sorted', display:[...result],
+        leftChildId:  leftRef?.id,
+        rightChildId: rightRef?.id,
+        pseudoLine:13,
+        phase:`✅ Merged → [${result.join(', ')}]`,
+        depth: mNode.depth});
+      mNode.values = [...result];
+    }
 
     return result;
   }
 
-  ms(S.root);
+  doMerges(S.splitRoot);
 
-  steps.push({type:'done',nodeId:S.root.id,state:'sorted',
-    display:[...(steps[steps.length-1]?.display||arr)],hL:-1,hR:-1,
-    pseudoLine:5,phase:'🏆 Sorting complete!',depth:0,
-    totalComps:comps,totalMerges:merges});
+  steps.push({type:'done', nodeId: S.mergeRoot?.id ?? S.splitRoot.id,
+    state:'sorted',
+    display:[...(steps[steps.length-1]?.display||arr)],
+    pseudoLine:5, phase:'🏆 Sorting complete! Final sorted array at the bottom.',
+    depth:0, totalComps:comps, totalMerges:merges});
 
   return steps;
 }
@@ -1127,8 +1316,8 @@ function startSim(){
   S.steps=precompute([...S.array]);
   S.stepIdx=0; S.comparisons=0; S.merges=0;
   S.isPlaying=false;
-  // Reset all node states to idle
-  S.nodes.forEach(n=>{n.state='idle';n.display=[...n.values];n.highlightL=-1;n.highlightR=-1;});
+  // All nodes start hidden — steps will reveal them
+  S.nodes.forEach(n=>{n.state='hidden';n.display=[...n.values];n.highlightL=-1;n.highlightR=-1;});
   resizeDraw();
   setPhase('🌳 READY — Press PLAY or STEP');
   setSignal('yellow'); snd('click');
@@ -1169,7 +1358,14 @@ function resetSim(keepArr=false){
   S.nodes.forEach(n=>{n.state='idle';n.display=[...n.values];n.highlightL=-1;n.highlightR=-1;});
   updateStats({depth:0,comparisons:0,merges:0});
   hlCode(-1); setSignal('green'); setPhase('READY');
-  if(!keepArr&&S.array.length){buildTree(S.array);layoutTree();}
+  if(!keepArr&&S.array.length){
+    buildTree(S.array); layoutTree();
+    // On reset (not during sim start), show split tree idle, hide merge tree
+    S.nodes.forEach(n=>{
+      if(n.treeType==='split') n.state='idle';
+      else n.state='hidden';
+    });
+  }
   resizeDraw();
   updateStepCounter();
   $('step-log').textContent='Press Start Simulation or load an array to begin.';
@@ -1179,25 +1375,63 @@ function resetSim(keepArr=false){
    APPLY A STEP
 ══════════════════════════════════════════════════════ */
 function applyStep(step){
-  const node=S.nodes.get(step.nodeId);
-  if(!node)return;
 
-  // Update main node
+  // Phase banner — just update UI
+  if(step.type==='phase-banner'){
+    setPhase(step.phase);
+    $('step-log').textContent=step.phase;
+    if(step.pseudoLine!==undefined) hlCode(step.pseudoLine);
+    updateStepCounter(); draw(); return;
+  }
+
+  const node = step.nodeId!=null ? S.nodes.get(step.nodeId) : null;
+  if(!node) return;
+
+  // Reveal a split node
+  if(step.type==='reveal-split'){
+    node.state = step.state;
+    node.display = [...step.display];
+    node.highlightL=-1; node.highlightR=-1;
+    if(step.pseudoLine!==undefined) hlCode(step.pseudoLine);
+    if(step.phase){ setPhase(step.phase); $('step-log').textContent=step.phase; }
+    setSignal(step.state==='sorted'?'green':'red');
+    if(step.state==='splitting') snd('split');
+    updateStats({depth:step.depth||0,comparisons:S.comparisons,merges:S.merges});
+    updateStepCounter(); draw(); return;
+  }
+
+  // Reveal a merge node
+  if(step.type==='reveal-merge'){
+    node.state = step.state;
+    node.display = [...step.display];
+    node.highlightL=-1; node.highlightR=-1;
+    if(step.pseudoLine!==undefined) hlCode(step.pseudoLine);
+    if(step.phase){ setPhase(step.phase); $('step-log').textContent=step.phase; }
+    setSignal(step.state==='sorted'?'green':'yellow');
+    updateStats({depth:step.depth||0,comparisons:S.comparisons,merges:S.merges});
+    updateStepCounter(); draw(); return;
+  }
+
+  // Update main node state/display
   node.state=step.state;
   node.display=[...step.display];
   node.highlightL=-1; node.highlightR=-1;
 
-  // Handle compare — highlight cells inside children
+  // Compare/pick — highlight cells inside child merge nodes
   if(step.type==='compare'||step.type==='pick'){
     const lc=step.leftChildId!=null?S.nodes.get(step.leftChildId):null;
     const rc=step.rightChildId!=null?S.nodes.get(step.rightChildId):null;
-    if(lc){lc.state='comparing';lc.highlightL=step.leftHighlight;lc.highlightR=-1;}
-    if(rc){rc.state='comparing';rc.highlightL=step.rightHighlight;rc.highlightR=-1;}
-    // Parent shows partial result
+    if(step.type==='compare'){
+      if(lc){lc.state='comparing';lc.highlightL=step.leftHighlight;lc.highlightR=-1;}
+      if(rc){rc.state='comparing';rc.highlightL=step.rightHighlight;rc.highlightR=-1;}
+    } else {
+      if(lc){lc.state='merging';lc.highlightL=-1;}
+      if(rc){rc.state='merging';rc.highlightL=-1;}
+    }
     node.display=[...step.display];
   }
 
-  // When merge completes, mark children sorted and dim them
+  // Merged — mark children sorted
   if(step.type==='merged'){
     const lc=step.leftChildId!=null?S.nodes.get(step.leftChildId):null;
     const rc=step.rightChildId!=null?S.nodes.get(step.rightChildId):null;
@@ -1205,37 +1439,25 @@ function applyStep(step){
     if(rc){rc.state='sorted';rc.highlightL=-1;rc.highlightR=-1;}
   }
 
-  // Done — all nodes sorted
+  // Done
   if(step.type==='done'){
-    S.nodes.forEach(n=>{n.state='sorted';n.highlightL=-1;n.highlightR=-1;});
+    S.nodes.forEach(n=>{
+      if(n.state!=='hidden'){n.state='sorted';n.highlightL=-1;n.highlightR=-1;}
+    });
     celebrate();
   }
 
-  // Stats
-  if(step.type==='compare')S.comparisons++;
-  if(step.type==='merged')S.merges++;
+  if(step.type==='compare') S.comparisons++;
+  if(step.type==='merged')  S.merges++;
   updateStats({depth:step.depth||0,comparisons:S.comparisons,merges:S.merges});
+  if(step.pseudoLine!==undefined) hlCode(step.pseudoLine);
+  if(step.phase){ setPhase(step.phase); $('step-log').textContent=step.phase; }
 
-  // Pseudocode
-  if(step.pseudoLine!==undefined)hlCode(step.pseudoLine);
+  if(step.type==='compare')     setSignal('yellow');
+  else if(step.type==='merged') {setSignal('green');snd('merge');}
+  else if(step.type==='done')   {setSignal('green');snd('done');}
 
-  // Phase + log
-  if(step.phase){setPhase(step.phase);$('step-log').textContent=step.phase;}
-
-  // Signal
-  if(step.type==='compare')          setSignal('yellow');
-  else if(step.type==='split')       {setSignal('red');   snd('split');}
-  else if(step.type==='merged')      {setSignal('green'); snd('merge');}
-  else if(step.type==='done')        {setSignal('green'); snd('done');}
-  else if(step.type==='compare')     snd('compare');
-
-  updateStepCounter();
-  draw();
-
-  // Scroll active node into view
-  if(node.y){
-    wrap.scrollTo({top:Math.max(0,node.y-40),behavior:'smooth'});
-  }
+  updateStepCounter(); draw();
 }
 
 /* ══════════════════════════════════════════════════════
