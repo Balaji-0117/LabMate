@@ -92,7 +92,7 @@ Instead of depending on physical labs and manual records, students can perform e
 
 ---
 
-# 📂 Core Modules
+# Core Modules
 
 * Electronics Virtual Labs
 * Data Structures Visualizers
