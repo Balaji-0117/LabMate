@@ -674,7 +674,94 @@
         }
 
         .tc-sim-wrap .tc-divider { border: none; border-top: 1px solid var(--border-var); margin: 18px 0; }
+        /* ── Viva accordion ── */
+.viva-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
 
+.viva-item {
+    background: var(--card-inner);
+    border: 1px solid var(--border-var);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    transition: border-color 0.22s, box-shadow 0.22s;
+}
+
+.viva-item.open {
+    border-color: var(--accent-btn, var(--teal));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn, var(--teal)) 10%, transparent);
+}
+
+.viva-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    gap: 12px;
+}
+
+.viva-question:hover {
+    background: var(--scale-bg);
+}
+
+.viva-q-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.viva-q-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.viva-chevron {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--text-soft);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+.viva-item.open .viva-chevron {
+    transform: rotate(180deg);
+}
+
+.viva-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), padding 0.28s;
+    padding: 0 18px;
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    line-height: 1.8;
+}
+
+.viva-item.open .viva-answer {
+    max-height: 300px;
+    padding: 0 18px 16px;
+}
+
+.viva-answer p {
+    margin: 0;
+}
         /* Responsive */
         @media (max-width: 800px) {
             .exp-main-body { flex-direction: column; padding: 20px 16px; }
@@ -694,6 +781,13 @@
             .tc-sim-wrap input[type="number"], .tc-sim-wrap select { width: 100%; }
             .tc-sim-wrap .tc-btn-convert { width: 100%; text-align: center; }
         }
+        .portal-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
     </style>
 </head>
 
@@ -703,11 +797,11 @@
     <header class="portal-header">
         <div class="header-left">
             <a href="" aria-label="LabMate home">
-                <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+                <img src="logo.png" alt="LabMate Logo" class="portal-logo" />
             </a>
             <div class="college-info">
                 <h1 class="college-name">Aditya University</h1>
-                <span class="stream-badge">
+                <!-- <span class="stream-badge">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                         style="vertical-align:-1px;margin-right:3px">
                         <circle cx="12" cy="12" r="3"></circle>
@@ -715,11 +809,11 @@
                         <path d="M4.93 4.93l14.14 14.14"></path>
                     </svg>
                     AIML Stream
-                </span>
+                </span> -->
             </div>
         </div>
 
-        <div class="header-center">
+        <!-- <div class="header-center">
             <div class="search-wrapper">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -730,7 +824,7 @@
                 <input type="text" class="global-search" placeholder="Search experiments & records…"
                     aria-label="Global Search" />
             </div>
-        </div>
+        </div> -->
 
         <div class="header-right">
             <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
@@ -867,6 +961,9 @@
                     <button class="exp-nav-btn" data-section="result">
                         <span class="exp-nav-icon">📊</span>Result
                     </button>
+                    <button class="exp-nav-btn" data-section="viva">
+                    <span class="exp-nav-icon">🎤</span>Viva Questions
+                </button>
                 </nav>
                 <div class="exp-sidebar-progress">
                     <div class="exp-progress-label">
@@ -1150,8 +1247,10 @@ int main() {
                             <div class="exp-panel-subtitle">Live conversion history &amp; analysis</div>
                         </div>
                     </div>
-                    <div class="exp-panel-body">
 
+                    
+                    <div class="exp-panel-body">
+                     
                         <!-- Pending state -->
                         <div id="tc-result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
                             <div style="font-size:2.8rem;margin-bottom:14px;">🌡️</div>
@@ -1253,14 +1352,136 @@ int main() {
                 </div>
 
             </div><!-- /.exp-panel -->
+               <div class="exp-section-content" id="section-viva">
+                           <div class="viva-list">
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">1</div>
+                <span>What is the formula to convert Celsius to Fahrenheit?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                The formula used is: Fahrenheit = (Celsius × 9/5) + 32.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">2</div>
+                <span>Why do we multiply Celsius by 9/5 in the conversion?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                We multiply by 9/5 because the Fahrenheit scale increases faster than the Celsius scale.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">3</div>
+                <span>Why is 32 added in the conversion formula?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                32 is added because the freezing point of water in Fahrenheit scale is 32°F.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">4</div>
+                <span>Which data type is commonly used for temperature conversion in C?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                The float data type is commonly used because temperature values may contain decimal points.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">5</div>
+                <span>What is the use of this program in real life?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                This program is used in weather applications, scientific calculations, and temperature measurement systems.
+            </p>
+        </div>
+    </div>
+
+</div> 
+                        </div>
         </main>
 
     </div><!-- /.exp-main-body -->
 
     <script>
+        document.querySelectorAll('.viva-question').forEach(question => {
+    question.addEventListener('click', () => {
+
+        const item = question.parentElement;
+
+        // close others
+        document.querySelectorAll('.viva-item').forEach(v => {
+            if (v !== item) {
+                v.classList.remove('open');
+            }
+        });
+
+        // toggle current
+        item.classList.toggle('open');
+    });
+});
     /* =====================================================
        PAGE NAVIGATION & THEME
     ===================================================== */
+
     document.addEventListener('DOMContentLoaded', () => {
 
         // Theme toggle (portal header checkbox)
@@ -1571,7 +1792,32 @@ int main() {
         if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') tcConvert(); });
     });
     </script>
-    <script src="../js/portal.js"></script>
+      document.querySelectorAll('.viva-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const item = question.parentElement;
+        item.classList.toggle('open');
+    });
+});
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Theme toggle
+            const toggle = document.getElementById('exp-theme-toggle');
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                if (savedTheme === 'dark') toggle.checked = true;
+            }
+            toggle?.addEventListener('change', () => {
+                const theme = toggle.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            });
+    <script src="../js/portal.js">
+        /* =====================================================
+   VIVA ACCORDION
+===================================================== */
+
+    </script>
 
 </body>
 

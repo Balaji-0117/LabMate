@@ -1274,6 +1274,101 @@
             border: 2.5px solid var(--border-strong);
             box-shadow: 0 0 6px color-mix(in srgb, var(--border-strong) 40%, transparent);
         }
+        .portal-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}   
+        /* ── Viva accordion ── */
+.viva-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.viva-item {
+    background: var(--card-inner);
+    border: 1px solid var(--border-var);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    transition: border-color 0.22s, box-shadow 0.22s;
+}
+
+.viva-item.open {
+    border-color: var(--accent-btn, var(--teal));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn, var(--teal)) 10%, transparent);
+}
+
+.viva-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    gap: 12px;
+}
+
+.viva-question:hover {
+    background: var(--scale-bg);
+}
+
+.viva-q-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.viva-q-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.viva-chevron {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--text-soft);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+.viva-item.open .viva-chevron {
+    transform: rotate(180deg);
+}
+
+.viva-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), padding 0.28s;
+    padding: 0 18px;
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    line-height: 1.8;
+}
+
+.viva-item.open .viva-answer {
+    max-height: 300px;
+    padding: 0 18px 16px;
+}
+
+.viva-answer p {
+    margin: 0;
+}
 
         /* ---- Responsive ---- */
         @media (max-width: 800px) {
@@ -1428,11 +1523,11 @@
                 </svg>
             </button> -->
             <a href="" aria-label="LabMate home">
-                <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+                <img src="logo.png" alt="LabMate Logo" class="portal-logo" />
             </a>
             <div class="college-info">
                 <h1 class="college-name">Aditya University</h1>
-                <span class="stream-badge">
+                <!-- <span class="stream-badge">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                         style="vertical-align:-1px;margin-right:3px">
                         <circle cx="12" cy="12" r="3"></circle>
@@ -1440,11 +1535,11 @@
                         <path d="M4.93 4.93l14.14 14.14"></path>
                     </svg>
                     AIML Stream
-                </span>
+                </span> -->
             </div>
         </div>
 
-        <div class="header-center">
+        <!-- <div class="header-center">
             <div class="search-wrapper">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -1455,7 +1550,7 @@
                 <input type="text" class="global-search" placeholder="Search experiments & records…"
                     aria-label="Global Search" />
             </div>
-        </div>
+        </div> -->
 
         <div class="header-right">
             <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
@@ -1617,6 +1712,10 @@
                     <button class="exp-nav-btn" data-section="result">
                         <span class="exp-nav-icon">📊</span>Result
                     </button>
+                    <button class="exp-nav-btn" data-section="viva">
+                        <span class="exp-nav-icon">🎤</span>
+                        <span>Viva Questions</span>
+                    </button>
                 </nav>
                 <div class="exp-sidebar-progress">
                     <div class="exp-progress-label">
@@ -1644,6 +1743,7 @@
                         </div>
                     </div>
                     <div class="exp-panel-body">
+                       
                         <p class="exp-body-text">
                             To understand and visualise the working of the <strong>Bubble Sort algorithm</strong> — one
                             of the simplest comparison-based sorting techniques — and analyse its step-by-step
@@ -1975,6 +2075,124 @@
 
                     </div>
                 </div>
+              <div id="section-viva" class="exp-section-content">
+
+    <div class="exp-panel-header">
+        <div class="exp-panel-icon">🎤</div>
+        <div>
+            <div class="exp-panel-title">Viva Questions</div>
+            <div class="exp-panel-subtitle">Important viva questions for Bubble Sort</div>
+        </div>
+    </div>
+
+    <div class="exp-panel-body">
+<div class="viva-list">
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">1</div>
+                <span>What is Bubble Sort?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                Bubble Sort is a comparison-based sorting algorithm that repeatedly compares adjacent elements and swaps them if they are in the wrong order.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">2</div>
+                <span>Why is it called Bubble Sort?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                It is called Bubble Sort because larger elements move toward the end of the array like bubbles rising to the surface.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">3</div>
+                <span>What is the time complexity of Bubble Sort?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                The worst-case and average-case time complexity is O(n²), while the best-case complexity is O(n).
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">4</div>
+                <span>Is Bubble Sort stable and in-place?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                Yes, Bubble Sort is a stable sorting algorithm and it is also an in-place sorting algorithm because it requires very little extra memory.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">5</div>
+                <span>What is the main disadvantage of Bubble Sort?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                Bubble Sort is inefficient for large datasets because it performs many unnecessary comparisons and swaps.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+    </div>
+
+</div>
 
             </div><!-- /.exp-panel -->
         </main>
@@ -1985,7 +2203,13 @@
     <script>
         /* =====================================================
            PAGE NAVIGATION & THEME
-        ===================================================== */
+        ===================================================== */    
+        document.querySelectorAll('.viva-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const item = question.parentElement;
+        item.classList.toggle('open');
+    });
+});
         document.addEventListener('DOMContentLoaded', () => {
 
             // Theme toggle
@@ -2475,6 +2699,15 @@
         // Init the bubble sort widget once DOM is ready
         document.addEventListener('DOMContentLoaded', () => { BS.init(); });
     </script>
+    document.querySelectorAll('.viva-question').forEach(question => {
+    question.addEventListener('click', () => {
+
+        const item = question.parentElement;
+
+        item.classList.toggle('open');
+
+    });
+});
     <script src="../js/portal.js"></script>
 
 </body>

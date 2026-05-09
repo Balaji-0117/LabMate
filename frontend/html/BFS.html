@@ -6,643 +6,693 @@
   <title>BFS Graph Traversal — LabMate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/portal.css" />
+
   <style>
-    :root {
-      --font-display: 'Cormorant Garamond', Georgia, serif;
-      --font-body:    'Outfit', sans-serif;
-      --font-mono:    'JetBrains Mono', monospace;
-      --bg-page:       #EDF4FB;
-      --bg-card:       #FFFFFF;
-      --card-inner:    #F0F7FF;
-      --border-var:    #C8DFF4;
-      --border-strong: #1A88D0;
-      --scale-bg:      #DCEEFA;
-      --accent-btn:    #1A88D0;
-      --btn-hover:     #1270B0;
-      --accent-2:      #0EC4E0;
-      --teal:          #1A88D0;
-      --teal-dim:      #DCEEFA;
-      --text-primary:  #0D2A4A;
-      --text-mid:      #2A5278;
-      --text-soft:     #6A90B0;
-      --sh-card: 0 2px 14px rgba(58,155,213,0.10), 0 1px 4px rgba(0,0,0,0.05);
-      --r-lg: 20px;
-      --r-md: 12px;
-    }
-    [data-theme="dark"] {
-      --bg-page:       #08081A;
-      --bg-card:       #0E0E22;
-      --card-inner:    #13132E;
-      --border-var:    #2A1F5A;
-      --border-strong: #7B2FBE;
-      --scale-bg:      #0E0E22;
-      --accent-btn:    #9B4DFF;
-      --btn-hover:     #B86AFF;
-      --accent-2:      #C07AFF;
-      --teal:          #9B4DFF;
-      --teal-dim:      #1A1040;
-      --text-primary:  #E8E0FF;
-      --text-mid:      #B0A0D8;
-      --text-soft:     #6A5A9A;
-      --sh-card: 0 4px 24px rgba(0,0,0,0.5), 0 1px 6px rgba(0,0,0,0.3);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 14px; scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-body);
-      background: var(--bg-page);
-      color: var(--text-primary);
-      min-height: 100vh;
+    /* =============================================
+       EXPERIMENT PAGE — Scoped Styles
+       ============================================= */
+    .exp-page-wrapper {
       display: flex;
       flex-direction: column;
-      transition: background 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      background: var(--bg-page);
     }
-    a { text-decoration: none; color: inherit; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-card); }
-    ::-webkit-scrollbar-thumb { background: var(--border-var); border-radius: 3px; }
 
-    /* HEADER */
-    .portal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 32px; height: 62px; background: var(--bg-card);
-      border-bottom: 1px solid var(--border-var);
-      position: sticky; top: 0; z-index: 100; transition: background 0.3s ease;
-    }
-    .header-left { display: flex; align-items: center; gap: 14px; }
-    .logo-placeholder {
-      width: 36px; height: 36px; border-radius: 10px; background: var(--accent-btn);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 1.3rem; font-weight: 800;
-      box-shadow: 0 0 14px rgba(26,136,208,0.4);
-    }
-    .college-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.1; }
-    .stream-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.68rem; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; }
-    .header-center { flex: 1; max-width: 380px; margin: 0 24px; }
-    .search-wrapper { position: relative; display: flex; align-items: center; }
-    .search-icon { position: absolute; left: 12px; color: var(--text-soft); }
-    .global-search {
-      width: 100%; padding: 8px 12px 8px 36px; background: var(--card-inner);
-      border: 1.5px solid var(--border-var); border-radius: 10px;
-      font-family: var(--font-body); font-size: 0.85rem; color: var(--text-primary);
-      outline: none; transition: border-color 0.2s;
-    }
-    .global-search:focus { border-color: var(--accent-btn); }
-    .global-search::placeholder { color: var(--text-soft); }
-    .header-right { display: flex; align-items: center; gap: 14px; }
-    .theme-switch { display: inline-block; height: 30px; position: relative; width: 64px; cursor: pointer; }
-    .theme-switch input { display: none; }
-    .slider {
-      background: var(--scale-bg); border: 1.5px solid var(--border-var);
-      bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0;
-      transition: .4s; display: flex; align-items: center;
-      justify-content: space-between; padding: 0 7px;
-    }
-    .slider .icon { width: 12px; height: 12px; z-index: 1; display: flex; align-items: center; justify-content: center; }
-    .slider .icon svg { width: 100%; height: 100%; }
-    .light-icon { color: #f39c12; }
-    .dark-icon  { color: #9B4DFF; }
-    .slider::before {
-      background: var(--bg-card); bottom: 3px; content: ""; height: 22px; left: 4px;
-      position: absolute; transition: transform .4s cubic-bezier(0.18,0.89,0.32,1.28);
-      width: 22px; z-index: 2; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-    input:checked + .slider::before { transform: translateX(34px); }
-    .slider.round { border-radius: 30px; }
-    .profile-avatar {
-      width: 28px; height: 28px; border-radius: 50%; background: var(--accent-btn);
-      color: #fff; display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; font-weight: 700;
-    }
-    .prof-name { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); display: block; line-height: 1.1; }
-    .prof-roll { font-size: 0.68rem; color: var(--text-soft); display: block; }
-
-    /* PAGE LAYOUT */
-    .exp-page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
     .exp-breadcrumb {
-      background: var(--bg-card); border-bottom: 1px solid var(--border-var);
-      padding: 10px 40px; display: flex; align-items: center; gap: 8px;
-      font-size: 0.82rem; color: var(--text-soft);
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-var);
+      padding: 10px 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-soft);
     }
-    .exp-breadcrumb a { color: var(--accent-btn); font-weight: 500; transition: color 0.2s; }
-    .exp-breadcrumb a:hover { color: var(--btn-hover); text-decoration: underline; }
+    .exp-breadcrumb a { color: var(--accent-btn, var(--teal)); font-weight: 500; transition: color 0.2s; }
+    .exp-breadcrumb a:hover { color: var(--btn-hover, #1270b0); text-decoration: underline; }
     .exp-breadcrumb .sep { opacity: 0.45; margin: 0 2px; }
     .exp-breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+
     .exp-banner {
-      background: linear-gradient(120deg, #0A5C8F 0%, var(--accent-btn) 60%, var(--accent-2) 100%);
-      color: #fff; padding: 22px 40px; display: flex; align-items: center; gap: 20px;
+      background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn, var(--teal)) 100%);
+      color: #fff;
+      padding: 22px 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
     .exp-banner-icon {
-      width: 52px; height: 52px; background: rgba(255,255,255,0.18);
-      border-radius: 14px; display: flex; align-items: center;
-      justify-content: center; font-size: 1.6rem; flex-shrink: 0;
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; flex-shrink: 0;
     }
     .exp-banner-meta { flex: 1; }
     .exp-banner-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.78; margin-bottom: 4px; }
     .exp-banner-title { font-family: var(--font-display); font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
     .exp-banner-sub { font-size: 0.83rem; opacity: 0.8; margin-top: 4px; }
     .exp-banner-badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35); border-radius: 20px; padding: 5px 14px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+
     .exp-main-body {
-      flex: 1; display: flex; gap: 0; padding: 32px 40px;
-      max-width: 1300px; width: 100%; margin: 0 auto;
+      flex: 1; display: flex; gap: 0;
+      padding: 32px 40px;
+      max-width: 1300px; width: 100%; margin: 0 auto; box-sizing: border-box;
     }
     .exp-sidebar { width: 220px; flex-shrink: 0; margin-right: 28px; }
     .exp-sidebar-card {
       background: var(--bg-card); border: 1px solid var(--border-var);
-      border-radius: var(--r-lg); box-shadow: var(--sh-card);
+      border-radius: var(--r-lg, 20px); box-shadow: var(--sh-card);
       overflow: hidden; position: sticky; top: 90px;
     }
     .exp-sidebar-header { padding: 16px 20px 12px; border-bottom: 1px solid var(--border-var); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft); }
     .exp-nav-list { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
     .exp-nav-btn {
       display: flex; align-items: center; gap: 12px; width: 100%;
-      padding: 12px 14px; border-radius: var(--r-md); font-family: var(--font-body);
-      font-size: 0.88rem; font-weight: 500; color: var(--text-mid);
-      background: transparent; border: none; cursor: pointer;
-      transition: background 0.22s, color 0.22s, transform 0.18s;
+      padding: 12px 14px; border-radius: var(--r-md, 12px);
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
+      color: var(--text-mid); background: transparent; border: none; cursor: pointer;
+      transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
       text-align: left; position: relative;
     }
-    .exp-nav-btn:hover { background: var(--teal-dim); color: var(--text-primary); transform: translateX(3px); }
-    .exp-nav-btn.active { background: var(--teal-dim); color: var(--accent-btn); font-weight: 600; }
-    .exp-nav-btn.active::before {
-      content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-      width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--accent-btn);
-    }
-    .exp-nav-icon {
-      width: 28px; height: 28px; border-radius: 8px; background: var(--card-inner);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.9rem; flex-shrink: 0; transition: background 0.22s;
-    }
-    .exp-nav-btn.active .exp-nav-icon { background: var(--accent-btn); color: #fff; }
+    .exp-nav-btn:hover { background: var(--scale-bg, var(--teal-dim)); color: var(--text-primary); transform: translateX(3px); }
+    .exp-nav-btn.active { background: var(--scale-bg, var(--teal-dim)); color: var(--accent-btn, var(--teal)); font-weight: 600; }
+    .exp-nav-btn.active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--accent-btn, var(--teal)); }
+    .exp-nav-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--card-inner); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; transition: background 0.22s ease; }
+    .exp-nav-btn.active .exp-nav-icon { background: var(--accent-btn, var(--teal)); color: #fff; }
+
     .exp-sidebar-progress { padding: 14px 20px 18px; border-top: 1px solid var(--border-var); }
     .exp-progress-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--text-soft); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
     .exp-progress-track { height: 5px; background: var(--scale-bg); border-radius: 10px; overflow: hidden; }
-    .exp-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-btn), var(--accent-2)); border-radius: 10px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 16.6%; }
+    .exp-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0)); border-radius: 10px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 16.6%; }
+
     .exp-content-area { flex: 1; min-width: 0; }
-    .exp-panel { background: var(--bg-card); border: 1px solid var(--border-var); border-radius: var(--r-lg); box-shadow: var(--sh-card); overflow: hidden; }
+    .exp-panel { background: var(--bg-card); border: 1px solid var(--border-var); border-radius: var(--r-lg, 20px); box-shadow: var(--sh-card); overflow: hidden; }
     .exp-panel-header { padding: 24px 32px 20px; border-bottom: 1px solid var(--border-var); display: flex; align-items: center; gap: 16px; }
     .exp-panel-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--scale-bg); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
     .exp-panel-title { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.1; }
     .exp-panel-subtitle { font-size: 0.83rem; color: var(--text-soft); margin-top: 2px; }
     .exp-panel-body { padding: 32px; }
+
     .exp-section-content { display: none; animation: sectionFadeIn 0.35s cubic-bezier(0.4,0,0.2,1) both; }
     .exp-section-content.visible { display: block; }
     @keyframes sectionFadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
     .exp-body-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.85; }
     .exp-body-text + .exp-body-text { margin-top: 16px; }
-    .exp-highlight-box { background: var(--scale-bg); border-left: 4px solid var(--accent-btn); border-radius: 0 var(--r-md) var(--r-md) 0; padding: 16px 20px; margin: 20px 0; font-size: 0.9rem; color: var(--text-primary); line-height: 1.7; }
+    .exp-highlight-box { background: var(--scale-bg); border-left: 4px solid var(--accent-btn, var(--teal)); border-radius: 0 var(--r-md) var(--r-md) 0; padding: 16px 20px; margin: 20px 0; font-size: 0.9rem; color: var(--text-primary); line-height: 1.7; }
     .exp-step-list { counter-reset: steps; list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 14px; }
     .exp-step-list li { counter-increment: steps; display: flex; align-items: flex-start; gap: 16px; font-size: 0.92rem; color: var(--text-mid); line-height: 1.7; }
-    .exp-step-list li::before { content: counter(steps); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-btn), var(--accent-2)); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .exp-step-list li::before { content: counter(steps); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0)); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
     .exp-materials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
     .exp-material-chip { display: flex; align-items: center; gap: 10px; background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 10px 14px; font-size: 0.83rem; color: var(--text-primary); font-weight: 500; }
-    .exp-material-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn); flex-shrink: 0; }
+    .exp-material-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn, var(--teal)); flex-shrink: 0; }
     .exp-result-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
-    .exp-result-table th { background: var(--scale-bg); color: var(--text-primary); font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 2px solid var(--border-var); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .exp-result-table th { background: var(--scale-bg); color: var(--text-primary); font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 2px solid var(--border-strong); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
     .exp-result-table td { padding: 11px 16px; color: var(--text-mid); border-bottom: 1px solid var(--border-var); line-height: 1.4; }
     .exp-result-table tr:last-child td { border-bottom: none; }
     .exp-result-table tr:hover td { background: var(--card-inner); }
     .exp-result-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin: 24px 0; }
     .exp-stat-card { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 18px 16px; text-align: center; }
-    .exp-stat-value { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--accent-btn); line-height: 1; margin-bottom: 6px; }
+    .exp-stat-value { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--accent-btn, var(--teal)); line-height: 1; margin-bottom: 6px; }
     .exp-stat-label { font-size: 0.75rem; color: var(--text-soft); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
     .exp-conclusion-box { background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 20px 24px; margin-top: 24px; }
-    .exp-conclusion-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-btn); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .exp-conclusion-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-btn, var(--teal)); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
     .exp-conclusion-text { font-size: 0.92rem; color: var(--text-primary); line-height: 1.75; }
     .exp-divider { height: 1px; background: var(--border-var); margin: 28px 0; border: none; }
-    .exp-tag { display: inline-block; background: var(--scale-bg); color: var(--accent-btn); border: 1px solid var(--border-var); border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; margin: 2px; }
+    .exp-tag { display: inline-block; background: var(--scale-bg); color: var(--accent-btn, var(--teal)); border: 1px solid var(--border-var); border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; margin: 2px; }
+
+    /* Theme switch in header */
+    .theme-switch { display: inline-block; height: 30px; position: relative; width: 64px; }
+    .theme-switch input { display: none; }
+    .slider { background-color: var(--scale-bg); border: 1.5px solid var(--border-var); bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; display: flex; align-items: center; justify-content: space-between; padding: 0 7px; box-sizing: border-box; }
+    .slider .icon { width: 12px; height: 12px; z-index: 1; display: flex; align-items: center; justify-content: center; }
+    .slider .icon svg { width: 100%; height: 100%; }
+    .light-icon { color: #f39c12; }
+    .dark-icon  { color: #aab; }
+    .slider::before { background-color: var(--bg-card); bottom: 3px; content: ""; height: 22px; left: 4px; position: absolute; transition: transform .4s cubic-bezier(0.18,0.89,0.32,1.28); width: 22px; z-index: 2; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    input:checked + .slider::before { transform: translateX(34px); }
+    .slider.round { border-radius: 30px; }
+
+    [data-theme="dark"] #site-header { background: rgba(14, 14, 30, 0.97); }
+
+    /* =============================================
+       CODE BLOCK — matches description section style
+       ============================================= */
     .code-block-wrapper { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); overflow: hidden; margin: 20px 0; }
     .code-block-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border-var); font-size: 0.75rem; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.08em; }
-    .code-lang-badge { background: var(--accent-btn); color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; }
-    .code-block-body { font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.8; padding: 16px 20px; overflow-x: auto; color: var(--text-mid); }
-    .code-kw { color: var(--accent-btn); font-weight: 600; }
-    .code-fn { color: var(--accent-2); }
+    .code-lang-badge { background: var(--accent-btn, var(--teal)); color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; }
+    .code-block-body { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 0.82rem; line-height: 1.8; padding: 16px 20px; overflow-x: auto; color: var(--text-mid); white-space: pre; }
+    .code-kw  { color: var(--accent-btn, var(--teal)); font-weight: 600; }
+    .code-fn  { color: var(--accent-2, #0EC4E0); }
     .code-num { color: #E07A30; }
     .code-cmt { color: var(--text-soft); font-style: italic; }
 
-    /* ALGORITHM CARDS */
+    /* =============================================
+       ALGORITHM FLOW CARDS
+       ============================================= */
     .algo-flow { display: flex; flex-direction: column; gap: 0; position: relative; margin: 24px 0; }
-    .algo-step-card {
-      display: flex; align-items: stretch; gap: 0; position: relative;
-      animation: stepSlideIn 0.4s ease both;
-    }
-    @keyframes stepSlideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+    .algo-step-card { display: flex; align-items: stretch; gap: 0; position: relative; animation: sectionFadeIn 0.4s ease both; }
     .algo-step-card:nth-child(1) { animation-delay: 0.05s; }
-    .algo-step-card:nth-child(2) { animation-delay: 0.1s; }
+    .algo-step-card:nth-child(2) { animation-delay: 0.10s; }
     .algo-step-card:nth-child(3) { animation-delay: 0.15s; }
-    .algo-step-card:nth-child(4) { animation-delay: 0.2s; }
+    .algo-step-card:nth-child(4) { animation-delay: 0.20s; }
     .algo-step-card:nth-child(5) { animation-delay: 0.25s; }
-    .algo-step-card:nth-child(6) { animation-delay: 0.3s; }
+    .algo-step-card:nth-child(6) { animation-delay: 0.30s; }
     .algo-step-card:nth-child(7) { animation-delay: 0.35s; }
     .algo-step-connector { display: flex; flex-direction: column; align-items: center; width: 40px; flex-shrink: 0; }
-    .algo-step-num {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
-      color: #fff; font-size: 0.78rem; font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 14px color-mix(in srgb, var(--accent-btn) 45%, transparent);
-      flex-shrink: 0; position: relative; z-index: 1;
-    }
-    .algo-step-line { flex: 1; width: 2px; background: linear-gradient(180deg, var(--accent-btn), var(--accent-2)); opacity: 0.35; min-height: 20px; }
+    .algo-step-num { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0)); color: #fff; font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 14px color-mix(in srgb, var(--accent-btn, var(--teal)) 45%, transparent); flex-shrink: 0; position: relative; z-index: 1; }
+    .algo-step-line { flex: 1; width: 2px; background: linear-gradient(180deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0)); opacity: 0.35; min-height: 20px; }
     .algo-step-card:last-child .algo-step-line { display: none; }
-    .algo-step-content {
-      flex: 1; background: var(--card-inner); border: 1px solid var(--border-var);
-      border-radius: var(--r-md); padding: 14px 18px; margin: 0 0 8px 12px;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-      cursor: default;
-    }
-    .algo-step-content:hover {
-      border-color: var(--accent-btn);
-      box-shadow: 0 0 16px color-mix(in srgb, var(--accent-btn) 15%, transparent);
-      transform: translateX(4px);
-    }
+    .algo-step-content { flex: 1; background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 14px 18px; margin: 0 0 8px 12px; transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s; cursor: default; }
+    .algo-step-content:hover { border-color: var(--accent-btn, var(--teal)); box-shadow: 0 0 16px color-mix(in srgb, var(--accent-btn, var(--teal)) 15%, transparent); transform: translateX(4px); }
     .algo-step-title { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
     .algo-step-desc { font-size: 0.8rem; color: var(--text-soft); line-height: 1.5; }
-    .algo-step-badge { display: inline-block; background: var(--accent-btn); color: #fff; font-size: 0.6rem; font-weight: 700; padding: 1px 7px; border-radius: 10px; margin-left: 6px; text-transform: uppercase; letter-spacing: 0.05em; vertical-align: middle; }
+    .algo-step-badge { display: inline-block; background: var(--accent-btn, var(--teal)); color: #fff; font-size: 0.6rem; font-weight: 700; padding: 1px 7px; border-radius: 10px; margin-left: 6px; text-transform: uppercase; letter-spacing: 0.05em; vertical-align: middle; }
 
-    /* PROCEDURE TIMELINE */
+    /* =============================================
+       PROCEDURE CARDS
+       ============================================= */
     .proc-timeline { display: flex; flex-direction: column; gap: 16px; margin: 20px 0; }
-    .proc-card {
-      background: var(--card-inner); border: 1px solid var(--border-var);
-      border-radius: var(--r-md); padding: 16px 20px;
-      display: flex; gap: 14px; align-items: flex-start;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .proc-card:hover { border-color: var(--accent-btn); transform: translateX(4px); }
-    .proc-step-icon {
-      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
-      background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; box-shadow: 0 2px 10px color-mix(in srgb, var(--accent-btn) 35%, transparent);
-    }
-    .proc-step-body {}
+    .proc-card { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 16px 20px; display: flex; gap: 14px; align-items: flex-start; transition: border-color 0.2s, transform 0.2s; }
+    .proc-card:hover { border-color: var(--accent-btn, var(--teal)); transform: translateX(4px); }
+    .proc-step-icon { width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0; background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0)); display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 2px 10px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent); }
     .proc-step-title { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
     .proc-step-text { font-size: 0.82rem; color: var(--text-soft); line-height: 1.6; }
 
-    /* BFS SIMULATION */
-    .bfs-sim-outer {
-      background: var(--card-inner); border: 1.5px solid var(--border-var);
-      border-radius: 16px; overflow: hidden; min-height: 560px;
-      display: flex; flex-direction: column;
+    /* =============================================
+       BFS SIMULATION — scoped inside .sim-wrap
+       ============================================= */
+    .sim-wrap {
+      background: var(--card-inner);
+      border: 1.5px solid var(--border-var);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
     }
-    .bfs-toolbar {
+
+    .sim-wrap .bfs-toolbar {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
       padding: 12px 18px; border-bottom: 1px solid var(--border-var);
       background: var(--bg-card);
     }
-    .bfs-toolbar-title {
+    .sim-wrap .bfs-toolbar-title {
       font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase; color: var(--accent-btn);
-      filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent-btn) 40%, transparent));
+      letter-spacing: 2px; text-transform: uppercase; color: var(--accent-btn, var(--teal));
+      filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent-btn, var(--teal)) 40%, transparent));
       margin-right: 4px; flex-shrink: 0;
     }
-    .bfs-toolbar-sep { width: 1px; height: 24px; background: var(--border-var); margin: 0 4px; flex-shrink: 0; }
-    .bfs-btn {
-      display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px;
+    .sim-wrap .bfs-toolbar-sep { width: 1px; height: 24px; background: var(--border-var); margin: 0 4px; flex-shrink: 0; }
+
+    .sim-wrap .bfs-btn {
+      display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px;
       border: none; border-radius: 20px; font-family: var(--font-body);
       font-size: 0.76rem; font-weight: 600; cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
-      white-space: nowrap;
+      transition: transform 0.15s, box-shadow 0.2s, background 0.2s; white-space: nowrap;
     }
-    .bfs-btn:active:not(:disabled) { transform: scale(0.95); }
-    .bfs-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .bfs-btn-primary { background: var(--accent-btn); color: #fff; box-shadow: 0 2px 10px color-mix(in srgb, var(--accent-btn) 35%, transparent); }
-    .bfs-btn-primary:hover:not(:disabled) { background: var(--btn-hover); transform: translateY(-1px); }
-    .bfs-btn-ghost { background: var(--bg-page); color: var(--text-mid); border: 1.5px solid var(--border-var); }
-    .bfs-btn-ghost:hover:not(:disabled) { background: var(--scale-bg); border-color: var(--accent-btn); }
-    .bfs-btn-danger { background: #FF6B9D; color: #fff; }
-    .bfs-btn-danger:hover:not(:disabled) { background: #e05585; }
-    .bfs-btn-green { background: #1AC080; color: #fff; }
-    .bfs-btn-green:hover:not(:disabled) { background: #16a06b; }
-    .bfs-btn-accent { background: #6B3FD8; color: #fff; }
-    .bfs-btn-accent:hover:not(:disabled) { background: #8A5BF5; }
-    .bfs-speed-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-    .bfs-speed-label { font-size: 0.68rem; color: var(--text-soft); white-space: nowrap; }
-    .bfs-speed-slider {
-      -webkit-appearance: none; width: 72px; height: 4px;
-      background: var(--border-var); border-radius: 2px; outline: none; cursor: pointer;
-    }
-    .bfs-speed-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-btn); cursor: pointer; }
-    .bfs-speed-val { font-size: 0.68rem; font-weight: 700; color: var(--accent-btn); min-width: 28px; }
-    .bfs-graph-toolbar {
+    .sim-wrap .bfs-btn:active:not(:disabled) { transform: scale(0.95); }
+    .sim-wrap .bfs-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .sim-wrap .bfs-btn-primary { background: var(--accent-btn, var(--teal)); color: #fff; box-shadow: 0 2px 10px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent); }
+    .sim-wrap .bfs-btn-primary:hover:not(:disabled) { background: var(--btn-hover); transform: translateY(-1px); }
+    .sim-wrap .bfs-btn-ghost { background: var(--bg-page); color: var(--text-mid); border: 1.5px solid var(--border-var); }
+    .sim-wrap .bfs-btn-ghost:hover:not(:disabled) { background: var(--scale-bg); border-color: var(--accent-btn, var(--teal)); }
+    .sim-wrap .bfs-btn-danger { background: #FF6B9D; color: #fff; }
+    .sim-wrap .bfs-btn-danger:hover:not(:disabled) { background: #e05585; }
+    .sim-wrap .bfs-btn-green { background: #1AC080; color: #fff; }
+    .sim-wrap .bfs-btn-green:hover:not(:disabled) { background: #16a06b; }
+    .sim-wrap .bfs-btn-accent { background: var(--border-strong); color: #fff; }
+    .sim-wrap .bfs-btn-accent:hover:not(:disabled) { background: var(--btn-hover); }
+
+    .sim-wrap .bfs-speed-wrap { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .sim-wrap .bfs-speed-label { font-size: 0.68rem; color: var(--text-soft); white-space: nowrap; }
+    .sim-wrap .bfs-speed-slider { -webkit-appearance: none; width: 80px; height: 4px; background: var(--border-var); border-radius: 2px; outline: none; cursor: pointer; }
+    .sim-wrap .bfs-speed-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-btn, var(--teal)); cursor: pointer; }
+    .sim-wrap .bfs-speed-val { font-size: 0.68rem; font-weight: 700; color: var(--accent-btn, var(--teal)); min-width: 32px; }
+
+    .sim-wrap .bfs-graph-toolbar {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-      padding: 8px 18px; border-bottom: 1px solid var(--border-var);
-      background: var(--bg-card);
+      padding: 8px 18px; border-bottom: 1px solid var(--border-var); background: var(--bg-card);
     }
-    .bfs-graph-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-right: 4px; }
-    .bfs-node-input {
+    .sim-wrap .bfs-graph-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-right: 2px; }
+    .sim-wrap .bfs-node-input {
       width: 44px; padding: 5px 8px; background: var(--bg-page);
       border: 1.5px solid var(--border-var); border-radius: 8px;
-      font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700;
       color: var(--text-primary); outline: none; text-align: center;
     }
-    .bfs-node-input:focus { border-color: var(--accent-btn); }
-    .bfs-edge-inputs { display: flex; align-items: center; gap: 4px; }
-    .bfs-edge-arrow { color: var(--text-soft); font-size: 0.8rem; }
-    .bfs-error { padding: 5px 18px; font-size: 0.76rem; color: #FF6B9D; background: rgba(255,107,157,0.08); border-bottom: 1px solid rgba(255,107,157,0.2); display: none; }
-    .bfs-error.visible { display: block; }
-    .bfs-stats-row {
-      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-      padding: 8px 18px; border-bottom: 1px solid var(--border-var);
-      background: var(--bg-card);
-    }
-    .bfs-pill { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: 14px; padding: 3px 10px; font-size: 0.72rem; color: var(--text-soft); white-space: nowrap; }
-    .bfs-pill .pv { font-weight: 700; color: var(--accent-btn); margin-left: 3px; }
-    .bfs-status { margin-left: auto; font-size: 0.76rem; color: var(--text-soft); font-style: italic; }
-    .bfs-status.running { color: var(--accent-btn); }
-    .bfs-status.done { color: var(--accent-2); }
-    .bfs-progress-row { padding: 6px 18px; background: var(--bg-card); border-bottom: 1px solid var(--border-var); }
-    .bfs-progress-meta { display: flex; justify-content: space-between; font-size: 0.66rem; color: var(--text-soft); margin-bottom: 4px; }
-    .bfs-progress-track { height: 4px; background: var(--scale-bg); border-radius: 2px; overflow: hidden; }
-    .bfs-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-btn), var(--accent-2)); border-radius: 2px; width: 0%; transition: width 0.3s ease; }
+    .sim-wrap .bfs-node-input:focus { border-color: var(--accent-btn, var(--teal)); }
+    .sim-wrap .bfs-edge-inputs { display: flex; align-items: center; gap: 4px; }
+    .sim-wrap .bfs-edge-arrow { color: var(--text-soft); font-size: 0.8rem; }
+    .sim-wrap .bfs-error { padding: 5px 18px; font-size: 0.76rem; color: #FF6B9D; background: rgba(255,107,157,0.08); border-bottom: 1px solid rgba(255,107,157,0.2); display: none; }
+    .sim-wrap .bfs-error.visible { display: block; }
 
-    /* Canvas zone */
-    .bfs-canvas-zone { display: flex; flex: 1; min-height: 400px; overflow: hidden; }
-    .bfs-left-panel {
+    .sim-wrap .bfs-stats-row {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 8px 18px; border-bottom: 1px solid var(--border-var); background: var(--bg-card);
+    }
+    .sim-wrap .bfs-pill { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: 14px; padding: 3px 10px; font-size: 0.72rem; color: var(--text-soft); white-space: nowrap; }
+    .sim-wrap .bfs-pill .pv { font-weight: 700; color: var(--accent-btn, var(--teal)); margin-left: 3px; }
+    .sim-wrap .bfs-status { margin-left: auto; font-size: 0.76rem; color: var(--text-soft); font-style: italic; }
+    .sim-wrap .bfs-status.running { color: var(--accent-btn, var(--teal)); }
+    .sim-wrap .bfs-status.done { color: var(--accent-2, #0EC4E0); }
+
+    .sim-wrap .bfs-progress-row { padding: 6px 18px; background: var(--bg-card); border-bottom: 1px solid var(--border-var); }
+    .sim-wrap .bfs-progress-meta { display: flex; justify-content: space-between; font-size: 0.66rem; color: var(--text-soft); margin-bottom: 4px; }
+    .sim-wrap .bfs-progress-track { height: 5px; background: var(--scale-bg); border-radius: 10px; overflow: hidden; }
+    .sim-wrap .bfs-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0)); border-radius: 10px; width: 0%; transition: width 0.3s ease; }
+
+    .sim-wrap .bfs-canvas-zone { display: flex; min-height: 400px; overflow: hidden; }
+
+    .sim-wrap .bfs-left-panel {
       width: 190px; flex-shrink: 0; border-right: 1px solid var(--border-var);
       display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-card);
     }
-    .bfs-panel-sec { padding: 12px 14px; border-bottom: 1px solid var(--border-var); }
-    .bfs-panel-head { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 10px; }
-    .bfs-code-block { background: var(--bg-page); border: 1px solid var(--border-var); border-radius: 8px; padding: 10px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.68rem; line-height: 1.9; }
-    .bfs-code-line { display: block; padding: 1px 4px; border-radius: 3px; border-left: 2px solid transparent; transition: background 0.25s, border-color 0.25s; }
-    .bfs-code-line.highlighted { background: color-mix(in srgb, var(--accent-btn) 15%, transparent); border-left-color: var(--accent-btn); }
-    .bfs-stats-mini { display: flex; flex-direction: column; gap: 6px; }
-    .bfs-stat-mini-item { background: var(--bg-page); border: 1px solid var(--border-var); border-radius: 8px; padding: 7px 10px; }
-    .bfs-stat-mini-val { font-size: 1.1rem; font-weight: 800; color: var(--accent-btn); font-family: var(--font-mono); line-height: 1; }
-    .bfs-stat-mini-lbl { font-size: 0.58rem; color: var(--text-soft); text-transform: uppercase; margin-top: 2px; }
+    .sim-wrap .bfs-panel-sec { padding: 12px 14px; border-bottom: 1px solid var(--border-var); }
+    .sim-wrap .bfs-panel-head { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 10px; }
+    .sim-wrap .bfs-code-block { background: var(--bg-page); border: 1px solid var(--border-var); border-radius: 8px; padding: 10px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; line-height: 1.9; }
+    .sim-wrap .bfs-code-line { display: block; padding: 1px 4px; border-radius: 3px; border-left: 2px solid transparent; transition: background 0.25s, border-color 0.25s; }
+    .sim-wrap .bfs-code-line.highlighted { background: color-mix(in srgb, var(--accent-btn, var(--teal)) 15%, transparent); border-left-color: var(--accent-btn, var(--teal)); }
+    .sim-wrap .bfs-stats-mini { display: flex; flex-direction: column; gap: 6px; }
+    .sim-wrap .bfs-stat-mini-item { background: var(--bg-page); border: 1px solid var(--border-var); border-radius: 8px; padding: 7px 10px; }
+    .sim-wrap .bfs-stat-mini-val { font-size: 1.1rem; font-weight: 800; color: var(--accent-btn, var(--teal)); font-family: 'JetBrains Mono', monospace; line-height: 1; }
+    .sim-wrap .bfs-stat-mini-lbl { font-size: 0.58rem; color: var(--text-soft); text-transform: uppercase; margin-top: 2px; }
 
-    /* Graph canvas */
-    .bfs-graph-zone { flex: 1; position: relative; overflow: hidden; background: var(--bg-page); }
-    .bfs-graph-canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
-    .bfs-empty-state {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-      text-align: center; pointer-events: none;
-    }
-    .bfs-empty-icon { font-size: 2.4rem; margin-bottom: 10px; opacity: 0.45; }
-    .bfs-empty-state p { color: var(--text-soft); font-size: 0.82rem; line-height: 1.6; }
-    .bfs-empty-state p strong { color: var(--accent-btn); }
-    .bfs-empty-state.hidden { display: none; }
+    .sim-wrap .bfs-graph-zone { flex: 1; position: relative; overflow: hidden; background: var(--bg-page); }
+    .sim-wrap .bfs-graph-canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
+    .sim-wrap .bfs-empty-state { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+    .sim-wrap .bfs-empty-icon { font-size: 2.4rem; margin-bottom: 10px; opacity: 0.45; }
+    .sim-wrap .bfs-empty-state p { color: var(--text-soft); font-size: 0.82rem; line-height: 1.6; }
+    .sim-wrap .bfs-empty-state p strong { color: var(--accent-btn, var(--teal)); }
+    .sim-wrap .bfs-empty-state.hidden { display: none; }
 
-    /* Right panel */
-    .bfs-right-panel {
+    .sim-wrap .bfs-right-panel {
       width: 200px; flex-shrink: 0; border-left: 1px solid var(--border-var);
       display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-card);
     }
-    .bfs-queue-container { }
-    .bfs-queue-title { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 8px; }
-    .bfs-queue-wrap {
-      display: flex; flex-direction: column; gap: 4px; min-height: 60px;
-      background: var(--bg-page); border: 1px solid var(--border-var);
-      border-radius: 8px; padding: 8px; overflow: hidden;
-    }
-    .bfs-queue-track { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
-    .bfs-queue-item {
-      background: var(--accent-btn); color: #fff; border-radius: 8px;
-      padding: 4px 10px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
-      animation: queueIn 0.3s cubic-bezier(0.18,0.89,0.32,1.28) both;
-      position: relative;
-    }
-    .bfs-queue-item.front {
-      background: var(--accent-2); box-shadow: 0 0 10px color-mix(in srgb, var(--accent-2) 55%, transparent);
-    }
-    .bfs-queue-item.dequeuing { animation: queueOut 0.35s ease forwards; }
+    .sim-wrap .bfs-queue-wrap { display: flex; flex-direction: column; gap: 4px; min-height: 60px; background: var(--bg-page); border: 1px solid var(--border-var); border-radius: 8px; padding: 8px; overflow: hidden; }
+    .sim-wrap .bfs-queue-track { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+    .sim-wrap .bfs-queue-item { background: var(--accent-btn, var(--teal)); color: #fff; border-radius: 8px; padding: 4px 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; animation: queueIn 0.3s cubic-bezier(0.18,0.89,0.32,1.28) both; }
+    .sim-wrap .bfs-queue-item.front { background: var(--accent-2, #0EC4E0); box-shadow: 0 0 10px color-mix(in srgb, var(--accent-2, #0EC4E0) 55%, transparent); }
     @keyframes queueIn { from { opacity: 0; transform: scale(0.6) translateY(-8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    @keyframes queueOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.6) translateX(-16px); } }
-    .bfs-queue-ptrs { display: flex; justify-content: space-between; margin-top: 4px; font-size: 0.58rem; color: var(--text-soft); font-family: var(--font-mono); }
-    .bfs-ptr-front { color: var(--accent-2); font-weight: 700; }
-    .bfs-ptr-rear  { color: var(--accent-btn); font-weight: 700; }
-    .bfs-queue-empty { color: var(--text-soft); font-size: 0.72rem; text-align: center; padding: 8px 0; font-style: italic; }
-    .bfs-trav-list { display: flex; flex-direction: column; gap: 4px; max-height: 120px; overflow-y: auto; }
-    .bfs-trav-item {
-      display: flex; align-items: center; gap: 6px; background: var(--card-inner);
-      border: 1px solid var(--border-var); border-radius: 6px; padding: 5px 8px;
-      font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-primary);
-      animation: travIn 0.25s ease both;
-    }
+    .sim-wrap .bfs-queue-ptrs { display: flex; justify-content: space-between; margin-top: 4px; font-size: 0.58rem; color: var(--text-soft); font-family: 'JetBrains Mono', monospace; }
+    .sim-wrap .bfs-ptr-front { color: var(--accent-2, #0EC4E0); font-weight: 700; }
+    .sim-wrap .bfs-ptr-rear  { color: var(--accent-btn, var(--teal)); font-weight: 700; }
+    .sim-wrap .bfs-queue-empty { color: var(--text-soft); font-size: 0.72rem; text-align: center; padding: 8px 0; font-style: italic; }
+    .sim-wrap .bfs-trav-list { display: flex; flex-direction: column; gap: 4px; max-height: 120px; overflow-y: auto; }
+    .sim-wrap .bfs-trav-item { display: flex; align-items: center; gap: 6px; background: var(--card-inner); border: 1px solid var(--border-var); border-radius: 6px; padding: 5px 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-primary); animation: travIn 0.25s ease both; }
     @keyframes travIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-    .bfs-trav-num { font-size: 0.58rem; color: var(--text-soft); margin-left: auto; }
-    .bfs-visited-chips { display: flex; flex-wrap: wrap; gap: 4px; }
-    .bfs-visited-chip {
-      background: var(--scale-bg); border: 1px solid var(--accent-btn);
-      border-radius: 6px; padding: 2px 8px; font-size: 0.7rem; font-weight: 700;
-      color: var(--accent-btn); font-family: var(--font-mono);
-      animation: chipIn 0.2s ease both;
-    }
+    .sim-wrap .bfs-trav-num { font-size: 0.58rem; color: var(--text-soft); margin-left: auto; }
+    .sim-wrap .bfs-visited-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .sim-wrap .bfs-visited-chip { background: var(--scale-bg); border: 1px solid var(--accent-btn, var(--teal)); border-radius: 6px; padding: 2px 8px; font-size: 0.7rem; font-weight: 700; color: var(--accent-btn, var(--teal)); font-family: 'JetBrains Mono', monospace; animation: chipIn 0.2s ease both; }
     @keyframes chipIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-    .bfs-cur-node {
-      background: var(--accent-btn); color: #fff; border-radius: 8px;
-      padding: 8px 12px; text-align: center; font-family: var(--font-mono);
-      font-size: 1rem; font-weight: 800; margin-bottom: 6px;
-      box-shadow: 0 0 16px color-mix(in srgb, var(--accent-btn) 50%, transparent);
-      transition: all 0.3s ease;
-    }
-    .bfs-cur-node.empty { background: var(--bg-page); color: var(--text-soft); font-size: 0.72rem; box-shadow: none; }
-    .bfs-level-badge {
-      background: var(--scale-bg); border: 1px solid var(--border-var);
-      border-radius: 6px; padding: 4px 10px; font-size: 0.72rem;
-      color: var(--text-mid); text-align: center; margin-bottom: 8px;
-    }
-    .bfs-level-badge .lv { color: var(--accent-btn); font-weight: 800; font-family: var(--font-mono); }
-    .bfs-legend {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      padding: 8px 18px; border-top: 1px solid var(--border-var); background: var(--bg-card);
-    }
-    .bfs-leg-item { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: var(--text-soft); }
-    .bfs-leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .sim-wrap .bfs-cur-node { background: var(--accent-btn, var(--teal)); color: #fff; border-radius: 8px; padding: 8px 12px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 800; margin-bottom: 6px; box-shadow: 0 0 16px color-mix(in srgb, var(--accent-btn, var(--teal)) 50%, transparent); transition: all 0.3s ease; }
+    .sim-wrap .bfs-cur-node.empty { background: var(--bg-page); color: var(--text-soft); font-size: 0.72rem; box-shadow: none; }
+    .sim-wrap .bfs-level-badge { background: var(--scale-bg); border: 1px solid var(--border-var); border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; color: var(--text-mid); text-align: center; margin-bottom: 8px; }
+    .sim-wrap .bfs-level-badge .lv { color: var(--accent-btn, var(--teal)); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
-    /* Tooltip */
-    .bfs-tooltip {
-      position: fixed; background: var(--bg-card); border: 1px solid var(--border-var);
-      border-radius: 8px; padding: 6px 12px; font-size: 0.7rem; color: var(--text-primary);
-      box-shadow: var(--sh-card); pointer-events: none; z-index: 200;
-      opacity: 0; transition: opacity 0.2s ease; font-family: var(--font-mono); white-space: nowrap;
-    }
-    .bfs-tooltip.visible { opacity: 1; }
+    .sim-wrap .bfs-legend { display: flex; flex-wrap: wrap; gap: 14px; padding: 10px 18px; border-top: 1px solid var(--border-var); background: var(--bg-card); }
+    .sim-wrap .bfs-leg-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-soft); }
+    .sim-wrap .bfs-leg-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
 
-    /* Toast */
-    .bfs-toast {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: var(--bg-card); border: 1px solid var(--border-strong);
-      border-radius: 10px; padding: 10px 20px; font-size: 0.8rem;
-      color: var(--text-primary); box-shadow: var(--sh-card);
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000;
-    }
+    /* Toast & Tooltip */
+    .bfs-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: 10px; padding: 10px 20px; font-size: 0.8rem; color: var(--text-primary); box-shadow: var(--sh-card); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000; }
     .bfs-toast.show { opacity: 1; }
+    .bfs-tooltip { position: fixed; background: var(--bg-card); border: 1px solid var(--border-var); border-radius: 8px; padding: 6px 12px; font-size: 0.7rem; color: var(--text-primary); box-shadow: var(--sh-card); pointer-events: none; z-index: 200; opacity: 0; transition: opacity 0.2s; font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+    .bfs-tooltip.visible { opacity: 1; }
+        /* ── Viva accordion ── */
+.viva-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
 
-    /* Mode selector */
-    .bfs-mode-wrap { display: flex; align-items: center; gap: 6px; }
-    .bfs-mode-label { font-size: 0.68rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; white-space: nowrap; }
-    .bfs-mode-btn {
-      padding: 4px 10px; border-radius: 14px; font-size: 0.7rem; font-weight: 600;
-      border: 1.5px solid var(--border-var); background: var(--bg-page);
-      color: var(--text-mid); cursor: pointer; transition: all 0.2s;
-    }
-    .bfs-mode-btn.active { background: var(--accent-btn); color: #fff; border-color: var(--accent-btn); }
+.viva-item {
+    background: var(--card-inner);
+    border: 1px solid var(--border-var);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    transition: border-color 0.22s, box-shadow 0.22s;
+}
 
-    @media (max-width: 900px) {
+.viva-item.open {
+    border-color: var(--accent-btn, var(--teal));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn, var(--teal)) 10%, transparent);
+}
+
+.viva-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    gap: 12px;
+}
+
+.viva-question:hover {
+    background: var(--scale-bg);
+}
+
+.viva-q-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.viva-q-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.viva-chevron {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--text-soft);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+.viva-item.open .viva-chevron {
+    transform: rotate(180deg);
+}
+
+.viva-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), padding 0.28s;
+    padding: 0 18px;
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    line-height: 1.8;
+}
+
+.viva-item.open .viva-answer {
+    max-height: 300px;
+    padding: 0 18px 16px;
+}
+
+.viva-answer p {
+    margin: 0;
+}
+
+    /* ---- Responsive ---- */
+    @media (max-width: 800px) {
       .exp-main-body { flex-direction: column; padding: 20px 16px; }
       .exp-sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
       .exp-sidebar-card { position: static; }
-      .exp-nav-list { flex-direction: row; flex-wrap: wrap; padding: 10px; gap: 6px; }
-      .exp-nav-btn { flex: 1; min-width: calc(33% - 3px); justify-content: center; font-size: 0.78rem; padding: 10px 6px; }
+      .exp-nav-list { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 10px; }
+      .exp-nav-btn { flex: 1; min-width: calc(33% - 4px); justify-content: center; font-size: 0.78rem; padding: 10px 6px; }
       .exp-nav-btn.active::before { display: none; }
       .exp-panel-body { padding: 20px; }
       .exp-panel-header { padding: 18px 20px; }
-      .bfs-left-panel, .bfs-right-panel { display: none; }
-      .bfs-canvas-zone { min-height: 320px; }
+      .exp-breadcrumb { padding: 8px 16px; }
+      .sim-wrap .bfs-left-panel, .sim-wrap .bfs-right-panel { display: none; }
+      .sim-wrap .bfs-canvas-zone { min-height: 300px; }
+    }
+    @media (max-width: 520px) {
+      .exp-nav-btn { min-width: calc(50% - 3px); }
+      .exp-result-stats { grid-template-columns: 1fr 1fr; }
+      .exp-banner-badge { display: none; }
     }
   </style>
 </head>
+
 <body class="exp-page-wrapper">
 
-<!-- HEADER -->
-<header class="portal-header">
-  <div class="header-left">
-    <div class="logo-placeholder">L</div>
-    <div>
-      <h1 class="college-name">Aditya University</h1>
-      <span class="stream-badge">AIML Stream</span>
-    </div>
-  </div>
-  <div class="header-center">
-    <div class="search-wrapper">
-      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" class="global-search" placeholder="Search experiments &amp; records…" />
-    </div>
-  </div>
-  <div class="header-right">
-    <label class="theme-switch" for="theme-toggle-chk">
-      <input type="checkbox" id="theme-toggle-chk" />
-      <div class="slider round">
-        <span class="icon light-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg></span>
-        <span class="icon dark-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
-      </div>
-    </label>
-    <div style="display:flex;align-items:center;gap:8px;border:1px solid var(--border-var);border-radius:10px;padding:5px 10px;">
-      <div class="profile-avatar">S</div>
-      <div><span class="prof-name">Santhosh</span><span class="prof-roll">24P31A42XX</span></div>
-    </div>
-  </div>
-</header>
-
-<!-- BREADCRUMB -->
-<div class="exp-breadcrumb">
-  <a href="portal.html">Dashboard</a><span class="sep">›</span>
-  <a href="data_structures_lab.html">Data Structures Lab</a><span class="sep">›</span>
-  <span class="current">BFS Graph Traversal</span>
-</div>
-
-<!-- BANNER -->
-<div class="exp-banner">
-  <div class="exp-banner-icon">🔵</div>
-  <div class="exp-banner-meta">
-    <div class="exp-banner-label">Data Structures · Experiment 04</div>
-    <div class="exp-banner-title">Graph Traversal using Breadth First Search (BFS)</div>
-    <div class="exp-banner-sub">Visualise level-order graph exploration with queue operations, visited tracking, and animated BFS wave propagation.</div>
-  </div>
-  <div class="exp-banner-badge">O(V+E) Time · O(V) Space</div>
-</div>
-
-<!-- MAIN BODY -->
-<div class="exp-main-body">
-  <!-- SIDEBAR -->
-  <aside class="exp-sidebar">
-    <div class="exp-sidebar-card">
-      <div class="exp-sidebar-header">Sections</div>
-      <nav class="exp-nav-list">
-        <button class="exp-nav-btn active" data-section="aim"><span class="exp-nav-icon">🎯</span>Aim</button>
-        <button class="exp-nav-btn" data-section="description"><span class="exp-nav-icon">📋</span>Description</button>
-        <button class="exp-nav-btn" data-section="algorithm"><span class="exp-nav-icon">⚙️</span>Algorithm</button>
-        <button class="exp-nav-btn" data-section="procedure"><span class="exp-nav-icon">📝</span>Procedure</button>
-        <button class="exp-nav-btn" data-section="simulation"><span class="exp-nav-icon">💻</span>Simulation</button>
-        <button class="exp-nav-btn" data-section="result"><span class="exp-nav-icon">📊</span>Result</button>
-      </nav>
-      <div class="exp-sidebar-progress">
-        <div class="exp-progress-label"><span>Progress</span><span id="progress-pct">16%</span></div>
-        <div class="exp-progress-track"><div class="exp-progress-fill" id="progress-fill"></div></div>
+  <!-- ===================== HEADER ===================== -->
+  <header class="portal-header">
+    <div class="header-left">
+      <a href="" aria-label="LabMate home">
+        <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+      </a>
+      <div class="college-info">
+        <h1 class="college-name">Aditya University</h1>
+        <!-- <span class="stream-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"></path>
+            <path d="M4.93 4.93l14.14 14.14"></path>
+          </svg>
+          AIML Stream
+        </span> -->
       </div>
     </div>
-  </aside>
 
-  <!-- CONTENT -->
-  <main class="exp-content-area">
-    <div class="exp-panel">
-
-      <!-- AIM -->
-      <div class="exp-section-content visible" id="section-aim">
-        <div class="exp-panel-header">
-          <div class="exp-panel-icon">🎯</div>
-          <div><div class="exp-panel-title">Aim</div><div class="exp-panel-subtitle">Objective of this experiment</div></div>
+    <div class="header-right">
+      <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+        <input type="checkbox" id="portal-theme-checkbox" />
+        <div class="slider round">
+          <span class="icon light-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="icon dark-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
         </div>
-        <div class="exp-panel-body">
-          <p class="exp-body-text">To implement <strong>Graph Traversal using Breadth First Search (BFS)</strong> in C, exploring all vertices of a graph in level-order fashion using a queue data structure — and to understand how BFS systematically visits all reachable nodes from a given source vertex, marking visited states and processing nodes layer by layer.</p>
-          <div class="exp-highlight-box">
-            <strong>Learning Objective:</strong> Develop a clear understanding of how BFS explores graphs by visiting all nodes at the current level before moving to the next. Understand the role of the <strong>queue</strong> in maintaining exploration order, the <strong>visited array</strong> in preventing revisits, and why BFS achieves <strong>O(V+E)</strong> time complexity — compared to DFS's recursive depth-first nature.
+      </label>
+
+      <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notification-badge"></span>
+      </button>
+
+      <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+        <div class="notif-panel-header">
+          <span>Notifications</span>
+          <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>New assignment from <strong>Aditya University</strong></p>
+              <span>BFS experiment is due this Friday</span>
+              <time>2 hours ago</time>
+            </div>
           </div>
-          <p class="exp-body-text">By the end of this experiment, you will be able to trace all BFS iterations for any given graph, explain how nodes are enqueued and dequeued, identify the level-order traversal sequence, understand the adjacency matrix representation, and visualise queue operations — all animated step-by-step in the simulation.</p>
-          <hr class="exp-divider" />
-          <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject Tags:</strong></p>
-          <div style="margin-top:8px;">
-            <span class="exp-tag">Graphs</span><span class="exp-tag">BFS</span><span class="exp-tag">Queue</span>
-            <span class="exp-tag">Traversal</span><span class="exp-tag">Data Structures</span>
-            <span class="exp-tag">Level Order Traversal</span><span class="exp-tag">Visited Array</span>
-            <span class="exp-tag">Adjacency Matrix</span>
+          <div class="notif-item notif-unread">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>Data Structures Lab Update</p>
+              <span>DFS experiment has been unlocked</span>
+              <time>Yesterday</time>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- DESCRIPTION -->
-      <div class="exp-section-content" id="section-description">
-        <div class="exp-panel-header">
-          <div class="exp-panel-icon">📋</div>
-          <div><div class="exp-panel-title">Description</div><div class="exp-panel-subtitle">Theory &amp; background</div></div>
+      <div class="profile-dropdown">
+        <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
+          <div class="profile-avatar">S</div>
+          <div class="profile-name-tag">
+            <span class="prof-name">Santhosh</span>
+            <span class="prof-roll">24P31A42XX</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chevron-down">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="dropdown-menu">
+          <div class="dropdown-header">
+            <div class="dh-avatar">S</div>
+            <div>
+              <strong>Santhosh</strong>
+              <span>24P31A42XX · AIML</span>
+            </div>
+          </div>
+          <hr>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Progress</a>
+          <hr>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Help &amp; Support</a>
+          <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
         </div>
-        <div class="exp-panel-body">
-          <p class="exp-body-text"><strong>Breadth First Search (BFS)</strong> is a fundamental graph traversal algorithm that explores all vertices of a graph level by level — visiting all neighbours of a node before proceeding to their neighbours. It was formally described by Konrad Zuse in 1945 and later re-developed by Edward F. Moore in 1959 for finding shortest paths in mazes.</p>
-          <p class="exp-body-text">BFS uses a <strong>queue (FIFO)</strong> data structure to keep track of which vertex to explore next. When a vertex is visited, all its unvisited adjacent vertices are enqueued. This ensures the algorithm processes vertices in the exact order they were discovered — guaranteeing level-by-level exploration.</p>
-          <div class="exp-highlight-box"><strong>Key Insight:</strong> BFS is equivalent to exploring a graph as concentric rings radiating outward from the source. Level 0 is the source; Level 1 is its direct neighbours; Level 2 is their unvisited neighbours; and so on. This makes BFS ideal for finding <strong>shortest paths in unweighted graphs</strong>.</div>
-          <hr class="exp-divider" />
-          <p class="exp-body-text"><strong>Program in C language:</strong></p>
-          <div class="code-block-wrapper">
-            <div class="code-block-header"><span>bfs.c</span><span class="code-lang-badge">C</span></div>
-            <div class="code-block-body"><pre><span class="code-kw">#include</span>&lt;stdio.h&gt;
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== BREADCRUMB ===================== -->
+  <div class="exp-breadcrumb">
+    <a href="portal.html">Dashboard</a>
+    <span class="sep">›</span>
+    <a href="data_structures_lab.html">Data Structures Lab</a>
+    <span class="sep">›</span>
+    <span class="current">BFS Graph Traversal</span>
+  </div>
+
+  <!-- ===================== BANNER ===================== -->
+  <div class="exp-banner">
+    <div class="exp-banner-icon">🔵</div>
+    <div class="exp-banner-meta">
+      <div class="exp-banner-label">Data Structures · Experiment 04</div>
+      <div class="exp-banner-title">Graph Traversal using Breadth First Search (BFS)</div>
+      <div class="exp-banner-sub">Visualise level-order graph exploration with queue operations, visited tracking, and animated BFS wave propagation.</div>
+    </div>
+    <div class="exp-banner-badge">O(V+E) Time · O(V) Space</div>
+  </div>
+
+  <!-- ===================== MAIN BODY ===================== -->
+  <div class="exp-main-body">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="exp-sidebar" role="complementary" aria-label="Experiment sections">
+      <div class="exp-sidebar-card">
+        <div class="exp-sidebar-header">Sections</div>
+        <nav class="exp-nav-list" aria-label="Experiment navigation">
+          <button class="exp-nav-btn active" data-section="aim" aria-current="true">
+            <span class="exp-nav-icon">🎯</span>Aim
+          </button>
+          <button class="exp-nav-btn" data-section="description">
+            <span class="exp-nav-icon">📋</span>Description
+          </button>
+          <button class="exp-nav-btn" data-section="algorithm">
+            <span class="exp-nav-icon">⚙️</span>Algorithm
+          </button>
+          <button class="exp-nav-btn" data-section="procedure">
+            <span class="exp-nav-icon">📝</span>Procedure
+          </button>
+          <button class="exp-nav-btn" data-section="simulation">
+            <span class="exp-nav-icon">💻</span>Simulation
+          </button>
+          <button class="exp-nav-btn" data-section="result">
+            <span class="exp-nav-icon">📊</span>Result
+          </button>
+          <button class="exp-nav-btn" data-section="viva">
+    <span class="exp-nav-icon">🎤</span>Viva Questions
+</button>
+        </nav>
+        <div class="exp-sidebar-progress">
+          <div class="exp-progress-label">
+            <span>Progress</span>
+            <span id="progress-pct">16%</span>
+          </div>
+          <div class="exp-progress-track">
+            <div class="exp-progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT CONTENT AREA -->
+    <main class="exp-content-area" id="exp-content-main" role="main">
+      <div class="exp-panel">
+
+        <!-- ========== AIM ========== -->
+        <div class="exp-section-content visible" id="section-aim">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">🎯</div>
+            <div>
+              <div class="exp-panel-title">Aim</div>
+              <div class="exp-panel-subtitle">Objective of this experiment</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">
+              To implement <strong>Graph Traversal using Breadth First Search (BFS)</strong> in C, exploring all vertices of a graph in level-order fashion using a queue data structure — and to understand how BFS systematically visits all reachable nodes from a given source vertex, marking visited states and processing nodes layer by layer.
+            </p>
+            <div class="exp-highlight-box">
+              <strong>Learning Objective:</strong> Develop a clear understanding of how BFS explores graphs by visiting all nodes at the current level before moving to the next. Understand the role of the <strong>queue</strong> in maintaining exploration order, the <strong>visited array</strong> in preventing revisits, and why BFS achieves <strong>O(V+E)</strong> time complexity.
+            </div>
+            <p class="exp-body-text">
+              By the end of this experiment, you will be able to trace all BFS iterations for any given graph, explain how nodes are enqueued and dequeued, identify the level-order traversal sequence, understand the adjacency matrix representation, and visualise queue operations — all animated step-by-step in the simulation.
+            </p>
+            <hr class="exp-divider" />
+            <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject Tags:</strong></p>
+            <div style="margin-top:8px;">
+              <span class="exp-tag">Graphs</span>
+              <span class="exp-tag">BFS</span>
+              <span class="exp-tag">Queue</span>
+              <span class="exp-tag">Traversal</span>
+              <span class="exp-tag">Data Structures</span>
+              <span class="exp-tag">Level Order</span>
+              <span class="exp-tag">Visited Array</span>
+              <span class="exp-tag">Adjacency Matrix</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== DESCRIPTION ========== -->
+        <div class="exp-section-content" id="section-description">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📋</div>
+            <div>
+              <div class="exp-panel-title">Description</div>
+              <div class="exp-panel-subtitle">Theory &amp; background</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">
+              <strong>Breadth First Search (BFS)</strong> is a fundamental graph traversal algorithm that explores all vertices of a graph level by level — visiting all neighbours of a node before proceeding to their neighbours. It was formally described by Konrad Zuse in 1945 and later re-developed by Edward F. Moore in 1959 for finding shortest paths in mazes.
+            </p>
+            <p class="exp-body-text">
+              BFS uses a <strong>queue (FIFO)</strong> data structure to keep track of which vertex to explore next. When a vertex is visited, all its unvisited adjacent vertices are enqueued. This ensures the algorithm processes vertices in the exact order they were discovered — guaranteeing level-by-level exploration.
+            </p>
+            <div class="exp-highlight-box">
+              <strong>Key Insight:</strong> BFS is equivalent to exploring a graph as concentric rings radiating outward from the source. Level 0 is the source; Level 1 is its direct neighbours; Level 2 is their unvisited neighbours; and so on. This makes BFS ideal for finding <strong>shortest paths in unweighted graphs</strong>.
+            </div>
+            <hr class="exp-divider" />
+            <p class="exp-body-text"><strong>Program in C language:</strong></p>
+            <div class="code-block-wrapper">
+              <div class="code-block-header">
+                <span>bfs.c</span>
+                <span class="code-lang-badge">C</span>
+              </div>
+              <div class="code-block-body"><span class="code-kw">#include</span>&lt;stdio.h&gt;
 
 <span class="code-kw">int</span> queue[<span class="code-num">20</span>], front = <span class="code-num">-1</span>, rear = <span class="code-num">-1</span>;
 <span class="code-kw">int</span> visited[<span class="code-num">20</span>];
 
-<span class="code-kw">void</span> <span class="code-fn">enqueue</span>(<span class="code-kw">int</span> vertex)
-{
+<span class="code-kw">void</span> <span class="code-fn">enqueue</span>(<span class="code-kw">int</span> vertex) {
     <span class="code-kw">if</span>(rear == <span class="code-num">19</span>) <span class="code-kw">return</span>;
     <span class="code-kw">if</span>(front == <span class="code-num">-1</span>) front = <span class="code-num">0</span>;
     queue[++rear] = vertex;
 }
 
-<span class="code-kw">int</span> <span class="code-fn">dequeue</span>()
-{
-    <span class="code-kw">if</span>(front == <span class="code-num">-1</span> || front &gt; rear)
-        <span class="code-kw">return</span> <span class="code-num">-1</span>;
+<span class="code-kw">int</span> <span class="code-fn">dequeue</span>() {
+    <span class="code-kw">if</span>(front == <span class="code-num">-1</span> || front &gt; rear) <span class="code-kw">return</span> <span class="code-num">-1</span>;
     <span class="code-kw">return</span> queue[front++];
 }
 
-<span class="code-kw">void</span> <span class="code-fn">BFS</span>(<span class="code-kw">int</span> G[<span class="code-num">20</span>][<span class="code-num">20</span>], <span class="code-kw">int</span> n, <span class="code-kw">int</span> start)
-{
+<span class="code-kw">void</span> <span class="code-fn">BFS</span>(<span class="code-kw">int</span> G[<span class="code-num">20</span>][<span class="code-num">20</span>], <span class="code-kw">int</span> n, <span class="code-kw">int</span> start) {
     <span class="code-kw">int</span> i, vertex;
     <span class="code-kw">for</span>(i=<span class="code-num">0</span>; i&lt;n; i++) visited[i] = <span class="code-num">0</span>;
-
     <span class="code-fn">enqueue</span>(start);
     visited[start] = <span class="code-num">1</span>;
-
-    <span class="code-kw">while</span>(front &lt;= rear)
-    {
+    <span class="code-kw">while</span>(front &lt;= rear) {
         vertex = <span class="code-fn">dequeue</span>();
         <span class="code-fn">printf</span>(<span class="code-num">"%d "</span>, vertex);
-
-        <span class="code-kw">for</span>(i=<span class="code-num">0</span>; i&lt;n; i++)
-        {
-            <span class="code-kw">if</span>(G[vertex][i]==<span class="code-num">1</span> &amp;&amp; !visited[i])
-            {
+        <span class="code-kw">for</span>(i=<span class="code-num">0</span>; i&lt;n; i++) {
+            <span class="code-kw">if</span>(G[vertex][i]==<span class="code-num">1</span> &amp;&amp; !visited[i]) {
                 <span class="code-fn">enqueue</span>(i);
                 visited[i] = <span class="code-num">1</span>;
             }
@@ -650,220 +700,270 @@
     }
 }
 
-<span class="code-kw">int</span> <span class="code-fn">main</span>()
-{
+<span class="code-kw">int</span> <span class="code-fn">main</span>() {
     <span class="code-kw">int</span> G[<span class="code-num">20</span>][<span class="code-num">20</span>], n, i, j;
-    <span class="code-fn">printf</span>(<span class="code-num">"Enter number of vertices: "</span>);
     <span class="code-fn">scanf</span>(<span class="code-num">"%d"</span>, &amp;n);
-    <span class="code-fn">printf</span>(<span class="code-num">"Enter adjacency matrix:\n"</span>);
     <span class="code-kw">for</span>(i=<span class="code-num">0</span>; i&lt;n; i++)
         <span class="code-kw">for</span>(j=<span class="code-num">0</span>; j&lt;n; j++)
             <span class="code-fn">scanf</span>(<span class="code-num">"%d"</span>, &amp;G[i][j]);
-    <span class="code-fn">printf</span>(<span class="code-num">"BFS Traversal: "</span>);
     <span class="code-fn">BFS</span>(G, n, <span class="code-num">0</span>);
     <span class="code-kw">return</span> <span class="code-num">0</span>;
-}</pre></div>
-          </div>
-          <hr class="exp-divider" />
-          <p class="exp-body-text"><strong>Complexity Analysis:</strong></p>
-          <div class="exp-materials-grid">
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Time: O(V + E)</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Space: O(V) — Queue + Visited</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Vertices visited: exactly once</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Edges scanned: each edge twice</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Finds shortest path in unweighted graphs</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Works on both directed &amp; undirected graphs</div>
-          </div>
-          <hr class="exp-divider" />
-          <p class="exp-body-text"><strong>BFS vs DFS Comparison:</strong></p>
-          <table class="exp-result-table">
-            <thead><tr><th>Feature</th><th>BFS</th><th>DFS</th></tr></thead>
-            <tbody>
-              <tr><td>Data Structure</td><td>Queue (FIFO)</td><td>Stack / Recursion</td></tr>
-              <tr><td>Traversal Order</td><td>Level by level</td><td>Depth first (one branch)</td></tr>
-              <tr><td>Shortest Path</td><td>✅ Yes (unweighted)</td><td>❌ Not guaranteed</td></tr>
-              <tr><td>Memory Usage</td><td>Higher (stores level)</td><td>Lower (stack depth)</td></tr>
-              <tr><td>Time Complexity</td><td>O(V + E)</td><td>O(V + E)</td></tr>
-              <tr><td>Space Complexity</td><td>O(V)</td><td>O(V)</td></tr>
-              <tr><td>Applications</td><td>Shortest path, networks</td><td>Topological sort, cycles</td></tr>
-            </tbody>
-          </table>
-          <hr class="exp-divider" />
-          <p class="exp-body-text"><strong>Real-World Applications of BFS:</strong></p>
-          <div class="exp-materials-grid">
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>GPS Navigation &amp; Maps</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Social Network Friend Suggestions</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Web Crawler (Indexing)</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Network Broadcasting</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Peer-to-Peer Networks</div>
-            <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Garbage Collection (JVM)</div>
+}</div>
+            </div>
+            <hr class="exp-divider" />
+            <p class="exp-body-text"><strong>Complexity Analysis:</strong></p>
+            <div class="exp-materials-grid">
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Time: O(V + E)</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Space: O(V) — Queue + Visited</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Vertices visited exactly once</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Each edge scanned twice</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Finds shortest path (unweighted)</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Works on directed &amp; undirected</div>
+            </div>
+            <hr class="exp-divider" />
+            <p class="exp-body-text"><strong>BFS vs DFS Comparison:</strong></p>
+            <table class="exp-result-table">
+              <thead>
+                <tr><th>Feature</th><th>BFS</th><th>DFS</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Data Structure</td><td>Queue (FIFO)</td><td>Stack / Recursion</td></tr>
+                <tr><td>Traversal Order</td><td>Level by level</td><td>Depth first (one branch)</td></tr>
+                <tr><td>Shortest Path</td><td>✅ Yes (unweighted)</td><td>❌ Not guaranteed</td></tr>
+                <tr><td>Memory Usage</td><td>Higher (stores level)</td><td>Lower (stack depth)</td></tr>
+                <tr><td>Time Complexity</td><td>O(V + E)</td><td>O(V + E)</td></tr>
+                <tr><td>Space Complexity</td><td>O(V)</td><td>O(V)</td></tr>
+                <tr><td>Applications</td><td>Shortest path, networks</td><td>Topological sort, cycles</td></tr>
+              </tbody>
+            </table>
+            <hr class="exp-divider" />
+            <p class="exp-body-text"><strong>Real-World Applications of BFS:</strong></p>
+            <div class="exp-materials-grid">
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>GPS Navigation &amp; Maps</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Social Network Suggestions</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Web Crawler (Indexing)</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Network Broadcasting</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Peer-to-Peer Networks</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Garbage Collection (JVM)</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- ALGORITHM -->
-      <div class="exp-section-content" id="section-algorithm">
-        <div class="exp-panel-header">
-          <div class="exp-panel-icon">⚙️</div>
-          <div><div class="exp-panel-title">Algorithm</div><div class="exp-panel-subtitle">Step-by-step BFS procedure</div></div>
-        </div>
-        <div class="exp-panel-body">
-          <p class="exp-body-text">The BFS algorithm proceeds systematically, expanding the frontier level by level. Each step is precisely defined to ensure all reachable vertices are visited exactly once.</p>
-          <div class="algo-flow">
-            <div class="algo-step-card">
-              <div class="algo-step-connector"><div class="algo-step-num">1</div><div class="algo-step-line"></div></div>
-              <div class="algo-step-content">
-                <div class="algo-step-title">Initialise <span class="algo-step-badge">Setup</span></div>
-                <div class="algo-step-desc">Create a visited array of size V, initialised to 0. Create an empty queue. Choose the source vertex <code>s</code>.</div>
-              </div>
-            </div>
-            <div class="algo-step-card">
-              <div class="algo-step-connector"><div class="algo-step-num">2</div><div class="algo-step-line"></div></div>
-              <div class="algo-step-content">
-                <div class="algo-step-title">Mark &amp; Enqueue Source <span class="algo-step-badge">Start</span></div>
-                <div class="algo-step-desc">Mark <code>visited[s] = 1</code>. Enqueue vertex <code>s</code> into the queue. Set front = rear = 0.</div>
-              </div>
-            </div>
-            <div class="algo-step-card">
-              <div class="algo-step-connector"><div class="algo-step-num">3</div><div class="algo-step-line"></div></div>
-              <div class="algo-step-content">
-                <div class="algo-step-title">Check Queue <span class="algo-step-badge">Loop</span></div>
-                <div class="algo-step-desc">While the queue is not empty (front ≤ rear), continue the traversal. If queue is empty, BFS is complete.</div>
-              </div>
-            </div>
-            <div class="algo-step-card">
-              <div class="algo-step-connector"><div class="algo-step-num">4</div><div class="algo-step-line"></div></div>
-              <div class="algo-step-content">
-                <div class="algo-step-title">Dequeue Front Vertex <span class="algo-step-badge">Process</span></div>
-                <div class="algo-step-desc">Remove the front vertex from the queue (increment front). Process it — print or record the vertex in the traversal order.</div>
-              </div>
-            </div>
-            <div class="algo-step-card">
-              <div class="algo-step-connector"><div class="algo-step-num">5</div><div class="algo-step-line"></div></div>
-              <div class="algo-step-content">
-                <div class="algo-step-title">Scan All Adjacent Vertices <span class="algo-step-badge">Explore</span></div>
-                <div class="algo-step-desc">For each vertex <code>i</code> from 0 to n-1, check if <code>G[vertex][i] == 1</code> (there is an edge) and <code>visited[i] == 0</code>.</div>
-              </div>
-            </div>
-            <div class="algo-step-card">
-              <div class="algo-step-connector"><div class="algo-step-num">6</div><div class="algo-step-line"></div></div>
-              <div class="algo-step-content">
-                <div class="algo-step-title">Enqueue Unvisited Neighbours <span class="algo-step-badge">Enqueue</span></div>
-                <div class="algo-step-desc">For each unvisited adjacent vertex <code>i</code>, mark <code>visited[i] = 1</code> and enqueue it. This prevents duplicates and ensures level-order processing.</div>
-              </div>
-            </div>
-            <div class="algo-step-card">
-              <div class="algo-step-connector"><div class="algo-step-num">7</div><div class="algo-step-line"></div></div>
-              <div class="algo-step-content">
-                <div class="algo-step-title">Repeat Until Queue Empty <span class="algo-step-badge">Termination</span></div>
-                <div class="algo-step-desc">Go back to Step 3. When the queue becomes empty, all reachable vertices have been visited. The BFS traversal is complete.</div>
-              </div>
+        <!-- ========== ALGORITHM ========== -->
+        <div class="exp-section-content" id="section-algorithm">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">⚙️</div>
+            <div>
+              <div class="exp-panel-title">Algorithm</div>
+              <div class="exp-panel-subtitle">Step-by-step BFS procedure</div>
             </div>
           </div>
-          <div class="exp-highlight-box">
-            <strong>Why mark visited BEFORE enqueuing (not after dequeuing)?</strong><br/>
-            If we mark visited only when dequeuing, the same vertex might be enqueued multiple times by different neighbours before it's processed — causing redundant work and potentially incorrect results. Marking it immediately upon enqueueing prevents this.
-          </div>
-        </div>
-      </div>
-
-      <!-- PROCEDURE -->
-      <div class="exp-section-content" id="section-procedure">
-        <div class="exp-panel-header">
-          <div class="exp-panel-icon">📝</div>
-          <div><div class="exp-panel-title">Procedure</div><div class="exp-panel-subtitle">Step-by-step instructions</div></div>
-        </div>
-        <div class="exp-panel-body">
-          <p class="exp-body-text">Follow these steps to successfully compile, execute, and analyse the BFS program in C.</p>
-          <div class="proc-timeline">
-            <div class="proc-card"><div class="proc-step-icon">🛠️</div><div class="proc-step-body"><div class="proc-step-title">Step 1 — Set Up Environment</div><div class="proc-step-text">Open a terminal and ensure GCC is installed (<code>gcc --version</code>). Create a new file <code>bfs.c</code> using a text editor or IDE. Copy the provided BFS program into the file.</div></div></div>
-            <div class="proc-card"><div class="proc-step-icon">⚙️</div><div class="proc-step-body"><div class="proc-step-title">Step 2 — Compile the Program</div><div class="proc-step-text">Run: <code>gcc bfs.c -o bfs</code>. Resolve any compilation errors (check for missing semicolons, undeclared variables). A successful compile produces the executable <code>bfs</code>.</div></div></div>
-            <div class="proc-card"><div class="proc-step-icon">▶️</div><div class="proc-step-body"><div class="proc-step-title">Step 3 — Execute the Program</div><div class="proc-step-text">Run: <code>./bfs</code> (Linux/Mac) or <code>bfs.exe</code> (Windows). The program will prompt for the number of vertices and the adjacency matrix.</div></div></div>
-            <div class="proc-card"><div class="proc-step-icon">📥</div><div class="proc-step-body"><div class="proc-step-title">Step 4 — Provide Input</div><div class="proc-step-text">Enter the number of vertices <code>n</code> (e.g., 5). Then enter the n×n adjacency matrix row by row. Use 1 if an edge exists between vertices i and j, else 0. The diagonal should be 0 (no self-loops).</div></div></div>
-            <div class="proc-card"><div class="proc-step-icon">👁️</div><div class="proc-step-body"><div class="proc-step-title">Step 5 — Observe the Simulation</div><div class="proc-step-text">In the Simulation tab, use <strong>Generate Sample Graph</strong> or add nodes/edges manually. Press <strong>Start BFS</strong> and observe the queue grow and shrink as each vertex is processed level by level.</div></div></div>
-            <div class="proc-card"><div class="proc-step-icon">🔬</div><div class="proc-step-body"><div class="proc-step-title">Step 6 — Analyse &amp; Record</div><div class="proc-step-text">Note the BFS traversal order, the maximum queue size, the number of queue operations, and which vertices were at each level. Compare with DFS output if available.</div></div></div>
-            <div class="proc-card"><div class="proc-step-icon">📊</div><div class="proc-step-body"><div class="proc-step-title">Step 7 — View Results</div><div class="proc-step-text">Navigate to the <strong>Result</strong> tab after the simulation completes to see the full traversal order, statistics, and complexity analysis auto-populated from your simulation run.</div></div></div>
-          </div>
-          <div class="exp-highlight-box">
-            <strong>Tip:</strong> Use the <em>Step Forward</em> button in the simulation for granular manual control. The pseudocode panel on the left highlights the exact line being executed, and the queue panel on the right shows live queue state — making it easy to correlate each operation with the algorithm.
-          </div>
-        </div>
-      </div>
-
-      <!-- SIMULATION -->
-      <div class="exp-section-content" id="section-simulation">
-        <div class="exp-panel-header">
-          <div class="exp-panel-icon">💻</div>
-          <div><div class="exp-panel-title">Simulation</div><div class="exp-panel-subtitle">Interactive BFS Graph Traversal Visualiser — BFSTrace</div></div>
-        </div>
-        <div class="exp-panel-body" style="padding:20px;">
-          <div class="bfs-sim-outer" id="bfsSimOuter">
-
-            <!-- Toolbar: BFS controls -->
-            <div class="bfs-toolbar">
-              <span class="bfs-toolbar-title">BFSTrace</span>
-              <button class="bfs-btn bfs-btn-primary" id="bfsBtnStart">▶ Start BFS</button>
-              <button class="bfs-btn bfs-btn-ghost" id="bfsBtnPause" disabled>⏸ Pause</button>
-              <button class="bfs-btn bfs-btn-ghost" id="bfsBtnResume" disabled>▶ Resume</button>
-              <button class="bfs-btn bfs-btn-ghost" id="bfsBtnReset">↺ Reset Traversal</button>
-              <button class="bfs-btn bfs-btn-accent" id="bfsBtnStep" disabled>Step ▶</button>
-              <div class="bfs-speed-wrap">
-                <span class="bfs-speed-label">Speed</span>
-                <input type="range" class="bfs-speed-slider" id="bfsSpeedSlider" min="1" max="5" value="3" />
-                <span class="bfs-speed-val" id="bfsSpeedVal">Med</span>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">The BFS algorithm proceeds systematically, expanding the frontier level by level. Each step is precisely defined to ensure all reachable vertices are visited exactly once.</p>
+            <div class="algo-flow">
+              <div class="algo-step-card">
+                <div class="algo-step-connector"><div class="algo-step-num">1</div><div class="algo-step-line"></div></div>
+                <div class="algo-step-content">
+                  <div class="algo-step-title">Initialise <span class="algo-step-badge">Setup</span></div>
+                  <div class="algo-step-desc">Create a visited array of size V, initialised to 0. Create an empty queue. Choose the source vertex <code>s</code>.</div>
+                </div>
+              </div>
+              <div class="algo-step-card">
+                <div class="algo-step-connector"><div class="algo-step-num">2</div><div class="algo-step-line"></div></div>
+                <div class="algo-step-content">
+                  <div class="algo-step-title">Mark &amp; Enqueue Source <span class="algo-step-badge">Start</span></div>
+                  <div class="algo-step-desc">Mark <code>visited[s] = 1</code>. Enqueue vertex <code>s</code> into the queue. Set front = rear = 0.</div>
+                </div>
+              </div>
+              <div class="algo-step-card">
+                <div class="algo-step-connector"><div class="algo-step-num">3</div><div class="algo-step-line"></div></div>
+                <div class="algo-step-content">
+                  <div class="algo-step-title">Check Queue <span class="algo-step-badge">Loop</span></div>
+                  <div class="algo-step-desc">While the queue is not empty (front ≤ rear), continue the traversal. If queue is empty, BFS is complete.</div>
+                </div>
+              </div>
+              <div class="algo-step-card">
+                <div class="algo-step-connector"><div class="algo-step-num">4</div><div class="algo-step-line"></div></div>
+                <div class="algo-step-content">
+                  <div class="algo-step-title">Dequeue Front Vertex <span class="algo-step-badge">Process</span></div>
+                  <div class="algo-step-desc">Remove the front vertex from the queue (increment front). Process it — print or record the vertex in the traversal order.</div>
+                </div>
+              </div>
+              <div class="algo-step-card">
+                <div class="algo-step-connector"><div class="algo-step-num">5</div><div class="algo-step-line"></div></div>
+                <div class="algo-step-content">
+                  <div class="algo-step-title">Scan All Adjacent Vertices <span class="algo-step-badge">Explore</span></div>
+                  <div class="algo-step-desc">For each vertex <code>i</code> from 0 to n-1, check if <code>G[vertex][i] == 1</code> (edge exists) and <code>visited[i] == 0</code>.</div>
+                </div>
+              </div>
+              <div class="algo-step-card">
+                <div class="algo-step-connector"><div class="algo-step-num">6</div><div class="algo-step-line"></div></div>
+                <div class="algo-step-content">
+                  <div class="algo-step-title">Enqueue Unvisited Neighbours <span class="algo-step-badge">Enqueue</span></div>
+                  <div class="algo-step-desc">For each unvisited adjacent vertex <code>i</code>, mark <code>visited[i] = 1</code> and enqueue it. This prevents duplicates and ensures level-order processing.</div>
+                </div>
+              </div>
+              <div class="algo-step-card">
+                <div class="algo-step-connector"><div class="algo-step-num">7</div><div class="algo-step-line"></div></div>
+                <div class="algo-step-content">
+                  <div class="algo-step-title">Repeat Until Queue Empty <span class="algo-step-badge">Termination</span></div>
+                  <div class="algo-step-desc">Go back to Step 3. When the queue becomes empty, all reachable vertices have been visited. The BFS traversal is complete.</div>
+                </div>
               </div>
             </div>
+            <div class="exp-highlight-box">
+              <strong>Why mark visited BEFORE enqueuing (not after dequeuing)?</strong><br/>
+              If we mark visited only when dequeuing, the same vertex might be enqueued multiple times by different neighbours before it's processed — causing redundant work and potentially incorrect results. Marking it immediately upon enqueueing prevents this.
+            </div>
+          </div>
+        </div>
 
-            <!-- Graph editing toolbar -->
-            <div class="bfs-graph-toolbar">
-              <span class="bfs-graph-label">Graph</span>
-              <button class="bfs-btn bfs-btn-ghost" id="bfsBtnSample">⚡ Sample Graph</button>
-              <div class="bfs-toolbar-sep"></div>
-              <span class="bfs-graph-label">Add Node</span>
-              <input type="number" class="bfs-node-input" id="bfsNodeInput" min="0" max="19" placeholder="0" style="width:48px;" />
-              <button class="bfs-btn bfs-btn-green" id="bfsBtnAddNode">+ Node</button>
-              <div class="bfs-toolbar-sep"></div>
-              <span class="bfs-graph-label">Add Edge</span>
-              <div class="bfs-edge-inputs">
-                <input type="number" class="bfs-node-input" id="bfsEdgeFrom" min="0" max="19" placeholder="0" />
-                <span class="bfs-edge-arrow">—</span>
-                <input type="number" class="bfs-node-input" id="bfsEdgeTo" min="0" max="19" placeholder="1" />
+        <!-- ========== PROCEDURE ========== -->
+        <div class="exp-section-content" id="section-procedure">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📝</div>
+            <div>
+              <div class="exp-panel-title">Procedure</div>
+              <div class="exp-panel-subtitle">Step-by-step instructions</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">Follow these steps to successfully compile, execute, and analyse the BFS program in C.</p>
+            <div class="proc-timeline">
+              <div class="proc-card">
+                <div class="proc-step-icon">🛠️</div>
+                <div>
+                  <div class="proc-step-title">Step 1 — Set Up Environment</div>
+                  <div class="proc-step-text">Open a terminal and ensure GCC is installed (<code>gcc --version</code>). Create a new file <code>bfs.c</code> using a text editor or IDE. Copy the provided BFS program into the file.</div>
+                </div>
               </div>
-              <button class="bfs-btn bfs-btn-green" id="bfsBtnAddEdge">+ Edge</button>
-              <div class="bfs-toolbar-sep"></div>
-              <span class="bfs-graph-label">Start from</span>
-              <input type="number" class="bfs-node-input" id="bfsStartNode" min="0" max="19" placeholder="0" style="width:48px;" />
-              <button class="bfs-btn bfs-btn-danger" id="bfsBtnClearGraph">Clear Graph</button>
+              <div class="proc-card">
+                <div class="proc-step-icon">⚙️</div>
+                <div>
+                  <div class="proc-step-title">Step 2 — Compile the Program</div>
+                  <div class="proc-step-text">Run: <code>gcc bfs.c -o bfs</code>. Resolve any compilation errors. A successful compile produces the executable <code>bfs</code>.</div>
+                </div>
+              </div>
+              <div class="proc-card">
+                <div class="proc-step-icon">▶️</div>
+                <div>
+                  <div class="proc-step-title">Step 3 — Execute the Program</div>
+                  <div class="proc-step-text">Run <code>./bfs</code> (Linux/Mac) or <code>bfs.exe</code> (Windows). The program will prompt for the number of vertices and the adjacency matrix.</div>
+                </div>
+              </div>
+              <div class="proc-card">
+                <div class="proc-step-icon">📥</div>
+                <div>
+                  <div class="proc-step-title">Step 4 — Provide Input</div>
+                  <div class="proc-step-text">Enter the number of vertices <code>n</code>. Then enter the n×n adjacency matrix row by row. Use 1 if an edge exists between i and j, else 0. Diagonal should be 0 (no self-loops).</div>
+                </div>
+              </div>
+              <div class="proc-card">
+                <div class="proc-step-icon">👁️</div>
+                <div>
+                  <div class="proc-step-title">Step 5 — Observe the Simulation</div>
+                  <div class="proc-step-text">In the Simulation tab, click <strong>Sample Graph</strong> or build a graph manually. Press <strong>Start BFS</strong> and watch the queue operations level by level.</div>
+                </div>
+              </div>
+              <div class="proc-card">
+                <div class="proc-step-icon">🔬</div>
+                <div>
+                  <div class="proc-step-title">Step 6 — Analyse &amp; Record</div>
+                  <div class="proc-step-text">Note the BFS traversal order, the maximum queue size, the number of queue operations, and which vertices appear at each level.</div>
+                </div>
+              </div>
+              <div class="proc-card">
+                <div class="proc-step-icon">📊</div>
+                <div>
+                  <div class="proc-step-title">Step 7 — View Results</div>
+                  <div class="proc-step-text">Navigate to the <strong>Result</strong> tab after the simulation completes to see the full traversal order, statistics, and complexity analysis auto-populated from your run.</div>
+                </div>
+              </div>
             </div>
-
-            <!-- Error -->
-            <div class="bfs-error" id="bfsError"></div>
-
-            <!-- Stats -->
-            <div class="bfs-stats-row">
-              <div class="bfs-pill">Visited <span class="pv" id="bfsPillVisited">0</span></div>
-              <div class="bfs-pill">Nodes <span class="pv" id="bfsPillNodes">0</span></div>
-              <div class="bfs-pill">Edges <span class="pv" id="bfsPillEdges">0</span></div>
-              <div class="bfs-pill">Queue Ops <span class="pv" id="bfsPillOps">0</span></div>
-              <div class="bfs-pill">Level <span class="pv" id="bfsPillLevel">—</span></div>
-              <div class="bfs-status" id="bfsStatus">Build a graph and press Start BFS</div>
+            <div class="exp-highlight-box">
+              <strong>Tip:</strong> Use the <em>Step ▶</em> button in the simulation for granular manual control. The pseudocode panel on the left highlights the exact line being executed, and the queue panel on the right shows live queue state — making it easy to correlate each operation with the algorithm.
             </div>
+          </div>
+        </div>
 
-            <!-- Progress -->
-            <div class="bfs-progress-row">
-              <div class="bfs-progress-meta"><span id="bfsStepLabel">Step 0</span><span id="bfsTotalLabel">of 0</span></div>
-              <div class="bfs-progress-track"><div class="bfs-progress-fill" id="bfsProgressFill"></div></div>
+        <!-- ========== SIMULATION ========== -->
+        <div class="exp-section-content" id="section-simulation">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">💻</div>
+            <div>
+              <div class="exp-panel-title">Simulation</div>
+              <div class="exp-panel-subtitle">Interactive BFS Graph Traversal Visualiser</div>
             </div>
+          </div>
+          <div class="exp-panel-body" style="padding:20px;">
 
-            <!-- Canvas zone -->
-            <div class="bfs-canvas-zone">
+            <!-- ===== BFS WIDGET ===== -->
+            <div class="sim-wrap" id="bfsSimOuter">
 
-              <!-- Left: pseudocode + stats -->
-              <div class="bfs-left-panel">
-                <div class="bfs-panel-sec">
-                  <div class="bfs-panel-head">Pseudocode</div>
-                  <pre class="bfs-code-block" id="bfsCodeBlock">
-<span class="bfs-code-line" data-line="0"><span class="code-kw">BFS</span>(G, n, start):</span>
+              <!-- Main controls -->
+              <div class="bfs-toolbar">
+                <span class="bfs-toolbar-title">BFSTrace</span>
+                <button class="bfs-btn bfs-btn-primary" id="bfsBtnStart">▶ Start BFS</button>
+                <button class="bfs-btn bfs-btn-ghost" id="bfsBtnPause" disabled>⏸ Pause</button>
+                <button class="bfs-btn bfs-btn-ghost" id="bfsBtnResume" disabled>▶ Resume</button>
+                <button class="bfs-btn bfs-btn-ghost" id="bfsBtnReset">↺ Reset</button>
+                <button class="bfs-btn bfs-btn-accent" id="bfsBtnStep" disabled>Step ▶</button>
+                <div class="bfs-speed-wrap">
+                  <span class="bfs-speed-label">Speed:</span>
+                  <input type="range" class="bfs-speed-slider" id="bfsSpeedSlider" min="1" max="5" value="3" />
+                  <span class="bfs-speed-val" id="bfsSpeedVal">Med</span>
+                </div>
+              </div>
+
+              <!-- Graph editing toolbar -->
+              <div class="bfs-graph-toolbar">
+                <span class="bfs-graph-label">Graph</span>
+                <button class="bfs-btn bfs-btn-ghost" id="bfsBtnSample">⚡ Sample Graph</button>
+                <div class="bfs-toolbar-sep"></div>
+                <span class="bfs-graph-label">Add Node</span>
+                <input type="number" class="bfs-node-input" id="bfsNodeInput" min="0" max="19" placeholder="0" style="width:48px;" />
+                <button class="bfs-btn bfs-btn-green" id="bfsBtnAddNode">+ Node</button>
+                <div class="bfs-toolbar-sep"></div>
+                <span class="bfs-graph-label">Add Edge</span>
+                <div class="bfs-edge-inputs">
+                  <input type="number" class="bfs-node-input" id="bfsEdgeFrom" min="0" max="19" placeholder="0" />
+                  <span class="bfs-edge-arrow">—</span>
+                  <input type="number" class="bfs-node-input" id="bfsEdgeTo" min="0" max="19" placeholder="1" />
+                </div>
+                <button class="bfs-btn bfs-btn-green" id="bfsBtnAddEdge">+ Edge</button>
+                <div class="bfs-toolbar-sep"></div>
+                <span class="bfs-graph-label">Start</span>
+                <input type="number" class="bfs-node-input" id="bfsStartNode" min="0" max="19" placeholder="0" style="width:48px;" />
+                <button class="bfs-btn bfs-btn-danger" id="bfsBtnClearGraph">Clear Graph</button>
+              </div>
+
+              <!-- Error -->
+              <div class="bfs-error" id="bfsError"></div>
+
+              <!-- Stats row -->
+              <div class="bfs-stats-row">
+                <div class="bfs-pill">Visited <span class="pv" id="bfsPillVisited">0</span></div>
+                <div class="bfs-pill">Nodes <span class="pv" id="bfsPillNodes">0</span></div>
+                <div class="bfs-pill">Edges <span class="pv" id="bfsPillEdges">0</span></div>
+                <div class="bfs-pill">Queue Ops <span class="pv" id="bfsPillOps">0</span></div>
+                <div class="bfs-pill">Level <span class="pv" id="bfsPillLevel">—</span></div>
+                <div class="bfs-status" id="bfsStatus">Build a graph and press Start BFS</div>
+              </div>
+
+              <!-- Progress -->
+              <div class="bfs-progress-row">
+                <div class="bfs-progress-meta"><span id="bfsStepLabel">Step 0</span><span id="bfsTotalLabel">of 0</span></div>
+                <div class="bfs-progress-track"><div class="bfs-progress-fill" id="bfsProgressFill"></div></div>
+              </div>
+
+              <!-- Canvas zone -->
+              <div class="bfs-canvas-zone">
+
+                <!-- Left: pseudocode + stats -->
+                <div class="bfs-left-panel">
+                  <div class="bfs-panel-sec">
+                    <div class="bfs-panel-head">Pseudocode</div>
+                    <pre class="bfs-code-block" id="bfsCodeBlock"><span class="bfs-code-line" data-line="0"><span class="code-kw">BFS</span>(G, n, start):</span>
 <span class="bfs-code-line" data-line="1">  init visited[]=0</span>
 <span class="bfs-code-line" data-line="2">  enqueue(start)</span>
 <span class="bfs-code-line" data-line="3">  visited[start]=1</span>
@@ -873,877 +973,789 @@
 <span class="bfs-code-line" data-line="7">    <span class="code-kw">for</span> i in adj(v):</span>
 <span class="bfs-code-line" data-line="8">      <span class="code-kw">if</span> !visited[i]:</span>
 <span class="bfs-code-line" data-line="9">        enqueue(i)</span>
-<span class="bfs-code-line" data-line="10">        visited[i]=1</span>
-                  </pre>
-                </div>
-                <div class="bfs-panel-sec">
-                  <div class="bfs-panel-head">Analysis</div>
-                  <div class="bfs-stats-mini">
-                    <div class="bfs-stat-mini-item"><div class="bfs-stat-mini-val" id="bfsSVisited">0</div><div class="bfs-stat-mini-lbl">Visited</div></div>
-                    <div class="bfs-stat-mini-item"><div class="bfs-stat-mini-val" id="bfsSLevel">0</div><div class="bfs-stat-mini-lbl">Current Level</div></div>
-                    <div class="bfs-stat-mini-item"><div class="bfs-stat-mini-val" id="bfsSQOps">0</div><div class="bfs-stat-mini-lbl">Queue Ops</div></div>
-                    <div class="bfs-stat-mini-item"><div class="bfs-stat-mini-val" id="bfsSMaxQ">0</div><div class="bfs-stat-mini-lbl">Max Queue Size</div></div>
+<span class="bfs-code-line" data-line="10">        visited[i]=1</span></pre>
                   </div>
-                </div>
-              </div>
-
-              <!-- Center: graph canvas -->
-              <div class="bfs-graph-zone" id="bfsGraphZone">
-                <canvas class="bfs-graph-canvas" id="bfsCanvas"></canvas>
-                <div class="bfs-empty-state" id="bfsEmptyState">
-                  <div class="bfs-empty-icon">🔵</div>
-                  <p>Click <strong>Sample Graph</strong> or add nodes manually.<br/>Then press <strong>Start BFS</strong> to begin traversal.</p>
-                </div>
-              </div>
-
-              <!-- Right: queue + traversal -->
-              <div class="bfs-right-panel">
-                <div class="bfs-panel-sec">
-                  <div class="bfs-panel-head">Current Node</div>
-                  <div class="bfs-cur-node empty" id="bfsCurNode">—</div>
-                  <div class="bfs-level-badge">Level: <span class="lv" id="bfsLevelDisp">—</span></div>
-                </div>
-                <div class="bfs-panel-sec">
-                  <div class="bfs-panel-head">Queue State</div>
-                  <div class="bfs-queue-wrap">
-                    <div class="bfs-queue-track" id="bfsQueueTrack">
-                      <span class="bfs-queue-empty">Empty</span>
+                  <div class="bfs-panel-sec">
+                    <div class="bfs-panel-head">Analysis</div>
+                    <div class="bfs-stats-mini">
+                      <div class="bfs-stat-mini-item"><div class="bfs-stat-mini-val" id="bfsSVisited">0</div><div class="bfs-stat-mini-lbl">Visited</div></div>
+                      <div class="bfs-stat-mini-item"><div class="bfs-stat-mini-val" id="bfsSLevel">0</div><div class="bfs-stat-mini-lbl">Current Level</div></div>
+                      <div class="bfs-stat-mini-item"><div class="bfs-stat-mini-val" id="bfsSQOps">0</div><div class="bfs-stat-mini-lbl">Queue Ops</div></div>
+                      <div class="bfs-stat-mini-item"><div class="bfs-stat-mini-val" id="bfsSMaxQ">0</div><div class="bfs-stat-mini-lbl">Max Queue Size</div></div>
                     </div>
                   </div>
-                  <div class="bfs-queue-ptrs">
-                    <span class="bfs-ptr-front" id="bfsFrontPtr">↑ front</span>
-                    <span class="bfs-ptr-rear" id="bfsRearPtr">rear ↑</span>
+                </div>
+
+                <!-- Center: graph canvas -->
+                <div class="bfs-graph-zone" id="bfsGraphZone">
+                  <canvas class="bfs-graph-canvas" id="bfsCanvas"></canvas>
+                  <div class="bfs-empty-state" id="bfsEmptyState">
+                    <div class="bfs-empty-icon">🔵</div>
+                    <p>Click <strong>Sample Graph</strong> or add nodes manually.<br/>Then press <strong>Start BFS</strong> to begin traversal.</p>
                   </div>
                 </div>
-                <div class="bfs-panel-sec">
-                  <div class="bfs-panel-head">Traversal Order</div>
-                  <div class="bfs-trav-list" id="bfsTravList"></div>
+
+                <!-- Right: queue + traversal -->
+                <div class="bfs-right-panel">
+                  <div class="bfs-panel-sec">
+                    <div class="bfs-panel-head">Current Node</div>
+                    <div class="bfs-cur-node empty" id="bfsCurNode">—</div>
+                    <div class="bfs-level-badge">Level: <span class="lv" id="bfsLevelDisp">—</span></div>
+                  </div>
+                  <div class="bfs-panel-sec">
+                    <div class="bfs-panel-head">Queue State</div>
+                    <div class="bfs-queue-wrap">
+                      <div class="bfs-queue-track" id="bfsQueueTrack">
+                        <span class="bfs-queue-empty">Empty</span>
+                      </div>
+                    </div>
+                    <div class="bfs-queue-ptrs">
+                      <span class="bfs-ptr-front" id="bfsFrontPtr">↑ front</span>
+                      <span class="bfs-ptr-rear"  id="bfsRearPtr">rear ↑</span>
+                    </div>
+                  </div>
+                  <div class="bfs-panel-sec">
+                    <div class="bfs-panel-head">Traversal Order</div>
+                    <div class="bfs-trav-list" id="bfsTravList"></div>
+                  </div>
+                  <div class="bfs-panel-sec">
+                    <div class="bfs-panel-head">Visited Nodes</div>
+                    <div class="bfs-visited-chips" id="bfsVisitedChips"></div>
+                  </div>
                 </div>
-                <div class="bfs-panel-sec">
-                  <div class="bfs-panel-head">Visited Nodes</div>
-                  <div class="bfs-visited-chips" id="bfsVisitedChips"></div>
-                </div>
+
+              </div><!-- /.bfs-canvas-zone -->
+
+              <!-- Legend -->
+              <div class="bfs-legend">
+                <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:var(--accent-btn);box-shadow:0 0 6px color-mix(in srgb,var(--accent-btn) 55%,transparent)"></span>Current (Active)</div>
+                <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:var(--accent-2,#0EC4E0)"></span>Enqueued</div>
+                <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:#1AC080"></span>Visited / Done</div>
+                <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:var(--scale-bg);border:1px solid var(--border-var)"></span>Unvisited</div>
+                <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:#FF9B6B;border-radius:2px;width:18px;height:4px;"></span>Traversed Edge</div>
               </div>
 
-            </div><!-- /.bfs-canvas-zone -->
+            </div><!-- /.sim-wrap -->
+          </div>
+        </div>
 
-            <!-- Legend -->
-            <div class="bfs-legend">
-              <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:var(--accent-btn);box-shadow:0 0 6px color-mix(in srgb,var(--accent-btn) 55%,transparent)"></span>Current (Active)</div>
-              <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:var(--accent-2)"></span>Enqueued</div>
-              <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:#1AC080"></span>Visited / Done</div>
-              <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:var(--scale-bg);border:1px solid var(--border-var)"></span>Unvisited</div>
-              <div class="bfs-leg-item"><span class="bfs-leg-dot" style="background:#FF9B6B;border-radius:2px;width:14px;height:4px;border-radius:2px;"></span>Traversed Edge</div>
+        <!-- ========== RESULT ========== -->
+        <div class="exp-section-content" id="section-result">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📊</div>
+            <div>
+              <div class="exp-panel-title">Result</div>
+              <div class="exp-panel-subtitle">Live observations &amp; analysis from your simulation</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+
+            <!-- Pending state -->
+            <div id="result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
+              <div style="font-size:2.8rem;margin-bottom:14px;">🧪</div>
+              <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No simulation data yet</p>
+              <p style="font-size:0.85rem;line-height:1.7;">Run the <strong>Simulation</strong> tab first. Once BFS completes, your full analysis and statistics will appear here automatically.</p>
             </div>
 
-          </div><!-- /.bfs-sim-outer -->
+            <!-- In-progress state -->
+            <div id="result-inprogress" style="display:none;text-align:center;padding:30px 20px;color:var(--text-soft);">
+              <div style="font-size:2.2rem;margin-bottom:12px;animation:sectionFadeIn 1.5s ease-in-out infinite;">🔵</div>
+              <p style="font-size:0.9rem;font-weight:600;color:var(--accent-btn,var(--teal));">BFS Simulation in progress…</p>
+              <p style="font-size:0.82rem;margin-top:6px;">Results will populate here once the traversal completes.</p>
+            </div>
+
+            <!-- Live results -->
+            <div id="result-live" style="display:none;">
+              <p class="exp-body-text" id="result-input-label"><strong>Observation Table</strong></p>
+              <table class="exp-result-table" id="result-call-table">
+                <thead><tr><th>Metric</th><th>Value</th><th>Notes</th></tr></thead>
+                <tbody id="result-call-tbody"></tbody>
+              </table>
+              <hr class="exp-divider" />
+              <p class="exp-body-text"><strong>BFS Traversal Sequence:</strong></p>
+              <div id="result-trav-seq" style="margin:12px 0;padding:14px 18px;background:var(--card-inner);border:1px solid var(--border-var);border-radius:var(--r-md);font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--accent-btn,var(--teal));font-weight:700;letter-spacing:0.08em;"></div>
+              <hr class="exp-divider" />
+              <p class="exp-body-text"><strong>Summary:</strong></p>
+              <div class="exp-result-stats">
+                <div class="exp-stat-card"><div class="exp-stat-value" id="res-visited">—</div><div class="exp-stat-label">Nodes Visited</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value" id="res-edges">—</div><div class="exp-stat-label">Edges Explored</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value" id="res-levels">—</div><div class="exp-stat-label">BFS Levels</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value" id="res-qops">—</div><div class="exp-stat-label">Queue Ops</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value">O(V+E)</div><div class="exp-stat-label">Time Complexity</div></div>
+                <div class="exp-stat-card"><div class="exp-stat-value">O(V)</div><div class="exp-stat-label">Space Complexity</div></div>
+              </div>
+              <div class="exp-conclusion-box">
+                <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
+                <p class="exp-conclusion-text" id="result-conclusion-text"></p>
+              </div>
+            </div>
+
+          </div>
         </div>
+
+      </div><!-- /.exp-panel -->
+      <div id="section-viva" class="exp-section-content"><div class="viva-list">
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">1</div>
+                <span>What is Breadth First Search (BFS)?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                BFS is a graph traversal algorithm that visits all neighbouring nodes first before moving to the next level of nodes.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">2</div>
+                <span>Which data structure is used in BFS?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                BFS uses a queue data structure to store and process nodes in FIFO order.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">3</div>
+                <span>What is the time complexity of BFS?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                The time complexity of BFS is O(V + E), where V is the number of vertices and E is the number of edges.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">4</div>
+                <span>Why is the visited array used in BFS?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                The visited array prevents revisiting the same node and avoids infinite loops in cyclic graphs.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">5</div>
+                <span>What is the difference between BFS and DFS?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                BFS explores nodes level by level using a queue, while DFS explores depth-wise using a stack or recursion.
+            </p>
+        </div>
+    </div>
+
+</div>
+        
       </div>
+    </main>
 
-      <!-- RESULT -->
-      <div class="exp-section-content" id="section-result">
-        <div class="exp-panel-header">
-          <div class="exp-panel-icon">📊</div>
-          <div><div class="exp-panel-title">Result</div><div class="exp-panel-subtitle">Live observations &amp; analysis from your simulation</div></div>
-        </div>
-        <div class="exp-panel-body">
-          <div id="result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
-            <div style="font-size:2.8rem;margin-bottom:14px;">🧪</div>
-            <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No simulation data yet</p>
-            <p style="font-size:0.85rem;line-height:1.7;">Run the <strong>Simulation</strong> tab first. Once BFS completes, your full analysis and statistics will appear here automatically.</p>
-          </div>
-          <div id="result-inprogress" style="display:none;text-align:center;padding:30px 20px;">
-            <div style="font-size:2rem;margin-bottom:12px;animation:sectionFadeIn 1.5s ease-in-out infinite;">🔵</div>
-            <p style="font-size:0.9rem;font-weight:600;color:var(--accent-btn);">BFS Simulation in progress…</p>
-            <p style="font-size:0.82rem;margin-top:6px;color:var(--text-soft);">Results will populate here once the traversal completes.</p>
-          </div>
-          <div id="result-live" style="display:none;">
-            <p class="exp-body-text" id="result-input-label"><strong>Observation Table</strong></p>
-            <table class="exp-result-table" id="result-call-table">
-              <thead><tr><th>Metric</th><th>Value</th><th>Notes</th></tr></thead>
-              <tbody id="result-call-tbody"></tbody>
-            </table>
-            <hr class="exp-divider" />
-            <p class="exp-body-text"><strong>BFS Traversal Sequence:</strong></p>
-            <div id="result-trav-seq" style="margin:12px 0;padding:14px 18px;background:var(--card-inner);border:1px solid var(--border-var);border-radius:var(--r-md);font-family:var(--font-mono);font-size:0.9rem;color:var(--accent-btn);font-weight:700;letter-spacing:0.08em;"></div>
-            <hr class="exp-divider" />
-            <p class="exp-body-text"><strong>Summary:</strong></p>
-            <div class="exp-result-stats">
-              <div class="exp-stat-card"><div class="exp-stat-value" id="res-visited">—</div><div class="exp-stat-label">Nodes Visited</div></div>
-              <div class="exp-stat-card"><div class="exp-stat-value" id="res-edges">—</div><div class="exp-stat-label">Edges Explored</div></div>
-              <div class="exp-stat-card"><div class="exp-stat-value" id="res-levels">—</div><div class="exp-stat-label">BFS Levels</div></div>
-              <div class="exp-stat-card"><div class="exp-stat-value" id="res-qops">—</div><div class="exp-stat-label">Queue Ops</div></div>
-              <div class="exp-stat-card"><div class="exp-stat-value">O(V+E)</div><div class="exp-stat-label">Time Complexity</div></div>
-              <div class="exp-stat-card"><div class="exp-stat-value">O(V)</div><div class="exp-stat-label">Space Complexity</div></div>
-            </div>
-            <div class="exp-conclusion-box">
-              <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
-              <p class="exp-conclusion-text" id="result-conclusion-text"></p>
-            </div>
-          </div>
-        </div>
-      </div>
+  </div><!-- /.exp-main-body -->
 
-    </div><!-- /.exp-panel -->
-  </main>
-</div><!-- /.exp-main-body -->
+  <div class="bfs-tooltip" id="bfsTooltip"></div>
+  <div class="bfs-toast"   id="bfsToast"></div>
 
-<div class="bfs-tooltip" id="bfsTooltip"></div>
-<div class="bfs-toast" id="bfsToast"></div>
+  <script>
+    document.querySelectorAll('.viva-question').forEach(question => {
+    question.addEventListener('click', () => {
 
-<script>
-/* ===================================================
-   THEME & NAV
-=================================================== */
-document.addEventListener('DOMContentLoaded', () => {
-  const toggle = document.getElementById('theme-toggle-chk');
-  const saved = localStorage.getItem('labTheme') || 'light';
-  document.documentElement.setAttribute('data-theme', saved);
-  if (toggle && saved === 'dark') toggle.checked = true;
-  toggle?.addEventListener('change', () => {
-    const t = toggle.checked ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', t);
-    localStorage.setItem('labTheme', t);
-  });
+        const item = question.parentElement;
 
-  const navBtns = document.querySelectorAll('.exp-nav-btn');
-  const sections = document.querySelectorAll('.exp-section-content');
-  const fill = document.getElementById('progress-fill');
-  const pct = document.getElementById('progress-pct');
-  const total = navBtns.length;
-  let visited = ['aim'];
+        // close others
+        document.querySelectorAll('.viva-item').forEach(v => {
+            if (v !== item) {
+                v.classList.remove('open');
+            }
+        });
 
-  function updateProgress() {
-    const p = Math.round((visited.length / total) * 100);
-    fill.style.width = p + '%'; pct.textContent = p + '%';
-  }
-  updateProgress();
-
-  navBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.dataset.section;
-      navBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      sections.forEach(s => s.classList.remove('visible'));
-      const sec = document.getElementById('section-' + target);
-      if (sec) { sec.style.animation='none'; sec.offsetHeight; sec.style.animation=''; sec.classList.add('visible'); }
-      if (!visited.includes(target)) visited.push(target);
-      updateProgress();
-      if (target === 'simulation') setTimeout(resizeCanvas, 100);
+        // toggle current
+        item.classList.toggle('open');
     });
-  });
 });
+    /* =====================================================
+       PAGE NAVIGATION & THEME — identical to Bubble Sort
+    ===================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
 
-/* ===================================================
-   BFS ENGINE
-=================================================== */
-const SPEED_MAP = [1400, 900, 520, 280, 120];
-const SPEED_LABELS = ['Slow','Slwr','Med','Fast','Blzg'];
+      // Theme toggle
+      const toggle = document.getElementById('portal-theme-checkbox');
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') toggle.checked = true;
+      }
+      toggle?.addEventListener('change', () => {
+        const theme = toggle.checked ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+      });
 
-// Graph data
-let graphNodes = {}; // id -> {id, x, y, label}
-let graphEdges = []; // [{from, to}]
-let nodeCounter = 0;
+      // Notifications panel
+      const notifBtn   = document.getElementById('notif-btn');
+      const notifPanel = document.getElementById('notif-panel');
+      notifBtn?.addEventListener('click', e => { e.stopPropagation(); notifPanel.classList.toggle('open'); });
+      document.getElementById('notif-clear')?.addEventListener('click', () => {
+        notifPanel.querySelector('.notif-list').innerHTML = '<p style="padding:14px 16px;font-size:0.8rem;color:var(--text-soft);">No notifications</p>';
+      });
+      document.addEventListener('click', e => {
+        if (!notifPanel.contains(e.target) && e.target !== notifBtn) notifPanel.classList.remove('open');
+      });
 
-// BFS state
-let bfsSteps = [], bfsCurrentStep = -1, bfsIsRunning = false, bfsIsPaused = false, bfsAnimTimer = null;
-let bfsVisited = [], bfsQueueState = [], bfsTravOrder = [], bfsQueueOps = 0, bfsMaxQSize = 0;
-let bfsLevelMap = {};
+      // Profile dropdown
+      const profileBtn   = document.querySelector('.profile-btn');
+      const dropdownMenu = document.querySelector('.dropdown-menu');
+      profileBtn?.addEventListener('click', e => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('open');
+        profileBtn.setAttribute('aria-expanded', dropdownMenu.classList.contains('open'));
+      });
+      document.addEventListener('click', () => { dropdownMenu?.classList.remove('open'); });
 
-// Interaction state
-let addNodeMode = false, selectedNodeForEdge = null;
-let isDragging = false, dragNodeId = null, dragOffX = 0, dragOffY = 0;
+      // Section navigation
+      const navBtns  = document.querySelectorAll('.exp-nav-btn');
+      const sections = document.querySelectorAll('.exp-section-content');
+      const progFill = document.getElementById('progress-fill');
+      const progPct  = document.getElementById('progress-pct');
+      const total    = navBtns.length;
 
-// Canvas refs
-const canvas = document.getElementById('bfsCanvas');
-const ctx = canvas.getContext('2d');
-const graphZone = document.getElementById('bfsGraphZone');
-const emptyState = document.getElementById('bfsEmptyState');
-const tooltip = document.getElementById('bfsTooltip');
-const toastEl = document.getElementById('bfsToast');
+      let visited = (() => { try { return JSON.parse(sessionStorage.getItem('visitedBFS') || '["aim"]'); } catch { return ['aim']; } })();
 
-// UI refs
-const bfsBtnStart   = document.getElementById('bfsBtnStart');
-const bfsBtnPause   = document.getElementById('bfsBtnPause');
-const bfsBtnResume  = document.getElementById('bfsBtnResume');
-const bfsBtnReset   = document.getElementById('bfsBtnReset');
-const bfsBtnStep    = document.getElementById('bfsBtnStep');
-const bfsBtnSample  = document.getElementById('bfsBtnSample');
-const bfsBtnAddNode = document.getElementById('bfsBtnAddNode');
-const bfsBtnAddEdge = document.getElementById('bfsBtnAddEdge');
-const bfsBtnClearGraph = document.getElementById('bfsBtnClearGraph');
-const bfsSpeedSlider= document.getElementById('bfsSpeedSlider');
-const bfsSpeedVal   = document.getElementById('bfsSpeedVal');
-const bfsStatus     = document.getElementById('bfsStatus');
-const bfsStepLabel  = document.getElementById('bfsStepLabel');
-const bfsTotalLabel = document.getElementById('bfsTotalLabel');
-const bfsProgressFill = document.getElementById('bfsProgressFill');
-const bfsError      = document.getElementById('bfsError');
-const bfsNodeInput  = document.getElementById('bfsNodeInput');
-const bfsEdgeFrom   = document.getElementById('bfsEdgeFrom');
-const bfsEdgeTo     = document.getElementById('bfsEdgeTo');
-const bfsStartNode  = document.getElementById('bfsStartNode');
-const bfsCurNode    = document.getElementById('bfsCurNode');
-const bfsLevelDisp  = document.getElementById('bfsLevelDisp');
-const bfsQueueTrack = document.getElementById('bfsQueueTrack');
-const bfsFrontPtr   = document.getElementById('bfsFrontPtr');
-const bfsRearPtr    = document.getElementById('bfsRearPtr');
-const bfsTravList   = document.getElementById('bfsTravList');
-const bfsVisitedChips = document.getElementById('bfsVisitedChips');
-const bfsPillVisited = document.getElementById('bfsPillVisited');
-const bfsPillNodes  = document.getElementById('bfsPillNodes');
-const bfsPillEdges  = document.getElementById('bfsPillEdges');
-const bfsPillOps    = document.getElementById('bfsPillOps');
-const bfsPillLevel  = document.getElementById('bfsPillLevel');
-const bfsSVisited   = document.getElementById('bfsSVisited');
-const bfsSLevel     = document.getElementById('bfsSLevel');
-const bfsSQOps      = document.getElementById('bfsSQOps');
-const bfsSMaxQ      = document.getElementById('bfsSMaxQ');
+      function updateProgress(v) {
+        const pct = Math.round((v.length / total) * 100);
+        progFill.style.width = pct + '%';
+        progPct.textContent  = pct + '%';
+      }
+      updateProgress(visited);
 
-bfsSpeedSlider.addEventListener('input', () => {
-  bfsSpeedVal.textContent = SPEED_LABELS[bfsSpeedSlider.value - 1];
-});
+      navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.section;
+          navBtns.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+          btn.classList.add('active'); btn.setAttribute('aria-current', 'true');
+          sections.forEach(s => s.classList.remove('visible'));
+          const sec = document.getElementById('section-' + target);
+          if (sec) { sec.style.animation = 'none'; sec.offsetHeight; sec.style.animation = ''; sec.classList.add('visible'); }
+          if (!visited.includes(target)) { visited.push(target); sessionStorage.setItem('visitedBFS', JSON.stringify(visited)); }
+          updateProgress(visited);
+          if (target === 'simulation') setTimeout(resizeCanvas, 100);
+        });
+      });
+    });
 
-/* --- Canvas resize --- */
-function resizeCanvas() {
-  const rect = graphZone.getBoundingClientRect();
-  canvas.width = rect.width || 600;
-  canvas.height = rect.height || 400;
-  drawGraph();
-}
-window.addEventListener('resize', resizeCanvas);
-setTimeout(resizeCanvas, 300);
+    /* =====================================================
+       BFS ENGINE — full simulation logic
+    ===================================================== */
+    const SPEED_MAP    = [1400, 900, 520, 280, 120];
+    const SPEED_LABELS = ['Slow', 'Slwr', 'Med', 'Fast', 'Blzg'];
 
-/* --- Color helpers --- */
-function getCSSVar(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
-function getNodeColor(id) {
-  const state = getNodeState(id);
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  if (state === 'active') return isDark ? '#9B4DFF' : '#1A88D0';
-  if (state === 'enqueued') return isDark ? '#C07AFF' : '#0EC4E0';
-  if (state === 'visited') return '#1AC080';
-  return isDark ? '#13132E' : '#F0F7FF';
-}
-function getNodeBorder(id) {
-  const state = getNodeState(id);
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  if (state === 'active') return isDark ? '#9B4DFF' : '#1A88D0';
-  if (state === 'enqueued') return isDark ? '#C07AFF' : '#0EC4E0';
-  if (state === 'visited') return '#1AC080';
-  return isDark ? '#2A1F5A' : '#C8DFF4';
-}
-function getNodeTextColor(id) {
-  const state = getNodeState(id);
-  if (state === 'active' || state === 'enqueued' || state === 'visited') return '#fff';
-  return getCSSVar('--text-primary');
-}
+    let graphNodes = {}, graphEdges = [], nodeStates = {}, edgeStates = {};
+    let bfsSteps = [], bfsCurrentStep = -1, bfsIsRunning = false, bfsIsPaused = false, bfsAnimTimer = null;
+    let bfsLevelMap = {};
+    let isDragging = false, dragNodeId = null, dragOffX = 0, dragOffY = 0;
+    let bfsTravOrderDisp = [], bfsVisitedDisp = [], bfsQueueDisp = [];
+    let bfsTotalQOps = 0, bfsTotalMaxQ = 0;
 
-// Node state: active, enqueued, visited, unvisited
-let nodeStates = {}; // id -> 'unvisited'|'enqueued'|'active'|'visited'
-let edgeStates = {}; // "from-to" -> 'default'|'traversed'|'active'
+    const canvas    = document.getElementById('bfsCanvas');
+    const ctx       = canvas.getContext('2d');
+    const graphZone = document.getElementById('bfsGraphZone');
+    const emptyState  = document.getElementById('bfsEmptyState');
+    const tooltip     = document.getElementById('bfsTooltip');
+    const toastEl     = document.getElementById('bfsToast');
 
-function getNodeState(id) { return nodeStates[id] || 'unvisited'; }
-function getEdgeKey(a, b) { return `${Math.min(a,b)}-${Math.max(a,b)}`; }
+    const bfsBtnStart    = document.getElementById('bfsBtnStart');
+    const bfsBtnPause    = document.getElementById('bfsBtnPause');
+    const bfsBtnResume   = document.getElementById('bfsBtnResume');
+    const bfsBtnReset    = document.getElementById('bfsBtnReset');
+    const bfsBtnStep     = document.getElementById('bfsBtnStep');
+    const bfsBtnSample   = document.getElementById('bfsBtnSample');
+    const bfsBtnAddNode  = document.getElementById('bfsBtnAddNode');
+    const bfsBtnAddEdge  = document.getElementById('bfsBtnAddEdge');
+    const bfsBtnClearGraph = document.getElementById('bfsBtnClearGraph');
+    const bfsSpeedSlider = document.getElementById('bfsSpeedSlider');
+    const bfsSpeedVal    = document.getElementById('bfsSpeedVal');
+    const bfsStatus      = document.getElementById('bfsStatus');
+    const bfsStepLabel   = document.getElementById('bfsStepLabel');
+    const bfsTotalLabel  = document.getElementById('bfsTotalLabel');
+    const bfsProgressFill = document.getElementById('bfsProgressFill');
+    const bfsError       = document.getElementById('bfsError');
+    const bfsNodeInput   = document.getElementById('bfsNodeInput');
+    const bfsEdgeFrom    = document.getElementById('bfsEdgeFrom');
+    const bfsEdgeTo      = document.getElementById('bfsEdgeTo');
+    const bfsStartNode   = document.getElementById('bfsStartNode');
+    const bfsCurNode     = document.getElementById('bfsCurNode');
+    const bfsLevelDisp   = document.getElementById('bfsLevelDisp');
+    const bfsQueueTrack  = document.getElementById('bfsQueueTrack');
+    const bfsFrontPtr    = document.getElementById('bfsFrontPtr');
+    const bfsRearPtr     = document.getElementById('bfsRearPtr');
+    const bfsTravList    = document.getElementById('bfsTravList');
+    const bfsVisitedChips = document.getElementById('bfsVisitedChips');
+    const bfsPillVisited = document.getElementById('bfsPillVisited');
+    const bfsPillNodes   = document.getElementById('bfsPillNodes');
+    const bfsPillEdges   = document.getElementById('bfsPillEdges');
+    const bfsPillOps     = document.getElementById('bfsPillOps');
+    const bfsPillLevel   = document.getElementById('bfsPillLevel');
+    const bfsSVisited    = document.getElementById('bfsSVisited');
+    const bfsSLevel      = document.getElementById('bfsSLevel');
+    const bfsSQOps       = document.getElementById('bfsSQOps');
+    const bfsSMaxQ       = document.getElementById('bfsSMaxQ');
 
-/* --- Draw graph --- */
-function drawGraph() {
-  if (!ctx) return;
-  const w = canvas.width, h = canvas.height;
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  ctx.clearRect(0, 0, w, h);
+    bfsSpeedSlider.addEventListener('input', () => {
+      bfsSpeedVal.textContent = SPEED_LABELS[bfsSpeedSlider.value - 1];
+    });
 
-  // Draw edges
-  graphEdges.forEach(e => {
-    const fn = graphNodes[e.from], tn = graphNodes[e.to];
-    if (!fn || !tn) return;
-    const key = getEdgeKey(e.from, e.to);
-    const es = edgeStates[key] || 'default';
-    const isActive = es === 'active';
-    const isTraversed = es === 'traversed';
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(fn.x, fn.y);
-    ctx.lineTo(tn.x, tn.y);
-    if (isActive) {
-      ctx.strokeStyle = isDark ? '#9B4DFF' : '#1A88D0';
-      ctx.lineWidth = 3;
-      ctx.shadowColor = isDark ? '#9B4DFF' : '#1A88D0';
-      ctx.shadowBlur = 12;
-    } else if (isTraversed) {
-      ctx.strokeStyle = '#FF9B6B';
-      ctx.lineWidth = 2.5;
-      ctx.shadowColor = '#FF9B6B';
-      ctx.shadowBlur = 8;
-    } else {
-      ctx.strokeStyle = isDark ? '#2A1F5A' : '#C8DFF4';
-      ctx.lineWidth = 1.8;
-      ctx.shadowBlur = 0;
+    function resizeCanvas() {
+      const rect = graphZone.getBoundingClientRect();
+      canvas.width  = rect.width  || 600;
+      canvas.height = rect.height || 400;
+      drawGraph();
     }
-    ctx.stroke();
-    ctx.restore();
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 300);
 
-    // Draw arrowhead midpoint label for traversed
-    if (isTraversed || isActive) {
-      const mx = (fn.x + tn.x) / 2, my = (fn.y + tn.y) / 2;
-      ctx.save();
-      ctx.fillStyle = '#FF9B6B';
-      ctx.beginPath();
-      ctx.arc(mx, my, 4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+    function getCSSVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+    function getNodeColor(id) {
+      const s  = nodeStates[id] || 'unvisited';
+      const dk = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (s === 'active')   return dk ? '#9B4DFF' : '#1A88D0';
+      if (s === 'enqueued') return dk ? '#C07AFF' : '#0EC4E0';
+      if (s === 'visited')  return '#1AC080';
+      return dk ? '#13132E' : '#F0F7FF';
     }
-  });
-
-  // Draw nodes
-  Object.values(graphNodes).forEach(nd => {
-    const r = 24;
-    const state = getNodeState(nd.id);
-    const bg = getNodeColor(nd.id);
-    const border = getNodeBorder(nd.id);
-    const tc = getNodeTextColor(nd.id);
-
-    ctx.save();
-    // Glow for active
-    if (state === 'active') {
-      ctx.shadowColor = bg;
-      ctx.shadowBlur = 28;
-    } else if (state === 'enqueued') {
-      ctx.shadowColor = bg;
-      ctx.shadowBlur = 14;
-    } else {
-      ctx.shadowBlur = 4;
-      ctx.shadowColor = 'rgba(0,0,0,0.12)';
+    function getNodeBorder(id) {
+      const s  = nodeStates[id] || 'unvisited';
+      const dk = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (s === 'active')   return dk ? '#9B4DFF' : '#1A88D0';
+      if (s === 'enqueued') return dk ? '#C07AFF' : '#0EC4E0';
+      if (s === 'visited')  return '#1AC080';
+      return dk ? '#2A1F5A' : '#C8DFF4';
     }
-    ctx.beginPath();
-    ctx.arc(nd.x, nd.y, r, 0, Math.PI * 2);
-    ctx.fillStyle = bg;
-    ctx.fill();
-    ctx.strokeStyle = border;
-    ctx.lineWidth = state === 'active' ? 3 : 2;
-    ctx.stroke();
-    ctx.restore();
-
-    // Label
-    ctx.save();
-    ctx.font = `700 13px 'JetBrains Mono', monospace`;
-    ctx.fillStyle = tc;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(nd.id.toString(), nd.x, nd.y);
-    ctx.restore();
-
-    // Level badge
-    if (bfsLevelMap[nd.id] !== undefined) {
-      ctx.save();
-      ctx.font = `600 9px Outfit, sans-serif`;
-      ctx.fillStyle = isDark ? '#C07AFF' : '#1A88D0';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(`L${bfsLevelMap[nd.id]}`, nd.x, nd.y + r + 10);
-      ctx.restore();
+    function getNodeTextColor(id) {
+      const s = nodeStates[id] || 'unvisited';
+      if (s === 'active' || s === 'enqueued' || s === 'visited') return '#fff';
+      return getCSSVar('--text-primary');
     }
-  });
+    function getEdgeKey(a, b) { return `${Math.min(a,b)}-${Math.max(a,b)}`; }
 
-  // Selected for edge
-  if (selectedNodeForEdge !== null && graphNodes[selectedNodeForEdge]) {
-    const nd = graphNodes[selectedNodeForEdge];
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(nd.x, nd.y, 28, 0, Math.PI * 2);
-    ctx.strokeStyle = '#FF9B6B';
-    ctx.lineWidth = 3;
-    ctx.setLineDash([6, 4]);
-    ctx.stroke();
-    ctx.restore();
-  }
-}
+    function drawGraph() {
+      if (!ctx) return;
+      const w = canvas.width, h = canvas.height;
+      const dk = document.documentElement.getAttribute('data-theme') === 'dark';
+      ctx.clearRect(0, 0, w, h);
 
-/* --- Node layout helpers --- */
-function getNodeAt(mx, my) {
-  for (const nd of Object.values(graphNodes)) {
-    const dx = mx - nd.x, dy = my - nd.y;
-    if (Math.sqrt(dx*dx+dy*dy) < 28) return nd.id;
-  }
-  return null;
-}
-function placeNodePosition(count) {
-  const w = canvas.width || 600, h = canvas.height || 380;
-  const cx = w / 2, cy = h / 2;
-  if (count === 0) return { x: cx, y: cy };
-  const angle = (count * 137.508) * Math.PI / 180;
-  const r = 60 + (count % 4) * 30;
-  return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
-}
+      graphEdges.forEach(e => {
+        const fn = graphNodes[e.from], tn = graphNodes[e.to]; if (!fn || !tn) return;
+        const key = getEdgeKey(e.from, e.to);
+        const es  = edgeStates[key] || 'default';
+        ctx.save(); ctx.beginPath(); ctx.moveTo(fn.x, fn.y); ctx.lineTo(tn.x, tn.y);
+        if (es === 'active') {
+          ctx.strokeStyle = dk ? '#9B4DFF' : '#1A88D0'; ctx.lineWidth = 3;
+          ctx.shadowColor = dk ? '#9B4DFF' : '#1A88D0'; ctx.shadowBlur = 12;
+        } else if (es === 'traversed') {
+          ctx.strokeStyle = '#FF9B6B'; ctx.lineWidth = 2.5; ctx.shadowColor = '#FF9B6B'; ctx.shadowBlur = 8;
+        } else {
+          ctx.strokeStyle = dk ? '#2A1F5A' : '#C8DFF4'; ctx.lineWidth = 1.8; ctx.shadowBlur = 0;
+        }
+        ctx.stroke(); ctx.restore();
+        if (es === 'traversed' || es === 'active') {
+          const mx = (fn.x+tn.x)/2, my = (fn.y+tn.y)/2;
+          ctx.save(); ctx.fillStyle = '#FF9B6B'; ctx.beginPath(); ctx.arc(mx,my,4,0,Math.PI*2); ctx.fill(); ctx.restore();
+        }
+      });
 
-/* --- Graph operations --- */
-function addNode(id) {
-  if (graphNodes[id] !== undefined) { showBfsError(`Node ${id} already exists.`); return false; }
-  const count = Object.keys(graphNodes).length;
-  const pos = placeNodePosition(count);
-  graphNodes[id] = { id, x: pos.x, y: pos.y };
-  nodeStates[id] = 'unvisited';
-  emptyState.classList.add('hidden');
-  updatePills();
-  drawGraph();
-  return true;
-}
-function addEdge(from, to) {
-  if (graphNodes[from] === undefined) { showBfsError(`Node ${from} doesn't exist.`); return false; }
-  if (graphNodes[to] === undefined) { showBfsError(`Node ${to} doesn't exist.`); return false; }
-  if (from === to) { showBfsError('Self-loops not supported.'); return false; }
-  const dup = graphEdges.some(e => (e.from===from&&e.to===to)||(e.from===to&&e.to===from));
-  if (dup) { showBfsError(`Edge ${from}—${to} already exists.`); return false; }
-  graphEdges.push({from, to});
-  updatePills();
-  drawGraph();
-  return true;
-}
-function clearAllStates() {
-  Object.keys(nodeStates).forEach(id => nodeStates[id] = 'unvisited');
-  Object.keys(edgeStates).forEach(k => delete edgeStates[k]);
-  bfsLevelMap = {};
-  drawGraph();
-}
-function updatePills() {
-  bfsPillNodes.textContent = Object.keys(graphNodes).length;
-  bfsPillEdges.textContent = graphEdges.length;
-}
+      Object.values(graphNodes).forEach(nd => {
+        const r = 24, s = nodeStates[nd.id] || 'unvisited';
+        ctx.save();
+        if (s === 'active')        { ctx.shadowColor = getNodeColor(nd.id); ctx.shadowBlur = 28; }
+        else if (s === 'enqueued') { ctx.shadowColor = getNodeColor(nd.id); ctx.shadowBlur = 14; }
+        else                       { ctx.shadowBlur = 4; ctx.shadowColor = 'rgba(0,0,0,0.12)'; }
+        ctx.beginPath(); ctx.arc(nd.x, nd.y, r, 0, Math.PI*2);
+        ctx.fillStyle   = getNodeColor(nd.id); ctx.fill();
+        ctx.strokeStyle = getNodeBorder(nd.id); ctx.lineWidth = s === 'active' ? 3 : 2; ctx.stroke();
+        ctx.restore();
+        ctx.save();
+        ctx.font = `700 13px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = getNodeTextColor(nd.id); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(nd.id.toString(), nd.x, nd.y); ctx.restore();
+        if (bfsLevelMap[nd.id] !== undefined) {
+          ctx.save(); ctx.font = `600 9px Outfit, sans-serif`;
+          ctx.fillStyle = dk ? '#C07AFF' : '#1A88D0';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(`L${bfsLevelMap[nd.id]}`, nd.x, nd.y + r + 10); ctx.restore();
+        }
+      });
+    }
 
-/* --- Sample Graph --- */
-function loadSampleGraph() {
-  graphNodes = {}; graphEdges = []; nodeStates = {}; edgeStates = {}; bfsLevelMap = {};
-  const w = canvas.width || 600, h = canvas.height || 380;
-  const positions = [
-    { id:0, x: w*0.5, y: h*0.15 },
-    { id:1, x: w*0.25, y: h*0.38 },
-    { id:2, x: w*0.75, y: h*0.38 },
-    { id:3, x: w*0.15, y: h*0.68 },
-    { id:4, x: w*0.42, y: h*0.68 },
-    { id:5, x: w*0.62, y: h*0.68 },
-    { id:6, x: w*0.85, y: h*0.68 },
-  ];
-  positions.forEach(p => { graphNodes[p.id]={id:p.id,x:p.x,y:p.y}; nodeStates[p.id]='unvisited'; });
-  [[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]].forEach(([a,b])=>graphEdges.push({from:a,to:b}));
-  emptyState.classList.add('hidden');
-  updatePills();
-  drawGraph();
-  showBfsToast('Sample BFS tree graph loaded. Press Start BFS!');
-}
+    function getNodeAt(mx, my) {
+      for (const nd of Object.values(graphNodes)) {
+        const dx = mx-nd.x, dy = my-nd.y;
+        if (Math.sqrt(dx*dx+dy*dy) < 28) return nd.id;
+      }
+      return null;
+    }
+    function placeNodePosition(count) {
+      const w = canvas.width||600, h = canvas.height||380;
+      if (count === 0) return { x: w/2, y: h/2 };
+      const ang = (count * 137.508) * Math.PI/180, r = 60+(count%4)*30;
+      return { x: w/2 + r*Math.cos(ang), y: h/2 + r*Math.sin(ang) };
+    }
+    function addNode(id) {
+      if (graphNodes[id] !== undefined) { showBfsError(`Node ${id} already exists.`); return false; }
+      const pos = placeNodePosition(Object.keys(graphNodes).length);
+      graphNodes[id] = { id, x: pos.x, y: pos.y }; nodeStates[id] = 'unvisited';
+      emptyState.classList.add('hidden'); updatePills(); drawGraph(); return true;
+    }
+    function addEdge(from, to) {
+      if (graphNodes[from]===undefined) { showBfsError(`Node ${from} doesn't exist.`); return false; }
+      if (graphNodes[to]===undefined)   { showBfsError(`Node ${to} doesn't exist.`); return false; }
+      if (from===to) { showBfsError('Self-loops not supported.'); return false; }
+      if (graphEdges.some(e=>(e.from===from&&e.to===to)||(e.from===to&&e.to===from))) { showBfsError(`Edge ${from}—${to} already exists.`); return false; }
+      graphEdges.push({from, to}); updatePills(); drawGraph(); return true;
+    }
+    function clearAllStates() {
+      Object.keys(nodeStates).forEach(id => nodeStates[id]='unvisited');
+      Object.keys(edgeStates).forEach(k  => delete edgeStates[k]);
+      bfsLevelMap = {}; drawGraph();
+    }
+    function updatePills() {
+      bfsPillNodes.textContent = Object.keys(graphNodes).length;
+      bfsPillEdges.textContent = graphEdges.length;
+    }
 
-/* --- BFS Step Builder --- */
-function buildBFSSteps(startId) {
-  bfsSteps = [];
-  const adj = {};
-  Object.keys(graphNodes).forEach(id => adj[+id] = []);
-  graphEdges.forEach(e => { adj[e.from].push(e.to); adj[e.to].push(e.from); });
-  Object.keys(adj).forEach(k => adj[k].sort((a,b)=>a-b));
+    function loadSampleGraph() {
+      graphNodes={}; graphEdges=[]; nodeStates={}; edgeStates={}; bfsLevelMap={};
+      const w=canvas.width||600, h=canvas.height||380;
+      const pos=[{id:0,x:w*.5,y:h*.15},{id:1,x:w*.25,y:h*.38},{id:2,x:w*.75,y:h*.38},{id:3,x:w*.15,y:h*.68},{id:4,x:w*.42,y:h*.68},{id:5,x:w*.62,y:h*.68},{id:6,x:w*.85,y:h*.68}];
+      pos.forEach(p=>{ graphNodes[p.id]={id:p.id,x:p.x,y:p.y}; nodeStates[p.id]='unvisited'; });
+      [[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]].forEach(([a,b])=>graphEdges.push({from:a,to:b}));
+      emptyState.classList.add('hidden'); updatePills(); drawGraph();
+      showBfsToast('Sample BFS tree graph loaded. Press Start BFS!');
+    }
 
-  const vis = {};
-  const queue = [];
-  const levelOf = {};
-  let front = 0, rear = -1, qOps = 0, maxQ = 0;
+    function buildBFSSteps(startId) {
+      bfsSteps=[];
+      const adj={};
+      Object.keys(graphNodes).forEach(id=>adj[+id]=[]);
+      graphEdges.forEach(e=>{ adj[e.from].push(e.to); adj[e.to].push(e.from); });
+      Object.keys(adj).forEach(k=>adj[k].sort((a,b)=>a-b));
+      const vis={}, queue=[], levelOf={};
+      let front=0, rear=-1;
+      bfsSteps.push({type:'init', codeLine:1, msg:'Initialise visited[] = 0 for all vertices.'});
+      bfsSteps.push({type:'enqueue', nodeId:startId, queue:[...queue], codeLine:2, msg:`Enqueue start vertex <strong>${startId}</strong> and mark visited.`});
+      vis[startId]=true; levelOf[startId]=0; queue.push(startId); rear++;
+      bfsSteps.push({type:'mark', nodeId:startId, codeLine:3, queue:[...queue].slice(front), msg:`Mark <strong>${startId}</strong> as visited. Level: 0`});
+      while (front<=rear) {
+        bfsSteps.push({type:'check_queue', codeLine:4, queue:[...queue].slice(front), msg:`Queue not empty (front=${front}, rear=${rear}). Continue BFS.`});
+        const v=queue[front++];
+        bfsSteps.push({type:'dequeue', nodeId:v, codeLine:5, queue:[...queue].slice(front), msg:`Dequeue vertex <strong>${v}</strong> from queue.`});
+        bfsSteps.push({type:'process', nodeId:v, level:levelOf[v], codeLine:6, queue:[...queue].slice(front), msg:`Process vertex <strong>${v}</strong> (Level ${levelOf[v]}).`});
+        for (const nb of (adj[v]||[])) {
+          bfsSteps.push({type:'check_adj', nodeId:v, adjId:nb, codeLine:8, queue:[...queue].slice(front), msg:`Check: <strong>${v}</strong> → <strong>${nb}</strong>. Visited: ${vis[nb]?'Yes':'No'}`});
+          if (!vis[nb]) {
+            vis[nb]=true; levelOf[nb]=levelOf[v]+1; queue.push(nb); rear++;
+            bfsSteps.push({type:'enqueue', nodeId:nb, fromId:v, codeLine:9, queue:[...queue].slice(front), msg:`Enqueue <strong>${nb}</strong> (Level ${levelOf[nb]}).`});
+            bfsSteps.push({type:'mark', nodeId:nb, codeLine:10, queue:[...queue].slice(front), msg:`Marked <strong>${nb}</strong> visited.`});
+          }
+        }
+      }
+      bfsSteps.push({type:'done', codeLine:-1, queue:[], msg:`BFS complete! Visited ${Object.keys(vis).length} vertices.`});
+      bfsLevelMap=levelOf;
+    }
 
-  bfsSteps.push({ type:'init', codeLine:1, msg:'Initialise visited[] = 0 for all vertices.' });
-  bfsSteps.push({ type:'enqueue', nodeId:startId, queue:[...queue], codeLine:2,
-    msg:`Enqueue start vertex <strong>${startId}</strong> and mark visited.` });
-  vis[startId] = true; levelOf[startId] = 0; queue.push(startId); rear++; qOps++;
-  maxQ = Math.max(maxQ, queue.length - front);
+    function applyStep(index) {
+      if (index<0||index>=bfsSteps.length) return;
+      const step=bfsSteps[index];
+      document.querySelectorAll('.bfs-code-line').forEach(el=>el.classList.remove('highlighted'));
+      if (step.codeLine>=0) { const l=document.querySelector(`.bfs-code-line[data-line="${step.codeLine}"]`); if(l) l.classList.add('highlighted'); }
+      bfsStepLabel.textContent = `Step ${index+1}`;
+      bfsTotalLabel.textContent = `of ${bfsSteps.length}`;
+      bfsProgressFill.style.width = ((index+1)/bfsSteps.length*100)+'%';
 
-  bfsSteps.push({ type:'mark', nodeId:startId, codeLine:3, queue:[...queue].slice(front),
-    msg:`Mark <strong>${startId}</strong> as visited. Level: 0` });
+      if (step.type==='init') {
+        Object.keys(nodeStates).forEach(id=>nodeStates[id]='unvisited');
+        Object.keys(edgeStates).forEach(k=>delete edgeStates[k]);
+        bfsTravOrderDisp=[]; bfsVisitedDisp=[]; bfsQueueDisp=[];
+        renderQueuePanel([]); renderTraversal([]); renderVisited([]); updateCurNode(null,null);
+      } else if (step.type==='enqueue') {
+        nodeStates[step.nodeId]='enqueued'; bfsQueueDisp.push(step.nodeId);
+        if (step.fromId!==undefined) edgeStates[getEdgeKey(step.fromId,step.nodeId)]='traversed';
+        renderQueuePanel(bfsQueueDisp); bfsTotalQOps++;
+        bfsTotalMaxQ=Math.max(bfsTotalMaxQ,bfsQueueDisp.length);
+      } else if (step.type==='mark') {
+        if (nodeStates[step.nodeId]!=='active') nodeStates[step.nodeId]='enqueued';
+        if (!bfsVisitedDisp.includes(step.nodeId)) bfsVisitedDisp.push(step.nodeId);
+        renderVisited(bfsVisitedDisp);
+      } else if (step.type==='dequeue') {
+        bfsQueueDisp.shift();
+        if (nodeStates[step.nodeId]!=='visited') nodeStates[step.nodeId]='active';
+        renderQueuePanel(bfsQueueDisp); bfsTotalQOps++;
+      } else if (step.type==='process') {
+        nodeStates[step.nodeId]='active'; bfsTravOrderDisp.push(step.nodeId);
+        renderTraversal(bfsTravOrderDisp); updateCurNode(step.nodeId,step.level);
+        bfsPillLevel.textContent=step.level; bfsSLevel.textContent=step.level;
+      } else if (step.type==='check_adj') {
+        if (step.nodeId!==undefined&&step.adjId!==undefined) {
+          const k=getEdgeKey(step.nodeId,step.adjId);
+          if (edgeStates[k]!=='traversed') edgeStates[k]='active';
+        }
+      } else if (step.type==='done') {
+        bfsTravOrderDisp.forEach(id=>nodeStates[id]='visited');
+        updateCurNode(null,null);
+      }
+      if (step.type==='dequeue'||step.type==='check_queue') {
+        Object.keys(nodeStates).forEach(id=>{ if(nodeStates[id]==='active'&&+id!==(step.nodeId??-1)) nodeStates[id]='visited'; });
+      }
+      bfsPillVisited.textContent  = bfsVisitedDisp.length;
+      bfsPillOps.textContent      = bfsTotalQOps;
+      bfsSVisited.textContent     = bfsVisitedDisp.length;
+      bfsSQOps.textContent        = bfsTotalQOps;
+      bfsSMaxQ.textContent        = bfsTotalMaxQ;
+      drawGraph();
+    }
 
-  while (front <= rear) {
-    bfsSteps.push({ type:'check_queue', codeLine:4, queue:[...queue].slice(front),
-      msg:`Queue not empty (front=${front}, rear=${rear}). Continue BFS.` });
+    function renderQueuePanel(q) {
+      if (!q.length) {
+        bfsQueueTrack.innerHTML = '<span class="bfs-queue-empty">Empty</span>';
+        bfsFrontPtr.style.opacity='0.3'; bfsRearPtr.style.opacity='0.3'; return;
+      }
+      bfsFrontPtr.style.opacity='1'; bfsRearPtr.style.opacity='1';
+      bfsQueueTrack.innerHTML = q.map((id,i)=>`<div class="bfs-queue-item ${i===0?'front':''}">${id}</div>`).join('');
+    }
+    function renderTraversal(order) {
+      bfsTravList.innerHTML = order.map((id,i)=>{
+        const lv = bfsLevelMap[id]!==undefined ? `L${bfsLevelMap[id]}` : '';
+        return `<div class="bfs-trav-item"><strong>${id}</strong><span class="bfs-trav-num">#${i+1} ${lv}</span></div>`;
+      }).join('');
+      bfsTravList.scrollTop=bfsTravList.scrollHeight;
+    }
+    function renderVisited(v) { bfsVisitedChips.innerHTML=v.map(id=>`<span class="bfs-visited-chip">${id}</span>`).join(''); }
+    function updateCurNode(id,level) {
+      if (id===null) { bfsCurNode.textContent='—'; bfsCurNode.className='bfs-cur-node empty'; bfsLevelDisp.textContent='—'; }
+      else { bfsCurNode.textContent=`Node ${id}`; bfsCurNode.className='bfs-cur-node'; bfsLevelDisp.textContent=level!==null?level:'—'; }
+    }
 
-    const v = queue[front++];
-    qOps++;
-    bfsSteps.push({ type:'dequeue', nodeId:v, codeLine:5, queue:[...queue].slice(front),
-      msg:`Dequeue vertex <strong>${v}</strong> from queue.` });
+    function resetTraversalState() {
+      bfsSteps=[]; bfsCurrentStep=-1; bfsIsRunning=false; bfsIsPaused=false;
+      clearTimeout(bfsAnimTimer); clearAllStates();
+      bfsTravOrderDisp=[]; bfsVisitedDisp=[]; bfsQueueDisp=[];
+      bfsTotalQOps=0; bfsTotalMaxQ=0;
+      renderQueuePanel([]); renderTraversal([]); renderVisited([]); updateCurNode(null,null);
+      bfsStepLabel.textContent='Step 0'; bfsTotalLabel.textContent='of 0'; bfsProgressFill.style.width='0%';
+      bfsPillVisited.textContent='0'; bfsPillOps.textContent='0'; bfsPillLevel.textContent='—';
+      bfsSVisited.textContent='0'; bfsSLevel.textContent='0'; bfsSQOps.textContent='0'; bfsSMaxQ.textContent='0';
+      bfsLevelMap={};
+      document.querySelectorAll('.bfs-code-line').forEach(el=>el.classList.remove('highlighted'));
+      bfsStatus.textContent='Build a graph and press Start BFS'; bfsStatus.className='bfs-status';
+      setBtnState('idle'); drawGraph();
+    }
 
-    bfsSteps.push({ type:'process', nodeId:v, level:levelOf[v], codeLine:6, queue:[...queue].slice(front),
-      msg:`Process vertex <strong>${v}</strong> (Level ${levelOf[v]}). Add to traversal order.` });
-
-    for (const nb of (adj[v] || [])) {
-      bfsSteps.push({ type:'check_adj', nodeId:v, adjId:nb, codeLine:8, queue:[...queue].slice(front),
-        msg:`Check adjacency: <strong>${v}</strong> → <strong>${nb}</strong>. Visited: ${vis[nb]?'Yes':'No'}` });
-
-      if (!vis[nb]) {
-        vis[nb] = true; levelOf[nb] = levelOf[v] + 1;
-        queue.push(nb); rear++; qOps++;
-        maxQ = Math.max(maxQ, queue.length - front);
-        bfsSteps.push({ type:'enqueue', nodeId:nb, fromId:v, codeLine:9, queue:[...queue].slice(front),
-          msg:`Enqueue <strong>${nb}</strong> (Level ${levelOf[nb]}). Mark visited.` });
-        bfsSteps.push({ type:'mark', nodeId:nb, codeLine:10, queue:[...queue].slice(front),
-          msg:`Marked <strong>${nb}</strong> visited. Queue size: ${queue.length - front}` });
+    async function runBFS() {
+      while (bfsCurrentStep<bfsSteps.length-1 && bfsIsRunning && !bfsIsPaused) {
+        bfsCurrentStep++; applyStep(bfsCurrentStep);
+        await sleep(SPEED_MAP[bfsSpeedSlider.value-1]||500);
+      }
+      if (bfsCurrentStep>=bfsSteps.length-1 && bfsIsRunning) {
+        bfsIsRunning=false; setBtnState('done');
+        bfsStatus.textContent=`✅ BFS complete! Traversal: ${bfsTravOrderDisp.join(' → ')}`;
+        bfsStatus.className='bfs-status done';
+        showBfsToast(`✅ BFS traversal complete! ${bfsTravOrderDisp.length} nodes visited.`);
+        finalizeResult();
       }
     }
-  }
-  bfsSteps.push({ type:'done', codeLine:-1, queue:[], msg:`BFS complete! Visited ${Object.keys(vis).length} vertices.` });
-  bfsLevelMap = levelOf;
-  return { qOps, maxQ, levelOf };
-}
+    function sleep(ms) { return new Promise(r=>{ bfsAnimTimer=setTimeout(r,ms); }); }
 
-/* --- Apply BFS Step --- */
-let bfsTravOrderDisp = [];
-let bfsVisitedDisp = [];
-let bfsQueueDisp = [];
-let bfsCurrentActiveNode = null;
-let bfsTotalQOps = 0, bfsTotalMaxQ = 0;
-
-function applyStep(index) {
-  if (index < 0 || index >= bfsSteps.length) return;
-  const step = bfsSteps[index];
-
-  // Update pseudocode
-  document.querySelectorAll('.bfs-code-line').forEach(el => el.classList.remove('highlighted'));
-  if (step.codeLine >= 0) {
-    const line = document.querySelector(`.bfs-code-line[data-line="${step.codeLine}"]`);
-    if (line) line.classList.add('highlighted');
-  }
-
-  // Update progress
-  bfsStepLabel.textContent = `Step ${index + 1}`;
-  bfsTotalLabel.textContent = `of ${bfsSteps.length}`;
-  bfsProgressFill.style.width = ((index + 1) / bfsSteps.length * 100) + '%';
-
-  // Process step types
-  if (step.type === 'init') {
-    Object.keys(nodeStates).forEach(id => nodeStates[id] = 'unvisited');
-    Object.keys(edgeStates).forEach(k => delete edgeStates[k]);
-    bfsTravOrderDisp = []; bfsVisitedDisp = []; bfsQueueDisp = [];
-    bfsCurrentActiveNode = null;
-    renderQueuePanel([]);
-    renderTraversal([]);
-    renderVisited([]);
-    updateCurNode(null, null);
-  } else if (step.type === 'enqueue') {
-    nodeStates[step.nodeId] = 'enqueued';
-    bfsQueueDisp.push(step.nodeId);
-    if (step.fromId !== undefined) {
-      const key = getEdgeKey(step.fromId, step.nodeId);
-      edgeStates[key] = 'traversed';
+    function setBtnState(state) {
+      bfsBtnStart.disabled  = state==='running'||state==='paused';
+      bfsBtnPause.disabled  = state!=='running';
+      bfsBtnResume.disabled = state!=='paused';
+      bfsBtnStep.disabled   = state==='running'||bfsCurrentStep>=bfsSteps.length-1;
     }
-    renderQueuePanel(bfsQueueDisp);
-    bfsTotalQOps++;
-    bfsTotalMaxQ = Math.max(bfsTotalMaxQ, bfsQueueDisp.length);
-  } else if (step.type === 'mark') {
-    if (nodeStates[step.nodeId] !== 'active') nodeStates[step.nodeId] = 'enqueued';
-    if (!bfsVisitedDisp.includes(step.nodeId)) bfsVisitedDisp.push(step.nodeId);
-    renderVisited(bfsVisitedDisp);
-  } else if (step.type === 'dequeue') {
-    bfsQueueDisp.shift();
-    if (nodeStates[step.nodeId] !== 'visited') nodeStates[step.nodeId] = 'active';
-    bfsCurrentActiveNode = step.nodeId;
-    renderQueuePanel(bfsQueueDisp);
-    bfsTotalQOps++;
-  } else if (step.type === 'process') {
-    nodeStates[step.nodeId] = 'active';
-    bfsTravOrderDisp.push(step.nodeId);
-    renderTraversal(bfsTravOrderDisp);
-    updateCurNode(step.nodeId, step.level);
-    bfsPillLevel.textContent = step.level;
-    bfsSLevel.textContent = step.level;
-  } else if (step.type === 'check_adj') {
-    // Briefly highlight the edge being checked
-    if (step.nodeId !== undefined && step.adjId !== undefined) {
-      const key = getEdgeKey(step.nodeId, step.adjId);
-      if (edgeStates[key] !== 'traversed') edgeStates[key] = 'active';
-    }
-  } else if (step.type === 'done') {
-    // Mark all visited as 'visited' state
-    bfsTravOrderDisp.forEach(id => { nodeStates[id] = 'visited'; });
-    bfsCurrentActiveNode = null;
-    updateCurNode(null, null);
-  }
 
-  // Mark previous active as visited if we moved on
-  if (step.type === 'dequeue' || step.type === 'check_queue') {
-    Object.keys(nodeStates).forEach(id => {
-      if (nodeStates[id] === 'active' && +id !== (step.nodeId ?? -1)) {
-        nodeStates[id] = 'visited';
+    function finalizeResult() {
+      const n = Object.keys(graphNodes).length, vis = bfsTravOrderDisp.length;
+      const maxLevel = bfsTravOrderDisp.length ? Math.max(...bfsTravOrderDisp.map(id=>bfsLevelMap[id]??0)) : 0;
+      document.getElementById('result-pending').style.display    = 'none';
+      document.getElementById('result-inprogress').style.display = 'none';
+      document.getElementById('result-input-label').innerHTML    = `<strong>Observation Table</strong> — BFS from Node <code>${bfsStartNode.value||0}</code>`;
+      document.getElementById('result-trav-seq').textContent     = bfsTravOrderDisp.join(' → ');
+      const tbody = document.getElementById('result-call-tbody');
+      tbody.innerHTML = [
+        ['Start Vertex',        bfsStartNode.value||0,           ''],
+        ['Total Nodes',         n,                                'Vertices in graph'],
+        ['Total Edges',         graphEdges.length,                'Undirected edges'],
+        ['Nodes Visited',       vis,                              'Reachable from start'],
+        ['BFS Levels',          maxLevel+1,                       'Depth of BFS tree'],
+        ['Total Queue Ops',     bfsTotalQOps,                     'Enqueue + Dequeue combined'],
+        ['Max Queue Size',      bfsTotalMaxQ,                     'Peak queue occupancy'],
+        ['Traversal Order',     bfsTravOrderDisp.join(' → '),     'Level-order sequence'],
+      ].map(([m,v,n])=>`<tr><td>${m}</td><td><strong>${v}</strong></td><td>${n}</td></tr>`).join('');
+      document.getElementById('res-visited').textContent = vis;
+      document.getElementById('res-edges').textContent   = graphEdges.length;
+      document.getElementById('res-levels').textContent  = maxLevel+1;
+      document.getElementById('res-qops').textContent    = bfsTotalQOps;
+      document.getElementById('result-conclusion-text').innerHTML =
+        `BFS successfully traversed <strong>${vis}</strong> vertices starting from Node ${bfsStartNode.value||0}.
+        The traversal proceeded level by level, reaching BFS depth <strong>${maxLevel}</strong>, producing the order:
+        <code>${bfsTravOrderDisp.join(' → ')}</code>.
+        A total of <strong>${bfsTotalQOps}</strong> queue operations were performed with a peak queue size of
+        <strong>${bfsTotalMaxQ}</strong>. This confirms the <strong>O(V+E)</strong> time complexity of BFS —
+        each vertex is enqueued and dequeued exactly once, and each edge is examined at most twice.
+        BFS guarantees the shortest path in unweighted graphs, making it ideal for network traversal,
+        social graph analysis, and level-order exploration tasks.`;
+      document.getElementById('result-live').style.display = '';
+    }
+
+    function showBfsError(msg) {
+      bfsError.textContent = msg; bfsError.classList.add('visible');
+      setTimeout(()=>bfsError.classList.remove('visible'), 3000);
+    }
+    let toastTimer = null;
+    function showBfsToast(msg) {
+      toastEl.textContent = msg; toastEl.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2800);
+    }
+
+    // Canvas mouse interaction
+    canvas.addEventListener('mousedown', e=>{
+      const r=canvas.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+      const hit=getNodeAt(mx,my);
+      if (bfsIsRunning||bfsIsPaused) return;
+      if (hit!==null) { isDragging=true; dragNodeId=hit; dragOffX=mx-graphNodes[hit].x; dragOffY=my-graphNodes[hit].y; }
+    });
+    canvas.addEventListener('mousemove', e=>{
+      const r=canvas.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+      if (isDragging&&dragNodeId!==null) { graphNodes[dragNodeId].x=mx-dragOffX; graphNodes[dragNodeId].y=my-dragOffY; drawGraph(); return; }
+      const hit=getNodeAt(mx,my);
+      if (hit!==null) {
+        tooltip.textContent=`Node ${hit} · State: ${nodeStates[hit]||'unvisited'}${bfsLevelMap[hit]!==undefined?' · Level '+bfsLevelMap[hit]:''}`;
+        tooltip.style.left=(e.clientX+14)+'px'; tooltip.style.top=(e.clientY-30)+'px'; tooltip.classList.add('visible');
+      } else { tooltip.classList.remove('visible'); }
+    });
+    canvas.addEventListener('mouseup',    ()=>{ isDragging=false; dragNodeId=null; });
+    canvas.addEventListener('mouseleave', ()=>{ isDragging=false; dragNodeId=null; tooltip.classList.remove('visible'); });
+
+    // Button wiring
+    bfsBtnSample.addEventListener('click', ()=>{ resetTraversalState(); loadSampleGraph(); });
+    bfsBtnAddNode.addEventListener('click', ()=>{
+      const v=parseInt(bfsNodeInput.value);
+      if (isNaN(v)||v<0||v>19) { showBfsError('Node id must be 0–19.'); return; }
+      if (addNode(v)) { showBfsToast(`Node ${v} added.`); bfsNodeInput.value=''; }
+    });
+    bfsBtnAddEdge.addEventListener('click', ()=>{
+      const f=parseInt(bfsEdgeFrom.value), t=parseInt(bfsEdgeTo.value);
+      if (isNaN(f)||isNaN(t)) { showBfsError('Enter valid node IDs for edge.'); return; }
+      if (addEdge(f,t)) { showBfsToast(`Edge ${f}—${t} added.`); bfsEdgeFrom.value=''; bfsEdgeTo.value=''; }
+    });
+    bfsBtnClearGraph.addEventListener('click', ()=>{
+      graphNodes={}; graphEdges=[]; nodeStates={}; edgeStates={}; bfsLevelMap={};
+      graphEdges=[]; resetTraversalState(); emptyState.classList.remove('hidden'); updatePills(); drawGraph();
+    });
+    bfsBtnStart.addEventListener('click', ()=>{
+      const startId=parseInt(bfsStartNode.value);
+      if (Object.keys(graphNodes).length===0) { showBfsError('Add nodes to the graph first.'); return; }
+      const startNode=isNaN(startId)?parseInt(Object.keys(graphNodes)[0]):startId;
+      if (graphNodes[startNode]===undefined) { showBfsError(`Start node ${startNode} doesn't exist.`); return; }
+      resetTraversalState(); buildBFSSteps(startNode);
+      bfsTotalQOps=0; bfsTotalMaxQ=0; clearAllStates();
+      document.getElementById('result-pending').style.display    = 'none';
+      document.getElementById('result-live').style.display       = 'none';
+      document.getElementById('result-inprogress').style.display = '';
+      bfsIsRunning=true; bfsIsPaused=false;
+      bfsStatus.textContent=`Running BFS from Node ${startNode}…`; bfsStatus.className='bfs-status running';
+      setBtnState('running'); runBFS();
+    });
+    bfsBtnPause.addEventListener('click', ()=>{
+      bfsIsPaused=true; bfsIsRunning=false; clearTimeout(bfsAnimTimer);
+      bfsStatus.textContent='⏸ Paused'; bfsStatus.className='bfs-status'; setBtnState('paused');
+    });
+    bfsBtnResume.addEventListener('click', ()=>{
+      if (!bfsIsPaused) return;
+      bfsIsPaused=false; bfsIsRunning=true;
+      bfsStatus.textContent='▶ Resumed…'; bfsStatus.className='bfs-status running';
+      setBtnState('running'); runBFS();
+    });
+    bfsBtnReset.addEventListener('click', ()=>{ resetTraversalState(); });
+    bfsBtnStep.addEventListener('click', ()=>{
+      if (!bfsSteps.length) {
+        const startId=parseInt(bfsStartNode.value);
+        if (Object.keys(graphNodes).length===0) { showBfsError('Add nodes first.'); return; }
+        const startNode=isNaN(startId)?parseInt(Object.keys(graphNodes)[0]):startId;
+        if (graphNodes[startNode]===undefined) { showBfsError(`Node ${startNode} doesn't exist.`); return; }
+        clearAllStates(); buildBFSSteps(startNode); bfsTotalQOps=0; bfsTotalMaxQ=0;
+        document.getElementById('result-inprogress').style.display = '';
+        document.getElementById('result-pending').style.display    = 'none';
+        document.getElementById('result-live').style.display       = 'none';
+      }
+      bfsIsPaused=true; bfsIsRunning=false;
+      if (bfsCurrentStep<bfsSteps.length-1) {
+        bfsCurrentStep++; applyStep(bfsCurrentStep); setBtnState('paused');
+        if (bfsCurrentStep>=bfsSteps.length-1) {
+          setBtnState('done');
+          bfsStatus.textContent=`✅ BFS complete! Traversal: ${bfsTravOrderDisp.join(' → ')}`;
+          bfsStatus.className='bfs-status done'; finalizeResult();
+        }
       }
     });
-  }
 
-  // Update stats
-  bfsPillVisited.textContent = bfsVisitedDisp.length;
-  bfsPillOps.textContent = bfsTotalQOps;
-  bfsSVisited.textContent = bfsVisitedDisp.length;
-  bfsSQOps.textContent = bfsTotalQOps;
-  bfsSMaxQ.textContent = bfsTotalMaxQ;
+    // Redraw on theme change
+    const observer = new MutationObserver(()=>drawGraph());
+    observer.observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
 
-  drawGraph();
-}
+    setBtnState('idle');
+    resizeCanvas();
+  </script>
 
-function renderQueuePanel(q) {
-  if (!q.length) {
-    bfsQueueTrack.innerHTML = '<span class="bfs-queue-empty">Empty</span>';
-    bfsFrontPtr.style.opacity = '0.3';
-    bfsRearPtr.style.opacity = '0.3';
-    return;
-  }
-  bfsFrontPtr.style.opacity = '1';
-  bfsRearPtr.style.opacity = '1';
-  bfsQueueTrack.innerHTML = q.map((id, i) =>
-    `<div class="bfs-queue-item ${i===0?'front':''}">${id}</div>`
-  ).join('');
-}
-
-function renderTraversal(order) {
-  bfsTravList.innerHTML = order.map((id, i) => {
-    const level = bfsLevelMap[id] !== undefined ? `L${bfsLevelMap[id]}` : '';
-    return `<div class="bfs-trav-item"><strong>${id}</strong><span class="bfs-trav-num">#${i+1} ${level}</span></div>`;
-  }).join('');
-  bfsTravList.scrollTop = bfsTravList.scrollHeight;
-}
-
-function renderVisited(v) {
-  bfsVisitedChips.innerHTML = v.map(id => `<span class="bfs-visited-chip">${id}</span>`).join('');
-}
-
-function updateCurNode(id, level) {
-  if (id === null) {
-    bfsCurNode.textContent = '—';
-    bfsCurNode.className = 'bfs-cur-node empty';
-    bfsLevelDisp.textContent = '—';
-  } else {
-    bfsCurNode.textContent = `Node ${id}`;
-    bfsCurNode.className = 'bfs-cur-node';
-    bfsLevelDisp.textContent = level !== null ? level : '—';
-  }
-}
-
-/* --- Full reset of traversal state --- */
-function resetTraversalState() {
-  bfsSteps = []; bfsCurrentStep = -1; bfsIsRunning = false; bfsIsPaused = false;
-  clearTimeout(bfsAnimTimer);
-  clearAllStates();
-  bfsTravOrderDisp = []; bfsVisitedDisp = []; bfsQueueDisp = [];
-  bfsCurrentActiveNode = null; bfsTotalQOps = 0; bfsTotalMaxQ = 0;
-  renderQueuePanel([]);
-  renderTraversal([]);
-  renderVisited([]);
-  updateCurNode(null, null);
-  bfsStepLabel.textContent = 'Step 0';
-  bfsTotalLabel.textContent = 'of 0';
-  bfsProgressFill.style.width = '0%';
-  bfsPillVisited.textContent = '0';
-  bfsPillOps.textContent = '0';
-  bfsPillLevel.textContent = '—';
-  bfsSVisited.textContent = '0';
-  bfsSLevel.textContent = '0';
-  bfsSQOps.textContent = '0';
-  bfsSMaxQ.textContent = '0';
-  bfsLevelMap = {};
-  document.querySelectorAll('.bfs-code-line').forEach(el => el.classList.remove('highlighted'));
-  updateCurNode(null, null);
-  bfsStatus.textContent = 'Build a graph and press Start BFS';
-  bfsStatus.className = 'bfs-status';
-  setBtnState('idle');
-  drawGraph();
-}
-
-/* --- Runner --- */
-async function runBFS() {
-  while (bfsCurrentStep < bfsSteps.length - 1 && bfsIsRunning && !bfsIsPaused) {
-    bfsCurrentStep++;
-    applyStep(bfsCurrentStep);
-    await sleep(SPEED_MAP[bfsSpeedSlider.value - 1] || 500);
-  }
-  if (bfsCurrentStep >= bfsSteps.length - 1 && bfsIsRunning) {
-    bfsIsRunning = false;
-    setBtnState('done');
-    bfsStatus.textContent = `✅ BFS complete! Traversal: ${bfsTravOrderDisp.join(' → ')}`;
-    bfsStatus.className = 'bfs-status done';
-    showBfsToast(`✅ BFS traversal complete! ${bfsTravOrderDisp.length} nodes visited.`);
-    finalizeResult();
-  }
-}
-function sleep(ms) { return new Promise(r => { bfsAnimTimer = setTimeout(r, ms); }); }
-
-function setBtnState(state) {
-  bfsBtnStart.disabled  = state === 'running' || state === 'paused';
-  bfsBtnPause.disabled  = state !== 'running';
-  bfsBtnResume.disabled = state !== 'paused';
-  bfsBtnStep.disabled   = state === 'running' || bfsCurrentStep >= bfsSteps.length - 1;
-}
-
-/* --- Finalize result --- */
-function finalizeResult() {
-  const n = Object.keys(graphNodes).length;
-  const visited = bfsTravOrderDisp.length;
-  const maxLevel = bfsTravOrderDisp.length ? Math.max(...bfsTravOrderDisp.map(id => bfsLevelMap[id] ?? 0)) : 0;
-  document.getElementById('result-pending').style.display = 'none';
-  document.getElementById('result-inprogress').style.display = 'none';
-  document.getElementById('result-input-label').innerHTML = `<strong>Observation Table</strong> — BFS from Node <code>${bfsStartNode.value || 0}</code>`;
-  document.getElementById('result-trav-seq').textContent = bfsTravOrderDisp.join(' → ');
-  const tbody = document.getElementById('result-call-tbody');
-  tbody.innerHTML = [
-    ['Start Vertex', bfsStartNode.value || 0, ''],
-    ['Total Nodes', n, 'Vertices in graph'],
-    ['Total Edges', graphEdges.length, 'Undirected edges'],
-    ['Nodes Visited', visited, 'Reachable from start'],
-    ['BFS Levels', maxLevel + 1, 'Depth of BFS tree'],
-    ['Total Queue Operations', bfsTotalQOps, 'Enqueue + Dequeue combined'],
-    ['Max Queue Size', bfsTotalMaxQ, 'Peak queue occupancy'],
-    ['Traversal Order', bfsTravOrderDisp.join(' → '), 'Level-order sequence'],
-  ].map(([m, v, n]) => `<tr><td>${m}</td><td><strong>${v}</strong></td><td>${n}</td></tr>`).join('');
-
-  document.getElementById('res-visited').textContent = visited;
-  document.getElementById('res-edges').textContent = graphEdges.length;
-  document.getElementById('res-levels').textContent = maxLevel + 1;
-  document.getElementById('res-qops').textContent = bfsTotalQOps;
-  document.getElementById('result-conclusion-text').innerHTML =
-    `BFS successfully traversed <strong>${visited}</strong> vertices starting from Node ${bfsStartNode.value||0}.
-    The traversal proceeded level by level, reaching BFS depth <strong>${maxLevel}</strong>, producing the order:
-    <code>${bfsTravOrderDisp.join(' → ')}</code>.
-    A total of <strong>${bfsTotalQOps}</strong> queue operations were performed with a peak queue size of
-    <strong>${bfsTotalMaxQ}</strong>. This confirms the <strong>O(V+E)</strong> time complexity of BFS —
-    each vertex is enqueued and dequeued exactly once, and each edge is examined at most twice.
-    BFS guarantees the shortest path in unweighted graphs, making it ideal for network traversal,
-    social graph analysis, and level-order exploration tasks.`;
-
-  document.getElementById('result-live').style.display = '';
-}
-
-/* --- Error/Toast helpers --- */
-function showBfsError(msg) { bfsError.textContent = msg; bfsError.classList.add('visible'); setTimeout(()=>bfsError.classList.remove('visible'), 3000); }
-let toastTimer = null;
-function showBfsToast(msg) {
-  toastEl.textContent = msg; toastEl.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2800);
-}
-
-/* --- Canvas mouse events --- */
-canvas.addEventListener('mousedown', e => {
-  const rect = canvas.getBoundingClientRect();
-  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-  const hit = getNodeAt(mx, my);
-  if (bfsIsRunning || bfsIsPaused) return;
-  if (hit !== null) {
-    isDragging = true; dragNodeId = hit;
-    dragOffX = mx - graphNodes[hit].x; dragOffY = my - graphNodes[hit].y;
-  }
-});
-canvas.addEventListener('mousemove', e => {
-  const rect = canvas.getBoundingClientRect();
-  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-  if (isDragging && dragNodeId !== null) {
-    graphNodes[dragNodeId].x = mx - dragOffX;
-    graphNodes[dragNodeId].y = my - dragOffY;
-    drawGraph(); return;
-  }
-  const hit = getNodeAt(mx, my);
-  if (hit !== null) {
-    tooltip.textContent = `Node ${hit} · State: ${getNodeState(hit)}${bfsLevelMap[hit]!==undefined?' · Level '+bfsLevelMap[hit]:''}`;
-    tooltip.style.left = (e.clientX + 14) + 'px';
-    tooltip.style.top = (e.clientY - 30) + 'px';
-    tooltip.classList.add('visible');
-  } else {
-    tooltip.classList.remove('visible');
-  }
-});
-canvas.addEventListener('mouseup', () => { isDragging = false; dragNodeId = null; });
-canvas.addEventListener('mouseleave', () => { isDragging = false; dragNodeId = null; tooltip.classList.remove('visible'); });
-
-/* --- Button handlers --- */
-bfsBtnSample.addEventListener('click', () => { resetTraversalState(); loadSampleGraph(); });
-
-bfsBtnAddNode.addEventListener('click', () => {
-  const v = parseInt(bfsNodeInput.value);
-  if (isNaN(v) || v < 0 || v > 19) { showBfsError('Node id must be 0–19.'); return; }
-  if (addNode(v)) { showBfsToast(`Node ${v} added.`); bfsNodeInput.value = ''; }
-});
-
-bfsBtnAddEdge.addEventListener('click', () => {
-  const f = parseInt(bfsEdgeFrom.value), t = parseInt(bfsEdgeTo.value);
-  if (isNaN(f) || isNaN(t)) { showBfsError('Enter valid node IDs for edge.'); return; }
-  if (addEdge(f, t)) { showBfsToast(`Edge ${f}—${t} added.`); bfsEdgeFrom.value=''; bfsEdgeTo.value=''; }
-});
-
-bfsBtnClearGraph.addEventListener('click', () => {
-  graphNodes = {}; graphEdges = []; nodeStates = {}; edgeStates = {}; bfsLevelMap = {};
-  resetTraversalState();
-  emptyState.classList.remove('hidden');
-  updatePills();
-  drawGraph();
-});
-
-bfsBtnStart.addEventListener('click', () => {
-  const startId = parseInt(bfsStartNode.value);
-  if (Object.keys(graphNodes).length === 0) { showBfsError('Add nodes to the graph first.'); return; }
-  const startNode = isNaN(startId) ? parseInt(Object.keys(graphNodes)[0]) : startId;
-  if (graphNodes[startNode] === undefined) { showBfsError(`Start node ${startNode} doesn't exist.`); return; }
-  resetTraversalState();
-  const { qOps, maxQ } = buildBFSSteps(startNode);
-  bfsTotalQOps = 0; bfsTotalMaxQ = 0;
-  clearAllStates();
-  document.getElementById('result-pending').style.display = 'none';
-  document.getElementById('result-live').style.display = 'none';
-  document.getElementById('result-inprogress').style.display = '';
-  bfsIsRunning = true; bfsIsPaused = false;
-  bfsStatus.textContent = `Running BFS from Node ${startNode}…`;
-  bfsStatus.className = 'bfs-status running';
-  setBtnState('running');
-  runBFS();
-});
-
-bfsBtnPause.addEventListener('click', () => {
-  bfsIsPaused = true; bfsIsRunning = false; clearTimeout(bfsAnimTimer);
-  bfsStatus.textContent = '⏸ Paused'; bfsStatus.className = 'bfs-status';
-  setBtnState('paused');
-});
-
-bfsBtnResume.addEventListener('click', () => {
-  if (!bfsIsPaused) return;
-  bfsIsPaused = false; bfsIsRunning = true;
-  bfsStatus.textContent = '▶ Resumed…'; bfsStatus.className = 'bfs-status running';
-  setBtnState('running'); runBFS();
-});
-
-bfsBtnReset.addEventListener('click', () => { resetTraversalState(); });
-
-bfsBtnStep.addEventListener('click', () => {
-  if (!bfsSteps.length) {
-    const startId = parseInt(bfsStartNode.value);
-    if (Object.keys(graphNodes).length === 0) { showBfsError('Add nodes first.'); return; }
-    const startNode = isNaN(startId) ? parseInt(Object.keys(graphNodes)[0]) : startId;
-    if (graphNodes[startNode] === undefined) { showBfsError(`Node ${startNode} doesn't exist.`); return; }
-    clearAllStates();
-    buildBFSSteps(startNode);
-    bfsTotalQOps = 0; bfsTotalMaxQ = 0;
-    document.getElementById('result-inprogress').style.display = '';
-    document.getElementById('result-pending').style.display = 'none';
-    document.getElementById('result-live').style.display = 'none';
-  }
-  bfsIsPaused = true; bfsIsRunning = false;
-  if (bfsCurrentStep < bfsSteps.length - 1) {
-    bfsCurrentStep++;
-    applyStep(bfsCurrentStep);
-    setBtnState('paused');
-    if (bfsCurrentStep >= bfsSteps.length - 1) {
-      setBtnState('done');
-      bfsStatus.textContent = `✅ BFS complete! Traversal: ${bfsTravOrderDisp.join(' → ')}`;
-      bfsStatus.className = 'bfs-status done';
-      finalizeResult();
-    }
-  }
-});
-
-bfsSpeedSlider.addEventListener('input', () => {
-  bfsSpeedVal.textContent = SPEED_LABELS[bfsSpeedSlider.value - 1];
-});
-
-/* --- Draw loop for theme change --- */
-const observer = new MutationObserver(() => drawGraph());
-observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
-/* --- Init --- */
-setBtnState('idle');
-resizeCanvas();
-</script>
+  <script src="../js/portal.js"></script>
 </body>
 </html>

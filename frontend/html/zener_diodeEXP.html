@@ -11,63 +11,14 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
 
+    <!-- Shared portal stylesheets (same as Bubble Sort page) -->
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/portal.css" />
+
     <style>
         /* =============================================
-           CSS VARIABLES — experiment page palette
-        ============================================= */
-        :root {
-            --bg-page: #f0f6fb;
-            --bg-card: #ffffff;
-            --card-inner: #f5f9fc;
-            --border-var: #c5dff0;
-            --border-strong: #3a9bd5;
-            --scale-bg: #dceefa;
-            --teal: #1a88d0;
-            --teal-dim: #dceefa;
-            --accent-btn: #1a88d0;
-            --btn-hover: #1270b0;
-            --accent-2: #0ec4e0;
-            --text-primary: #0d2a3e;
-            --text-mid: #2b5a7a;
-            --text-soft: #6b93b0;
-            --font-display: 'Cormorant Garamond', Georgia, serif;
-            --font-body: 'DM Sans', 'Outfit', sans-serif;
-            --r-lg: 20px;
-            --r-md: 12px;
-            --sh-card: 0 1px 4px rgba(26,100,160,0.07), 0 4px 16px rgba(26,100,160,0.05);
-        }
-        [data-theme="dark"] {
-            --bg-page: #050510;
-            --bg-card: #0e0e1e;
-            --card-inner: #13132a;
-            --border-var: #2a1f5a;
-            --border-strong: #7b2fbe;
-            --scale-bg: #0e0e22;
-            --teal: #9b4dff;
-            --teal-dim: rgba(155,77,255,0.09);
-            --accent-btn: #9b4dff;
-            --btn-hover: #7b2fbe;
-            --accent-2: #c07aff;
-            --text-primary: #e8e0ff;
-            --text-mid: #b8a8e8;
-            --text-soft: #7b6aaa;
-        }
-
-        *, *::before, *::after { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            font-family: var(--font-body);
-            background: var(--bg-page);
-            color: var(--text-primary);
-            min-height: 100vh;
-            transition: background 0.35s, color 0.35s;
-        }
-
-        a { text-decoration: none; }
-
-        /* =============================================
            EXPERIMENT PAGE — Scoped Styles
+           (mirrors bubble_sort.html scoped block)
         ============================================= */
         .exp-page-wrapper {
             display: flex;
@@ -75,65 +26,6 @@
             min-height: 100vh;
             background: var(--bg-page);
         }
-
-        /* ---- PORTAL HEADER ---- */
-        .portal-header {
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-var);
-            padding: 0 32px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 200;
-            box-shadow: 0 1px 0 var(--border-var);
-        }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .portal-logo { height: 32px; width: auto; }
-        .college-name { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0; line-height: 1.1; }
-        .stream-badge { font-size: 0.7rem; color: var(--text-soft); font-weight: 500; display: flex; align-items: center; gap: 3px; }
-        .college-info { display: flex; flex-direction: column; }
-        .header-center { flex: 1; max-width: 380px; }
-        .search-wrapper { position: relative; }
-        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-soft); pointer-events: none; }
-        .global-search { width: 100%; padding: 7px 12px 7px 34px; border: 1px solid var(--border-var); border-radius: 8px; background: var(--card-inner); color: var(--text-primary); font-family: var(--font-body); font-size: 0.83rem; outline: none; transition: border-color 0.2s; }
-        .global-search:focus { border-color: var(--accent-btn); }
-        .header-right { display: flex; align-items: center; gap: 10px; }
-        .icon-btn { background: none; border: 1px solid var(--border-var); border-radius: 8px; padding: 6px 8px; cursor: pointer; color: var(--text-mid); display: flex; align-items: center; justify-content: center; position: relative; transition: border-color 0.2s; }
-        .icon-btn:hover { border-color: var(--accent-btn); color: var(--accent-btn); }
-        .notification-badge { position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; border-radius: 50%; background: #e74c3c; border: 1.5px solid var(--bg-card); }
-        .notif-panel { position: absolute; top: 52px; right: 12px; width: 300px; background: var(--bg-card); border: 1px solid var(--border-var); border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); z-index: 999; display: none; overflow: hidden; }
-        .notif-panel.open { display: block; }
-        .notif-panel-header { padding: 14px 16px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-var); font-size: 0.82rem; font-weight: 700; color: var(--text-primary); }
-        .notif-clear-btn { background: none; border: none; font-size: 0.72rem; color: var(--accent-btn); cursor: pointer; font-family: var(--font-body); }
-        .notif-list { padding: 8px; }
-        .notif-item { display: flex; gap: 10px; padding: 10px 10px; border-radius: 8px; margin-bottom: 4px; }
-        .notif-unread { background: var(--card-inner); }
-        .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn); flex-shrink: 0; margin-top: 4px; }
-        .notif-body p { margin: 0 0 2px; font-size: 0.8rem; font-weight: 600; color: var(--text-primary); }
-        .notif-body span { font-size: 0.75rem; color: var(--text-mid); display: block; }
-        .notif-body time { font-size: 0.7rem; color: var(--text-soft); display: block; margin-top: 3px; }
-        .profile-dropdown { position: relative; }
-        .profile-btn { display: flex; align-items: center; gap: 8px; background: var(--card-inner); border: 1px solid var(--border-var); border-radius: 10px; padding: 5px 10px 5px 6px; cursor: pointer; transition: border-color 0.2s; }
-        .profile-btn:hover { border-color: var(--accent-btn); }
-        .profile-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-btn); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; }
-        .profile-name-tag { display: flex; flex-direction: column; line-height: 1.1; }
-        .prof-name { font-size: 0.78rem; font-weight: 600; color: var(--text-primary); }
-        .prof-roll { font-size: 0.68rem; color: var(--text-soft); }
-        .chevron-down { color: var(--text-soft); }
-        .dropdown-menu { position: absolute; right: 0; top: calc(100% + 8px); width: 220px; background: var(--bg-card); border: 1px solid var(--border-var); border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); z-index: 999; display: none; overflow: hidden; padding: 8px; }
-        .profile-dropdown:hover .dropdown-menu { display: block; }
-        .dropdown-header { display: flex; align-items: center; gap: 10px; padding: 10px 10px 12px; border-bottom: 1px solid var(--border-var); margin-bottom: 6px; }
-        .dh-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-btn); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-        .dropdown-header strong { font-size: 0.82rem; display: block; color: var(--text-primary); }
-        .dropdown-header span { font-size: 0.7rem; color: var(--text-soft); }
-        .dropdown-menu hr { border: none; border-top: 1px solid var(--border-var); margin: 6px 0; }
-        .dropdown-menu a { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: 0.8rem; color: var(--text-mid); transition: background 0.15s; }
-        .dropdown-menu a:hover { background: var(--card-inner); color: var(--text-primary); }
-        .logout-link { color: #e74c3c !important; }
 
         .exp-breadcrumb {
             background: var(--bg-card);
@@ -145,13 +37,13 @@
             font-size: 0.82rem;
             color: var(--text-soft);
         }
-        .exp-breadcrumb a { color: var(--accent-btn); font-weight: 500; transition: color 0.2s; }
-        .exp-breadcrumb a:hover { color: var(--btn-hover); text-decoration: underline; }
+        .exp-breadcrumb a { color: var(--accent-btn, var(--teal)); font-weight: 500; transition: color 0.2s; }
+        .exp-breadcrumb a:hover { color: var(--btn-hover, #1270b0); text-decoration: underline; }
         .exp-breadcrumb .sep { opacity: 0.45; margin: 0 2px; }
         .exp-breadcrumb .current { color: var(--text-primary); font-weight: 600; }
 
         .exp-banner {
-            background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn) 100%);
+            background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn, var(--teal)) 100%);
             color: #fff;
             padding: 22px 40px;
             display: flex;
@@ -180,7 +72,7 @@
         .exp-sidebar-card {
             background: var(--bg-card);
             border: 1px solid var(--border-var);
-            border-radius: var(--r-lg);
+            border-radius: var(--r-lg, 20px);
             box-shadow: var(--sh-card);
             overflow: hidden;
             position: sticky;
@@ -190,27 +82,27 @@
         .exp-nav-list { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
         .exp-nav-btn {
             display: flex; align-items: center; gap: 12px; width: 100%;
-            padding: 12px 14px; border-radius: var(--r-md);
+            padding: 12px 14px; border-radius: var(--r-md, 12px);
             font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
             color: var(--text-mid); background: transparent; border: none; cursor: pointer;
             transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
             text-align: left; position: relative;
         }
-        .exp-nav-btn:hover { background: var(--scale-bg); color: var(--text-primary); transform: translateX(3px); }
-        .exp-nav-btn.active { background: var(--scale-bg); color: var(--accent-btn); font-weight: 600; }
+        .exp-nav-btn:hover { background: var(--scale-bg, var(--teal-dim)); color: var(--text-primary); transform: translateX(3px); }
+        .exp-nav-btn.active { background: var(--scale-bg, var(--teal-dim)); color: var(--accent-btn, var(--teal)); font-weight: 600; }
         .exp-nav-btn.active::before {
             content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-            width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--accent-btn);
+            width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--accent-btn, var(--teal));
         }
         .exp-nav-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--card-inner); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; transition: background 0.22s ease; }
-        .exp-nav-btn.active .exp-nav-icon { background: var(--accent-btn); color: #fff; }
+        .exp-nav-btn.active .exp-nav-icon { background: var(--accent-btn, var(--teal)); color: #fff; }
         .exp-sidebar-progress { padding: 14px 20px 18px; border-top: 1px solid var(--border-var); }
         .exp-progress-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--text-soft); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
         .exp-progress-track { height: 5px; background: var(--scale-bg); border-radius: 10px; overflow: hidden; }
-        .exp-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-btn), var(--accent-2)); border-radius: 10px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 11%; }
+        .exp-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0)); border-radius: 10px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 12%; }
 
         .exp-content-area { flex: 1; min-width: 0; }
-        .exp-panel { background: var(--bg-card); border: 1px solid var(--border-var); border-radius: var(--r-lg); box-shadow: var(--sh-card); overflow: hidden; }
+        .exp-panel { background: var(--bg-card); border: 1px solid var(--border-var); border-radius: var(--r-lg, 20px); box-shadow: var(--sh-card); overflow: hidden; }
         .exp-panel-header { padding: 24px 32px 20px; border-bottom: 1px solid var(--border-var); display: flex; align-items: center; gap: 16px; }
         .exp-panel-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--scale-bg); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
         .exp-panel-title { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.1; }
@@ -223,13 +115,13 @@
 
         .exp-body-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.85; }
         .exp-body-text + .exp-body-text { margin-top: 16px; }
-        .exp-highlight-box { background: var(--scale-bg); border-left: 4px solid var(--accent-btn); border-radius: 0 var(--r-md) var(--r-md) 0; padding: 16px 20px; margin: 20px 0; font-size: 0.9rem; color: var(--text-primary); line-height: 1.7; }
+        .exp-highlight-box { background: var(--scale-bg); border-left: 4px solid var(--accent-btn, var(--teal)); border-radius: 0 var(--r-md) var(--r-md) 0; padding: 16px 20px; margin: 20px 0; font-size: 0.9rem; color: var(--text-primary); line-height: 1.7; }
         .exp-step-list { counter-reset: steps; list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 14px; }
         .exp-step-list li { counter-increment: steps; display: flex; align-items: flex-start; gap: 16px; font-size: 0.92rem; color: var(--text-mid); line-height: 1.7; }
-        .exp-step-list li::before { content: counter(steps); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-btn), var(--accent-2)); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+        .exp-step-list li::before { content: counter(steps); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0)); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
         .exp-materials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
         .exp-material-chip { display: flex; align-items: center; gap: 10px; background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 10px 14px; font-size: 0.83rem; color: var(--text-primary); font-weight: 500; }
-        .exp-material-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn); flex-shrink: 0; }
+        .exp-material-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn, var(--teal)); flex-shrink: 0; }
         .exp-result-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
         .exp-result-table th { background: var(--scale-bg); color: var(--text-primary); font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 2px solid var(--border-strong); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
         .exp-result-table td { padding: 11px 16px; color: var(--text-mid); border-bottom: 1px solid var(--border-var); line-height: 1.4; text-align: center; }
@@ -238,15 +130,15 @@
         .exp-result-table tr:hover td { background: var(--card-inner); }
         .exp-result-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin: 24px 0; }
         .exp-stat-card { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 18px 16px; text-align: center; }
-        .exp-stat-value { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--accent-btn); line-height: 1; margin-bottom: 6px; }
+        .exp-stat-value { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--accent-btn, var(--teal)); line-height: 1; margin-bottom: 6px; }
         .exp-stat-label { font-size: 0.75rem; color: var(--text-soft); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
         .exp-conclusion-box { background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 20px 24px; margin-top: 24px; }
-        .exp-conclusion-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-btn); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .exp-conclusion-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-btn, var(--teal)); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .exp-conclusion-text { font-size: 0.92rem; color: var(--text-primary); line-height: 1.75; }
         .exp-divider { height: 1px; background: var(--border-var); margin: 28px 0; border: none; }
-        .exp-tag { display: inline-block; background: var(--scale-bg); color: var(--accent-btn); border: 1px solid var(--border-var); border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; margin: 2px; }
+        .exp-tag { display: inline-block; background: var(--scale-bg); color: var(--accent-btn, var(--teal)); border: 1px solid var(--border-var); border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; margin: 2px; }
 
-        /* Theme switch */
+        /* Theme switch (identical to bubble sort page) */
         .theme-switch { display: inline-block; height: 30px; position: relative; width: 64px; }
         .theme-switch input { display: none; }
         .slider { background-color: var(--scale-bg); border: 1.5px solid var(--border-var); bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; display: flex; align-items: center; justify-content: space-between; padding: 0 7px; box-sizing: border-box; }
@@ -259,84 +151,51 @@
         input:checked + .slider::before { transform: translateX(34px); }
         .slider.round { border-radius: 30px; }
 
-        /* Apparatus */
+        [data-theme="dark"] #site-header { background: rgba(14,14,30,0.97); }
+
+        /* ── Apparatus ── */
         .apparatus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin: 20px 0; }
         .apparatus-chip { display: flex; align-items: center; gap: 12px; background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 12px 16px; font-size: 0.85rem; color: var(--text-primary); font-weight: 500; transition: border-color 0.22s, box-shadow 0.22s, transform 0.18s; }
-        .apparatus-chip:hover { border-color: var(--accent-btn); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn) 10%, transparent); transform: translateY(-2px); }
+        .apparatus-chip:hover { border-color: var(--accent-btn, var(--teal)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn, var(--teal)) 10%, transparent); transform: translateY(-2px); }
         .apparatus-icon { width: 34px; height: 34px; border-radius: 10px; background: var(--scale-bg); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
 
-        /* Procedure */
+        /* ── Procedure columns ── */
         .procedure-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
         .procedure-col-card { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); overflow: hidden; }
         .procedure-col-header { padding: 14px 18px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid var(--border-var); display: flex; align-items: center; gap: 8px; }
         .procedure-col-header.forward { color: #e67e22; background: rgba(230,126,34,0.08); }
-        .procedure-col-header.reverse { color: var(--accent-btn); background: color-mix(in srgb, var(--accent-btn) 8%, transparent); }
+        .procedure-col-header.reverse { color: var(--accent-btn, var(--teal)); background: color-mix(in srgb, var(--accent-btn, var(--teal)) 8%, transparent); }
         .procedure-col-body { padding: 18px; }
         .procedure-col-body .exp-step-list { margin: 0; }
 
-        /* Observation tabs */
-        .obs-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
-        .obs-tab-btn { padding: 8px 20px; border: 1.5px solid var(--border-var); border-radius: 30px; font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: pointer; background: transparent; color: var(--text-mid); transition: all 0.22s; }
-        .obs-tab-btn.active { background: var(--accent-btn); border-color: var(--accent-btn); color: #fff; box-shadow: 0 3px 10px color-mix(in srgb, var(--accent-btn) 30%, transparent); }
-        .obs-tab-btn:not(.active):hover { border-color: var(--accent-btn); color: var(--accent-btn); }
-        .obs-table-panel { display: none; }
-        .obs-table-panel.visible { display: block; animation: sectionFadeIn 0.28s both; }
-
-        /* Precautions */
+        /* ── Precautions ── */
         .precaution-list { list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 10px; }
         .precaution-item { display: flex; align-items: flex-start; gap: 14px; background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 12px 16px; font-size: 0.88rem; color: var(--text-mid); line-height: 1.6; transition: border-color 0.2s, transform 0.18s; }
-        .precaution-item:hover { border-color: var(--accent-btn); transform: translateX(3px); }
+        .precaution-item:hover { border-color: var(--accent-btn, var(--teal)); transform: translateX(3px); }
         .precaution-num { flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; background: rgba(255,160,0,0.15); color: #c47a00; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
         [data-theme="dark"] .precaution-num { color: #ffe8a0; }
 
-        /* Viva accordion */
+        /* ── Viva accordion ── */
         .viva-list { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
         .viva-item { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); overflow: hidden; transition: border-color 0.22s, box-shadow 0.22s; }
-        .viva-item.open { border-color: var(--accent-btn); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn) 10%, transparent); }
+        .viva-item.open { border-color: var(--accent-btn, var(--teal)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn, var(--teal)) 10%, transparent); }
         .viva-question { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; cursor: pointer; user-select: none; font-size: 0.9rem; font-weight: 600; color: var(--text-primary); gap: 12px; }
         .viva-question:hover { background: var(--scale-bg); }
         .viva-q-left { display: flex; align-items: center; gap: 12px; }
-        .viva-q-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-btn), var(--accent-2)); color: #fff; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .viva-q-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0)); color: #fff; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
         .viva-chevron { width: 18px; height: 18px; flex-shrink: 0; color: var(--text-soft); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); }
         .viva-item.open .viva-chevron { transform: rotate(180deg); }
         .viva-answer { max-height: 0; overflow: hidden; transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), padding 0.28s; padding: 0 18px; font-size: 0.88rem; color: var(--text-mid); line-height: 1.8; }
         .viva-item.open .viva-answer { max-height: 300px; padding: 0 18px 16px; }
         .viva-answer p { margin: 0; }
 
-        /* Circuit diagram / model graph */
+        /* ── Circuit / model graph images ── */
         .circuit-placeholder { background: var(--card-inner); border: 1.5px dashed var(--border-var); border-radius: var(--r-md); padding: 32px 20px; text-align: center; margin: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .circuit-diagram { border: black; border-radius: 50px; height: 400px; width: 600px; }
-        .model-graph { border: black; border-radius: 50px; height: 400px; width: 600px; }
+        .circuit-diagram, .model-graph { border-radius: 12px; max-width: 100%; height: auto; max-height: 400px; }
 
-        /* Result */
-        .result-badge { display: inline-flex; align-items: center; gap: 6px; background: color-mix(in srgb, var(--accent-btn) 12%, transparent); color: var(--accent-btn); border: 1px solid color-mix(in srgb, var(--accent-btn) 30%, transparent); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; margin: 4px; }
+        /* ── Simulation section wrapper ── */
+        #section-simulations .exp-panel-body { padding: 0; overflow: hidden; }
 
-        /* Graph placeholders */
-        .graph-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
-        .graph-card-exp { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); overflow: hidden; transition: border-color 0.22s, box-shadow 0.22s; }
-        .graph-card-exp:hover { border-color: var(--accent-btn); box-shadow: 0 4px 18px color-mix(in srgb, var(--accent-btn) 12%, transparent); }
-        .graph-card-header-exp { padding: 14px 18px; border-bottom: 1px solid var(--border-var); font-size: 0.82rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
-        .graph-card-body-exp { height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px; }
-        .graph-placeholder-icon { font-size: 2.2rem; opacity: 0.35; }
-        .graph-placeholder-text { font-size: 0.82rem; color: var(--text-soft); text-align: center; line-height: 1.6; }
-        .graph-wip-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(230,160,0,0.12); color: #c47a00; border: 1px solid rgba(230,160,0,0.3); border-radius: 20px; padding: 4px 12px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; }
-        [data-theme="dark"] .graph-wip-badge { color: #ffe8a0; }
-
-        /* Responsive */
-        @media (max-width: 900px) { .procedure-cols { grid-template-columns: 1fr; } .graph-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 800px) { .exp-main-body { flex-direction: column; padding: 20px 16px; } .exp-sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; } .exp-sidebar-card { position: static; } .exp-nav-list { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 10px; } .exp-nav-btn { flex: 1; min-width: calc(33% - 4px); justify-content: center; font-size: 0.78rem; padding: 10px 8px; } .exp-nav-btn.active::before { display: none; } .exp-banner { padding: 18px 20px; flex-wrap: wrap; gap: 12px; } .exp-panel-body { padding: 20px; } .exp-panel-header { padding: 18px 20px; } .exp-breadcrumb { padding: 8px 16px; } }
-        @media (max-width: 520px) { .exp-nav-btn { min-width: calc(50% - 3px); } .exp-result-stats { grid-template-columns: 1fr 1fr; } .exp-banner-badge { display: none; } .apparatus-grid { grid-template-columns: 1fr 1fr; } }
-
-        /* =============================================
-           SIMULATION SECTION WRAPPER
-           Scoped inside .sim-section to avoid conflicts
-        ============================================= */
-        #section-simulations .exp-panel-body {
-            padding: 0;
-            overflow: hidden;
-        }
-
-        /* ---- Simulation container ---- */
         .sim-section {
             --sim-bg: #E8F4FD;
             --sim-surface: #FFFFFF;
@@ -366,7 +225,7 @@
             color: var(--sim-tp);
             font-family: 'IBM Plex Sans', sans-serif;
             padding: 20px;
-            border-radius: 0 0 var(--r-lg) var(--r-lg);
+            border-radius: 0 0 var(--r-lg, 20px) var(--r-lg, 20px);
         }
         [data-theme="dark"] .sim-section {
             --sim-bg: #050510;
@@ -395,19 +254,9 @@
             --sim-shadow-md: 0 2px 8px rgba(0,0,0,0.45), 0 8px 24px rgba(0,0,0,0.32);
         }
 
-        /* Scoped simulation styles — prefix .sim-section */
         .sim-section .s-mono { font-family: 'IBM Plex Mono', monospace; }
 
-        .sim-section .s-step-bar {
-            border-bottom: 1px solid var(--sim-border);
-            padding: 8px 4px;
-            display: flex;
-            align-items: center;
-            gap: 0;
-            margin-bottom: 16px;
-            background: var(--sim-surface);
-            border-radius: 10px;
-        }
+        .sim-section .s-step-bar { border-bottom: 1px solid var(--sim-border); padding: 8px 4px; display: flex; align-items: center; gap: 0; margin-bottom: 16px; background: var(--sim-surface); border-radius: 10px; }
         .sim-section .s-step-item { display: flex; align-items: center; gap: 6px; flex: 1; position: relative; }
         .sim-section .s-step-item:not(:last-child)::after { content: ''; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: calc(100% - 80px); height: 1px; background: var(--sim-border); left: 80px; transition: background 0.4s; }
         .sim-section .s-step-item.s-done:not(:last-child)::after { background: var(--sim-accent); }
@@ -482,7 +331,6 @@
         .sim-section .s-physics-row { font-size: 10.5px; color: var(--sim-ts); line-height: 1.8; display: flex; gap: 4px; }
         .sim-section .s-physics-row::before { content: '·'; color: var(--sim-tm); }
 
-        /* Observation tables */
         .sim-section .s-obs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
         .sim-section .s-obs-panel { background: var(--sim-surface); border: 1px solid var(--sim-border); border-radius: 12px; padding: 16px; box-shadow: var(--sim-shadow); }
         .sim-section .s-obs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
@@ -507,7 +355,6 @@
         .sim-section .s-del-btn:hover { color: var(--sim-danger); }
         .sim-section .s-obs-count { font-size: 9px; color: var(--sim-tm); margin-top: 6px; text-align: right; font-family: 'IBM Plex Mono', monospace; }
 
-        /* Analysis section */
         .sim-section .s-analysis-section { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
         .sim-section .s-graph-card { background: var(--sim-surface); border: 1px solid var(--sim-border); border-radius: 12px; padding: 14px 20px 12px; box-shadow: var(--sim-shadow); display: flex; flex-direction: column; align-items: center; }
         .sim-section .s-graph-canvas-outer { display: flex; justify-content: center; width: 100%; }
@@ -526,7 +373,6 @@
         .sim-section .s-gl-swatch { width: 16px; height: 2.5px; border-radius: 2px; }
         .sim-section .s-gl-dot-swatch { width: 8px; height: 8px; border-radius: 2px; transform: rotate(45deg); }
 
-        /* Step log */
         .sim-section .s-steplog-card { background: var(--sim-surface); border: 1px solid var(--sim-border); border-radius: 12px; padding: 14px 18px; box-shadow: var(--sim-shadow); }
         .sim-section .s-steplog-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--sim-tm); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .sim-section .s-steplog-count { font-size: 9px; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--sim-tf); font-family: 'IBM Plex Mono', monospace; }
@@ -547,7 +393,6 @@
         .sim-section .s-sl-entry.past .s-sl-txt { color: var(--sim-tm); }
         .sim-section .s-sl-time { font-size: 7.5px; color: var(--sim-tf); margin-top: 3px; font-family: 'IBM Plex Mono', monospace; }
 
-        /* Instruction section */
         .sim-section .s-instr-section { background: var(--sim-surface); border: 1px solid var(--sim-border); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: var(--sim-shadow); }
         .sim-section .s-instr-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 14px; }
         .sim-section .s-instr-card { background: var(--sim-surface2); border: 1px solid var(--sim-border); border-radius: 10px; padding: 14px; transition: all 0.3s; position: relative; }
@@ -562,7 +407,6 @@
         .sim-section .s-instr-card.active .s-instr-card-status { color: var(--sim-accent); }
         .sim-section .s-instr-card.completed .s-instr-card-status { color: var(--sim-ok); }
 
-        /* Theory section */
         .sim-section .s-theory-section { background: var(--sim-surface); border: 1px solid var(--sim-border); border-radius: 12px; margin-bottom: 16px; box-shadow: var(--sim-shadow); overflow: hidden; }
         .sim-section .s-theory-toggle { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; cursor: pointer; user-select: none; transition: background 0.2s; }
         .sim-section .s-theory-toggle:hover { background: var(--sim-surface2); }
@@ -578,19 +422,50 @@
         .sim-section .s-theory-card-text { font-size: 11px; color: var(--sim-ts); line-height: 1.6; }
         .sim-section .s-theory-formula { background: var(--sim-surface2); border: 1px solid var(--sim-border); border-radius: 8px; padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--sim-accent); margin-top: 8px; text-align: center; }
 
-        /* SVG component styles */
+        /* SVG circuit styles */
         .sim-section .s-wire { stroke: var(--sim-accent); stroke-width: 2.2; fill: none; stroke-linecap: round; transition: stroke 0.4s; }
         .sim-section .s-cbody { fill: transparent; stroke: var(--sim-accent); stroke-width: 2; transition: stroke 0.4s; }
         .sim-section .s-ctxt { fill: var(--sim-accent); font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; }
         .sim-section .s-clbl { fill: var(--sim-tm); font-family: 'IBM Plex Sans', sans-serif; font-size: 9px; }
-        @keyframes s-pulse-glow { 0%, 100% { filter: drop-shadow(0 0 2px var(--sim-accent)); } 50% { filter: drop-shadow(0 0 8px var(--sim-accent)); } }
+        @keyframes s-pulse-glow { 0%,100%{filter:drop-shadow(0 0 2px var(--sim-accent))}50%{filter:drop-shadow(0 0 8px var(--sim-accent))}}
         .sim-section .s-gpulse { animation: s-pulse-glow 2s ease-in-out infinite; }
-        @keyframes s-wire-glow { 0%, 100% { stroke-opacity: 1; filter: drop-shadow(0 0 2px var(--sim-accent)); } 50% { stroke-opacity: 0.7; filter: drop-shadow(0 0 6px var(--sim-accent)); } }
+        @keyframes s-wire-glow { 0%,100%{stroke-opacity:1;filter:drop-shadow(0 0 2px var(--sim-accent))}50%{stroke-opacity:0.7;filter:drop-shadow(0 0 6px var(--sim-accent))}}
         .sim-section .s-wire-active { animation: s-wire-glow 1.5s ease-in-out infinite; }
 
-        @media (max-width: 1100px) { .sim-section .s-main-grid { grid-template-columns: 200px 1fr 185px; } }
-        @media (max-width: 900px) { .sim-section .s-main-grid { grid-template-columns: 1fr; } .sim-section .s-obs-grid { grid-template-columns: 1fr; } .sim-section .s-theory-content { grid-template-columns: 1fr; } .sim-section .s-instr-cards { grid-template-columns: 1fr 1fr; } .sim-section .s-graph-canvas-wrap { width: 100%; height: 300px; } }
-        @media (max-width: 600px) { .sim-section .s-instr-cards { grid-template-columns: 1fr; } .sim-section .s-meter-value { font-size: 22px; } .sim-section .s-graph-canvas-wrap { height: 260px; } .sim-section .s-sl-entry { min-width: 90px; } }
+        /* Responsive */
+        @media (max-width: 900px) { .procedure-cols { grid-template-columns: 1fr; } .sim-section .s-theory-content { grid-template-columns: 1fr; } }
+        @media (max-width: 800px) {
+            .exp-main-body { flex-direction: column; padding: 20px 16px; }
+            .exp-sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
+            .exp-sidebar-card { position: static; }
+            .exp-nav-list { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 10px; }
+            .exp-nav-btn { flex: 1; min-width: calc(33% - 4px); justify-content: center; font-size: 0.78rem; padding: 10px 8px; }
+            .exp-nav-btn.active::before { display: none; }
+            .exp-banner { padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
+            .exp-panel-body { padding: 20px; }
+            .exp-panel-header { padding: 18px 20px; }
+            .exp-breadcrumb { padding: 8px 16px; }
+            .sim-section .s-main-grid { grid-template-columns: 1fr; }
+            .sim-section .s-obs-grid { grid-template-columns: 1fr; }
+            .sim-section .s-graph-canvas-wrap { width: 100%; height: 300px; }
+        }
+        @media (max-width: 520px) {
+            .exp-nav-btn { min-width: calc(50% - 3px); }
+            .exp-result-stats { grid-template-columns: 1fr 1fr; }
+            .exp-banner-badge { display: none; }
+            .apparatus-grid { grid-template-columns: 1fr 1fr; }
+            .sim-section .s-instr-cards { grid-template-columns: 1fr; }
+            .sim-section .s-meter-value { font-size: 22px; }
+            .sim-section .s-graph-canvas-wrap { height: 260px; }
+            .sim-section .s-sl-entry { min-width: 90px; }
+        }
+        .portal-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
     </style>
 </head>
 
@@ -600,28 +475,19 @@
     <header class="portal-header">
         <div class="header-left">
             <a href="" aria-label="LabMate home">
-                <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+                <img src="logo.png" alt="LabMate Logo" class="portal-logo" />
             </a>
             <div class="college-info">
                 <h1 class="college-name">Aditya University</h1>
-                <span class="stream-badge">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px">
+                <!-- <span class="stream-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        style="vertical-align:-1px;margin-right:3px">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"></path>
                         <path d="M4.93 4.93l14.14 14.14"></path>
                     </svg>
                     AIML Stream
-                </span>
-            </div>
-        </div>
-
-        <div class="header-center">
-            <div class="search-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" class="global-search" placeholder="Search experiments & records…" aria-label="Global Search" />
+                </span> -->
             </div>
         </div>
 
@@ -630,16 +496,22 @@
                 <input type="checkbox" id="portal-theme-checkbox" />
                 <div class="slider round">
                     <span class="icon light-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                         </svg>
                     </span>
                     <span class="icon dark-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
                     </span>
@@ -647,7 +519,8 @@
             </label>
 
             <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
@@ -686,21 +559,26 @@
                         <span class="prof-name">Santhosh</span>
                         <span class="prof-roll">24P31A42XX</span>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chevron-down">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="chevron-down">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
                 <div class="dropdown-menu">
                     <div class="dropdown-header">
                         <div class="dh-avatar">S</div>
-                        <div><strong>Santhosh</strong><span>24P31A42XX · AIML</span></div>
+                        <div>
+                            <strong>Santhosh</strong>
+                            <span>24P31A42XX · AIML</span>
+                        </div>
                     </div>
                     <hr>
                     <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
                     <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</a>
                     <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Progress</a>
                     <hr>
-                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Help & Support</a>
+                    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Help &amp; Support</a>
                     <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
                 </div>
             </div>
@@ -722,7 +600,7 @@
         <div class="exp-banner-meta">
             <div class="exp-banner-label">Physics Lab · Experiment 02</div>
             <div class="exp-banner-title">Zener Diode Characteristics</div>
-            <div class="exp-banner-sub">Study V-I characteristics in forward & reverse bias and determine the breakdown voltage.</div>
+            <div class="exp-banner-sub">Study V-I characteristics in forward &amp; reverse bias and determine the breakdown voltage.</div>
         </div>
         <div class="exp-banner-badge">🔬 Virtual Lab</div>
     </div>
@@ -763,7 +641,7 @@
                 <div class="exp-sidebar-progress">
                     <div class="exp-progress-label">
                         <span>Progress</span>
-                        <span id="progress-pct">11%</span>
+                        <span id="progress-pct">12%</span>
                     </div>
                     <div class="exp-progress-track">
                         <div class="exp-progress-fill" id="progress-fill"></div>
@@ -838,7 +716,7 @@
                         </div>
                         <hr class="exp-divider" />
                         <div class="circuit-placeholder">
-                            <div><img class="circuit-diagram" src="zenercircuitdiagram.jpeg" alt="Circuit Diagram"></div>
+                            <img class="circuit-diagram" src="zenercircuitdiagram.jpeg" alt="Circuit Diagram" />
                         </div>
                     </div>
                 </div>
@@ -870,14 +748,18 @@
                         <hr class="exp-divider" />
                         <p class="exp-body-text"><strong>V-I Characteristic Behaviour Summary:</strong></p>
                         <table class="exp-result-table">
-                            <thead><tr><th>Region</th><th>Bias</th><th>Behaviour</th><th>Current</th></tr></thead>
+                            <thead>
+                                <tr><th>Region</th><th>Bias</th><th>Behaviour</th><th>Current</th></tr>
+                            </thead>
                             <tbody>
                                 <tr><td>Forward Conduction</td><td>Forward</td><td>Conducts above cut-in voltage</td><td>Increases rapidly</td></tr>
                                 <tr><td>Reverse Blocking</td><td>Reverse (V &lt; Vz)</td><td>Blocks current; tiny leakage</td><td>≈ 0 (µA range)</td></tr>
                                 <tr><td>Zener Breakdown</td><td>Reverse (V ≥ Vz)</td><td>Controlled breakdown; Vz constant</td><td>Increases sharply</td></tr>
                             </tbody>
                         </table>
-                        <div><img class="model-graph" src="zenermodelgraph.jpeg" alt="Model graph"></div>
+                        <div style="margin-top:20px;text-align:center;">
+                            <img class="model-graph" src="zenermodelgraph.jpeg" alt="Model V-I graph" />
+                        </div>
                     </div>
                 </div>
 
@@ -936,35 +818,16 @@
                         </div>
                     </div>
 
-                    <!-- ===== SIMULATION CONTENT ===== -->
                     <div class="sim-section">
 
                         <!-- STEP PROGRESS BAR -->
                         <div class="s-step-bar">
-                            <div class="s-step-item s-active" id="sSp1">
-                                <div class="s-step-num" id="sSn1">1</div>
-                                <span class="s-step-label">Place Components</span>
-                            </div>
-                            <div class="s-step-item" id="sSp2">
-                                <div class="s-step-num" id="sSn2">2</div>
-                                <span class="s-step-label">Power Circuit</span>
-                            </div>
-                            <div class="s-step-item" id="sSp3">
-                                <div class="s-step-num" id="sSn3">3</div>
-                                <span class="s-step-label">Set Voltage</span>
-                            </div>
-                            <div class="s-step-item" id="sSp4">
-                                <div class="s-step-num" id="sSn4">4</div>
-                                <span class="s-step-label">Record Data</span>
-                            </div>
-                            <div class="s-step-item" id="sSp5">
-                                <div class="s-step-num" id="sSn5">5</div>
-                                <span class="s-step-label">Plot Graph</span>
-                            </div>
-                            <div class="s-step-item" id="sSp6">
-                                <div class="s-step-num" id="sSn6">6</div>
-                                <span class="s-step-label">Analyze</span>
-                            </div>
+                            <div class="s-step-item s-active" id="sSp1"><div class="s-step-num" id="sSn1">1</div><span class="s-step-label">Place Components</span></div>
+                            <div class="s-step-item" id="sSp2"><div class="s-step-num" id="sSn2">2</div><span class="s-step-label">Power Circuit</span></div>
+                            <div class="s-step-item" id="sSp3"><div class="s-step-num" id="sSn3">3</div><span class="s-step-label">Set Voltage</span></div>
+                            <div class="s-step-item" id="sSp4"><div class="s-step-num" id="sSn4">4</div><span class="s-step-label">Record Data</span></div>
+                            <div class="s-step-item" id="sSp5"><div class="s-step-num" id="sSn5">5</div><span class="s-step-label">Plot Graph</span></div>
+                            <div class="s-step-item" id="sSp6"><div class="s-step-num" id="sSn6">6</div><span class="s-step-label">Analyze</span></div>
                         </div>
 
                         <!-- MAIN 3-COLUMN GRID -->
@@ -1212,10 +1075,10 @@
                             </div>
                         </div>
 
-                        <!-- THEORY SECTION -->
+                        <!-- THEORY ACCORDION -->
                         <div class="s-theory-section">
                             <div class="s-theory-toggle" onclick="simToggleTheory(this)">
-                                <div class="s-theory-toggle-title">⚡ What is Zener Breakdown? — Theory & Concepts</div>
+                                <div class="s-theory-toggle-title">⚡ What is Zener Breakdown? — Theory &amp; Concepts</div>
                                 <span class="s-theory-chevron" id="sTheoryChevron">▼</span>
                             </div>
                             <div class="s-theory-body" id="sTheoryBody">
@@ -1223,19 +1086,19 @@
                                     <div class="s-theory-card">
                                         <div class="s-theory-card-icon">🔬</div>
                                         <div class="s-theory-card-title">Zener Breakdown</div>
-                                        <div class="s-theory-card-text">When reverse voltage across the diode reaches the breakdown voltage (V_Z), the electric field becomes strong enough to pull electrons from their covalent bonds — creating a sharp, controlled current surge. Unlike regular diodes, Zener diodes are designed to operate safely in this region.</div>
+                                        <div class="s-theory-card-text">When reverse voltage across the diode reaches V_Z, the electric field becomes strong enough to pull electrons from covalent bonds — creating a sharp, controlled current surge. Unlike regular diodes, Zener diodes are designed to operate safely in this region.</div>
                                         <div class="s-theory-formula">V_Z = 6.2 V (at I_Z = 5 mA)</div>
                                     </div>
                                     <div class="s-theory-card">
                                         <div class="s-theory-card-icon">📐</div>
                                         <div class="s-theory-card-title">Voltage Regulation</div>
-                                        <div class="s-theory-card-text">The key property: once breakdown occurs, the voltage across the Zener stays approximately constant at V_Z, regardless of the current through it. Any additional supply voltage drops across the series resistor R_S. This makes Zener diodes ideal for reference voltage and regulation circuits.</div>
+                                        <div class="s-theory-card-text">Once breakdown occurs, the voltage across the Zener stays approximately constant at V_Z regardless of the current through it. Any additional supply voltage drops across R_S. This makes Zener diodes ideal for reference voltage and regulation circuits.</div>
                                         <div class="s-theory-formula">V_R = V_supply − V_Z<br>I_Z = V_R / R_S</div>
                                     </div>
                                     <div class="s-theory-card">
                                         <div class="s-theory-card-icon">📈</div>
                                         <div class="s-theory-card-title">V-I Regions</div>
-                                        <div class="s-theory-card-text">The V-I curve has three key regions in reverse bias: (1) Leakage Region — tiny reverse current below V_Z; (2) Breakdown Knee — rapid transition at V_Z ≈ 6.2V; (3) Regulation Region — steep near-vertical curve where voltage is clamped. In forward bias, the diode conducts like a normal silicon diode above ~0.65V.</div>
+                                        <div class="s-theory-card-text">The V-I curve has three key regions in reverse bias: (1) Leakage Region — tiny reverse current below V_Z; (2) Breakdown Knee — rapid transition at V_Z ≈ 6.2V; (3) Regulation Region — steep near-vertical curve where voltage is clamped.</div>
                                         <div class="s-theory-formula">I = I_S · (e^(V/nV_T) − 1)</div>
                                     </div>
                                 </div>
@@ -1280,7 +1143,7 @@
                     <div class="exp-panel-body">
                         <p class="exp-body-text">The V-I characteristics of the Zener diode were successfully studied under both forward and reverse bias conditions. The following outcomes were observed:</p>
                         <div class="exp-result-stats">
-                            <div class="exp-stat-card"><div class="exp-stat-value">8 V</div><div class="exp-stat-label">Breakdown Voltage (Vz)</div></div>
+                            <div class="exp-stat-card"><div class="exp-stat-value">6.2 V</div><div class="exp-stat-label">Breakdown Voltage (Vz)</div></div>
                             <div class="exp-stat-card"><div class="exp-stat-value">~0.7 V</div><div class="exp-stat-label">Forward Cut-in Voltage</div></div>
                             <div class="exp-stat-card"><div class="exp-stat-value">Si</div><div class="exp-stat-label">Diode Material</div></div>
                             <div class="exp-stat-card"><div class="exp-stat-value">✔</div><div class="exp-stat-label">Regulation Confirmed</div></div>
@@ -1288,7 +1151,7 @@
                         <hr class="exp-divider" />
                         <div class="exp-conclusion-box">
                             <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
-                            <p class="exp-conclusion-text">The V-I characteristics of the Zener diode were studied successfully. In <strong>forward bias</strong>, the diode behaved like a normal PN junction diode — conducting after the silicon cut-in voltage of approximately <strong>0.7 V</strong>. In <strong>reverse bias</strong>, a negligible leakage current was observed until the reverse voltage reached the <strong>Zener breakdown voltage of Vz ≈ 8 V</strong>, beyond which the current increased sharply while the voltage across the diode remained nearly constant. This confirms the Zener diode's suitability for <strong>voltage regulation</strong> applications.</p>
+                            <p class="exp-conclusion-text">The V-I characteristics of the Zener diode were studied successfully. In <strong>forward bias</strong>, the diode behaved like a normal PN junction diode — conducting after the silicon cut-in voltage of approximately <strong>0.7 V</strong>. In <strong>reverse bias</strong>, a negligible leakage current was observed until the reverse voltage reached the <strong>Zener breakdown voltage of Vz ≈ 6.2 V</strong>, beyond which the current increased sharply while the voltage across the diode remained nearly constant. This confirms the Zener diode's suitability for <strong>voltage regulation</strong> applications.</p>
                         </div>
                     </div>
                 </div>
@@ -1305,13 +1168,30 @@
                     <div class="exp-panel-body">
                         <p class="exp-body-text" style="margin-bottom:6px;">Prepare for your lab viva using these commonly asked questions on Zener diode characteristics.</p>
                         <div class="viva-list" id="vivaList">
-                            <div class="viva-item"><div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">1</span><span>What is a Zener diode?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div><div class="viva-answer"><p>A Zener diode is a <strong>heavily doped PN junction diode</strong> specially designed to operate in the reverse breakdown region without being destroyed. It maintains a nearly constant voltage (Vz) across its terminals once the reverse breakdown voltage is reached.</p></div></div>
-                            <div class="viva-item"><div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">2</span><span>What is breakdown voltage in a Zener diode?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div><div class="viva-answer"><p>The <strong>breakdown voltage (Vz)</strong> is the specific reverse voltage at which the Zener diode begins to conduct heavily. At this voltage, either the <strong>Zener effect</strong> (quantum tunneling, Vz &lt; 5V) or <strong>avalanche effect</strong> (impact ionization, Vz &gt; 5V) initiates stable, controlled conduction.</p></div></div>
-                            <div class="viva-item"><div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">3</span><span>Why is the Zener diode used in circuits?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div><div class="viva-answer"><p>The Zener diode maintains a <strong>constant voltage across its terminals</strong> in the breakdown region. This makes it valuable for: voltage regulation, voltage reference in precision circuits, clipping/clamping in waveform shaping, and overvoltage protection for sensitive components.</p></div></div>
-                            <div class="viva-item"><div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">4</span><span>In which bias condition does the Zener diode operate for regulation?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div><div class="viva-answer"><p>For voltage regulation, the Zener diode operates in <strong>reverse bias</strong>. When the supply voltage exceeds Vz, the diode clamps the output at Vz. In forward bias, it behaves like an ordinary diode and cannot provide voltage regulation.</p></div></div>
-                            <div class="viva-item"><div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">5</span><span>What is the difference between Zener effect and Avalanche effect?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div><div class="viva-answer"><p><strong>Zener Effect:</strong> Occurs in heavily doped junctions (Vz &lt; 5V) via quantum tunneling. Negative temperature coefficient.<br><br><strong>Avalanche Effect:</strong> Occurs in lightly doped junctions (Vz &gt; 5V) via impact ionization chain reactions. Positive temperature coefficient. Diodes near 5V combine both effects, giving near-zero temperature coefficient — ideal for stable voltage references.</p></div></div>
+                            <div class="viva-item">
+                                <div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">1</span><span>What is a Zener diode?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+                                <div class="viva-answer"><p>A Zener diode is a <strong>heavily doped PN junction diode</strong> specially designed to operate in the reverse breakdown region without being destroyed. It maintains a nearly constant voltage (Vz) across its terminals once the reverse breakdown voltage is reached.</p></div>
+                            </div>
+                            <div class="viva-item">
+                                <div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">2</span><span>What is breakdown voltage in a Zener diode?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+                                <div class="viva-answer"><p>The <strong>breakdown voltage (Vz)</strong> is the specific reverse voltage at which the Zener diode begins to conduct heavily. At this voltage, either the <strong>Zener effect</strong> (quantum tunneling, Vz &lt; 5V) or <strong>avalanche effect</strong> (impact ionization, Vz &gt; 5V) initiates stable, controlled conduction.</p></div>
+                            </div>
+                            <div class="viva-item">
+                                <div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">3</span><span>Why is the Zener diode used in circuits?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+                                <div class="viva-answer"><p>The Zener diode maintains a <strong>constant voltage across its terminals</strong> in the breakdown region. This makes it valuable for voltage regulation, voltage reference in precision circuits, clipping/clamping in waveform shaping, and overvoltage protection for sensitive components.</p></div>
+                            </div>
+                            <div class="viva-item">
+                                <div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">4</span><span>In which bias condition does the Zener diode operate for regulation?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+                                <div class="viva-answer"><p>For voltage regulation, the Zener diode operates in <strong>reverse bias</strong>. When the supply voltage exceeds Vz, the diode clamps the output at Vz. In forward bias, it behaves like an ordinary diode and cannot provide voltage regulation.</p></div>
+                            </div>
+                            <div class="viva-item">
+                                <div class="viva-question"><div class="viva-q-left"><span class="viva-q-num">5</span><span>What is the difference between Zener effect and Avalanche effect?</span></div><svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+                                <div class="viva-answer"><p><strong>Zener Effect:</strong> Occurs in heavily doped junctions (Vz &lt; 5V) via quantum tunneling. Negative temperature coefficient.<br><br><strong>Avalanche Effect:</strong> Occurs in lightly doped junctions (Vz &gt; 5V) via impact ionization chain reactions. Positive temperature coefficient. Diodes near 5V combine both effects, giving near-zero temperature coefficient — ideal for stable voltage references.</p></div>
+                            </div>
                         </div>
-                        <div class="exp-highlight-box" style="margin-top:24px;"><strong>Pro Tip:</strong> During the viva, always relate the Zener diode's behaviour back to the characteristic curve. Mention the three regions — forward conduction, reverse blocking, and Zener breakdown — clearly by name.</div>
+                        <div class="exp-highlight-box" style="margin-top:24px;">
+                            <strong>Pro Tip:</strong> During the viva, always relate the Zener diode's behaviour back to the characteristic curve. Mention the three regions — forward conduction, reverse blocking, and Zener breakdown — clearly by name.
+                        </div>
                     </div>
                 </div>
 
@@ -1328,10 +1208,12 @@
 
     <script>
     /* =====================================================
-       EXPERIMENT PAGE NAVIGATION
+       PAGE NAVIGATION & THEME
+       (matches bubble_sort.html pattern exactly)
     ===================================================== */
     document.addEventListener('DOMContentLoaded', () => {
-        // Theme toggle
+
+        // Theme toggle — same ID as bubble sort page (portal-theme-checkbox)
         const toggle = document.getElementById('portal-theme-checkbox');
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
@@ -1342,16 +1224,16 @@
             const theme = toggle.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
-            // Sync simulation theme
+            // Sync simulation chart theme
             simDark = (theme === 'dark');
             if (simViCh) { simViCh._spotlightEl = null; simRefreshChartTheme(); }
         });
 
-        // Section navigation
+        // Section navigation — unique sessionStorage key per page
         const navBtns = document.querySelectorAll('.exp-nav-btn');
         const sections = document.querySelectorAll('.exp-section-content');
         const progFill = document.getElementById('progress-fill');
-        const progPct = document.getElementById('progress-pct');
+        const progPct  = document.getElementById('progress-pct');
         const total = navBtns.length;
 
         let visited = (() => {
@@ -1379,7 +1261,7 @@
                     sec.offsetHeight;
                     sec.style.animation = '';
                     sec.classList.add('visible');
-                    // Init chart when simulation section first shown
+                    // Lazy-init chart when simulation tab first opened
                     if (target === 'simulations' && !simChartInited) {
                         setTimeout(() => { simInitChart(); simChartInited = true; }, 80);
                     }
@@ -1392,50 +1274,33 @@
             });
         });
 
-        // Observation tabs
-        const obsTabBtns = document.querySelectorAll('.obs-tab-btn');
-        const obsPanels = document.querySelectorAll('.obs-table-panel');
-        obsTabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const target = btn.dataset.obs;
-                obsTabBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                obsPanels.forEach(p => p.classList.remove('visible'));
-                const panel = document.getElementById('obs-' + target);
-                if (panel) panel.classList.add('visible');
-            });
-        });
-
         // Viva accordion
-        const vivaItems = document.querySelectorAll('.viva-item');
-        vivaItems.forEach(item => {
-            const question = item.querySelector('.viva-question');
-            question.addEventListener('click', () => {
+        document.querySelectorAll('.viva-item').forEach(item => {
+            item.querySelector('.viva-question').addEventListener('click', () => {
                 const isOpen = item.classList.contains('open');
-                vivaItems.forEach(v => v.classList.remove('open'));
+                document.querySelectorAll('.viva-item').forEach(v => v.classList.remove('open'));
                 if (!isOpen) item.classList.add('open');
             });
         });
 
-        // Notification panel
-        const notifBtn = document.getElementById('notif-btn');
+        // Notification panel (matches bubble sort page pattern)
+        const notifBtn   = document.getElementById('notif-btn');
         const notifPanel = document.getElementById('notif-panel');
         const notifClear = document.getElementById('notif-clear');
-        notifBtn?.addEventListener('click', (e) => { e.stopPropagation(); notifPanel.classList.toggle('open'); });
+        notifBtn?.addEventListener('click', e => { e.stopPropagation(); notifPanel.classList.toggle('open'); });
         notifClear?.addEventListener('click', () => { notifPanel.querySelectorAll('.notif-item').forEach(i => i.remove()); });
-        document.addEventListener('click', (e) => { if (!notifPanel.contains(e.target) && e.target !== notifBtn) notifPanel.classList.remove('open'); });
+        document.addEventListener('click', e => { if (!notifPanel.contains(e.target) && e.target !== notifBtn) notifPanel.classList.remove('open'); });
     });
 
     /* =====================================================
-       SIMULATION LOGIC — all IDs prefixed with 's'
+       SIMULATION LOGIC — all IDs/vars prefixed with 's' / 'sim'
     ===================================================== */
     const simST = {
-        placed: {supply:false, resistor:false, ammeter:false, zener:false, voltmeter:false, thermo:false, wires:false},
-        count: 0, ready: false, powered: false,
-        voltage: 0, bias: 'reverse',
-        Vz: 6.2, IBV: 0.005, rZ: 8, RS: 470, IS: 1e-14, N: 1.05, Vf: 0.65,
-        reading: {v:0, i:0},
-        simInt: null, lastKey: ''
+        placed: {supply:false,resistor:false,ammeter:false,zener:false,voltmeter:false,thermo:false,wires:false},
+        count:0, ready:false, powered:false,
+        voltage:0, bias:'reverse',
+        Vz:6.2, IBV:0.005, rZ:8, RS:470, IS:1e-14, N:1.05, Vf:0.65,
+        reading:{v:0,i:0}, simInt:null
     };
 
     const SIM_VT = 0.02585;
@@ -1443,11 +1308,10 @@
     let simViCh = null;
     let simChartInited = false;
 
-    /* Theme helper */
     function simChartColors() {
         return {
-            grid: simDark ? 'rgba(37,48,68,0.6)' : 'rgba(209,221,232,0.4)',
-            txt:  simDark ? '#6A8399' : '#637A90',
+            grid: simDark ? 'rgba(37,48,68,0.6)'  : 'rgba(209,221,232,0.4)',
+            txt:  simDark ? '#6A8399'              : '#637A90',
             zero: simDark ? 'rgba(255,255,255,0.15)' : 'rgba(26,35,50,0.15)'
         };
     }
@@ -1455,20 +1319,20 @@
     /* ── Instruction Log ── */
     const simInstrHistory = [];
     const SIM_INSTRS = {
-        start:    {step:'Step 1 — Place Components', txt:'Click each material button to add components to the circuit board. All 7 must be placed before you can start.'},
-        ready:    {step:'Step 2 — Ready', txt:'All components placed! Click "Supply Electricity" to power the circuit.'},
-        rev_low:  {step:'Step 3 — Leakage Region', txt:'Reverse bias active. Very small leakage current flowing. Voltage across Zener ≈ supply voltage.'},
-        rev_mid:  {step:'Step 4 — Near Breakdown', txt:'Voltage approaching V_Z = 6.2V. Current beginning to rise noticeably. Watch the ammeter!'},
+        start:    {step:'Step 1 — Place Components',  txt:'Click each material button to add components to the circuit board. All 7 must be placed before you can start.'},
+        ready:    {step:'Step 2 — Ready',             txt:'All components placed! Click "Supply Electricity" to power the circuit.'},
+        rev_low:  {step:'Step 3 — Leakage Region',   txt:'Reverse bias active. Very small leakage current flowing. Voltage across Zener ≈ supply voltage.'},
+        rev_mid:  {step:'Step 4 — Near Breakdown',   txt:'Voltage approaching V_Z = 6.2V. Current beginning to rise noticeably. Watch the ammeter!'},
         rev_brk:  {step:'Step 5 — ⚡ Zener Breakdown!', txt:'BREAKDOWN! Zener clamps at 6.2V. Excess voltage drops across R_S = 470 Ω. This is voltage regulation!'},
-        fwd_low:  {step:'Step 3 — Cut-off Region', txt:'Forward bias below threshold (~0.65V). Extremely small current — diode not yet conducting.'},
+        fwd_low:  {step:'Step 3 — Cut-off Region',   txt:'Forward bias below threshold (~0.65V). Extremely small current — diode not yet conducting.'},
         fwd_cond: {step:'Step 4 — Forward Conduction', txt:'Threshold exceeded! Current rises steeply. Diode fully conducting. V_Z ≈ 0.65V.'}
     };
 
     function simSetInstr(key) {
         if (!SIM_INSTRS[key]) return;
         const {step, txt} = SIM_INSTRS[key];
-        const time = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-        simInstrHistory.push({step, txt, time, key});
+        const time = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+        simInstrHistory.push({step,txt,time,key});
         simRenderInstrHistory();
     }
     function simRenderInstrHistory() {
@@ -1496,22 +1360,22 @@
     function simPlace(name) {
         if (simST.placed[name]) return;
         if (name === 'wires') {
-            const others = SIM_ORDER.filter(c => c !== 'wires');
-            if (!others.every(c => simST.placed[c])) { alert('⚠ Place all other components before connecting wires!'); return; }
+            if (!SIM_ORDER.filter(c=>c!=='wires').every(c=>simST.placed[c])) {
+                alert('⚠ Place all other components before connecting wires!'); return;
+            }
         }
-        simST.placed[name] = true;
-        simST.count++;
+        simST.placed[name] = true; simST.count++;
         document.getElementById('sMat-'+name).classList.add('sel');
         document.getElementById('sMatCount').textContent = simST.count + ' / 7 placed';
         anime({targets:'#sG-'+name, opacity:[0,1], scale:[0.5,1], duration:650, easing:'spring(1,80,10,0)'});
         if (name === 'wires') anime({targets:'#sG-nodes', opacity:[0,1], duration:500});
         if (simST.count < 7) {
-            const nxt = SIM_ORDER.find(c => !simST.placed[c]);
-            const names = {supply:'power supply', resistor:'resistor', ammeter:'ammeter', zener:'Zener diode', voltmeter:'voltmeter', thermo:'breadboard', wires:'connecting wires'};
+            const nxt = SIM_ORDER.find(c=>!simST.placed[c]);
+            const names = {supply:'power supply',resistor:'resistor',ammeter:'ammeter',zener:'Zener diode',voltmeter:'voltmeter',thermo:'breadboard',wires:'connecting wires'};
             const time = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
             simInstrHistory.push({step:`Component ${simST.count}/7`, txt:`✅ Added! Next: place the ${names[nxt]||nxt}.`, time, key:'place'});
             simRenderInstrHistory();
-            simUpdateInstrCards(1, 'in-progress');
+            simUpdateInstrCards(1,'in-progress');
         }
         if (simST.count === 7) simOnAllPlaced();
     }
@@ -1519,17 +1383,14 @@
     function simOnAllPlaced() {
         simST.ready = true;
         simSetInstr('ready');
-        const badge = document.getElementById('sCircCompleteBadge');
-        badge.classList.add('visible');
+        document.getElementById('sCircCompleteBadge').classList.add('visible');
         anime({targets:'#sG-wires', opacity:[0,1], duration:800, easing:'easeOutQuad'});
-        setTimeout(() => { document.querySelectorAll('#sG-wires line').forEach(l => l.classList.add('s-wire-active')); }, 800);
+        setTimeout(() => document.querySelectorAll('#sG-wires line').forEach(l=>l.classList.add('s-wire-active')), 800);
         const btn = document.getElementById('sSupplyBtn');
         btn.style.display = 'block';
         anime({targets:'#sSupplyBtn', opacity:[0,1], translateY:[12,0], duration:500, easing:'easeOutQuad'});
-        simUpdateStepBar(2, 'active');
-        simUpdateStepBar(1, 'done');
-        simUpdateInstrCards(1, 'completed');
-        simUpdateInstrCards(2, 'in-progress');
+        simUpdateStepBar(2,'active'); simUpdateStepBar(1,'done');
+        simUpdateInstrCards(1,'completed'); simUpdateInstrCards(2,'in-progress');
     }
 
     /* ── Power ── */
@@ -1538,42 +1399,37 @@
     function simStartPower() {
         simST.powered = true;
         const btn = document.getElementById('sSupplyBtn');
-        btn.textContent = '⏹ Stop Electricity';
-        btn.classList.add('stop');
-        document.getElementById('sVoltCtrl').style.display = 'block';
+        btn.textContent = '⏹ Stop Electricity'; btn.classList.add('stop');
+        const ctrl = document.getElementById('sVoltCtrl');
+        ctrl.style.display = 'block';
         anime({targets:'#sVoltCtrl', opacity:[0,1], translateY:[-8,0], duration:400, easing:'easeOutQuad'});
         anime({targets:'#sG-arrows', opacity:[0,0.75], duration:700});
         anime({targets:'#sBiasLbl', opacity:[0,1], duration:700});
-        ['sMeterV','sMeterA'].forEach(id => document.getElementById(id).classList.add('active'));
+        ['sMeterV','sMeterA'].forEach(id=>document.getElementById(id).classList.add('active'));
         document.getElementById('sRecBtnFwd').disabled = false;
         document.getElementById('sRecBtnRev').disabled = false;
         simStartParticles();
         simST.simInt = setInterval(simTick, 120);
         simSetInstr('rev_low');
-        simUpdateStepBar(2, 'done');
-        simUpdateStepBar(3, 'active');
-        simUpdateInstrCards(2, 'completed');
-        simUpdateInstrCards(3, 'in-progress');
+        simUpdateStepBar(2,'done'); simUpdateStepBar(3,'active');
+        simUpdateInstrCards(2,'completed'); simUpdateInstrCards(3,'in-progress');
     }
 
     function simStopPower() {
         simST.powered = false;
         clearInterval(simST.simInt);
-        simST.voltage = 0;
-        simST.reading = {v:0, i:0};
-        document.getElementById('sVSlider').value = 0;
-        simOnVolt(0);
+        simST.voltage = 0; simST.reading = {v:0,i:0};
+        document.getElementById('sVSlider').value = 0; simOnVolt(0);
         const btn = document.getElementById('sSupplyBtn');
-        btn.textContent = '⚡ Supply Electricity';
-        btn.classList.remove('stop');
+        btn.textContent = '⚡ Supply Electricity'; btn.classList.remove('stop');
         simStopParticles();
-        ['sMeterV','sMeterA'].forEach(id => document.getElementById(id).classList.remove('active'));
+        ['sMeterV','sMeterA'].forEach(id=>document.getElementById(id).classList.remove('active'));
         document.getElementById('sRecBtnFwd').disabled = true;
         document.getElementById('sRecBtnRev').disabled = true;
-        simUpdateMeters(0, 0);
+        simUpdateMeters(0,0);
         anime({targets:'#sBdCirc', opacity:0, duration:400});
         anime({targets:'#sG-arrows', opacity:0, duration:400});
-        simSetStatusChip('idle', 'Idle', 'Circuit stopped. Click "Supply Electricity" to restart.');
+        simSetStatusChip('idle','Idle','Circuit stopped. Click "Supply Electricity" to restart.');
         simSetInstr('ready');
     }
 
@@ -1581,89 +1437,72 @@
         simST.voltage = parseFloat(val);
         const pct = (simST.voltage / 30) * 100;
         document.getElementById('sVDisp').textContent = simST.voltage.toFixed(1) + ' V';
-        document.getElementById('sVSlider').style.setProperty('--pct', pct + '%');
-        document.getElementById('sPsV').textContent = simST.voltage.toFixed(1) + 'V';
+        document.getElementById('sVSlider').style.setProperty('--pct', pct+'%');
+        document.getElementById('sPsV').textContent = simST.voltage.toFixed(1)+'V';
     }
     function simChangeVoltage(step) {
         const slider = document.getElementById('sVSlider');
-        let v = parseFloat(slider.value) + step;
-        v = Math.max(0, Math.min(30, parseFloat(v.toFixed(1))));
-        slider.value = v;
-        simOnVolt(v);
+        let v = Math.max(0, Math.min(30, parseFloat((parseFloat(slider.value)+step).toFixed(1))));
+        slider.value = v; simOnVolt(v);
     }
     function simSetBias(mode) {
-        simST.bias = mode;
-        simST.voltage = 0;
-        document.getElementById('sVSlider').value = 0;
-        simOnVolt(0);
-        document.getElementById('sBtnR').classList.toggle('active', mode === 'reverse');
-        document.getElementById('sBtnF').classList.toggle('active', mode === 'forward');
-        document.getElementById('sBiasLbl').textContent = mode === 'reverse' ? '← Reverse Bias Mode' : 'Forward Bias Mode →';
-        simSetInstr(mode === 'reverse' ? 'rev_low' : 'fwd_low');
+        simST.bias = mode; simST.voltage = 0;
+        document.getElementById('sVSlider').value = 0; simOnVolt(0);
+        document.getElementById('sBtnR').classList.toggle('active', mode==='reverse');
+        document.getElementById('sBtnF').classList.toggle('active', mode==='forward');
+        document.getElementById('sBiasLbl').textContent = mode==='reverse' ? '← Reverse Bias Mode' : 'Forward Bias Mode →';
+        simSetInstr(mode==='reverse' ? 'rev_low' : 'fwd_low');
     }
 
     /* ── Physics Model ── */
     function simCalcReadings(V_supply, bias) {
-        const {Vz, IBV, rZ, RS, IS, N, Vf} = simST;
-        let I = 0, Vzen = 0;
-        if (bias === 'reverse') {
-            if (V_supply <= 0) return {I:0, Vzen:0};
-            if (V_supply < Vz * 0.80) {
-                I = IS * 1000 * (1 - Math.exp(-V_supply / (N * SIM_VT)));
-                I += 0.0005 * Math.pow(V_supply / Vz, 4);
-                Vzen = V_supply;
+        const {Vz,IBV,rZ,RS,IS,N,Vf} = simST;
+        let I=0, Vzen=0;
+        if (bias==='reverse') {
+            if (V_supply<=0) return {I:0,Vzen:0};
+            if (V_supply < Vz*0.80) {
+                I = IS*1000*(1-Math.exp(-V_supply/(N*SIM_VT)));
+                I += 0.0005*Math.pow(V_supply/Vz,4); Vzen=V_supply;
             } else if (V_supply < Vz) {
-                const ratio = (V_supply - Vz * 0.80) / (Vz * 0.20);
-                I = 0.0005 + IBV * 1000 * Math.pow(ratio, 2.5);
-                Vzen = V_supply;
+                const ratio=(V_supply-Vz*0.80)/(Vz*0.20);
+                I=0.0005+IBV*1000*Math.pow(ratio,2.5); Vzen=V_supply;
             } else {
-                const excess = V_supply - Vz;
-                I = IBV * 1000 + excess / ((RS + rZ) / 1000);
-                Vzen = Vz + (I * rZ / 1000);
+                const excess=V_supply-Vz;
+                I=IBV*1000+excess/((RS+rZ)/1000); Vzen=Vz+(I*rZ/1000);
             }
         } else {
-            if (V_supply <= 0) return {I:0, Vzen:0};
-            if (V_supply < 0.3) {
-                I = IS * 1000 * (Math.exp(V_supply / (N*SIM_VT)) - 1);
-                Vzen = V_supply;
-            } else if (V_supply < Vf) {
-                I = Math.min(IS * 1000 * (Math.exp(V_supply / (N*SIM_VT)) - 1), 0.5);
-                Vzen = V_supply;
-            } else {
-                I = Math.max(0, ((V_supply - Vf) / RS) * 1000);
-                Vzen = Vf;
-            }
+            if (V_supply<=0) return {I:0,Vzen:0};
+            if (V_supply<0.3) { I=IS*1000*(Math.exp(V_supply/(N*SIM_VT))-1); Vzen=V_supply; }
+            else if (V_supply<Vf) { I=Math.min(IS*1000*(Math.exp(V_supply/(N*SIM_VT))-1),0.5); Vzen=V_supply; }
+            else { I=Math.max(0,((V_supply-Vf)/RS)*1000); Vzen=Vf; }
         }
-        return { I: parseFloat(Math.max(0, I).toFixed(4)), Vzen: parseFloat(Math.abs(Vzen).toFixed(3)) };
+        return {I:parseFloat(Math.max(0,I).toFixed(4)), Vzen:parseFloat(Math.abs(Vzen).toFixed(3))};
     }
 
     let simLastKey = '';
     function simTick() {
         if (!simST.powered) return;
-        const {I, Vzen} = simCalcReadings(simST.voltage, simST.bias);
-        simST.reading = {v:Vzen, i:I};
-        simUpdateMeters(Vzen, I);
+        const {I,Vzen} = simCalcReadings(simST.voltage, simST.bias);
+        simST.reading = {v:Vzen,i:I};
+        simUpdateMeters(Vzen,I);
         simUpdateParticleSpeed(I);
-        if (simViCh && simViCh.data.datasets.length >= 3) {
-            const opDs = simViCh.data.datasets.find(d => d.label === 'Operating Point');
+        if (simViCh) {
+            const opDs = simViCh.data.datasets.find(d=>d.label==='Operating Point');
             if (opDs) {
-                const x = simST.bias === 'reverse' ? -Vzen : Vzen;
-                const y = simST.bias === 'reverse' ? -I : I;
-                opDs.data = [{x: parseFloat(x.toFixed(3)), y: parseFloat(y.toFixed(3))}];
+                const x = simST.bias==='reverse' ? -Vzen : Vzen;
+                const y = simST.bias==='reverse' ? -I    : I;
+                opDs.data = [{x:parseFloat(x.toFixed(3)), y:parseFloat(y.toFixed(3))}];
                 simViCh.update('none');
             }
         }
-        let key = '';
-        if (simST.bias === 'reverse') {
-            key = simST.voltage < 3 ? 'rev_low' : simST.voltage < simST.Vz ? 'rev_mid' : 'rev_brk';
-        } else {
-            key = simST.voltage < simST.Vf ? 'fwd_low' : 'fwd_cond';
-        }
+        let key = simST.bias==='reverse'
+            ? (simST.voltage<3?'rev_low':simST.voltage<simST.Vz?'rev_mid':'rev_brk')
+            : (simST.voltage<simST.Vf?'fwd_low':'fwd_cond');
         if (key !== simLastKey) {
             simLastKey = key;
             simSetInstr(key);
-            simUpdateStatusFromKey(key, I);
-            if (key === 'rev_brk') {
+            simUpdateStatusFromKey(key,I);
+            if (key==='rev_brk') {
                 anime({targets:'#sBdCirc', opacity:[0,0.9,0.5], r:[22,36,28], duration:800, easing:'easeInOutSine'});
                 anime({targets:'#sG-zener', filter:['url(#sGf)','url(#sGf2)','url(#sGf)'], duration:800});
             } else {
@@ -1673,86 +1512,79 @@
         }
     }
 
-    function simUpdateMeters(v, i) {
+    function simUpdateMeters(v,i) {
         document.getElementById('sVvZ').textContent = Math.abs(v).toFixed(3);
         const iEl = document.getElementById('sVvI');
         iEl.textContent = i.toFixed(4);
-        iEl.style.color = i > 80 ? 'var(--sim-danger)' : i > 50 ? 'var(--sim-warn)' : 'var(--sim-accent)';
+        iEl.style.color = i>80?'var(--sim-danger)':i>50?'var(--sim-warn)':'var(--sim-accent)';
     }
-    function simSetStatusChip(type, text, desc) {
+    function simSetStatusChip(type,text,desc) {
         const chip = document.getElementById('sStatusChip');
-        chip.className = 's-status-chip' + (type !== 'idle' ? ' '+type : '');
+        chip.className = 's-status-chip'+(type!=='idle'?' '+type:'');
         document.getElementById('sStatusText').textContent = text;
         document.getElementById('sStatusDesc').textContent = desc;
     }
-    function simUpdateStatusFromKey(key, I) {
+    function simUpdateStatusFromKey(key,I) {
         const map = {
-            rev_low: ['', 'Leakage Region', `Tiny leakage ≈ ${(I*1000).toFixed(2)} μA flowing in reverse.`],
-            rev_mid: ['warn', 'Near Breakdown', `Voltage approaching V_Z = ${simST.Vz}V...`],
-            rev_brk: ['danger', '⚡ BREAKDOWN', `Clamped at ${simST.Vz}V — I_Z = ${I.toFixed(3)} mA`],
-            fwd_low: ['', 'Cut-off', 'Forward bias below threshold. Minimal conduction.'],
-            fwd_cond: ['ok', 'Conducting', `Fwd I = ${I.toFixed(3)} mA`]
+            rev_low:  ['','Leakage Region',    `Tiny leakage ≈ ${(I*1000).toFixed(2)} μA flowing in reverse.`],
+            rev_mid:  ['warn','Near Breakdown', `Voltage approaching V_Z = ${simST.Vz}V...`],
+            rev_brk:  ['danger','⚡ BREAKDOWN', `Clamped at ${simST.Vz}V — I_Z = ${I.toFixed(3)} mA`],
+            fwd_low:  ['','Cut-off',            'Forward bias below threshold. Minimal conduction.'],
+            fwd_cond: ['ok','Conducting',        `Fwd I = ${I.toFixed(3)} mA`]
         };
-        const m = map[key] || ['','Active',''];
-        simSetStatusChip(m[0], m[1], m[2]);
+        const m = map[key]||['','Active',''];
+        simSetStatusChip(m[0],m[1],m[2]);
     }
 
-    /* ── Step Bars & Instruction Cards ── */
-    function simUpdateStepBar(n, state) {
-        const item = document.getElementById('sSp'+n);
-        if (!item) return;
-        item.className = 's-step-item ' + (state === 'active' ? 's-active' : state === 'done' ? 's-done' : '');
+    function simUpdateStepBar(n,state) {
+        const item = document.getElementById('sSp'+n); if (!item) return;
+        item.className = 's-step-item '+(state==='active'?'s-active':state==='done'?'s-done':'');
     }
-    function simUpdateInstrCards(n, state) {
-        const card = document.getElementById('sIc'+n);
-        const status = document.getElementById('sIc'+n+'s');
+    function simUpdateInstrCards(n,state) {
+        const card=document.getElementById('sIc'+n), status=document.getElementById('sIc'+n+'s');
         if (!card) return;
         card.className = 's-instr-card';
-        if (state === 'in-progress') { card.classList.add('active'); if (status) status.textContent = '→ In progress'; }
-        else if (state === 'completed') { card.classList.add('completed'); if (status) status.textContent = '✓ Completed'; }
+        if (state==='in-progress') { card.classList.add('active'); if(status) status.textContent='→ In progress'; }
+        else if (state==='completed') { card.classList.add('completed'); if(status) status.textContent='✓ Completed'; }
     }
 
-    /* ── Theory Toggle ── */
-    function simToggleTheory(el) {
-        const body = document.getElementById('sTheoryBody');
-        const chevron = document.getElementById('sTheoryChevron');
-        body.classList.toggle('open');
-        chevron.classList.toggle('open');
+    function simToggleTheory() {
+        document.getElementById('sTheoryBody').classList.toggle('open');
+        document.getElementById('sTheoryChevron').classList.toggle('open');
     }
 
     /* ── Particles ── */
-    let simPCtx, simPCanvas, simPAF, simParticles = [], simPSpeed = 0.002;
-    const SIM_PATH = [
+    let simPCtx, simPCanvas, simPAF, simParticles=[], simPSpeed=0.002;
+    const SIM_PATH=[
         {x:120,y:168},{x:120,y:80},{x:218,y:80},{x:268,y:80},{x:318,y:80},
         {x:415,y:80},{x:443,y:80},{x:470,y:80},{x:585,y:80},{x:585,y:168},
         {x:585,y:205},{x:585,y:238},{x:585,y:305},{x:400,y:305},{x:120,y:305},
         {x:120,y:238},{x:120,y:168}
     ];
     function simPtOnPath(t) {
-        const total = SIM_PATH.length-1, si = Math.floor(t*total), sp = t*total-si;
-        const a = SIM_PATH[Math.min(si,total-1)], b = SIM_PATH[Math.min(si+1,total)];
+        const total=SIM_PATH.length-1, si=Math.floor(t*total), sp=t*total-si;
+        const a=SIM_PATH[Math.min(si,total-1)], b=SIM_PATH[Math.min(si+1,total)];
         if (!a||!b) return SIM_PATH[0];
         return {x:a.x+(b.x-a.x)*sp, y:a.y+(b.y-a.y)*sp};
     }
     function simStartParticles() {
         simPCanvas = document.getElementById('sPCanvas');
-        const svg = document.getElementById('sCsvg'), r = svg.getBoundingClientRect();
-        simPCanvas.width = r.width; simPCanvas.height = r.height;
-        simPCanvas._sx = r.width/700; simPCanvas._sy = r.height/380;
+        const r = document.getElementById('sCsvg').getBoundingClientRect();
+        simPCanvas.width=r.width; simPCanvas.height=r.height;
+        simPCanvas._sx=r.width/700; simPCanvas._sy=r.height/380;
         simPCtx = simPCanvas.getContext('2d');
         simParticles = [];
-        for (let i=0; i<14; i++) simParticles.push({t:i/14, spd:0.0014+Math.random()*0.0008, sz:2+Math.random()*2, op:0.5+Math.random()*0.4});
+        for (let i=0;i<14;i++) simParticles.push({t:i/14, spd:0.0014+Math.random()*0.0008, sz:2+Math.random()*2, op:0.5+Math.random()*0.4});
         function loop() {
             if (!simST.powered) return;
             simPCtx.clearRect(0,0,simPCanvas.width,simPCanvas.height);
-            const sx = simPCanvas._sx||1, sy = simPCanvas._sy||1;
-            const clr = simDark ? '155,77,255' : '26,136,208';
+            const sx=simPCanvas._sx||1, sy=simPCanvas._sy||1;
+            const clr = simDark?'155,77,255':'26,136,208';
             simParticles.forEach(p => {
                 p.t += p.spd*(simPSpeed/0.002); if (p.t>=1) p.t-=1;
-                const pt = simPtOnPath(p.t), x = pt.x*sx, y = pt.y*sy;
-                const g = simPCtx.createRadialGradient(x,y,0,x,y,p.sz*3);
-                g.addColorStop(0,`rgba(${clr},${p.op})`);
-                g.addColorStop(1,`rgba(${clr},0)`);
+                const pt=simPtOnPath(p.t), x=pt.x*sx, y=pt.y*sy;
+                const g=simPCtx.createRadialGradient(x,y,0,x,y,p.sz*3);
+                g.addColorStop(0,`rgba(${clr},${p.op})`); g.addColorStop(1,`rgba(${clr},0)`);
                 simPCtx.beginPath();simPCtx.arc(x,y,p.sz*3,0,Math.PI*2);simPCtx.fillStyle=g;simPCtx.fill();
                 simPCtx.beginPath();simPCtx.arc(x,y,p.sz*0.4,0,Math.PI*2);
                 simPCtx.fillStyle=`rgba(255,255,255,${p.op*0.8})`;simPCtx.fill();
@@ -1761,99 +1593,80 @@
         }
         simPAF = requestAnimationFrame(loop);
     }
-    function simStopParticles() { cancelAnimationFrame(simPAF); if (simPCtx) simPCtx.clearRect(0,0,simPCanvas.width,simPCanvas.height); }
+    function simStopParticles() { cancelAnimationFrame(simPAF); if(simPCtx) simPCtx.clearRect(0,0,simPCanvas.width,simPCanvas.height); }
     function simUpdateParticleSpeed(I) { simPSpeed = Math.max(0.001, Math.min(0.012, 0.001+I*0.0008)); }
     window.addEventListener('resize', () => {
         if (simST.powered && simPCanvas) {
-            const r = document.getElementById('sCsvg').getBoundingClientRect();
-            simPCanvas.width = r.width; simPCanvas.height = r.height;
-            simPCanvas._sx = r.width/700; simPCanvas._sy = r.height/380;
+            const r=document.getElementById('sCsvg').getBoundingClientRect();
+            simPCanvas.width=r.width; simPCanvas.height=r.height;
+            simPCanvas._sx=r.width/700; simPCanvas._sy=r.height/380;
         }
     });
 
     /* ── Chart ── */
     function simBuildTheoreticVI() {
-        const revPts = [], fwdPts = [];
-        const revVoltages = [];
-        for(let v=0; v<=49; v++) revVoltages.push(v*0.1);
-        for(let v=50; v<=62; v++) revVoltages.push(v*0.1);
-        for(let v=63; v<=130; v++) revVoltages.push(v*0.1);
-        revVoltages.forEach(Vs => {
-            const {I,Vzen} = simCalcReadings(Vs,'reverse');
-            revPts.push({x:parseFloat((-Vzen).toFixed(3)), y:parseFloat((-I).toFixed(4))});
-        });
-        const revMap = new Map();
-        revPts.forEach(p => { if (!revMap.has(p.x) || p.y < revMap.get(p.x)) revMap.set(p.x, p.y); });
-        const revClean = [...revMap.entries()].map(([x,y])=>({x,y})).sort((a,b)=>a.x-b.x);
-        const fwdVoltages = [];
-        for(let v=0; v<=30; v++) fwdVoltages.push(v*0.02);
-        for(let v=31; v<=60; v++) fwdVoltages.push(0.60+(v-30)*0.04);
-        fwdVoltages.forEach(Vs => {
-            const {I,Vzen} = simCalcReadings(Vs,'forward');
-            fwdPts.push({x:parseFloat(Vzen.toFixed(3)), y:parseFloat(I.toFixed(4))});
-        });
-        return {revPts: revClean, fwdPts: fwdPts.sort((a,b)=>a.x-b.x)};
+        const revPts=[], fwdPts=[];
+        const revV=[...Array(50).keys()].map(i=>i*0.1).concat([...Array(13).keys()].map(i=>5+i*0.1)).concat([...Array(68).keys()].map(i=>6.3+i*0.1));
+        revV.forEach(Vs=>{ const {I,Vzen}=simCalcReadings(Vs,'reverse'); revPts.push({x:parseFloat((-Vzen).toFixed(3)),y:parseFloat((-I).toFixed(4))}); });
+        const revMap=new Map();
+        revPts.forEach(p=>{if(!revMap.has(p.x)||p.y<revMap.get(p.x))revMap.set(p.x,p.y);});
+        const revClean=[...revMap.entries()].map(([x,y])=>({x,y})).sort((a,b)=>a.x-b.x);
+        const fwdV=[...Array(31).keys()].map(i=>i*0.02).concat([...Array(30).keys()].map(i=>0.60+i*0.04));
+        fwdV.forEach(Vs=>{ const {I,Vzen}=simCalcReadings(Vs,'forward'); fwdPts.push({x:parseFloat(Vzen.toFixed(3)),y:parseFloat(I.toFixed(4))}); });
+        return {revPts:revClean, fwdPts:fwdPts.sort((a,b)=>a.x-b.x)};
     }
 
     function simInitChart() {
-        const cc = simChartColors();
-        const {revPts, fwdPts} = simBuildTheoreticVI();
-        const revColor  = simDark ? '#EF5350' : '#C62828';
-        const fwdColor  = simDark ? '#C07AFF' : '#1A88D0';
-        const kneeColor = simDark ? '#FFA726' : '#E65100';
-        const canvas = document.getElementById('sViCh');
-        if (!canvas) return;
+        const cc=simChartColors();
+        const {revPts,fwdPts}=simBuildTheoreticVI();
+        const revColor  = simDark?'#EF5350':'#C62828';
+        const fwdColor  = simDark?'#C07AFF':'#1A88D0';
+        const kneeColor = simDark?'#FFA726':'#E65100';
+        const canvas = document.getElementById('sViCh'); if (!canvas) return;
         simViCh = new Chart(canvas.getContext('2d'), {
-            type: 'scatter',
-            data: {
-                datasets: [
-                    { label: '_RevRef', data: revPts, borderColor: simDark?'rgba(239,83,80,0.18)':'rgba(198,40,40,0.14)', backgroundColor:'transparent', borderWidth:1.5, showLine:true, tension:0.32, pointRadius:0, fill:false, borderDash:[4,5], order:10 },
-                    { label: '_FwdRef', data: fwdPts, borderColor: simDark?'rgba(192,122,255,0.18)':'rgba(26,136,208,0.14)', backgroundColor:'transparent', borderWidth:1.5, showLine:true, tension:0.32, pointRadius:0, fill:false, borderDash:[4,5], order:10 },
-                    { label:'Reverse Bias', data:[], borderColor:revColor, backgroundColor:revColor, borderWidth:2.5, showLine:true, tension:0.38, pointRadius:5, pointHoverRadius:9, pointBackgroundColor:revColor, pointBorderColor:simDark?'#0E0E1E':'#fff', pointBorderWidth:2.5, fill:false, order:2 },
-                    { label:'Forward Bias', data:[], borderColor:fwdColor, backgroundColor:fwdColor, borderWidth:2.5, showLine:true, tension:0.38, pointRadius:5, pointHoverRadius:9, pointBackgroundColor:fwdColor, pointBorderColor:simDark?'#0E0E1E':'#fff', pointBorderWidth:2.5, fill:false, order:2 },
-                    { label:'Operating Point', data:[{x:0,y:0}], borderColor:kneeColor, backgroundColor:kneeColor, borderWidth:2, pointRadius:7, pointHoverRadius:11, pointBackgroundColor:kneeColor, pointBorderColor:simDark?'#0E0E1E':'#fff', pointBorderWidth:2.5, pointStyle:'rectRot', showLine:false, order:1 }
-                ]
-            },
-            options: {
+            type:'scatter',
+            data: { datasets:[
+                {label:'_RevRef', data:revPts, borderColor:simDark?'rgba(239,83,80,0.18)':'rgba(198,40,40,0.14)', backgroundColor:'transparent', borderWidth:1.5, showLine:true, tension:0.32, pointRadius:0, fill:false, borderDash:[4,5], order:10},
+                {label:'_FwdRef', data:fwdPts, borderColor:simDark?'rgba(192,122,255,0.18)':'rgba(26,136,208,0.14)', backgroundColor:'transparent', borderWidth:1.5, showLine:true, tension:0.32, pointRadius:0, fill:false, borderDash:[4,5], order:10},
+                {label:'Reverse Bias', data:[], borderColor:revColor, backgroundColor:revColor, borderWidth:2.5, showLine:true, tension:0.38, pointRadius:5, pointHoverRadius:9, pointBackgroundColor:revColor, pointBorderColor:simDark?'#0E0E1E':'#fff', pointBorderWidth:2.5, fill:false, order:2},
+                {label:'Forward Bias', data:[], borderColor:fwdColor, backgroundColor:fwdColor, borderWidth:2.5, showLine:true, tension:0.38, pointRadius:5, pointHoverRadius:9, pointBackgroundColor:fwdColor, pointBorderColor:simDark?'#0E0E1E':'#fff', pointBorderWidth:2.5, fill:false, order:2},
+                {label:'Operating Point', data:[{x:0,y:0}], borderColor:kneeColor, backgroundColor:kneeColor, borderWidth:2, pointRadius:7, pointHoverRadius:11, pointBackgroundColor:kneeColor, pointBorderColor:simDark?'#0E0E1E':'#fff', pointBorderWidth:2.5, pointStyle:'rectRot', showLine:false, order:1}
+            ]},
+            options:{
                 responsive:true, maintainAspectRatio:false,
-                animation:{duration:350, easing:'easeOutQuart'},
-                scales: {
-                    x: { type:'linear', title:{display:true,text:'Voltage (V)',color:cc.txt,font:{size:11,family:'IBM Plex Sans',weight:'500'}}, min:-10, max:2, grid:{color:cc.grid,lineWidth:1}, border:{color:cc.zero}, ticks:{color:cc.txt,font:{size:10,family:'IBM Plex Mono'},maxTicksLimit:13,callback:v=>v.toFixed(1)} },
-                    y: { title:{display:true,text:'Current (mA)',color:cc.txt,font:{size:11,family:'IBM Plex Sans',weight:'500'}}, min:-30, max:25, grid:{color:cc.grid,lineWidth:1}, border:{color:cc.zero}, ticks:{color:cc.txt,font:{size:10,family:'IBM Plex Mono'},maxTicksLimit:11,callback:v=>v.toFixed(0)} }
+                animation:{duration:350,easing:'easeOutQuart'},
+                scales:{
+                    x:{type:'linear',title:{display:true,text:'Voltage (V)',color:cc.txt,font:{size:11,family:'IBM Plex Sans',weight:'500'}},min:-10,max:2,grid:{color:cc.grid,lineWidth:1},border:{color:cc.zero},ticks:{color:cc.txt,font:{size:10,family:'IBM Plex Mono'},maxTicksLimit:13,callback:v=>v.toFixed(1)}},
+                    y:{title:{display:true,text:'Current (mA)',color:cc.txt,font:{size:11,family:'IBM Plex Sans',weight:'500'}},min:-30,max:25,grid:{color:cc.grid,lineWidth:1},border:{color:cc.zero},ticks:{color:cc.txt,font:{size:10,family:'IBM Plex Mono'},maxTicksLimit:11,callback:v=>v.toFixed(0)}}
                 },
-                plugins: {
-                    legend: { labels:{color:cc.txt,font:{size:10,family:'IBM Plex Sans'},usePointStyle:true,padding:14,filter:item=>!item.text.startsWith('_')} },
-                    tooltip: { backgroundColor:simDark?'#0E0E1E':'#fff', borderColor:cc.grid, borderWidth:1, titleColor:cc.txt, bodyColor:cc.txt, padding:10, cornerRadius:8, callbacks:{title:ctx=>ctx[0].dataset.label, label:ctx=>`  |V| = ${Math.abs(ctx.parsed.x).toFixed(3)} V   |I| = ${Math.abs(ctx.parsed.y).toFixed(4)} mA`} },
-                    annotation: { annotations: { vzLine:{type:'line',xMin:-simST.Vz,xMax:-simST.Vz,borderColor:kneeColor,borderWidth:1.5,borderDash:[6,4],label:{display:true,content:'V_Z = '+simST.Vz+'V',position:'start',backgroundColor:simDark?'rgba(255,167,38,0.12)':'rgba(230,81,0,0.10)',color:kneeColor,font:{size:10,family:'IBM Plex Mono',weight:'600'},padding:{x:6,y:3},borderRadius:4}}, zeroLine:{type:'line',yMin:0,yMax:0,borderColor:cc.zero,borderWidth:1.2} } },
-                    zoom: { zoom:{wheel:{enabled:false},pinch:{enabled:false}}, pan:{enabled:false} }
+                plugins:{
+                    legend:{labels:{color:cc.txt,font:{size:10,family:'IBM Plex Sans'},usePointStyle:true,padding:14,filter:item=>!item.text.startsWith('_')}},
+                    tooltip:{backgroundColor:simDark?'#0E0E1E':'#fff',borderColor:cc.grid,borderWidth:1,titleColor:cc.txt,bodyColor:cc.txt,padding:10,cornerRadius:8,callbacks:{title:ctx=>ctx[0].dataset.label,label:ctx=>`  |V| = ${Math.abs(ctx.parsed.x).toFixed(3)} V   |I| = ${Math.abs(ctx.parsed.y).toFixed(4)} mA`}},
+                    annotation:{annotations:{vzLine:{type:'line',xMin:-simST.Vz,xMax:-simST.Vz,borderColor:kneeColor,borderWidth:1.5,borderDash:[6,4],label:{display:true,content:'V_Z = '+simST.Vz+'V',position:'start',backgroundColor:simDark?'rgba(255,167,38,0.12)':'rgba(230,81,0,0.10)',color:kneeColor,font:{size:10,family:'IBM Plex Mono',weight:'600'},padding:{x:6,y:3},borderRadius:4}},zeroLine:{type:'line',yMin:0,yMax:0,borderColor:cc.zero,borderWidth:1.2}}},
+                    zoom:{zoom:{wheel:{enabled:false},pinch:{enabled:false}},pan:{enabled:false}}
                 },
                 onHover:(evt,elements,chart)=>simApplyHoverFocus(chart,elements)
             }
         });
-        // Also log start step
         simSetInstr('start');
         simRenderInstrHistory();
-        // Animate component buttons in
         anime({targets:'.s-mat-btn', opacity:[0,1], translateX:[-14,0], delay:anime.stagger(45,{start:150}), duration:450, easing:'easeOutQuad'});
     }
 
     function simRefreshChartTheme() {
         if (!simViCh) return;
-        const cc = simChartColors();
-        const kneeColor = simDark?'#FFA726':'#E65100';
-        const revColor  = simDark?'#EF5350':'#C62828';
-        const fwdColor  = simDark?'#C07AFF':'#1A88D0';
-        simViCh.options.scales.x.grid.color  = cc.grid; simViCh.options.scales.x.ticks.color = cc.txt; simViCh.options.scales.x.title.color = cc.txt;
-        simViCh.options.scales.y.grid.color  = cc.grid; simViCh.options.scales.y.ticks.color = cc.txt; simViCh.options.scales.y.title.color = cc.txt;
-        simViCh.options.plugins.legend.labels.color = cc.txt;
-        simViCh.options.plugins.tooltip.backgroundColor = simDark?'#0E0E1E':'#fff';
-        simViCh.options.plugins.tooltip.titleColor = cc.txt; simViCh.options.plugins.tooltip.bodyColor = cc.txt; simViCh.options.plugins.tooltip.borderColor = cc.grid;
+        const cc=simChartColors();
+        const kneeColor=simDark?'#FFA726':'#E65100', revColor=simDark?'#EF5350':'#C62828', fwdColor=simDark?'#C07AFF':'#1A88D0';
+        simViCh.options.scales.x.grid.color=cc.grid; simViCh.options.scales.x.ticks.color=cc.txt; simViCh.options.scales.x.title.color=cc.txt;
+        simViCh.options.scales.y.grid.color=cc.grid; simViCh.options.scales.y.ticks.color=cc.txt; simViCh.options.scales.y.title.color=cc.txt;
+        simViCh.options.plugins.legend.labels.color=cc.txt;
+        simViCh.options.plugins.tooltip.backgroundColor=simDark?'#0E0E1E':'#fff'; simViCh.options.plugins.tooltip.titleColor=cc.txt; simViCh.options.plugins.tooltip.bodyColor=cc.txt; simViCh.options.plugins.tooltip.borderColor=cc.grid;
         if (simViCh.options.plugins.annotation) {
-            const ann = simViCh.options.plugins.annotation.annotations;
-            if (ann.vzLine)   { ann.vzLine.borderColor = kneeColor; ann.vzLine.label.color = kneeColor; ann.vzLine.label.backgroundColor = simDark?'rgba(255,167,38,0.12)':'rgba(230,81,0,0.1)'; }
-            if (ann.zeroLine) { ann.zeroLine.borderColor = cc.zero; }
+            const ann=simViCh.options.plugins.annotation.annotations;
+            if (ann.vzLine) { ann.vzLine.borderColor=kneeColor; ann.vzLine.label.color=kneeColor; ann.vzLine.label.backgroundColor=simDark?'rgba(255,167,38,0.12)':'rgba(230,81,0,0.1)'; }
+            if (ann.zeroLine) ann.zeroLine.borderColor=cc.zero;
         }
-        simViCh.data.datasets.forEach(ds => {
+        simViCh.data.datasets.forEach(ds=>{
             if (ds.label==='_RevRef') ds.borderColor=simDark?'rgba(239,83,80,0.18)':'rgba(198,40,40,0.14)';
             else if (ds.label==='_FwdRef') ds.borderColor=simDark?'rgba(192,122,255,0.18)':'rgba(26,136,208,0.14)';
             else if (ds.label==='Reverse Bias') { ds.borderColor=revColor; ds.backgroundColor=revColor; ds.pointBackgroundColor=revColor; ds.pointBorderColor=simDark?'#0E0E1E':'#fff'; }
@@ -1864,26 +1677,24 @@
     }
 
     /* ── Observation Data ── */
-    const simFwdObs = [], simRevObs = [];
-    let simFwdCounter = 0, simRevCounter = 0;
+    const simFwdObs=[], simRevObs=[];
+    let simFwdCounter=0, simRevCounter=0;
 
     function simUpdateObsGraph() {
         if (!simViCh) return;
-        const revDs = simViCh.data.datasets.find(d => d.label === 'Reverse Bias');
-        const fwdDs = simViCh.data.datasets.find(d => d.label === 'Forward Bias');
-        if (revDs) revDs.data = simRevObs.map(o=>({x:parseFloat((-Math.abs(o.vz)).toFixed(3)),y:parseFloat((-Math.abs(o.i)).toFixed(4))})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)).sort((a,b)=>a.x-b.x);
-        if (fwdDs) fwdDs.data = simFwdObs.map(o=>({x:parseFloat(Math.abs(o.vz).toFixed(3)),y:parseFloat(Math.abs(o.i).toFixed(4))})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)).sort((a,b)=>a.x-b.x);
-        // Auto-scaling
-        const allX = [...simRevObs.map(o=>-Math.abs(o.vz)), ...simFwdObs.map(o=>Math.abs(o.vz))];
-        const allY = [...simRevObs.map(o=>-Math.abs(o.i)), ...simFwdObs.map(o=>Math.abs(o.i))];
-        if (allX.length > 0) {
-            const rawXMin=Math.min(...allX), rawXMax=Math.max(...allX), xSpan=rawXMax-rawXMin||1;
-            const xPad=xSpan*0.10+0.3;
-            simViCh.options.scales.x.min=rawXMin-xPad; simViCh.options.scales.x.max=rawXMax+xPad;
-            const rawYMin=Math.min(...allY), rawYMax=Math.max(...allY), ySpan=rawYMax-rawYMin;
+        const revDs=simViCh.data.datasets.find(d=>d.label==='Reverse Bias');
+        const fwdDs=simViCh.data.datasets.find(d=>d.label==='Forward Bias');
+        if (revDs) revDs.data=simRevObs.map(o=>({x:parseFloat((-Math.abs(o.vz)).toFixed(3)),y:parseFloat((-Math.abs(o.i)).toFixed(4))})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)).sort((a,b)=>a.x-b.x);
+        if (fwdDs) fwdDs.data=simFwdObs.map(o=>({x:parseFloat(Math.abs(o.vz).toFixed(3)),y:parseFloat(Math.abs(o.i).toFixed(4))})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)).sort((a,b)=>a.x-b.x);
+        const allX=[...simRevObs.map(o=>-Math.abs(o.vz)),...simFwdObs.map(o=>Math.abs(o.vz))];
+        const allY=[...simRevObs.map(o=>-Math.abs(o.i)),...simFwdObs.map(o=>Math.abs(o.i))];
+        if (allX.length>0) {
+            const rxMin=Math.min(...allX),rxMax=Math.max(...allX),xSpan=rxMax-rxMin||1,xPad=xSpan*0.10+0.3;
+            simViCh.options.scales.x.min=rxMin-xPad; simViCh.options.scales.x.max=rxMax+xPad;
+            const ryMin=Math.min(...allY),ryMax=Math.max(...allY),ySpan=ryMax-ryMin;
             let yMin,yMax;
-            if (ySpan<1e-6){const center=(rawYMin+rawYMax)/2;yMin=center-1;yMax=center+1;}
-            else{const absMaxY=Math.max(Math.abs(rawYMin),Math.abs(rawYMax));if(absMaxY<1){const logPad=ySpan*0.25;yMin=rawYMin-(rawYMin<0?logPad:0);yMax=rawYMax+(rawYMax>0?logPad:0);const center=(yMin+yMax)/2;const halfWin=Math.max((yMax-yMin)/2,absMaxY*0.5+0.05);yMin=Math.min(yMin,center-halfWin);yMax=Math.max(yMax,center+halfWin);}else{const yPad=ySpan*0.10;yMin=rawYMin-(rawYMin<0?yPad+Math.abs(rawYMin)*0.05:0);yMax=rawYMax+(rawYMax>0?yPad+rawYMax*0.05:0);}if(rawYMin>=0)yMin=Math.min(yMin,-(ySpan*0.08+0.5));else yMax=Math.max(yMax,ySpan*0.08+0.5);}
+            if (ySpan<1e-6){const c=(ryMin+ryMax)/2;yMin=c-1;yMax=c+1;}
+            else{const absMaxY=Math.max(Math.abs(ryMin),Math.abs(ryMax));if(absMaxY<1){const lp=ySpan*0.25;yMin=ryMin-(ryMin<0?lp:0);yMax=ryMax+(ryMax>0?lp:0);const c=(yMin+yMax)/2,hw=Math.max((yMax-yMin)/2,absMaxY*0.5+0.05);yMin=Math.min(yMin,c-hw);yMax=Math.max(yMax,c+hw);}else{const yp=ySpan*0.10;yMin=ryMin-(ryMin<0?yp+Math.abs(ryMin)*0.05:0);yMax=ryMax+(ryMax>0?yp+ryMax*0.05:0);}if(ryMin>=0)yMin=Math.min(yMin,-(ySpan*0.08+0.5));else yMax=Math.max(yMax,ySpan*0.08+0.5);}
             simViCh.options.scales.y.min=yMin; simViCh.options.scales.y.max=yMax;
         }
         simViCh.update();
@@ -1899,56 +1710,42 @@
 
     function simRecordReading(bias) {
         if (!simST.powered) return;
-        if (simST.bias !== bias) { alert(`Currently in ${simST.bias} bias mode. Switch to ${bias} bias to record ${bias} readings.`); return; }
-        const {v, i} = simST.reading;
-        const time = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-        if (bias === 'forward') {
-            simFwdCounter++;
-            simFwdObs.push({id:simFwdCounter, supplyV:simST.voltage, vz:v, i:i, time});
-            simRenderObsTable('forward');
-        } else {
-            simRevCounter++;
-            simRevObs.push({id:simRevCounter, supplyV:simST.voltage, vz:v, i:i, time});
-            simRenderObsTable('reverse');
-        }
+        if (simST.bias!==bias){alert(`Currently in ${simST.bias} bias mode. Switch to ${bias} bias to record ${bias} readings.`);return;}
+        const {v,i}=simST.reading;
+        const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+        if (bias==='forward'){simFwdCounter++;simFwdObs.push({id:simFwdCounter,supplyV:simST.voltage,vz:v,i,time});simRenderObsTable('forward');}
+        else{simRevCounter++;simRevObs.push({id:simRevCounter,supplyV:simST.voltage,vz:v,i,time});simRenderObsTable('reverse');}
         simUpdateObsGraph();
         simUpdateStepBar(4,'done'); simUpdateInstrCards(4,'completed');
         simUpdateInstrCards(5,'in-progress'); simUpdateStepBar(5,'active');
-        setTimeout(() => {
-            const tbody = document.getElementById(bias==='forward'?'sFwdTbody':'sRevTbody');
-            const last = tbody.querySelector('tr:last-child');
-            if (last) { last.style.background='color-mix(in srgb, var(--sim-accent) 12%, transparent)'; setTimeout(()=>last.style.background='',700); }
-        }, 30);
+        setTimeout(()=>{
+            const tbody=document.getElementById(bias==='forward'?'sFwdTbody':'sRevTbody');
+            const last=tbody.querySelector('tr:last-child');
+            if(last){last.style.background='color-mix(in srgb,var(--sim-accent) 12%,transparent)';setTimeout(()=>last.style.background='',700);}
+        },30);
     }
 
-    function simDeleteObs(bias, id) {
-        const arr = bias==='forward' ? simFwdObs : simRevObs;
-        const idx = arr.findIndex(o=>o.id===id);
-        if (idx!==-1) arr.splice(idx,1);
-        simRenderObsTable(bias);
-        simUpdateObsGraph();
+    function simDeleteObs(bias,id) {
+        const arr=bias==='forward'?simFwdObs:simRevObs;
+        const idx=arr.findIndex(o=>o.id===id); if(idx!==-1)arr.splice(idx,1);
+        simRenderObsTable(bias); simUpdateObsGraph();
     }
 
     function simClearObs(bias) {
         if (!confirm('Clear all '+bias+' bias observations?')) return;
-        if (bias==='forward'){simFwdObs.length=0;simFwdCounter=0;}
+        if(bias==='forward'){simFwdObs.length=0;simFwdCounter=0;}
         else{simRevObs.length=0;simRevCounter=0;}
-        simRenderObsTable(bias);
-        simUpdateObsGraph();
+        simRenderObsTable(bias); simUpdateObsGraph();
     }
 
     function simRenderObsTable(bias) {
-        const arr = bias==='forward' ? simFwdObs : simRevObs;
-        const tbodyId = bias==='forward' ? 'sFwdTbody' : 'sRevTbody';
-        const countId = bias==='forward' ? 'sFwdCount' : 'sRevCount';
-        const tbody = document.getElementById(tbodyId);
-        const countEl = document.getElementById(countId);
+        const arr=bias==='forward'?simFwdObs:simRevObs;
+        const tbodyId=bias==='forward'?'sFwdTbody':'sRevTbody';
+        const countId=bias==='forward'?'sFwdCount':'sRevCount';
+        const tbody=document.getElementById(tbodyId), countEl=document.getElementById(countId);
         if (!tbody) return;
-        if (arr.length===0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="s-obs-empty">No ${bias} bias readings yet.</td></tr>`;
-            countEl.textContent = '0 readings'; return;
-        }
-        tbody.innerHTML = arr.map((o,idx) => `<tr>
+        if (arr.length===0){tbody.innerHTML=`<tr><td colspan="6" class="s-obs-empty">No ${bias} bias readings yet.</td></tr>`;countEl.textContent='0 readings';return;}
+        tbody.innerHTML=arr.map((o,idx)=>`<tr>
             <td style="font-weight:700;color:var(--sim-accent)">${idx+1}</td>
             <td>${o.supplyV.toFixed(2)}</td>
             <td style="font-weight:600;color:var(--sim-accent)">${o.vz.toFixed(3)}</td>
@@ -1956,64 +1753,54 @@
             <td style="font-size:10px;color:var(--sim-tm)">${o.time}</td>
             <td><button class="s-del-btn" onclick="simDeleteObs('${bias}',${o.id})">✕</button></td>
         </tr>`).join('');
-        const n = arr.length;
-        countEl.textContent = n + ' reading' + (n!==1?'s':'');
+        const n=arr.length; countEl.textContent=n+' reading'+(n!==1?'s':'');
     }
 
     /* ── Hover Focus ── */
-    let simHoverActive = false;
-    function simApplyHoverFocus(chart, elements) {
-        const obsLabels = ['Forward Bias', 'Reverse Bias'];
-        const refLabels = ['_RevRef', '_FwdRef'];
-        if (!elements || elements.length===0) {
+    let simHoverActive=false;
+    function simApplyHoverFocus(chart,elements) {
+        const obsL=['Forward Bias','Reverse Bias'], refL=['_RevRef','_FwdRef'];
+        if (!elements||elements.length===0) {
             if (simHoverActive) {
-                chart.data.datasets.forEach((ds,i) => {
-                    if (obsLabels.includes(ds.label)) { ds.borderWidth=2.5; ds.pointRadius=5; ds.pointHoverRadius=9; }
-                    if (refLabels.includes(ds.label)) ds.borderColor=ds.label==='_RevRef'?(simDark?'rgba(239,83,80,0.18)':'rgba(198,40,40,0.14)'):(simDark?'rgba(192,122,255,0.18)':'rgba(26,136,208,0.14)');
+                chart.data.datasets.forEach((ds,i)=>{
+                    if(obsL.includes(ds.label)){ds.borderWidth=2.5;ds.pointRadius=5;ds.pointHoverRadius=9;}
+                    if(refL.includes(ds.label))ds.borderColor=ds.label==='_RevRef'?(simDark?'rgba(239,83,80,0.18)':'rgba(198,40,40,0.14)'):(simDark?'rgba(192,122,255,0.18)':'rgba(26,136,208,0.14)');
                 });
                 chart._spotlightEl=null; simHoverActive=false; chart.update('none');
             }
             return;
         }
-        const hoveredDsIdx = elements[0].datasetIndex;
-        const hoveredDs = chart.data.datasets[hoveredDsIdx];
-        if (!obsLabels.includes(hoveredDs?.label)) return;
-        simHoverActive = true;
-        chart.data.datasets.forEach((ds,i) => {
-            if (obsLabels.includes(ds.label)) {
-                if (i===hoveredDsIdx) { ds.borderWidth=3.5; ds.pointRadius=7; ds.pointHoverRadius=12; }
-                else { ds.borderWidth=1.5; ds.pointRadius=3; ds.pointHoverRadius=5; }
-            }
-            if (refLabels.includes(ds.label)) ds.borderColor=ds.label==='_RevRef'?(simDark?'rgba(239,83,80,0.07)':'rgba(198,40,40,0.06)'):(simDark?'rgba(192,122,255,0.07)':'rgba(26,136,208,0.06)');
+        const hovIdx=elements[0].datasetIndex, hovDs=chart.data.datasets[hovIdx];
+        if (!obsL.includes(hovDs?.label)) return;
+        simHoverActive=true;
+        chart.data.datasets.forEach((ds,i)=>{
+            if(obsL.includes(ds.label)){if(i===hovIdx){ds.borderWidth=3.5;ds.pointRadius=7;ds.pointHoverRadius=12;}else{ds.borderWidth=1.5;ds.pointRadius=3;ds.pointHoverRadius=5;}}
+            if(refL.includes(ds.label))ds.borderColor=ds.label==='_RevRef'?(simDark?'rgba(239,83,80,0.07)':'rgba(198,40,40,0.06)'):(simDark?'rgba(192,122,255,0.07)':'rgba(26,136,208,0.06)');
         });
         chart._spotlightEl=elements[0]; chart.update('none');
     }
 
     /* ── Spotlight Plugin ── */
-    const simSpotlightPlugin = {
-        id: 'simSpotlight',
+    Chart.register({
+        id:'simSpotlight',
         afterDraw(chart) {
-            const el = chart._spotlightEl;
-            if (!el) return;
-            const {ctx, chartArea:ca} = chart;
-            const pt = chart.getDatasetMeta(el.datasetIndex).data[el.index];
-            if (!pt) return;
-            const x=pt.x, y=pt.y, r=80;
+            const el=chart._spotlightEl; if(!el)return;
+            const {ctx,chartArea:ca}=chart;
+            const pt=chart.getDatasetMeta(el.datasetIndex).data[el.index]; if(!pt)return;
+            const x=pt.x,y=pt.y,r=80;
             ctx.save();
-            ctx.beginPath();
-            ctx.rect(ca.left,ca.top,ca.width,ca.height);
-            ctx.arc(x,y,r,0,Math.PI*2,true);
-            ctx.fillStyle=simDark?'rgba(5,5,16,0.28)':'rgba(232,244,253,0.30)';
-            ctx.fill();
+            ctx.beginPath();ctx.rect(ca.left,ca.top,ca.width,ca.height);ctx.arc(x,y,r,0,Math.PI*2,true);
+            ctx.fillStyle=simDark?'rgba(5,5,16,0.28)':'rgba(232,244,253,0.30)';ctx.fill();
             const grd=ctx.createRadialGradient(x,y,r*0.55,x,y,r);
-            grd.addColorStop(0,'transparent');
-            grd.addColorStop(1,simDark?'rgba(155,77,255,0.10)':'rgba(26,136,208,0.10)');
+            grd.addColorStop(0,'transparent');grd.addColorStop(1,simDark?'rgba(155,77,255,0.10)':'rgba(26,136,208,0.10)');
             ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=grd;ctx.fill();
             ctx.restore();
         }
-    };
-    Chart.register(simSpotlightPlugin);
+    });
     </script>
+
+    <!-- Shared portal JS (handles header interactions, mobile nav, etc.) -->
+    <script src="../js/portal.js"></script>
 
 </body>
 </html>

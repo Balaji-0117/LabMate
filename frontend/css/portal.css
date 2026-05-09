@@ -17,7 +17,13 @@
   --status-info: #9b59b6;
   --bg-info: rgba(155, 89, 182, 0.12);
 }
-
+.portal-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
 [data-theme="dark"] {
   /* Boost opacity slightly for better visibility in dark mode */
   --bg-success: rgba(46, 204, 113, 0.2);
