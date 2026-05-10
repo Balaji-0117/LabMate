@@ -1,4 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    async function loginUser() {
+
+    const email =
+        document.getElementById("email").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:5000/api/auth/login",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            // STORE JWT TOKEN
+            localStorage.setItem("token", data.token);
+
+            // REDIRECT TO DASHBOARD
+            window.location.href =
+                "../html/portal.html";
+
+        } else {
+
+            alert(data.error);
+        }
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("Login failed");
+    }
+}
+
     const loginForm = document.getElementById('login-form');
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('password-input');
@@ -52,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if(loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const emailValue = emailInput.value.trim();
@@ -73,25 +124,63 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.style.opacity = '0.7';
             submitBtn.disabled = true;
 
-            setTimeout(() => {
-                loginForm.classList.add('hidden');
-                
-                const loginTitle = document.querySelector('.login-title');
-                if (loginTitle) loginTitle.classList.add('hidden');
-                
-                const loginSubtitle = document.querySelector('.login-subtitle');
-                if (loginSubtitle) loginSubtitle.classList.add('hidden');
-                
-                const loginFooter = document.querySelector('.login-footer');
-                if (loginFooter) loginFooter.classList.add('hidden');
+            try {
+                const res = await fetch("http://localhost:5000/api/auth/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: emailValue,
+                        password: passValue
+                    }),
+                });
 
-                successState.classList.remove('hidden');
+                const data = await res.json();
 
-                // Redirect to homepage after success
-                setTimeout(() => {
-                    window.location.href = 'labmate_landing.html';
-                }, 1500);
-            }, 1500); // 1.5 seconds artificial delay
+                if (res.ok) {
+
+                    // ✅ Store JWT token
+                    if (data.token) {
+                        localStorage.setItem("token", data.token);
+                    }
+
+                    // ✅ SAME SUCCESS UI (no change)
+                    loginForm.classList.add('hidden');
+                    
+                    const loginTitle = document.querySelector('.login-title');
+                    if (loginTitle) loginTitle.classList.add('hidden');
+                    
+                    const loginSubtitle = document.querySelector('.login-subtitle');
+                    if (loginSubtitle) loginSubtitle.classList.add('hidden');
+                    
+                    const loginFooter = document.querySelector('.login-footer');
+                    if (loginFooter) loginFooter.classList.add('hidden');
+
+                    successState.classList.remove('hidden');
+
+                    // ✅ Redirect to portal (IMPORTANT CHANGE)
+                    setTimeout(() => {
+                        window.location.href = '../html/portal.html';
+                    }, 1500);
+
+                } else {
+                    // ❌ Show backend error
+                    alert(data.error || "Login failed ❌");
+
+                    submitBtn.innerHTML = 'Login';
+                    submitBtn.style.opacity = '1';
+                    submitBtn.disabled = false;
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("Server error ❌");
+
+                submitBtn.innerHTML = 'Login';
+                submitBtn.style.opacity = '1';
+                submitBtn.disabled = false;
+            }
         });
     }
 

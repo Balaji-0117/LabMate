@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logic Gates — LabMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/portal.css"/>
+
+  <style>
+    /* =============================================
+       EXPERIMENT PAGE — Scoped Styles (mirrors bubble_sort_exp.html)
+       ============================================= */
+    .exp-page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg-page);
+    }
+
+    .exp-breadcrumb {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-var);
+      padding: 10px 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-soft);
+    }
+    .exp-breadcrumb a { color: var(--accent-btn, var(--teal)); font-weight: 500; transition: color 0.2s; }
+    .exp-breadcrumb a:hover { color: var(--btn-hover, #1270b0); text-decoration: underline; }
+    .exp-breadcrumb .sep { opacity: 0.45; margin: 0 2px; }
+    .exp-breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+
+    .exp-banner {
+      background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn, var(--teal)) 100%);
+      color: #fff;
+      padding: 22px 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .exp-banner-icon {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,0.18); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; flex-shrink: 0;
+    }
+    .exp-banner-meta { flex: 1; }
+    .exp-banner-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.78; margin-bottom: 4px; }
+    .exp-banner-title { font-family: var(--font-display); font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+    .exp-banner-sub { font-size: 0.83rem; opacity: 0.8; margin-top: 4px; }
+
+    .exp-main-body {
+      flex: 1; display: flex; gap: 0;
+      padding: 32px 40px;
+      max-width: 1300px; width: 100%;
+      margin: 0 auto; box-sizing: border-box;
+    }
+
+    .exp-sidebar { width: 220px; flex-shrink: 0; margin-right: 28px; }
+    .exp-sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-lg, 20px);
+      box-shadow: var(--sh-card);
+      overflow: hidden;
+      position: sticky; top: 90px;
+    }
+    .exp-sidebar-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--border-var);
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-soft);
+    }
+    .exp-nav-list { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .exp-nav-btn {
+      display: flex; align-items: center; gap: 12px;
+      width: 100%; padding: 12px 14px;
+      border-radius: var(--r-md, 12px);
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
+      color: var(--text-mid); background: transparent; border: none;
+      cursor: pointer;
+      transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
+      text-align: left; position: relative;
+    }
+    .exp-nav-btn:hover { background: var(--scale-bg, var(--teal-dim)); color: var(--text-primary); transform: translateX(3px); }
+    .exp-nav-btn.active { background: var(--scale-bg, var(--teal-dim)); color: var(--accent-btn, var(--teal)); font-weight: 600; }
+    .exp-nav-btn.active::before {
+      content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--accent-btn, var(--teal));
+    }
+    .exp-nav-btn.locked { opacity: 0.45; cursor: not-allowed; }
+    .exp-nav-btn.locked:hover { transform: none; background: transparent; }
+    .exp-nav-icon {
+      width: 28px; height: 28px; border-radius: 8px; background: var(--card-inner);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0; transition: background 0.22s;
+    }
+    .exp-nav-btn.active .exp-nav-icon { background: var(--accent-btn, var(--teal)); color: #fff; }
+
+    .exp-sidebar-progress { padding: 14px 20px 18px; border-top: 1px solid var(--border-var); }
+    .exp-progress-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.72rem; color: var(--text-soft);
+      margin-bottom: 8px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .exp-progress-track { height: 5px; background: var(--scale-bg); border-radius: 10px; overflow: hidden; }
+    .exp-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+      border-radius: 10px;
+      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+      width: 20%;
+    }
+
+    .exp-content-area { flex: 1; min-width: 0; }
+    .exp-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-lg, 20px);
+      box-shadow: var(--sh-card);
+      overflow: hidden;
+    }
+    .exp-panel-header {
+      padding: 24px 32px 20px;
+      border-bottom: 1px solid var(--border-var);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .exp-panel-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--scale-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .exp-panel-title { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.1; }
+    .exp-panel-subtitle { font-size: 0.83rem; color: var(--text-soft); margin-top: 2px; }
+    .exp-panel-body { padding: 32px; }
+
+    .exp-section-content { display: none; animation: sectionFadeIn 0.35s cubic-bezier(0.4,0,0.2,1) both; }
+    .exp-section-content.visible { display: block; }
+    @keyframes sectionFadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .exp-body-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.85; }
+    .exp-body-text + .exp-body-text { margin-top: 16px; }
+
+    .exp-highlight-box {
+      background: var(--scale-bg);
+      border-left: 4px solid var(--accent-btn, var(--teal));
+      border-radius: 0 var(--r-md) var(--r-md) 0;
+      padding: 16px 20px; margin: 20px 0;
+      font-size: 0.9rem; color: var(--text-primary); line-height: 1.7;
+    }
+
+    .exp-step-list { counter-reset: steps; list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 14px; }
+    .exp-step-list li {
+      counter-increment: steps; display: flex; align-items: flex-start;
+      gap: 16px; font-size: 0.92rem; color: var(--text-mid); line-height: 1.7;
+    }
+    .exp-step-list li::before {
+      content: counter(steps); flex-shrink: 0;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+      color: #fff; font-size: 0.72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; margin-top: 2px;
+    }
+
+    .exp-materials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px; margin: 20px 0; }
+    .exp-material-chip {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--card-inner); border: 1px solid var(--border-var);
+      border-radius: var(--r-md); padding: 10px 14px;
+      font-size: 0.83rem; color: var(--text-primary); font-weight: 500;
+    }
+    .exp-material-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn, var(--teal)); flex-shrink: 0; }
+
+    .exp-result-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 16px; margin: 24px 0; }
+    .exp-stat-card { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 18px 16px; text-align: center; }
+    .exp-stat-value { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--accent-btn, var(--teal)); line-height: 1; margin-bottom: 6px; }
+    .exp-stat-label { font-size: 0.75rem; color: var(--text-soft); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .exp-conclusion-box {
+      background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%);
+      border: 1px solid var(--border-var); border-radius: var(--r-md);
+      padding: 20px 24px; margin-top: 24px;
+    }
+    .exp-conclusion-label {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent-btn, var(--teal)); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .exp-conclusion-text { font-size: 0.92rem; color: var(--text-primary); line-height: 1.75; }
+
+    .exp-divider { height: 1px; background: var(--border-var); margin: 28px 0; border: none; }
+
+    .exp-tag {
+      display: inline-block; background: var(--scale-bg);
+      color: var(--accent-btn, var(--teal)); border: 1px solid var(--border-var);
+      border-radius: 20px; padding: 3px 12px;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; margin: 2px;
+    }
+
+    .exp-result-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    .exp-result-table th {
+      background: var(--scale-bg); color: var(--text-primary); font-weight: 600;
+      padding: 12px 16px; text-align: left; border-bottom: 2px solid var(--border-strong);
+      font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .exp-result-table td { padding: 11px 16px; color: var(--text-mid); border-bottom: 1px solid var(--border-var); line-height: 1.4; }
+    .exp-result-table tr:last-child td { border-bottom: none; }
+    .exp-result-table tr:hover td { background: var(--card-inner); }
+
+    /* Theme switch */
+    .theme-switch { display: inline-block; height: 30px; position: relative; width: 64px; }
+    .theme-switch input { display: none; }
+    .slider {
+      background-color: var(--scale-bg);
+      border: 1.5px solid var(--border-var);
+      bottom: 0; cursor: pointer; left: 0;
+      position: absolute; right: 0; top: 0;
+      transition: .4s;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 7px; box-sizing: border-box;
+    }
+    .slider .icon { width: 12px; height: 12px; z-index: 1; display: flex; align-items: center; justify-content: center; }
+    .slider .icon svg { width: 100%; height: 100%; }
+    .light-icon { color: #f39c12; }
+    .dark-icon  { color: #aab; }
+    .slider::before {
+      background-color: var(--bg-card);
+      bottom: 3px; content: ""; height: 22px; left: 4px;
+      position: absolute; transition: transform .4s cubic-bezier(0.18,0.89,0.32,1.28);
+      width: 22px; z-index: 2; border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,.2);
+    }
+    input:checked + .slider::before { transform: translateX(34px); }
+    .slider.round { border-radius: 30px; }
+
+    .portal-logo {
+      width: 50px; height: 50px;
+      border-radius: 50%; object-fit: cover; border: 2px solid white;
+    }
+
+    /* =============================================
+       VIVA ACCORDION
+       ============================================= */
+    .viva-list { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+    .viva-item {
+      background: var(--card-inner);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      transition: border-color 0.22s, box-shadow 0.22s;
+    }
+    .viva-item.open {
+      border-color: var(--accent-btn, var(--teal));
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn, var(--teal)) 10%, transparent);
+    }
+    .viva-question {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; cursor: pointer; user-select: none;
+      font-size: 0.9rem; font-weight: 600; color: var(--text-primary); gap: 12px;
+    }
+    .viva-question:hover { background: var(--scale-bg); }
+    .viva-q-left { display: flex; align-items: center; gap: 12px; }
+    .viva-q-num {
+      flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+      color: #fff; font-size: 0.7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .viva-chevron { width: 18px; height: 18px; flex-shrink: 0; color: var(--text-soft); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); }
+    .viva-item.open .viva-chevron { transform: rotate(180deg); }
+    .viva-answer {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), padding 0.28s;
+      padding: 0 18px; font-size: 0.88rem; color: var(--text-mid); line-height: 1.8;
+    }
+    .viva-item.open .viva-answer { max-height: 300px; padding: 0 18px 16px; }
+    .viva-answer p { margin: 0; }
+
+    /* =============================================
+       GATE DESCRIPTION CARDS GRID
+       ============================================= */
+    .gates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; margin-top: 20px; }
+    .gate-desc-card {
+      background: var(--card-inner); border: 1px solid var(--border-var);
+      border-radius: var(--r-md); padding: 18px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .gate-desc-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); transform: translateY(-2px); }
+    .gdc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .gdc-sym {
+      width: 42px; height: 42px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+    }
+    .gate-desc-card h3 { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .gate-desc-card small { font-size: 12px; color: var(--text-soft); }
+    .gate-expr {
+      font-family: 'JetBrains Mono', monospace; font-size: 13px;
+      background: var(--scale-bg); border: 1px solid var(--border-var);
+      border-radius: 6px; padding: 5px 10px;
+      color: var(--accent-btn, var(--teal)); font-weight: 600;
+      margin-bottom: 10px; display: inline-block;
+    }
+    .gate-desc-card p { font-size: 12.5px; color: var(--text-soft); line-height: 1.6; margin-bottom: 12px; }
+    .mini-tt { width: 100%; border-collapse: collapse; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+    .mini-tt th { background: var(--border-var); color: var(--text-primary); padding: 5px 10px; text-align: center; font-weight: 600; }
+    .mini-tt td { padding: 4px 10px; text-align: center; border-bottom: 1px solid var(--border-var); color: var(--text-mid); }
+    .mini-tt tr:last-child td { border-bottom: none; }
+    .mini-tt tr:nth-child(even) td { background: var(--scale-bg); }
+    .td-one { color: #10b981 !important; font-weight: 700; }
+    .td-zero { color: var(--text-soft) !important; }
+
+    /* =============================================
+       SIMULATION WIDGET — scoped inside .sim-wrap
+       ============================================= */
+    .sim-wrap {
+      background: var(--card-inner);
+      border: 1.5px solid var(--border-var);
+      border-radius: 16px; padding: 24px;
+      position: relative;
+    }
+    .sim-wrap .sim-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(13px, 2.5vw, 18px);
+      font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent-btn, var(--teal));
+      filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent));
+    }
+    .sim-wrap .sim-subtitle { font-size: 11px; color: var(--text-soft); font-style: italic; margin-top: 3px; margin-bottom: 20px; }
+
+    /* Gate selector */
+    .sim-wrap .gate-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .sim-wrap .gate-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 10px 14px; border-radius: 10px;
+      border: 2px solid var(--border-var); background: var(--bg-card);
+      cursor: pointer; transition: all 0.2s;
+      font-size: 12px; font-weight: 600; color: var(--text-mid);
+      min-width: 60px; position: relative;
+      font-family: var(--font-body);
+    }
+    .sim-wrap .gate-btn .gb-sym { font-size: 17px; font-family: 'JetBrains Mono', monospace; font-weight: 800; }
+    .sim-wrap .gate-btn:hover { border-color: var(--accent-btn, var(--teal)); color: var(--accent-btn, var(--teal)); background: var(--scale-bg); }
+    .sim-wrap .gate-btn.active {
+      border-color: var(--accent-btn, var(--teal)); background: var(--accent-btn, var(--teal)); color: #fff;
+      box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent);
+    }
+    .sim-wrap .gate-btn.executed::after {
+      content: '✓'; position: absolute; top: 3px; right: 5px;
+      font-size: 8px; color: #10b981; font-weight: 800;
+    }
+    .sim-wrap .gates-badge {
+      margin-left: auto; font-size: 11px; color: var(--text-soft); font-weight: 500;
+      padding: 4px 10px; border-radius: 99px;
+      background: var(--scale-bg); border: 1px solid var(--border-var);
+      white-space: nowrap;
+    }
+    .sim-wrap .gates-badge.done { color: #10b981; border-color: #10b981; background: color-mix(in srgb, #10b981 10%, transparent); }
+
+    /* IO Panel */
+    .sim-wrap .io-panel {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; flex-wrap: wrap; padding: 20px;
+      background: var(--bg-card); border: 1px solid var(--border-var);
+      border-radius: var(--r-md); margin-bottom: 16px;
+    }
+    .sim-wrap .io-arrow { font-size: 22px; color: var(--border-var); font-weight: 300; flex-shrink: 0; }
+    .sim-wrap .input-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .sim-wrap .input-label { font-size: 11px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.6px; }
+
+    .sim-wrap .toggle-switch {
+      width: 66px; height: 36px; border-radius: 99px;
+      background: var(--border-var); position: relative;
+      cursor: pointer; transition: all 0.25s; border: none; outline: none;
+    }
+    .sim-wrap .toggle-switch.on { background: #10b981; box-shadow: 0 0 12px rgba(16,185,129,.4); }
+    .sim-wrap .toggle-knob {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--bg-card); position: absolute; top: 4px; left: 4px;
+      transition: all 0.25s; box-shadow: 0 1px 4px rgba(0,0,0,.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+      color: var(--text-soft);
+    }
+    .sim-wrap .toggle-switch.on .toggle-knob { left: calc(100% - 32px); color: var(--accent-btn, var(--teal)); }
+    .sim-wrap .state-badge { font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+    .sim-wrap .state-low  { background: var(--scale-bg); color: var(--text-soft); }
+    .sim-wrap .state-high { background: color-mix(in srgb, #10b981 15%, transparent); color: #10b981; }
+
+    .sim-wrap .gate-center {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 12px 18px; background: var(--scale-bg);
+      border: 1.5px solid var(--accent-btn, var(--teal));
+      border-radius: 12px; min-width: 80px;
+    }
+    .sim-wrap .gate-center .gc-name { font-size: 11px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.6px; }
+    .sim-wrap .gate-center .gc-sym { font-size: 22px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--accent-btn, var(--teal)); }
+    .sim-wrap .gate-center .gc-expr { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--text-soft); }
+
+    .sim-wrap .output-indicator { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .sim-wrap .output-bulb {
+      width: 58px; height: 58px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #374151, #111827);
+      border: 3px solid var(--border-var);
+      transition: all 0.4s; display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .sim-wrap .output-bulb.glow {
+      background: radial-gradient(circle at 35% 35%, #fef08a, #facc15);
+      border-color: #f59e0b;
+      box-shadow: 0 0 20px rgba(251,191,36,.7), 0 0 40px rgba(251,191,36,.3);
+    }
+    .sim-wrap .output-value { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 800; }
+    .sim-wrap .val-1 { color: #10b981; }
+    .sim-wrap .val-0 { color: var(--text-soft); }
+
+    /* Gate SVG area */
+    .sim-wrap .gate-viz-area {
+      min-height: 180px; background: var(--bg-page);
+      border: 1px solid var(--border-var); border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden;
+    }
+    .sim-wrap .gate-viz-area::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(0,0,0,.03) 24px, rgba(0,0,0,.03) 25px),
+        repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(0,0,0,.03) 24px, rgba(0,0,0,.03) 25px);
+    }
+
+    /* Sim body layout */
+    .sim-wrap .sim-body { display: grid; grid-template-columns: 1fr 300px; gap: 16px; }
+    .sim-wrap .sim-left { display: flex; flex-direction: column; gap: 12px; }
+    .sim-wrap .sim-right { display: flex; flex-direction: column; gap: 12px; }
+
+    /* Boolean panel */
+    .sim-wrap .bool-panel {
+      background: var(--bg-card); border: 1px solid var(--border-var);
+      border-radius: var(--r-md); padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .sim-wrap .bool-panel .bp-title { font-size: 10px; color: var(--accent-2, #0EC4E0); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; margin-bottom: 10px; }
+    .sim-wrap .bool-panel .bp-vars { font-size: 12px; color: var(--text-soft); margin-bottom: 8px; }
+    .sim-wrap .bool-panel .bp-vars span { color: var(--accent-btn, var(--teal)); font-weight: 600; }
+    .sim-wrap .bool-panel .bp-eq { font-size: 15px; color: var(--text-primary); font-weight: 600; border-top: 1px solid var(--border-var); padding-top: 8px; margin-bottom: 6px; }
+    .sim-wrap .bool-panel .bp-res { font-size: 13px; }
+    .sim-wrap .bp-r0 { color: var(--text-soft); }
+    .sim-wrap .bp-r1 { color: #10b981; font-weight: 700; }
+
+    /* Truth table */
+    .sim-wrap .tt-wrap { overflow-x: auto; }
+    .sim-wrap .truth-table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+    .sim-wrap .truth-table th { background: var(--scale-bg); color: var(--text-primary); padding: 8px 12px; text-align: center; font-weight: 700; font-size: 12px; }
+    .sim-wrap .truth-table td { padding: 7px 12px; text-align: center; border-bottom: 1px solid var(--border-var); color: var(--text-mid); font-weight: 500; }
+    .sim-wrap .truth-table tr.tt-active td { background: color-mix(in srgb, var(--accent-btn, var(--teal)) 10%, transparent); color: var(--accent-btn, var(--teal)); font-weight: 700; }
+    .sim-wrap .truth-table tr.tt-active td:last-child { color: #10b981; }
+    .sim-wrap .truth-table tr:hover td { background: var(--scale-bg); }
+
+    /* Log */
+    .sim-wrap .log-title { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-soft); margin-bottom: 7px; display: flex; align-items: center; justify-content: space-between; }
+    .sim-wrap .log-panel {
+      background: var(--bg-card); border: 1px solid var(--border-var);
+      border-radius: var(--r-md); padding: 10px 14px;
+      max-height: 130px; overflow-y: auto;
+      scrollbar-width: thin; scrollbar-color: var(--border-var) transparent;
+    }
+    .sim-wrap .log-entry {
+      display: flex; align-items: flex-start; gap: 7px;
+      padding: 4px 0; border-bottom: 1px solid color-mix(in srgb, var(--border-var) 40%, transparent);
+      font-size: 11px; color: var(--text-mid); line-height: 1.5;
+    }
+    .sim-wrap .log-entry:last-child { border-bottom: none; }
+    .sim-wrap .log-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .sim-wrap .log-dot-blue   { background: var(--accent-btn, var(--teal)); }
+    .sim-wrap .log-dot-green  { background: #10b981; }
+    .sim-wrap .log-dot-orange { background: #f59e0b; }
+    .sim-wrap .log-time { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-soft); flex-shrink: 0; padding-top: 1px; }
+
+    /* Sim controls */
+    .sim-wrap .sim-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .sim-wrap .sim-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 40px; border: none;
+      cursor: pointer; font-size: 12px; font-weight: 600;
+      font-family: var(--font-body); transition: all 0.2s; user-select: none;
+    }
+    .sim-wrap .sim-btn:active { transform: scale(0.95); }
+    .sim-wrap .sim-btn-primary { background: var(--accent-btn, var(--teal)); color: #fff; box-shadow: 0 3px 12px color-mix(in srgb, var(--accent-btn, var(--teal)) 35%, transparent); }
+    .sim-wrap .sim-btn-primary:hover { background: var(--btn-hover); transform: translateY(-1px); }
+    .sim-wrap .sim-btn-outline { background: var(--bg-card); border: 1.5px solid var(--border-var); color: var(--text-mid); }
+    .sim-wrap .sim-btn-outline:hover { background: var(--scale-bg); border-color: var(--accent-btn, var(--teal)); color: var(--accent-btn, var(--teal)); }
+    .sim-wrap .sim-btn-success { background: #10b981; color: #fff; }
+    .sim-wrap .sim-btn-success:hover { background: #059669; transform: translateY(-1px); }
+
+    @keyframes signalPulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .signal-active { animation: signalPulse .8s ease infinite; }
+
+    /* Result locked state */
+    .result-locked-msg { text-align: center; padding: 40px 20px; color: var(--text-soft); }
+    .result-locked-msg .lock-icon { font-size: 2.8rem; margin-bottom: 14px; }
+    .result-locked-msg h3 { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+    .result-locked-msg p { font-size: 0.85rem; line-height: 1.7; }
+
+    /* Precaution list */
+    .precaution-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 12px; padding: 0; }
+    .precaution-list li { font-size: 0.9rem; color: var(--text-mid); display: flex; gap: 8px; align-items: flex-start; }
+    .precaution-list li span { color: var(--accent-btn, var(--teal)); }
+
+    [data-theme="dark"] #site-header { background: rgba(14,14,30,0.97); }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 900px) {
+      .sim-wrap .sim-body { grid-template-columns: 1fr; }
+      .sim-wrap .sim-right { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    }
+    @media (max-width: 800px) {
+      .exp-main-body { flex-direction: column; padding: 20px 16px; }
+      .exp-sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
+      .exp-sidebar-card { position: static; }
+      .exp-nav-list { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 10px; }
+      .exp-nav-btn { flex: 1; min-width: calc(50% - 3px); justify-content: center; font-size: 0.8rem; padding: 10px 8px; }
+      .exp-nav-btn.active::before { display: none; }
+      .exp-banner { padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
+      .exp-panel-body { padding: 20px; }
+      .exp-panel-header { padding: 18px 20px; }
+      .exp-breadcrumb { padding: 8px 16px; }
+    }
+    @media (max-width: 520px) {
+      .exp-result-stats { grid-template-columns: 1fr 1fr; }
+      .sim-wrap .io-panel { gap: 8px; }
+    }
+  </style>
+</head>
+
+<body class="exp-page-wrapper">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="portal-header">
+    <div class="header-left">
+      <a href="" aria-label="LabMate home">
+        <img src="../assets/images/LabMateLogo2.png" alt="LabMate Logo" class="portal-logo"/>
+      </a>
+      <div class="college-info">
+        <h1 class="college-name">Aditya University</h1>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+        <input type="checkbox" id="portal-theme-checkbox"/>
+        <div class="slider round">
+          <span class="icon light-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="icon dark-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </div>
+      </label>
+
+      <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notification-badge"></span>
+      </button>
+
+      <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+        <div class="notif-panel-header">
+          <span>Notifications</span>
+          <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>New assignment from <strong>Aditya University</strong></p>
+              <span>Logic Gates experiment is now due this Friday</span>
+              <time>2 hours ago</time>
+            </div>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>Digital Electronics Lab Update</p>
+              <span>Boolean Algebra section has been updated</span>
+              <time>Yesterday</time>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-dropdown">
+        <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
+          <div class="profile-avatar">S</div>
+          <div class="profile-name-tag">
+            <span class="prof-name">Santhosh</span>
+            <span class="prof-roll">24P31A42XX</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chevron-down">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="dropdown-menu">
+          <div class="dropdown-header">
+            <div class="dh-avatar">S</div>
+            <div>
+              <strong>Santhosh</strong>
+              <span>24P31A42XX · AIML</span>
+            </div>
+          </div>
+          <hr>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Progress</a>
+          <hr>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Help &amp; Support</a>
+          <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== BREADCRUMB ===================== -->
+  <div class="exp-breadcrumb">
+    <a href="portal.html">Dashboard</a>
+    <span class="sep">›</span>
+    <a href="BEEELab.html">Basic Electrical & Electronic Lab</a>
+    <span class="sep">›</span>
+    <span class="current">Logic Gates</span>
+  </div>
+
+  <!-- ===================== BANNER ===================== -->
+  <div class="exp-banner">
+    <div class="exp-banner-icon">⚡</div>
+    <div class="exp-banner-meta">
+      <div class="exp-banner-label">Digital Electronics · Experiment 07</div>
+      <div class="exp-banner-title">Verification of Logic Gates</div>
+      <div class="exp-banner-sub">Understand the working of digital logic gates through interactive simulations and truth table visualizations.</div>
+    </div>
+  </div>
+
+  <!-- ===================== MAIN BODY ===================== -->
+  <div class="exp-main-body">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="exp-sidebar" role="complementary" aria-label="Experiment sections">
+      <div class="exp-sidebar-card">
+        <div class="exp-sidebar-header">Sections</div>
+        <nav class="exp-nav-list" aria-label="Experiment navigation">
+          <button class="exp-nav-btn active" data-section="aim" aria-current="true">
+            <span class="exp-nav-icon">🎯</span>Aim
+          </button>
+          <button class="exp-nav-btn" data-section="description">
+            <span class="exp-nav-icon">📖</span>Description
+          </button>
+          <button class="exp-nav-btn" data-section="procedure">
+            <span class="exp-nav-icon">📝</span>Procedure
+          </button>
+          <button class="exp-nav-btn" data-section="simulation">
+            <span class="exp-nav-icon">⚡</span>Simulation
+          </button>
+          <button class="exp-nav-btn locked" data-section="result" id="result-nav-btn" title="Complete all 7 gates to unlock">
+            <span class="exp-nav-icon">📊</span>Result
+          </button>
+          <button class="exp-nav-btn" data-section="viva">
+            <span class="exp-nav-icon">🎤</span>Viva Questions
+          </button>
+        </nav>
+        <div class="exp-sidebar-progress">
+          <div class="exp-progress-label">
+            <span>Progress</span>
+            <span id="progress-pct">17%</span>
+          </div>
+          <div class="exp-progress-track">
+            <div class="exp-progress-fill" id="progress-fill" style="width:17%"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT CONTENT AREA -->
+    <main class="exp-content-area" id="exp-content-main" role="main">
+      <div class="exp-panel">
+
+        <!-- ========== AIM ========== -->
+        <div class="exp-section-content visible" id="section-aim">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">🎯</div>
+            <div>
+              <div class="exp-panel-title">Aim</div>
+              <div class="exp-panel-subtitle">Objective of this experiment</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">
+              To verify the behavior (truth table) of fundamental digital logic gates — <strong>AND, OR, NOT, NAND, NOR, XOR, and XNOR</strong> — using integrated circuits and interactive simulation.
+            </p>
+            <div class="exp-highlight-box">
+              <strong>Learning Objective:</strong> Develop an intuitive understanding of how each logic gate processes binary inputs (0/1) to produce a deterministic output governed by Boolean algebra. Students will observe input-output relationships and verify truth tables for all seven gate types.
+            </div>
+            <p class="exp-body-text">
+              By the end of this experiment, you will be able to derive Boolean expressions, verify IC truth tables, trace gate behavior for every input combination, and understand the role of NAND and NOR as <strong>universal gates</strong>.
+            </p>
+            <hr class="exp-divider"/>
+            <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject Tags:</strong></p>
+            <div style="margin-top:8px;">
+              <span class="exp-tag">Logic Gates</span>
+              <span class="exp-tag">Boolean Algebra</span>
+              <span class="exp-tag">Digital Electronics</span>
+              <span class="exp-tag">AND / OR / NOT</span>
+              <span class="exp-tag">NAND / NOR / XOR</span>
+              <span class="exp-tag">IC Verification</span>
+              <span class="exp-tag">O(1) Complexity</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== DESCRIPTION ========== -->
+        <div class="exp-section-content" id="section-description">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📖</div>
+            <div>
+              <div class="exp-panel-title">Description</div>
+              <div class="exp-panel-subtitle">Theory &amp; gate reference</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">
+              A <strong>logic gate</strong> is a fundamental building block of digital circuits that performs a basic logical function on one or more binary inputs (0 or 1) and produces a single binary output.
+            </p>
+            <p class="exp-body-text">
+              In digital electronics, logic <strong>0</strong> ≈ 0V (LOW) and logic <strong>1</strong> ≈ 5V (HIGH) in TTL circuits. Every digital device — from calculators to processors — is built from combinations of these gates. Their behavior is fully described by a <strong>truth table</strong>.
+            </p>
+            <hr class="exp-divider"/>
+            <p class="exp-body-text"><strong>Key Properties:</strong></p>
+            <div class="exp-materials-grid">
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Input Type: Binary (0/1)</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Output Type: Binary (0/1)</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Logic System: Boolean</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Gates Covered: 7 Types</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Time Complexity: O(1)</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Voltage: 5V TTL Logic</div>
+            </div>
+            <hr class="exp-divider"/>
+            <p class="exp-body-text" style="font-size:1rem;font-weight:700;margin-bottom:4px;">🔲 Gate Reference</p>
+            <div class="gates-grid">
+              <!-- AND -->
+              <div class="gate-desc-card">
+                <div class="gdc-header">
+                  <div class="gdc-sym" style="background:#dbeafe;color:#1d4ed8">&amp;</div>
+                  <div><h3 style="color:#1d4ed8">AND Gate</h3><small>IC 7408</small></div>
+                </div>
+                <span class="gate-expr">Y = A · B</span>
+                <p>Output HIGH only when ALL inputs are HIGH. Like a series switch — both must be closed.</p>
+                <table class="mini-tt"><thead><tr><th>A</th><th>B</th><th>Y</th></tr></thead>
+                  <tbody><tr><td class="td-zero">0</td><td class="td-zero">0</td><td class="td-zero">0</td></tr><tr><td class="td-zero">0</td><td class="td-one">1</td><td class="td-zero">0</td></tr><tr><td class="td-one">1</td><td class="td-zero">0</td><td class="td-zero">0</td></tr><tr><td class="td-one">1</td><td class="td-one">1</td><td class="td-one">1</td></tr></tbody>
+                </table>
+              </div>
+              <!-- OR -->
+              <div class="gate-desc-card">
+                <div class="gdc-header">
+                  <div class="gdc-sym" style="background:#dcfce7;color:#166534">≥1</div>
+                  <div><h3 style="color:#166534">OR Gate</h3><small>IC 7432</small></div>
+                </div>
+                <span class="gate-expr">Y = A + B</span>
+                <p>Output HIGH when ANY input is HIGH. Like a parallel switch — either can close the circuit.</p>
+                <table class="mini-tt"><thead><tr><th>A</th><th>B</th><th>Y</th></tr></thead>
+                  <tbody><tr><td class="td-zero">0</td><td class="td-zero">0</td><td class="td-zero">0</td></tr><tr><td class="td-zero">0</td><td class="td-one">1</td><td class="td-one">1</td></tr><tr><td class="td-one">1</td><td class="td-zero">0</td><td class="td-one">1</td></tr><tr><td class="td-one">1</td><td class="td-one">1</td><td class="td-one">1</td></tr></tbody>
+                </table>
+              </div>
+              <!-- NOT -->
+              <div class="gate-desc-card">
+                <div class="gdc-header">
+                  <div class="gdc-sym" style="background:#fce7f3;color:#9d174d">¬</div>
+                  <div><h3 style="color:#9d174d">NOT Gate</h3><small>IC 7404</small></div>
+                </div>
+                <span class="gate-expr">Y = Ā</span>
+                <p>Inverts the input. Single input gate — output is always opposite. Also called inverter.</p>
+                <table class="mini-tt"><thead><tr><th>A</th><th>Y</th></tr></thead>
+                  <tbody><tr><td class="td-zero">0</td><td class="td-one">1</td></tr><tr><td class="td-one">1</td><td class="td-zero">0</td></tr></tbody>
+                </table>
+              </div>
+              <!-- NAND -->
+              <div class="gate-desc-card">
+                <div class="gdc-header">
+                  <div class="gdc-sym" style="background:#fef3c7;color:#92400e">↑</div>
+                  <div><h3 style="color:#92400e">NAND Gate</h3><small>IC 7400</small></div>
+                </div>
+                <span class="gate-expr">Y = (A·B)̄</span>
+                <p>AND followed by NOT. Universal gate — all other gates can be made from NAND alone.</p>
+                <table class="mini-tt"><thead><tr><th>A</th><th>B</th><th>Y</th></tr></thead>
+                  <tbody><tr><td class="td-zero">0</td><td class="td-zero">0</td><td class="td-one">1</td></tr><tr><td class="td-zero">0</td><td class="td-one">1</td><td class="td-one">1</td></tr><tr><td class="td-one">1</td><td class="td-zero">0</td><td class="td-one">1</td></tr><tr><td class="td-one">1</td><td class="td-one">1</td><td class="td-zero">0</td></tr></tbody>
+                </table>
+              </div>
+              <!-- NOR -->
+              <div class="gate-desc-card">
+                <div class="gdc-header">
+                  <div class="gdc-sym" style="background:#f3e8ff;color:#6b21a8">↓</div>
+                  <div><h3 style="color:#6b21a8">NOR Gate</h3><small>IC 7402</small></div>
+                </div>
+                <span class="gate-expr">Y = (A+B)̄</span>
+                <p>OR followed by NOT. Also a universal gate. Output HIGH only when ALL inputs are LOW.</p>
+                <table class="mini-tt"><thead><tr><th>A</th><th>B</th><th>Y</th></tr></thead>
+                  <tbody><tr><td class="td-zero">0</td><td class="td-zero">0</td><td class="td-one">1</td></tr><tr><td class="td-zero">0</td><td class="td-one">1</td><td class="td-zero">0</td></tr><tr><td class="td-one">1</td><td class="td-zero">0</td><td class="td-zero">0</td></tr><tr><td class="td-one">1</td><td class="td-one">1</td><td class="td-zero">0</td></tr></tbody>
+                </table>
+              </div>
+              <!-- XOR -->
+              <div class="gate-desc-card">
+                <div class="gdc-header">
+                  <div class="gdc-sym" style="background:#ede9fe;color:#5b21b6">⊕</div>
+                  <div><h3 style="color:#5b21b6">XOR Gate</h3><small>IC 7486</small></div>
+                </div>
+                <span class="gate-expr">Y = A ⊕ B</span>
+                <p>Exclusive OR — output HIGH when inputs are DIFFERENT. Used in binary adders and error detection.</p>
+                <table class="mini-tt"><thead><tr><th>A</th><th>B</th><th>Y</th></tr></thead>
+                  <tbody><tr><td class="td-zero">0</td><td class="td-zero">0</td><td class="td-zero">0</td></tr><tr><td class="td-zero">0</td><td class="td-one">1</td><td class="td-one">1</td></tr><tr><td class="td-one">1</td><td class="td-zero">0</td><td class="td-one">1</td></tr><tr><td class="td-one">1</td><td class="td-one">1</td><td class="td-zero">0</td></tr></tbody>
+                </table>
+              </div>
+              <!-- XNOR -->
+              <div class="gate-desc-card">
+                <div class="gdc-header">
+                  <div class="gdc-sym" style="background:#d1fae5;color:#065f46">≡</div>
+                  <div><h3 style="color:#065f46">XNOR Gate</h3><small>IC 4077</small></div>
+                </div>
+                <span class="gate-expr">Y = (A⊕B)̄</span>
+                <p>Exclusive NOR — output HIGH when inputs are SAME. Equivalence detector; opposite of XOR.</p>
+                <table class="mini-tt"><thead><tr><th>A</th><th>B</th><th>Y</th></tr></thead>
+                  <tbody><tr><td class="td-zero">0</td><td class="td-zero">0</td><td class="td-one">1</td></tr><tr><td class="td-zero">0</td><td class="td-one">1</td><td class="td-zero">0</td></tr><tr><td class="td-one">1</td><td class="td-zero">0</td><td class="td-zero">0</td></tr><tr><td class="td-one">1</td><td class="td-one">1</td><td class="td-one">1</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== PROCEDURE ========== -->
+        <div class="exp-section-content" id="section-procedure">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📝</div>
+            <div>
+              <div class="exp-panel-title">Procedure</div>
+              <div class="exp-panel-subtitle">Step-by-step instructions</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">Follow each step carefully to verify the truth table of each logic gate.</p>
+            <ol class="exp-step-list">
+              <li>Navigate to the <strong>Simulation</strong> tab to access the interactive gate simulator.</li>
+              <li><strong>Select a logic gate</strong> from the selector panel — choose from AND, OR, NOT, NAND, NOR, XOR, or XNOR.</li>
+              <li>Observe the <strong>gate symbol SVG</strong> in the visualization area and the Boolean expression displayed below.</li>
+              <li><strong>Toggle Input A</strong> using its switch to set the binary value (0 = LOW, 1 = HIGH).</li>
+              <li><strong>Toggle Input B</strong> (not applicable for NOT gate) to set its binary value.</li>
+              <li>Observe the <strong>output Y</strong> — the bulb glows HIGH (💡) or stays dim LOW based on gate logic.</li>
+              <li>Verify the <strong>truth table row</strong> highlights to confirm the expected output matches the observed output.</li>
+              <li>Repeat for all input combinations (00, 01, 10, 11) for each gate to fully verify its truth table.</li>
+              <li><strong>Switch to each remaining gate</strong> and repeat steps 3–8 for all 7 gates.</li>
+            </ol>
+            <div class="exp-highlight-box">
+              <strong>Tip:</strong> The Result tab unlocks automatically once you have interacted with all 7 gates. The progress bar updates as you complete each gate.
+            </div>
+            <hr class="exp-divider"/>
+            <p class="exp-body-text"><strong>Precautions:</strong></p>
+            <ul class="precaution-list">
+              <li><span>●</span> Connect pin 14 to 5V (Vcc) and pin 7 to GND for all TTL ICs.</li>
+              <li><span>●</span> Apply logic inputs carefully; ensure correct IC identification before powering on.</li>
+              <li><span>●</span> Avoid loose connections on the breadboard to prevent erratic output readings.</li>
+              <li><span>●</span> Switch off power supply before inserting or removing ICs from the trainer kit.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ========== SIMULATION ========== -->
+        <div class="exp-section-content" id="section-simulation">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">⚡</div>
+            <div>
+              <div class="exp-panel-title">Simulation</div>
+              <div class="exp-panel-subtitle">Interactive logic gate simulator — toggle inputs and observe real-time output</div>
+            </div>
+          </div>
+          <div class="exp-panel-body" style="padding:20px;">
+
+            <div class="sim-wrap" id="simWrap">
+              <div class="sim-title">⚡ Logic Gates</div>
+              <div class="sim-subtitle">Toggle inputs and watch Boolean logic in action</div>
+
+              <!-- Gate Selector -->
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+                <span style="font-size:10px;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.6px;">Select Gate:</span>
+                <div class="gate-selector" id="gateSelector">
+                  <button class="gate-btn active" onclick="selectGate('AND',this)"><span class="gb-sym">&amp;</span>AND</button>
+                  <button class="gate-btn" onclick="selectGate('OR',this)"><span class="gb-sym">≥1</span>OR</button>
+                  <button class="gate-btn" onclick="selectGate('NOT',this)"><span class="gb-sym">¬</span>NOT</button>
+                  <button class="gate-btn" onclick="selectGate('NAND',this)"><span class="gb-sym">↑</span>NAND</button>
+                  <button class="gate-btn" onclick="selectGate('NOR',this)"><span class="gb-sym">↓</span>NOR</button>
+                  <button class="gate-btn" onclick="selectGate('XOR',this)"><span class="gb-sym">⊕</span>XOR</button>
+                  <button class="gate-btn" onclick="selectGate('XNOR',this)"><span class="gb-sym">≡</span>XNOR</button>
+                </div>
+                <span class="gates-badge" id="gatesBadge">0/7 gates done</span>
+              </div>
+
+              <!-- Main sim body -->
+              <div class="sim-body">
+                <!-- LEFT -->
+                <div class="sim-left">
+                  <!-- Gate SVG viz -->
+                  <div class="gate-viz-area">
+                    <div id="gateSvgWrap" style="position:relative;z-index:1;"></div>
+                  </div>
+
+                  <!-- IO Panel -->
+                  <div class="io-panel">
+                    <div class="input-group" id="inputGroupA">
+                      <div class="input-label">Input A</div>
+                      <button class="toggle-switch" id="toggleA" onclick="toggleInput('A')">
+                        <div class="toggle-knob" id="knobA">0</div>
+                      </button>
+                      <div class="state-badge state-low" id="badgeA">LOW (0)</div>
+                    </div>
+                    <div class="io-arrow">→</div>
+                    <div class="input-group" id="inputGroupB">
+                      <div class="input-label">Input B</div>
+                      <button class="toggle-switch" id="toggleB" onclick="toggleInput('B')">
+                        <div class="toggle-knob" id="knobB">0</div>
+                      </button>
+                      <div class="state-badge state-low" id="badgeB">LOW (0)</div>
+                    </div>
+                    <div class="io-arrow">→</div>
+                    <div class="gate-center">
+                      <div class="gc-name" id="gateNameLabel">AND</div>
+                      <div class="gc-sym" id="gateSymBig">&amp;</div>
+                      <div class="gc-expr" id="gateExprSmall">Y = A · B</div>
+                    </div>
+                    <div class="io-arrow">→</div>
+                    <div class="output-indicator">
+                      <div class="input-label">Output Y</div>
+                      <div class="output-bulb" id="outputBulb">💡</div>
+                      <div class="output-value val-0" id="outputValue">0</div>
+                      <div class="state-badge state-low" id="outputBadge">LOW</div>
+                    </div>
+                  </div>
+
+                  <!-- Boolean panel -->
+                  <div class="bool-panel">
+                    <div class="bp-title">⟨ Boolean Expression Evaluator ⟩</div>
+                    <div class="bp-vars" id="bepVars">A = <span>0</span> &nbsp; B = <span>0</span></div>
+                    <div class="bp-eq" id="bepEq">Y = A · B</div>
+                    <div class="bp-res" id="bepResult"><span class="bp-r0">Y = 0 · 0 = 0 → LOW ○</span></div>
+                  </div>
+
+                  <!-- Controls -->
+                  <div class="sim-controls">
+                    <button class="sim-btn sim-btn-outline" onclick="resetSim()">🔄 Reset</button>
+                    <button class="sim-btn sim-btn-outline" onclick="randomInputs()">🎲 Random</button>
+                    <button class="sim-btn sim-btn-outline" onclick="prevGate()">← Prev</button>
+                    <button class="sim-btn sim-btn-outline" onclick="nextGate()">Next →</button>
+                    <button class="sim-btn sim-btn-success" onclick="goToResult()">📊 View Result</button>
+                  </div>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="sim-right">
+                  <!-- Truth table -->
+                  <div>
+                    <div class="log-title">Truth Table</div>
+                    <div class="tt-wrap">
+                      <table class="truth-table" id="truthTable">
+                        <thead><tr><th>A</th><th>B</th><th>Y</th></tr></thead>
+                        <tbody id="truthTableBody"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <!-- Event log -->
+                  <div>
+                    <div class="log-title">
+                      Event Log
+                      <button onclick="clearLog()" style="font-size:10px;background:none;border:none;color:var(--text-soft);cursor:pointer;font-family:var(--font-body);">Clear</button>
+                    </div>
+                    <div class="log-panel" id="eventLog">
+                      <div class="log-entry">
+                        <div class="log-dot log-dot-blue"></div>
+                        <div class="log-time" id="initTime"></div>
+                        <div>Simulation started — AND gate selected</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /.sim-body -->
+            </div><!-- /.sim-wrap -->
+
+          </div>
+        </div>
+
+        <!-- ========== RESULT ========== -->
+        <div class="exp-section-content" id="section-result">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📊</div>
+            <div>
+              <div class="exp-panel-title">Result</div>
+              <div class="exp-panel-subtitle">Observations &amp; analysis from your simulation</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+
+            <!-- Locked state -->
+            <div id="result-locked">
+              <div class="result-locked-msg">
+                <div class="lock-icon">🔒</div>
+                <h3>Complete the Simulation First</h3>
+                <p id="result-lock-msg">Interact with all 7 gates in the Simulation tab. Once you have toggled inputs on all gates, this section will unlock automatically with your results.</p>
+              </div>
+            </div>
+
+            <!-- Live results -->
+            <div id="result-live" style="display:none;">
+              <p class="exp-body-text"><strong>Observation Table</strong> — truth table verification for all gates tested:</p>
+              <table class="exp-result-table" id="resultTruthTable">
+                <thead>
+                  <tr>
+                    <th>Gate</th><th>A</th><th>B</th>
+                    <th>Y (Expected)</th><th>Y (Observed)</th><th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="resultTTBody"></tbody>
+              </table>
+              <hr class="exp-divider"/>
+              <p class="exp-body-text"><strong>Summary:</strong></p>
+              <div class="exp-result-stats">
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value" id="res-gates-tested">—</div>
+                  <div class="exp-stat-label">Gates Verified</div>
+                </div>
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value" id="res-combos">—</div>
+                  <div class="exp-stat-label">Combinations</div>
+                </div>
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value" id="res-current-gate">—</div>
+                  <div class="exp-stat-label">Last Gate</div>
+                </div>
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value">2</div>
+                  <div class="exp-stat-label">Binary States</div>
+                </div>
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value">O(1)</div>
+                  <div class="exp-stat-label">Time Complexity</div>
+                </div>
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value">O(1)</div>
+                  <div class="exp-stat-label">Space Complexity</div>
+                </div>
+              </div>
+              <div class="exp-conclusion-box">
+                <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
+                <p class="exp-conclusion-text" id="result-conclusion-text"></p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ========== VIVA QUESTIONS ========== -->
+        <div class="exp-section-content" id="section-viva">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">🎤</div>
+            <div>
+              <div class="exp-panel-title">Viva Questions</div>
+              <div class="exp-panel-subtitle">Important viva questions for Logic Gates</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <div class="viva-list">
+
+              <div class="viva-item">
+                <div class="viva-question">
+                  <div class="viva-q-left"><div class="viva-q-num">1</div><span>What is a logic gate?</span></div>
+                  <svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="viva-answer"><p>A logic gate is a basic building block of digital circuits that performs a Boolean operation on one or more binary inputs to produce a single binary output.</p></div>
+              </div>
+
+              <div class="viva-item">
+                <div class="viva-question">
+                  <div class="viva-q-left"><div class="viva-q-num">2</div><span>What are universal gates? Why are they called so?</span></div>
+                  <svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="viva-answer"><p>NAND and NOR gates are called universal gates because any other logic gate — AND, OR, NOT, XOR, etc. — can be implemented using only NAND gates or only NOR gates. This makes them functionally complete.</p></div>
+              </div>
+
+              <div class="viva-item">
+                <div class="viva-question">
+                  <div class="viva-q-left"><div class="viva-q-num">3</div><span>What is the difference between XOR and XNOR?</span></div>
+                  <svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="viva-answer"><p>XOR (Exclusive OR) outputs HIGH (1) only when inputs are DIFFERENT. XNOR (Exclusive NOR) outputs HIGH (1) when inputs are the SAME — it is the complement of XOR and acts as an equality detector.</p></div>
+              </div>
+
+              <div class="viva-item">
+                <div class="viva-question">
+                  <div class="viva-q-left"><div class="viva-q-num">4</div><span>What is the Boolean expression for a NAND gate?</span></div>
+                  <svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="viva-answer"><p>The Boolean expression for a two-input NAND gate is Y = (A · B)̄, which means the output is the complement of the AND operation. The output is LOW only when both A and B are HIGH.</p></div>
+              </div>
+
+              <div class="viva-item">
+                <div class="viva-question">
+                  <div class="viva-q-left"><div class="viva-q-num">5</div><span>What are the IC numbers used for common logic gates?</span></div>
+                  <svg class="viva-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="viva-answer"><p>Common TTL IC numbers: AND → 7408, OR → 7432, NOT → 7404, NAND → 7400, NOR → 7402, XOR → 7486, XNOR → 4077. All TTL ICs require Vcc = 5V on pin 14 and GND on pin 7.</p></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.exp-panel -->
+    </main>
+
+  </div><!-- /.exp-main-body -->
+
+
+  <script>
+    /* =====================================================
+       PAGE NAVIGATION & THEME
+    ===================================================== */
+    document.querySelectorAll('.viva-question').forEach(q => {
+      q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Theme toggle — mirrors bubble sort page
+      const toggle = document.getElementById('portal-theme-checkbox');
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') toggle.checked = true;
+      }
+      toggle.addEventListener('change', () => {
+        const theme = toggle.checked ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        renderSVG(GATES[currentGateIdx]);
+      });
+
+      // Notification panel
+      const notifBtn  = document.getElementById('notif-btn');
+      const notifPanel = document.getElementById('notif-panel');
+      const notifClear = document.getElementById('notif-clear');
+      notifBtn?.addEventListener('click', e => { e.stopPropagation(); notifPanel.classList.toggle('open'); });
+      notifClear?.addEventListener('click', () => {
+        document.querySelectorAll('.notif-item').forEach(n => n.classList.remove('notif-unread'));
+        document.querySelector('.notification-badge')?.remove();
+      });
+      document.addEventListener('click', e => { if (!notifPanel.contains(e.target) && e.target !== notifBtn) notifPanel.classList.remove('open'); });
+
+      // Section navigation
+      const navBtns  = document.querySelectorAll('.exp-nav-btn');
+      const sections = document.querySelectorAll('.exp-section-content');
+      const total    = navBtns.length;
+
+      let visited = (() => { try { return JSON.parse(sessionStorage.getItem('lgVisited') || '["aim"]'); } catch { return ['aim']; } })();
+      updateProgress();
+
+      navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.section;
+          if (btn.classList.contains('locked')) {
+            addLog('⚠️ Complete all 7 gates to unlock Result. ' + (7 - gatesExecuted.size) + ' remaining.', 'orange');
+            showSection('simulation');
+            return;
+          }
+          showSection(target);
+        });
+      });
+
+      document.getElementById('initTime').textContent = new Date().toLocaleTimeString();
+      gatesExecuted.add('AND');
+      renderGate('AND');
+      updateProgress();
+    });
+
+    function showSection(id) {
+      document.querySelectorAll('.exp-section-content').forEach(s => s.classList.remove('visible'));
+      const sec = document.getElementById('section-' + id);
+      if (sec) { sec.style.animation = 'none'; sec.offsetHeight; sec.style.animation = ''; sec.classList.add('visible'); }
+      document.querySelectorAll('.exp-nav-btn').forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+      const navBtn = document.querySelector('[data-section="' + id + '"]');
+      if (navBtn) { navBtn.classList.add('active'); navBtn.setAttribute('aria-current', 'true'); }
+      const visited = (() => { try { return JSON.parse(sessionStorage.getItem('lgVisited') || '["aim"]'); } catch { return ['aim']; } })();
+      if (!visited.includes(id)) { visited.push(id); sessionStorage.setItem('lgVisited', JSON.stringify(visited)); }
+      updateProgress();
+      if (id === 'simulation') setTimeout(() => renderGate(GATES[currentGateIdx]), 50);
+      if (id === 'result') updateResult();
+    }
+
+    function goToResult() {
+      if (gatesExecuted.size < GATES.length) {
+        addLog('⚠️ Complete all 7 gates first. ' + (GATES.length - gatesExecuted.size) + ' remaining.', 'orange');
+        return;
+      }
+      showSection('result');
+    }
+
+    /* =====================================================
+       GATE DATA & STATE
+    ===================================================== */
+    const GATES = ['AND','OR','NOT','NAND','NOR','XOR','XNOR'];
+    let currentGateIdx = 0;
+    let inputA = 0, inputB = 0;
+    let gatesExecuted = new Set();
+    let totalCombinations = 0;
+
+    const GATE_DATA = {
+      AND:  { sym:'&',  ic:'7408', expr:'Y = A · B',   calc:(a,b)=>a&b,       desc:'Output HIGH only when both A and B are HIGH.' },
+      OR:   { sym:'≥1', ic:'7432', expr:'Y = A + B',   calc:(a,b)=>a|b,       desc:'Output HIGH when any input is HIGH.' },
+      NOT:  { sym:'¬',  ic:'7404', expr:'Y = Ā',       calc:(a,b)=>a^1,       desc:'Inverts input A. Input B is not used.' },
+      NAND: { sym:'↑',  ic:'7400', expr:'Y = (A·B)̄',  calc:(a,b)=>(a&b)^1,  desc:'Output LOW only when both inputs are HIGH.' },
+      NOR:  { sym:'↓',  ic:'7402', expr:'Y = (A+B)̄',  calc:(a,b)=>(a|b)^1,  desc:'Output HIGH only when all inputs are LOW.' },
+      XOR:  { sym:'⊕',  ic:'7486', expr:'Y = A ⊕ B',  calc:(a,b)=>a^b,       desc:'Output HIGH when inputs are DIFFERENT.' },
+      XNOR: { sym:'≡',  ic:'4077', expr:'Y = (A⊕B)̄', calc:(a,b)=>(a^b)^1,  desc:'Output HIGH when inputs are the SAME.' },
+    };
+
+    function getTruthRows(gate) {
+      const d = GATE_DATA[gate];
+      if (gate === 'NOT') return [{a:0,b:null,y:d.calc(0,0)},{a:1,b:null,y:d.calc(1,0)}];
+      return [{a:0,b:0,y:d.calc(0,0)},{a:0,b:1,y:d.calc(0,1)},{a:1,b:0,y:d.calc(1,0)},{a:1,b:1,y:d.calc(1,1)}];
+    }
+
+    /* =====================================================
+       PROGRESS
+    ===================================================== */
+    function updateProgress() {
+      const visited = (() => { try { return JSON.parse(sessionStorage.getItem('lgVisited') || '["aim"]'); } catch { return ['aim']; } })();
+      const sectionPct = Math.round((Math.min(visited.length, 5) / 6) * 40);
+      const gatePct    = Math.round((gatesExecuted.size / GATES.length) * 60);
+      const total = Math.min(sectionPct + gatePct, 100);
+      document.getElementById('progress-pct').textContent = total + '%';
+      document.getElementById('progress-fill').style.width = total + '%';
+
+      const badge = document.getElementById('gatesBadge');
+      badge.textContent = gatesExecuted.size + '/7 gates done';
+      badge.className = 'gates-badge' + (gatesExecuted.size === 7 ? ' done' : '');
+
+      document.querySelectorAll('.gate-btn').forEach((b,i) => {
+        if (gatesExecuted.has(GATES[i])) b.classList.add('executed');
+      });
+
+      const resultBtn = document.getElementById('result-nav-btn');
+      if (gatesExecuted.size >= GATES.length) {
+        resultBtn.classList.remove('locked'); resultBtn.title = '';
+      } else {
+        resultBtn.classList.add('locked'); resultBtn.title = 'Complete all 7 gates to unlock';
+      }
+    }
+
+    /* =====================================================
+       GATE RENDERING
+    ===================================================== */
+    function selectGate(name, btnEl) {
+      currentGateIdx = GATES.indexOf(name);
+      document.querySelectorAll('.gate-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      inputA = 0; inputB = 0;
+      renderGate(name);
+      addLog('🔲 Gate changed to <strong>' + name + '</strong> · ' + GATE_DATA[name].expr, 'blue');
+    }
+
+    function renderGate(name) {
+      const isNOT = name === 'NOT';
+      document.getElementById('gateNameLabel').textContent = name;
+      document.getElementById('gateSymBig').textContent = name === 'AND' ? '&' : GATE_DATA[name].sym;
+      document.getElementById('gateExprSmall').textContent = GATE_DATA[name].expr;
+      const groupB = document.getElementById('inputGroupB');
+      groupB.style.opacity = isNOT ? '.35' : '1';
+      groupB.style.pointerEvents = isNOT ? 'none' : '';
+      updateOutput();
+      renderTruthTable(name);
+      renderSVG(name);
+      updateBooleanPanel(name);
+    }
+
+    function toggleInput(which) {
+      const gate = GATES[currentGateIdx];
+      if (which === 'A') {
+        inputA ^= 1;
+        updateToggleUI('A', inputA);
+        addLog('Input A → <strong>' + inputA + '</strong> (' + (inputA?'HIGH':'LOW') + ')', inputA?'green':'orange');
+      } else {
+        if (gate === 'NOT') return;
+        inputB ^= 1;
+        updateToggleUI('B', inputB);
+        addLog('Input B → <strong>' + inputB + '</strong> (' + (inputB?'HIGH':'LOW') + ')', inputB?'green':'orange');
+      }
+      totalCombinations++;
+      gatesExecuted.add(gate);
+      updateOutput();
+      updateBooleanPanel(gate);
+      renderSVG(gate);
+      updateProgress();
+    }
+
+    function updateToggleUI(which, val) {
+      const tog   = document.getElementById('toggle' + which);
+      const knob  = document.getElementById('knob' + which);
+      const badge = document.getElementById('badge' + which);
+      knob.textContent = val;
+      if (val) {
+        tog.classList.add('on');
+        badge.className = 'state-badge state-high';
+        badge.textContent = 'HIGH (1)';
+      } else {
+        tog.classList.remove('on');
+        badge.className = 'state-badge state-low';
+        badge.textContent = 'LOW (0)';
+      }
+    }
+
+    function updateOutput() {
+      const gate = GATES[currentGateIdx];
+      const out  = GATE_DATA[gate].calc(inputA, inputB);
+      const bulb  = document.getElementById('outputBulb');
+      const valEl = document.getElementById('outputValue');
+      const badge = document.getElementById('outputBadge');
+      if (out) {
+        bulb.classList.add('glow');
+        valEl.className = 'output-value val-1';
+        badge.className = 'state-badge state-high'; badge.textContent = 'HIGH';
+      } else {
+        bulb.classList.remove('glow');
+        valEl.className = 'output-value val-0';
+        badge.className = 'state-badge state-low'; badge.textContent = 'LOW';
+      }
+      valEl.textContent = out;
+      highlightTTRow(gate, inputA, inputB);
+      addLog(gate + ' gate → Y = <strong>' + out + '</strong> (' + (out?'HIGH 💡':'LOW ○') + ')', out?'green':'orange');
+    }
+
+    function renderTruthTable(gate) {
+      const rows  = getTruthRows(gate);
+      const isNOT = gate === 'NOT';
+      const thead = document.querySelector('#truthTable thead tr');
+      thead.innerHTML = isNOT ? '<th>A</th><th>Y</th>' : '<th>A</th><th>B</th><th>Y</th>';
+      const tbody = document.getElementById('truthTableBody');
+      tbody.innerHTML = rows.map(r => {
+        const yc = r.y ? 'td-one' : 'td-zero';
+        return isNOT
+          ? `<tr><td>${r.a}</td><td class="${yc}">${r.y}</td></tr>`
+          : `<tr><td>${r.a}</td><td>${r.b}</td><td class="${yc}">${r.y}</td></tr>`;
+      }).join('');
+    }
+
+    function highlightTTRow(gate, a, b) {
+      const rows = document.getElementById('truthTableBody').querySelectorAll('tr');
+      rows.forEach(r => r.classList.remove('tt-active'));
+      getTruthRows(gate).forEach((row, i) => {
+        if (row.a === a && (gate === 'NOT' || row.b === b)) {
+          if (rows[i]) rows[i].classList.add('tt-active');
+        }
+      });
+    }
+
+    function updateBooleanPanel(gate) {
+      const d   = GATE_DATA[gate];
+      const out = d.calc(inputA, inputB);
+      const isNOT = gate === 'NOT';
+      document.getElementById('bepVars').innerHTML = isNOT
+        ? `A = <span>${inputA}</span>`
+        : `A = <span>${inputA}</span> &nbsp; B = <span>${inputB}</span>`;
+      document.getElementById('bepEq').textContent = d.expr;
+      let ev = '';
+      if (gate==='AND')  ev=`Y = ${inputA} · ${inputB} = ${out}`;
+      else if (gate==='OR')   ev=`Y = ${inputA} + ${inputB} = ${out}`;
+      else if (gate==='NOT')  ev=`Y = ${inputA===1?'1̄':'0̄'} = ${out}`;
+      else if (gate==='NAND') ev=`Y = (${inputA}·${inputB})̄ = ${out}`;
+      else if (gate==='NOR')  ev=`Y = (${inputA}+${inputB})̄ = ${out}`;
+      else if (gate==='XOR')  ev=`Y = ${inputA} ⊕ ${inputB} = ${out}`;
+      else if (gate==='XNOR') ev=`Y = (${inputA}⊕${inputB})̄ = ${out}`;
+      const cls = out ? 'bp-r1' : 'bp-r0';
+      document.getElementById('bepResult').innerHTML = `<span class="${cls}">${ev} ${out?'→ HIGH ✓':'→ LOW ○'}</span>`;
+    }
+
+    /* =====================================================
+       SVG GATE RENDERING
+    ===================================================== */
+    function renderSVG(gate) {
+      const out     = GATE_DATA[gate].calc(inputA, inputB);
+      const aColor  = inputA ? 'var(--accent-btn)' : 'var(--text-soft)';
+      const bColor  = inputB ? 'var(--accent-btn)' : 'var(--text-soft)';
+      const oColor  = out    ? '#10b981'            : 'var(--text-soft)';
+      const isDark  = document.documentElement.getAttribute('data-theme') === 'dark';
+      const gateFill   = isDark ? '#1e2535' : '#f8fafc';
+      const gateStroke = 'var(--accent-btn)';
+      const textColor  = 'var(--text-soft)';
+      let sym = '';
+
+      if (gate==='AND'||gate==='NAND') {
+        const bubble = gate==='NAND'?`<circle cx="185" cy="100" r="7" fill="${oColor}" stroke="${oColor}" stroke-width="2"/>`:'';
+        const outX = gate==='NAND'?192:185;
+        sym=`<path d="M100 70 L130 70 Q165 70 165 100 Q165 130 130 130 L100 130 Z" fill="${gateFill}" stroke="${gateStroke}" stroke-width="2.5"/>
+          <line x1="60" y1="85" x2="100" y2="85" stroke="${aColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="60" y1="115" x2="100" y2="115" stroke="${bColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="165" y1="100" x2="${outX}" y2="100" stroke="${oColor}" stroke-width="2.5" stroke-linecap="round"/>
+          ${bubble}<line x1="${outX}" y1="100" x2="${outX+30}" y2="100" stroke="${oColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="50" cy="85" r="6" fill="${aColor}" class="${inputA?'signal-active':''}"/>
+          <circle cx="50" cy="115" r="6" fill="${bColor}" class="${inputB?'signal-active':''}"/>
+          <circle cx="${outX+30}" cy="100" r="6" fill="${oColor}" class="${out?'signal-active':''}"/>
+          <text x="44" y="80" fill="${textColor}" font-size="11" font-family="JetBrains Mono" text-anchor="middle">A</text>
+          <text x="44" y="110" fill="${textColor}" font-size="11" font-family="JetBrains Mono" text-anchor="middle">B</text>
+          <text x="${outX+38}" y="95" fill="${textColor}" font-size="11" font-family="JetBrains Mono">Y</text>
+          <text x="132" y="105" fill="${textColor}" font-size="13" font-family="JetBrains Mono" text-anchor="middle">${gate==='NAND'?'↑':'&amp;'}</text>`;
+      } else if (gate==='OR'||gate==='NOR') {
+        const bubble = gate==='NOR'?`<circle cx="185" cy="100" r="7" fill="${oColor}" stroke="${oColor}" stroke-width="2"/>`:'';
+        const outX = gate==='NOR'?192:185;
+        sym=`<path d="M100 70 Q120 70 145 100 Q120 130 100 130 Q115 115 115 100 Q115 85 100 70 Z" fill="${gateFill}" stroke="${gateStroke}" stroke-width="2.5"/>
+          <line x1="60" y1="85" x2="107" y2="85" stroke="${aColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="60" y1="115" x2="107" y2="115" stroke="${bColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="145" y1="100" x2="${outX}" y2="100" stroke="${oColor}" stroke-width="2.5" stroke-linecap="round"/>
+          ${bubble}<line x1="${outX}" y1="100" x2="${outX+30}" y2="100" stroke="${oColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="50" cy="85" r="6" fill="${aColor}" class="${inputA?'signal-active':''}"/>
+          <circle cx="50" cy="115" r="6" fill="${bColor}" class="${inputB?'signal-active':''}"/>
+          <circle cx="${outX+30}" cy="100" r="6" fill="${oColor}" class="${out?'signal-active':''}"/>
+          <text x="44" y="80" fill="${textColor}" font-size="11" font-family="JetBrains Mono" text-anchor="middle">A</text>
+          <text x="44" y="110" fill="${textColor}" font-size="11" font-family="JetBrains Mono" text-anchor="middle">B</text>
+          <text x="${outX+38}" y="95" fill="${textColor}" font-size="11" font-family="JetBrains Mono">Y</text>
+          <text x="122" y="105" fill="${textColor}" font-size="13" font-family="JetBrains Mono" text-anchor="middle">${gate==='NOR'?'↓':'≥1'}</text>`;
+      } else if (gate==='NOT') {
+        sym=`<path d="M100 70 L160 100 L100 130 Z" fill="${gateFill}" stroke="${gateStroke}" stroke-width="2.5"/>
+          <circle cx="167" cy="100" r="7" fill="${oColor}" stroke="${oColor}" stroke-width="2"/>
+          <line x1="50" y1="100" x2="100" y2="100" stroke="${aColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="174" y1="100" x2="215" y2="100" stroke="${oColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="44" cy="100" r="6" fill="${aColor}" class="${inputA?'signal-active':''}"/>
+          <circle cx="221" cy="100" r="6" fill="${oColor}" class="${out?'signal-active':''}"/>
+          <text x="38" y="95" fill="${textColor}" font-size="11" font-family="JetBrains Mono">A</text>
+          <text x="225" y="95" fill="${textColor}" font-size="11" font-family="JetBrains Mono">Y</text>
+          <text x="130" y="106" fill="${textColor}" font-size="14" font-family="JetBrains Mono" text-anchor="middle">¬</text>`;
+      } else if (gate==='XOR'||gate==='XNOR') {
+        const bubble = gate==='XNOR'?`<circle cx="185" cy="100" r="7" fill="${oColor}" stroke="${oColor}" stroke-width="2"/>`:'';
+        const outX = gate==='XNOR'?192:185;
+        sym=`<path d="M100 70 Q120 70 145 100 Q120 130 100 130 Q115 115 115 100 Q115 85 100 70 Z" fill="${gateFill}" stroke="${gateStroke}" stroke-width="2.5"/>
+          <path d="M93 70 Q108 85 108 100 Q108 115 93 130" fill="none" stroke="${gateStroke}" stroke-width="2.5"/>
+          <line x1="60" y1="85" x2="107" y2="85" stroke="${aColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="60" y1="115" x2="107" y2="115" stroke="${bColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="145" y1="100" x2="${outX}" y2="100" stroke="${oColor}" stroke-width="2.5" stroke-linecap="round"/>
+          ${bubble}<line x1="${outX}" y1="100" x2="${outX+30}" y2="100" stroke="${oColor}" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="50" cy="85" r="6" fill="${aColor}" class="${inputA?'signal-active':''}"/>
+          <circle cx="50" cy="115" r="6" fill="${bColor}" class="${inputB?'signal-active':''}"/>
+          <circle cx="${outX+30}" cy="100" r="6" fill="${oColor}" class="${out?'signal-active':''}"/>
+          <text x="44" y="80" fill="${textColor}" font-size="11" font-family="JetBrains Mono" text-anchor="middle">A</text>
+          <text x="44" y="110" fill="${textColor}" font-size="11" font-family="JetBrains Mono" text-anchor="middle">B</text>
+          <text x="${outX+38}" y="95" fill="${textColor}" font-size="11" font-family="JetBrains Mono">Y</text>
+          <text x="122" y="106" fill="${textColor}" font-size="14" font-family="JetBrains Mono" text-anchor="middle">${gate==='XNOR'?'≡':'⊕'}</text>`;
+      }
+
+      document.getElementById('gateSvgWrap').innerHTML = `
+        <svg width="270" height="200" viewBox="0 0 270 200" xmlns="http://www.w3.org/2000/svg">
+          <text x="135" y="20" fill="${textColor}" font-size="11" font-family="JetBrains Mono" text-anchor="middle">${gate} Gate — IC ${GATE_DATA[gate].ic}</text>
+          <g transform="translate(0,30)">${sym}</g>
+          <text x="135" y="192" fill="${oColor}" font-size="11" font-family="JetBrains Mono" text-anchor="middle">Output: ${out} (${out?'HIGH 💡':'LOW'})</text>
+        </svg>`;
+    }
+
+    /* =====================================================
+       CONTROLS
+    ===================================================== */
+    function resetSim() {
+      inputA = 0; inputB = 0;
+      updateToggleUI('A',0); updateToggleUI('B',0);
+      updateOutput(); updateBooleanPanel(GATES[currentGateIdx]); renderSVG(GATES[currentGateIdx]);
+      addLog('🔄 Reset — inputs cleared','orange');
+    }
+
+    function randomInputs() {
+      inputA = Math.random()>.5?1:0;
+      inputB = Math.random()>.5?1:0;
+      updateToggleUI('A',inputA); updateToggleUI('B',inputB);
+      totalCombinations++;
+      const gate = GATES[currentGateIdx];
+      gatesExecuted.add(gate);
+      updateOutput(); updateBooleanPanel(gate); renderSVG(gate);
+      addLog('🎲 Random: A='+inputA+', B='+inputB,'blue');
+      updateProgress();
+    }
+
+    function nextGate() {
+      currentGateIdx = (currentGateIdx+1) % GATES.length;
+      const gate = GATES[currentGateIdx];
+      document.querySelectorAll('.gate-btn').forEach((b,i) => b.classList.toggle('active', i===currentGateIdx));
+      inputA = 0; inputB = 0;
+      renderGate(gate);
+      addLog('→ Switched to <strong>'+gate+'</strong>','blue');
+    }
+
+    function prevGate() {
+      currentGateIdx = (currentGateIdx-1+GATES.length) % GATES.length;
+      const gate = GATES[currentGateIdx];
+      document.querySelectorAll('.gate-btn').forEach((b,i) => b.classList.toggle('active', i===currentGateIdx));
+      inputA = 0; inputB = 0;
+      renderGate(gate);
+      addLog('← Switched to <strong>'+gate+'</strong>','blue');
+    }
+
+    /* =====================================================
+       EVENT LOG
+    ===================================================== */
+    function addLog(msg, type='blue') {
+      const log = document.getElementById('eventLog');
+      const e = document.createElement('div'); e.className = 'log-entry';
+      const dotCls = type==='green'?'log-dot-green':type==='orange'?'log-dot-orange':'log-dot-blue';
+      const now = new Date();
+      const t = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0')+':'+now.getSeconds().toString().padStart(2,'0');
+      e.innerHTML = `<div class="log-dot ${dotCls}"></div><div class="log-time">${t}</div><div>${msg}</div>`;
+      log.insertBefore(e, log.firstChild);
+      if (log.children.length > 20) log.removeChild(log.lastChild);
+    }
+
+    function clearLog() {
+      document.getElementById('eventLog').innerHTML = '';
+      addLog('Log cleared','orange');
+    }
+
+    /* =====================================================
+       RESULT
+    ===================================================== */
+    function updateResult() {
+      const gate = GATES[currentGateIdx];
+      document.getElementById('res-gates-tested').textContent = gatesExecuted.size;
+      document.getElementById('res-combos').textContent = totalCombinations;
+      document.getElementById('res-current-gate').textContent = gate;
+
+      const rows  = getTruthRows(gate);
+      const isNOT = gate === 'NOT';
+      const tbody = document.getElementById('resultTTBody');
+      tbody.innerHTML = rows.map(r => {
+        const col = r.y ? '#10b981' : 'var(--text-soft)';
+        const lbl = r.y ? 'HIGH' : 'LOW';
+        const bCell = isNOT ? '<td>—</td>' : `<td>${r.b}</td>`;
+        return `<tr>
+          <td><strong>${gate}</strong></td>
+          <td>${r.a}</td>${bCell}
+          <td style="color:${col};font-weight:700">${r.y} (${lbl})</td>
+          <td style="color:${col};font-weight:700">${r.y} (${lbl})</td>
+          <td style="color:#10b981;font-weight:600">✅ Verified</td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('result-conclusion-text').textContent =
+        `The Logic Gates experiment successfully verified the truth tables of all ${gatesExecuted.size} gate type(s) tested. The simulation confirmed: AND outputs 1 only when both inputs are 1; OR outputs 1 when any input is 1; NOT inverts the input; NAND and NOR serve as universal gates; XOR detects input difference while XNOR detects equivalence. All observed results matched the expected Boolean expressions precisely, validating the O(1) operational behaviour of each gate.`;
+
+      document.getElementById('result-locked').style.display = 'none';
+      document.getElementById('result-live').style.display = 'block';
+    }
+  </script>
+  <script src="../js/portal.js"></script>
+
+</body>
+</html>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Physics Lab — LabMate</title>
+  <title>BEEE Lab — LabMate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -60,9 +60,6 @@
     }
     .back-btn:hover {
       text-decoration: underline;
-    }
-    .background-theme{
-      background: linear-gradient(130deg, #9b59b6 0%, #112a46 100%);
     }
     .portal-logo {
     width: 50px;
@@ -127,7 +124,7 @@
             <div class="notif-dot"></div>
             <div class="notif-body">
               <p>New assignment from <strong>Aditya University</strong></p>
-              <span>Zener diode experiment is now due this Friday</span>
+              <span>Bubble Sort experiment is now due this Friday</span>
               <time>2 hours ago</time>
             </div>
           </div>
@@ -178,11 +175,11 @@
       
       <a href="portal.html" class="back-btn">&larr; Back to Dashboard</a>
       
-      <section class="welcome-banner" style="background: linear-gradient(130deg, #9b59b6 0%, #112a46 100%);">
+      <section class="welcome-banner" style="background: linear-gradient(130deg, #2ecc71 0%, #112a46 100%);">
         <div class="welcome-text">
-          <h2>Physics Lab</h2>
+          <h2>Basic Electrical & Electronical Lab</h2>
           <p>
-            <span class="welcome-meta-chip">⚡ BASIC SCIENCE</span>
+            <span class="welcome-meta-chip">🧪 BASIC SCIENCE</span>
             <span class="welcome-meta-chip">2 Experiments</span>
           </p>
         </div>
@@ -193,29 +190,48 @@
           <h3>Lab Experiments</h3>
         </div>
         
-        <div class="experiment-list">
+        <!-- <div class="experiment-list">
+          <p style="color: var(--text-soft); font-size: 0.9rem;">No experiments have been assigned to this lab yet.</p>
+        </div>     <div class="experiment-list"> -->
           <div class="experiment-card">
             <div class="exp-info">
-              <h4>Exp 1: Zener Diode Characteristics</h4>
-              <p>Analyze voltage-current characteristics of a Zener diode through simulation.</p>
+              <h4>Exp 1: Logic Gates</h4>
+              <p></p>
             </div>
             <div class="exp-action">
-               <a href="zener_diodeEXP.html">
-              <button style="background: linear-gradient(130deg, #9b59b6 0%, #112a46 100%);" id="startBtn1" class="small-btn cta-primary">Start</button>
-            </a>
-            </div>
-          </div>
-
-          <div class="experiment-card">
-            <div class="exp-info">
-              <h4>Exp 2: Difraction Grating</h4>
-              <p>Observe light diffraction patterns and wavelength measurement visually.</p>
-            </div>
-            <div class="exp-action">
-              <a href="DiffractionGratingEXP.html">
-              <button style="background: linear-gradient(130deg, #9b59b6 0%, #112a46 100%);" id="startBtn2" class="small-btn cta-primary">Start</button>
+              <a href="logicGateExp.html">
+              <button id="startBtn1" class="small-btn cta-primary">Start</button>
               </a>
             </div>
+          </div>
+          <br>
+          <div class="experiment-card">
+            <div class="exp-info">
+              <h4>Exp 2: Zener Diode Characteristics</h4>
+              <p></p>
+            </div>
+            <div class="exp-action">
+              <a href="zener_diodeEXP.html">
+              <button id="startBtn2" class="small-btn cta-primary">Start</button>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- <a href="fibonacciEXP.html">
+        <div class="experiment-card">
+            <div class="exp-info">
+              <h4>Exp 3: Fibonacci: Using recursion</h4>
+              <p>Generate Fibonacci series step-by-step using recursive function calls.</p>
+            </div>
+            <div class="exp-action">
+              <button id="startBtn2" class="small-btn cta-primary">Start</button>
+            </div>
+          </div>
+        </div>
+        </a> -->
+
+
+
       </section>
 
     </main>

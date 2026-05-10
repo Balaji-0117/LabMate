@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPasswordGroup = document.getElementById('confirm-password-group');
     const submitBtn = document.getElementById('submit-btn');
     const successState = document.getElementById('success-state');
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    console.log("Token:", token);
 
     // Requirements elements
     const reqLength = document.getElementById('req-length');
@@ -112,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if(createPasswordForm) {
-        createPasswordForm.addEventListener('submit', (e) => {
+        createPasswordForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const passValue = passwordInput.value;
@@ -136,22 +139,47 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.style.opacity = '0.7';
             submitBtn.disabled = true;
 
-            setTimeout(() => {
-                createPasswordForm.classList.add('hidden');
-                
-                const loginTitle = document.querySelector('.login-title');
-                if (loginTitle) loginTitle.classList.add('hidden');
-                
-                const loginSubtitle = document.querySelector('.login-subtitle');
-                if (loginSubtitle) loginSubtitle.classList.add('hidden');
+            try {
+                const res = await fetch(`http://localhost:5000/api/auth/set-password/${token}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ password: passValue }),
+                });
 
-                successState.classList.remove('hidden');
+                const data = await res.json();
 
-                // Redirect to homepage after success
-                setTimeout(() => {
-                    window.location.href = 'labmate_landing.html';
-                }, 1500);
-            }, 1500); // 1.5 seconds artificial delay
+                if (res.ok) {
+                    // SAME UI you already wrote ✅
+                    createPasswordForm.classList.add('hidden');
+                    
+                    const loginTitle = document.querySelector('.login-title');
+                    if (loginTitle) loginTitle.classList.add('hidden');
+                    
+                    const loginSubtitle = document.querySelector('.login-subtitle');
+                    if (loginSubtitle) loginSubtitle.classList.add('hidden');
+
+                    successState.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        window.location.href = '../html/labmate_landing.html';
+                    }, 1500);
+
+                } else {
+                    alert(data.error || "Failed to set password ❌");
+                    submitBtn.innerHTML = 'Confirm';
+                    submitBtn.style.opacity = '1';
+                    submitBtn.disabled = false;
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("Server error ❌");
+                submitBtn.innerHTML = 'Confirm';
+                submitBtn.style.opacity = '1';
+                submitBtn.disabled = false;
+            } // 1.5 seconds artificial delay
         });
     }
 });

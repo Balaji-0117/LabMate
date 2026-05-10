@@ -7,179 +7,46 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/portal.css" />
 
   <style>
     /* =============================================
-       CSS VARIABLES — Light/Dark Theme
+       EXPERIMENT PAGE — Scoped Styles
     ============================================= */
-    :root {
-      --font-display: 'Cormorant Garamond', Georgia, serif;
-      --font-body:    'Outfit', sans-serif;
-      --font-mono:    'JetBrains Mono', monospace;
-
-      --bg-page:       #EDF4FB;
-      --bg-card:       #FFFFFF;
-      --card-inner:    #F0F7FF;
-      --border-var:    #C8DFF4;
-      --border-strong: #1A88D0;
-      --scale-bg:      #DCEEFA;
-      --accent-btn:    #1A88D0;
-      --btn-hover:     #1270B0;
-      --accent-2:      #0EC4E0;
-      --teal:          #1A88D0;
-      --teal-dim:      #DCEEFA;
-
-      --text-primary:  #0D2A4A;
-      --text-mid:      #2A5278;
-      --text-soft:     #6A90B0;
-
-      --sh-card: 0 2px 14px rgba(58,155,213,0.10), 0 1px 4px rgba(0,0,0,0.05);
-      --r-lg: 20px;
-      --r-md: 12px;
+    .exp-page-wrapper {
+      display: flex; flex-direction: column; min-height: 100vh; background: var(--bg-page);
     }
 
-    [data-theme="dark"] {
-      --bg-page:       #08081A;
-      --bg-card:       #0E0E22;
-      --card-inner:    #13132E;
-      --border-var:    #2A1F5A;
-      --border-strong: #7B2FBE;
-      --scale-bg:      #0E0E22;
-      --accent-btn:    #9B4DFF;
-      --btn-hover:     #B86AFF;
-      --accent-2:      #C07AFF;
-      --teal:          #9B4DFF;
-      --teal-dim:      #1A1040;
-
-      --text-primary:  #E8E0FF;
-      --text-mid:      #B0A0D8;
-      --text-soft:     #6A5A9A;
-
-      --sh-card: 0 4px 24px rgba(0,0,0,0.5), 0 1px 6px rgba(0,0,0,0.3);
-    }
-
-    /* =============================================
-       RESET & BASE
-    ============================================= */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 14px; scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-body);
-      background: var(--bg-page);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-    a { text-decoration: none; color: inherit; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-card); }
-    ::-webkit-scrollbar-thumb { background: var(--border-var); border-radius: 3px; }
-
-    /* =============================================
-       HEADER
-    ============================================= */
-    .portal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 32px; height: 62px; background: var(--bg-card);
-      border-bottom: 1px solid var(--border-var);
-      position: sticky; top: 0; z-index: 100; transition: background 0.3s ease;
-    }
-    .header-left { display: flex; align-items: center; gap: 14px; }
-    .logo-placeholder {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: var(--accent-btn);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 1.3rem; font-weight: 800;
-      box-shadow: 0 0 14px rgba(155,77,255,0.4);
-    }
-    .college-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.1; }
-    .stream-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 0.68rem; font-weight: 600; color: var(--text-soft);
-      text-transform: uppercase; letter-spacing: 0.06em;
-    }
-    .header-center { flex: 1; max-width: 380px; margin: 0 24px; }
-    .search-wrapper { position: relative; display: flex; align-items: center; }
-    .search-icon { position: absolute; left: 12px; color: var(--text-soft); }
-    .global-search {
-      width: 100%; padding: 8px 12px 8px 36px;
-      background: var(--card-inner); border: 1.5px solid var(--border-var);
-      border-radius: 10px; font-family: var(--font-body); font-size: 0.85rem;
-      color: var(--text-primary); outline: none; transition: border-color 0.2s;
-    }
-    .global-search:focus { border-color: var(--accent-btn); }
-    .global-search::placeholder { color: var(--text-soft); }
-    .header-right { display: flex; align-items: center; gap: 14px; }
-
-    /* Theme switch */
-    .theme-switch { display: inline-block; height: 30px; position: relative; width: 64px; cursor: pointer; }
-    .theme-switch input { display: none; }
-    .slider {
-      background: var(--scale-bg); border: 1.5px solid var(--border-var);
-      bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0;
-      transition: .4s; display: flex; align-items: center;
-      justify-content: space-between; padding: 0 7px; box-sizing: border-box;
-    }
-    .slider .icon { width: 12px; height: 12px; z-index: 1; display: flex; align-items: center; justify-content: center; }
-    .slider .icon svg { width: 100%; height: 100%; }
-    .light-icon { color: #f39c12; }
-    .dark-icon  { color: #9B4DFF; }
-    .slider::before {
-      background: var(--bg-card); bottom: 3px; content: ""; height: 22px; left: 4px;
-      position: absolute; transition: transform .4s cubic-bezier(0.18,0.89,0.32,1.28);
-      width: 22px; z-index: 2; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-    input:checked + .slider::before { transform: translateX(34px); }
-    .slider.round { border-radius: 30px; }
-    .profile-avatar {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--accent-btn); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; font-weight: 700;
-    }
-    .prof-name { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); display: block; line-height: 1.1; }
-    .prof-roll { font-size: 0.68rem; color: var(--text-soft); display: block; }
-
-    /* =============================================
-       EXPERIMENT PAGE LAYOUT
-    ============================================= */
-    .exp-page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
     .exp-breadcrumb {
       background: var(--bg-card); border-bottom: 1px solid var(--border-var);
       padding: 10px 40px; display: flex; align-items: center; gap: 8px;
       font-size: 0.82rem; color: var(--text-soft);
     }
-    .exp-breadcrumb a { color: var(--accent-btn); font-weight: 500; transition: color 0.2s; }
-    .exp-breadcrumb a:hover { color: var(--btn-hover); text-decoration: underline; }
+    .exp-breadcrumb a { color: var(--accent-btn, var(--teal)); font-weight: 500; transition: color 0.2s; }
+    .exp-breadcrumb a:hover { color: var(--btn-hover, #1270b0); text-decoration: underline; }
     .exp-breadcrumb .sep { opacity: 0.45; margin: 0 2px; }
     .exp-breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+
     .exp-banner {
-      background: linear-gradient(120deg, #0A4A7A 0%, var(--accent-btn) 100%);
+      background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn, var(--teal)) 100%);
       color: #fff; padding: 22px 40px; display: flex; align-items: center; gap: 20px;
     }
     .exp-banner-icon {
       width: 52px; height: 52px; background: rgba(255,255,255,0.18);
-      border-radius: 14px; display: flex; align-items: center;
-      justify-content: center; font-size: 1.6rem; flex-shrink: 0;
+      border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; flex-shrink: 0;
     }
     .exp-banner-meta { flex: 1; }
-    .exp-banner-label {
-      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
-      text-transform: uppercase; opacity: 0.78; margin-bottom: 4px;
-    }
-    .exp-banner-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-      font-weight: 700; line-height: 1.2; letter-spacing: -0.01em;
-    }
+    .exp-banner-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.78; margin-bottom: 4px; }
+    .exp-banner-title { font-family: var(--font-display); font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
     .exp-banner-sub { font-size: 0.83rem; opacity: 0.8; margin-top: 4px; }
     .exp-banner-badge {
       background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35);
       border-radius: 20px; padding: 5px 14px; font-size: 0.75rem;
       font-weight: 600; letter-spacing: 0.04em; white-space: nowrap;
     }
+
     .exp-main-body {
       flex: 1; display: flex; gap: 0; padding: 32px 40px;
       max-width: 1300px; width: 100%; margin: 0 auto; box-sizing: border-box;
@@ -187,7 +54,7 @@
     .exp-sidebar { width: 220px; flex-shrink: 0; margin-right: 28px; }
     .exp-sidebar-card {
       background: var(--bg-card); border: 1px solid var(--border-var);
-      border-radius: var(--r-lg); box-shadow: var(--sh-card);
+      border-radius: var(--r-lg, 20px); box-shadow: var(--sh-card);
       overflow: hidden; position: sticky; top: 90px;
     }
     .exp-sidebar-header {
@@ -198,24 +65,24 @@
     .exp-nav-list { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
     .exp-nav-btn {
       display: flex; align-items: center; gap: 12px; width: 100%;
-      padding: 12px 14px; border-radius: var(--r-md); font-family: var(--font-body);
+      padding: 12px 14px; border-radius: var(--r-md, 12px); font-family: var(--font-body);
       font-size: 0.88rem; font-weight: 500; color: var(--text-mid);
       background: transparent; border: none; cursor: pointer;
-      transition: background 0.22s, color 0.22s, transform 0.18s;
+      transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
       text-align: left; position: relative;
     }
-    .exp-nav-btn:hover { background: var(--teal-dim); color: var(--text-primary); transform: translateX(3px); }
-    .exp-nav-btn.active { background: var(--teal-dim); color: var(--accent-btn); font-weight: 600; }
+    .exp-nav-btn:hover { background: var(--scale-bg, var(--teal-dim)); color: var(--text-primary); transform: translateX(3px); }
+    .exp-nav-btn.active { background: var(--scale-bg, var(--teal-dim)); color: var(--accent-btn, var(--teal)); font-weight: 600; }
     .exp-nav-btn.active::before {
       content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-      width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--accent-btn);
+      width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--accent-btn, var(--teal));
     }
     .exp-nav-icon {
       width: 28px; height: 28px; border-radius: 8px; background: var(--card-inner);
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.9rem; flex-shrink: 0; transition: background 0.22s;
+      font-size: 0.9rem; flex-shrink: 0; transition: background 0.22s ease;
     }
-    .exp-nav-btn.active .exp-nav-icon { background: var(--accent-btn); color: #fff; }
+    .exp-nav-btn.active .exp-nav-icon { background: var(--accent-btn, var(--teal)); color: #fff; }
     .exp-sidebar-progress { padding: 14px 20px 18px; border-top: 1px solid var(--border-var); }
     .exp-progress-label {
       display: flex; justify-content: space-between; align-items: center;
@@ -224,13 +91,14 @@
     }
     .exp-progress-track { height: 5px; background: var(--scale-bg); border-radius: 10px; overflow: hidden; }
     .exp-progress-fill {
-      height: 100%; background: linear-gradient(90deg, var(--accent-btn), var(--accent-2));
+      height: 100%; background: linear-gradient(90deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
       border-radius: 10px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 16.66%;
     }
+
     .exp-content-area { flex: 1; min-width: 0; }
     .exp-panel {
       background: var(--bg-card); border: 1px solid var(--border-var);
-      border-radius: var(--r-lg); box-shadow: var(--sh-card); overflow: hidden;
+      border-radius: var(--r-lg, 20px); box-shadow: var(--sh-card); overflow: hidden;
     }
     .exp-panel-header {
       padding: 24px 32px 20px; border-bottom: 1px solid var(--border-var);
@@ -238,13 +106,9 @@
     }
     .exp-panel-icon {
       width: 44px; height: 44px; border-radius: 12px; background: var(--scale-bg);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
     }
-    .exp-panel-title {
-      font-family: var(--font-display); font-size: 1.7rem; font-weight: 700;
-      color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.1;
-    }
+    .exp-panel-title { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.1; }
     .exp-panel-subtitle { font-size: 0.83rem; color: var(--text-soft); margin-top: 2px; }
     .exp-panel-body { padding: 32px; }
 
@@ -255,31 +119,28 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Content helpers */
     .exp-body-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.85; }
     .exp-body-text + .exp-body-text { margin-top: 16px; }
     .exp-highlight-box {
-      background: var(--scale-bg); border-left: 4px solid var(--accent-btn);
+      background: var(--scale-bg); border-left: 4px solid var(--accent-btn, var(--teal));
       border-radius: 0 var(--r-md) var(--r-md) 0;
-      padding: 16px 20px; margin: 20px 0; font-size: 0.9rem;
-      color: var(--text-primary); line-height: 1.7;
+      padding: 16px 20px; margin: 20px 0; font-size: 0.9rem; color: var(--text-primary); line-height: 1.7;
     }
     .exp-step-list { counter-reset: steps; list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 14px; }
     .exp-step-list li { counter-increment: steps; display: flex; align-items: flex-start; gap: 16px; font-size: 0.92rem; color: var(--text-mid); line-height: 1.7; }
     .exp-step-list li::before {
       content: counter(steps); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
+      background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
       color: #fff; font-size: 0.72rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center; margin-top: 2px;
     }
     .exp-materials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
     .exp-material-chip {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--card-inner); border: 1px solid var(--border-var);
-      border-radius: var(--r-md); padding: 10px 14px;
-      font-size: 0.83rem; color: var(--text-primary); font-weight: 500;
+      display: flex; align-items: center; gap: 10px; background: var(--card-inner);
+      border: 1px solid var(--border-var); border-radius: var(--r-md);
+      padding: 10px 14px; font-size: 0.83rem; color: var(--text-primary); font-weight: 500;
     }
-    .exp-material-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn); flex-shrink: 0; }
+    .exp-material-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-btn, var(--teal)); flex-shrink: 0; }
     .exp-result-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
     .exp-result-table th {
       background: var(--scale-bg); color: var(--text-primary); font-weight: 600;
@@ -291,18 +152,43 @@
     .exp-result-table tr:hover td { background: var(--card-inner); }
     .exp-result-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin: 24px 0; }
     .exp-stat-card { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 18px 16px; text-align: center; }
-    .exp-stat-value { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--accent-btn); line-height: 1; margin-bottom: 6px; }
+    .exp-stat-value { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--accent-btn, var(--teal)); line-height: 1; margin-bottom: 6px; }
     .exp-stat-label { font-size: 0.75rem; color: var(--text-soft); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
     .exp-conclusion-box { background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%); border: 1px solid var(--border-var); border-radius: var(--r-md); padding: 20px 24px; margin-top: 24px; }
-    .exp-conclusion-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-btn); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .exp-conclusion-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-btn, var(--teal)); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
     .exp-conclusion-text { font-size: 0.92rem; color: var(--text-primary); line-height: 1.75; }
     .exp-divider { height: 1px; background: var(--border-var); margin: 28px 0; border: none; }
     .exp-tag {
-      display: inline-block; background: var(--scale-bg); color: var(--accent-btn);
+      display: inline-block; background: var(--scale-bg); color: var(--accent-btn, var(--teal));
       border: 1px solid var(--border-var); border-radius: 20px;
-      padding: 3px 12px; font-size: 0.75rem; font-weight: 600;
-      letter-spacing: 0.04em; margin: 2px;
+      padding: 3px 12px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; margin: 2px;
     }
+
+    /* Theme switch in header */
+    .theme-switch { display: inline-block; height: 30px; position: relative; width: 64px; }
+    .theme-switch input { display: none; }
+    .slider {
+      background-color: var(--scale-bg); border: 1.5px solid var(--border-var);
+      bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0;
+      transition: .4s; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 7px; box-sizing: border-box;
+    }
+    .slider .icon { width: 12px; height: 12px; z-index: 1; display: flex; align-items: center; justify-content: center; }
+    .slider .icon svg { width: 100%; height: 100%; }
+    .light-icon { color: #f39c12; }
+    .dark-icon  { color: #aab; }
+    .slider::before {
+      background-color: var(--bg-card); bottom: 3px; content: ""; height: 22px; left: 4px;
+      position: absolute; transition: transform .4s cubic-bezier(0.18,0.89,0.32,1.28);
+      width: 22px; z-index: 2; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider { border-color: var(--border-strong); }
+    input:checked + .slider::before { transform: translateX(34px); }
+    .slider.round { border-radius: 30px; }
+
+    /* =============================================
+       CODE BLOCK (shared across tabs)
+    ============================================= */
     .code-block-wrapper {
       background: var(--card-inner); border: 1px solid var(--border-var);
       border-radius: var(--r-md); overflow: hidden; margin: 20px 0;
@@ -313,31 +199,22 @@
       font-size: 0.75rem; font-weight: 600; color: var(--text-soft);
       text-transform: uppercase; letter-spacing: 0.08em;
     }
-    .code-lang-badge {
-      background: var(--accent-btn); color: #fff;
-      padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700;
-    }
-    .code-block-body {
-      font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.8;
-      padding: 16px 20px; overflow-x: auto; color: var(--text-mid);
-    }
+    .code-lang-badge { background: var(--accent-btn); color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; }
+    .code-block-body { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.8; padding: 16px 20px; overflow-x: auto; color: var(--text-mid); }
     .code-kw  { color: var(--accent-btn); font-weight: 600; }
     .code-fn  { color: var(--accent-2); }
     .code-num { color: #E07A30; }
     .code-cmt { color: var(--text-soft); font-style: italic; }
 
-    /* Algorithm step cards */
+    /* =============================================
+       ALGORITHM STEP CARDS
+    ============================================= */
     .algo-steps { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
-    .algo-step {
-      display: flex; align-items: stretch; gap: 0; position: relative;
-      animation: sectionFadeIn 0.4s ease both;
-    }
-    .algo-step-line {
-      display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 48px;
-    }
+    .algo-step { display: flex; align-items: stretch; gap: 0; position: relative; animation: sectionFadeIn 0.4s ease both; }
+    .algo-step-line { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 48px; }
     .algo-step-num {
       width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
+      background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
       color: #fff; display: flex; align-items: center; justify-content: center;
       font-size: 0.82rem; font-weight: 800; flex-shrink: 0; z-index: 1;
     }
@@ -353,7 +230,7 @@
     .algo-step-desc  { font-size: 0.82rem; color: var(--text-soft); line-height: 1.6; }
 
     /* =============================================
-       DFS SIMULATION OUTER
+       DFS SIMULATION — Scoped inside .dfs-sim-outer
     ============================================= */
     .dfs-sim-outer {
       background: var(--card-inner); border: 1.5px solid var(--border-var);
@@ -361,11 +238,9 @@
       min-height: 560px; display: flex; flex-direction: column;
     }
 
-    /* Toolbar */
     .dfs-toolbar {
       display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-      padding: 14px 20px; border-bottom: 1px solid var(--border-var);
-      background: var(--bg-card);
+      padding: 14px 20px; border-bottom: 1px solid var(--border-var); background: var(--bg-card);
     }
     .dfs-toolbar-title {
       font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700;
@@ -395,97 +270,67 @@
       -webkit-appearance: none; width: 80px; height: 4px;
       background: var(--border-var); border-radius: 2px; outline: none; cursor: pointer;
     }
-    .dfs-speed-slider::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
-      background: var(--accent-btn); cursor: pointer;
-    }
+    .dfs-speed-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-btn); cursor: pointer; }
     .dfs-speed-val { font-size: 0.7rem; font-weight: 700; color: var(--accent-btn); min-width: 36px; }
 
-    /* Graph controls row */
     .dfs-graph-controls {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-      padding: 8px 20px; border-bottom: 1px solid var(--border-var);
-      background: var(--bg-card);
+      padding: 8px 20px; border-bottom: 1px solid var(--border-var); background: var(--bg-card);
     }
     .dfs-graph-controls label { font-size: 0.72rem; color: var(--text-soft); font-weight: 600; white-space: nowrap; }
     .dfs-small-input {
       width: 52px; padding: 5px 8px; background: var(--bg-page);
       border: 1.5px solid var(--border-var); border-radius: 8px;
-      font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700;
-      color: var(--text-primary); outline: none; text-align: center;
-      transition: border-color 0.2s;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700;
+      color: var(--text-primary); outline: none; text-align: center; transition: border-color 0.2s;
     }
     .dfs-small-input:focus { border-color: var(--accent-btn); }
     .dfs-sep { width: 1px; height: 22px; background: var(--border-var); margin: 0 4px; flex-shrink: 0; }
 
-    /* Error */
     .dfs-error { padding: 6px 20px; font-size: 0.78rem; color: #FF6B9D; background: rgba(255,107,157,0.08); border-bottom: 1px solid rgba(255,107,157,0.25); display: none; }
     .dfs-error.visible { display: block; }
 
-    /* Stat pills */
     .dfs-stats-row {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
       padding: 8px 20px; border-bottom: 1px solid var(--border-var); background: var(--bg-card);
     }
-    .dfs-pill {
-      background: var(--card-inner); border: 1px solid var(--border-var);
-      border-radius: 14px; padding: 4px 11px; font-size: 0.73rem; color: var(--text-soft); white-space: nowrap;
-    }
+    .dfs-pill { background: var(--card-inner); border: 1px solid var(--border-var); border-radius: 14px; padding: 4px 11px; font-size: 0.73rem; color: var(--text-soft); white-space: nowrap; }
     .dfs-pill .pv { font-weight: 700; color: var(--accent-btn); margin-left: 3px; }
     .dfs-status { margin-left: auto; font-size: 0.78rem; color: var(--text-soft); font-style: italic; }
     .dfs-status.running { color: var(--accent-btn); }
     .dfs-status.done    { color: var(--accent-2); }
 
-    /* Progress */
     .dfs-progress-row { padding: 6px 20px; background: var(--bg-card); border-bottom: 1px solid var(--border-var); }
     .dfs-progress-meta { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-soft); margin-bottom: 4px; }
     .dfs-progress-track { height: 4px; background: var(--scale-bg); border-radius: 2px; overflow: hidden; }
     .dfs-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-btn), var(--accent-2)); border-radius: 2px; width: 0%; transition: width 0.3s ease; }
 
-    /* Canvas zone */
     .dfs-canvas-zone { display: flex; flex: 1; min-height: 380px; overflow: hidden; }
 
-    /* Left panel */
-    .dfs-left-panel {
-      width: 200px; flex-shrink: 0; border-right: 1px solid var(--border-var);
-      display: flex; flex-direction: column; overflow-y: auto;
-    }
+    .dfs-left-panel { width: 200px; flex-shrink: 0; border-right: 1px solid var(--border-var); display: flex; flex-direction: column; overflow-y: auto; }
     .dfs-panel-sec { padding: 12px 14px; border-bottom: 1px solid var(--border-var); }
-    .dfs-panel-head {
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--text-soft); margin-bottom: 10px;
-    }
+    .dfs-panel-head { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 10px; }
     .dfs-code-block {
       background: var(--bg-page); border: 1px solid var(--border-var);
       border-radius: 8px; padding: 10px; overflow-x: auto;
-      font-family: var(--font-mono); font-size: 0.68rem; line-height: 1.9;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; line-height: 1.9;
     }
     .dfs-code-line { display: block; padding: 1px 4px; border-radius: 3px; border-left: 2px solid transparent; transition: background 0.25s, border-color 0.25s; }
     .dfs-code-line.highlighted { background: color-mix(in srgb, var(--accent-btn) 15%, transparent); border-left-color: var(--accent-btn); }
     .dfs-stats-mini { display: flex; flex-direction: column; gap: 6px; }
     .dfs-stat-mini-item { background: var(--bg-page); border: 1px solid var(--border-var); border-radius: 8px; padding: 7px 10px; }
-    .dfs-stat-mini-val { font-size: 1.1rem; font-weight: 800; color: var(--accent-btn); font-family: var(--font-mono); line-height: 1; }
+    .dfs-stat-mini-val { font-size: 1.1rem; font-weight: 800; color: var(--accent-btn); font-family: 'JetBrains Mono', monospace; line-height: 1; }
     .dfs-stat-mini-lbl { font-size: 0.6rem; color: var(--text-soft); text-transform: uppercase; margin-top: 2px; }
 
-    /* Center: graph canvas */
-    .dfs-graph-zone {
-      flex: 1; position: relative; overflow: auto; background: var(--bg-page);
-    }
-    .dfs-graph-svg { display: block; }
-    .dfs-empty-state {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-      text-align: center; pointer-events: none;
-    }
-    .dfs-empty-icon { font-size: 2.4rem; margin-bottom: 10px; opacity: 0.45; }
+    .dfs-graph-zone { flex: 1; position: relative; overflow: auto; background: var(--bg-page); }
+    .dfs-graph-svg  { display: block; }
+    .dfs-empty-state { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+    .dfs-empty-icon  { font-size: 2.4rem; margin-bottom: 10px; opacity: 0.45; }
     .dfs-empty-state p { color: var(--text-soft); font-size: 0.82rem; line-height: 1.6; }
     .dfs-empty-state p strong { color: var(--accent-btn); }
     .dfs-empty-state.hidden { display: none; }
 
-    /* Right panel */
-    .dfs-right-panel {
-      width: 210px; flex-shrink: 0; border-left: 1px solid var(--border-var);
-      display: flex; flex-direction: column; overflow-y: auto;
-    }
+    .dfs-right-panel { width: 210px; flex-shrink: 0; border-left: 1px solid var(--border-var); display: flex; flex-direction: column; overflow-y: auto; }
     .dfs-explanation-content {
       background: var(--bg-page); border: 1px solid var(--accent-btn);
       border-radius: 8px; padding: 10px; min-height: 54px;
@@ -493,23 +338,18 @@
       margin-bottom: 8px; transition: border-color 0.3s;
     }
     .dfs-explanation-idle { color: var(--text-soft); font-style: italic; }
-    .dfs-highlight { color: var(--accent-btn); font-weight: 700; }
-    .dfs-visited-hl { color: var(--accent-2); font-weight: 700; }
-    .dfs-ret-hl     { color: #FF9B6B; font-weight: 700; }
-    .dfs-hist-wrap { max-height: 90px; overflow-y: auto; }
-    .dfs-hist-item {
-      font-size: 0.67rem; padding: 3px 7px; border-radius: 5px; margin-bottom: 3px;
-      color: var(--text-soft); background: var(--bg-page);
-      border-left: 2px solid var(--border-var); line-height: 1.4;
-    }
+    .dfs-highlight   { color: var(--accent-btn); font-weight: 700; }
+    .dfs-visited-hl  { color: var(--accent-2); font-weight: 700; }
+    .dfs-ret-hl      { color: #FF9B6B; font-weight: 700; }
+    .dfs-hist-wrap   { max-height: 90px; overflow-y: auto; }
+    .dfs-hist-item { font-size: 0.67rem; padding: 3px 7px; border-radius: 5px; margin-bottom: 3px; color: var(--text-soft); background: var(--bg-page); border-left: 2px solid var(--border-var); line-height: 1.4; }
 
-    /* Stack */
     .dfs-stack-list { display: flex; flex-direction: column; gap: 4px; max-height: 200px; overflow-y: auto; }
     .dfs-stack-empty { text-align: center; color: var(--text-soft); font-size: 0.72rem; padding: 14px 0; }
     .dfs-stack-item {
       display: flex; align-items: center; justify-content: space-between;
       background: var(--card-inner); border: 1px solid var(--border-var);
-      border-radius: 7px; padding: 6px 10px; font-family: var(--font-mono);
+      border-radius: 7px; padding: 6px 10px; font-family: 'JetBrains Mono', monospace;
       font-size: 0.72rem; color: var(--text-primary); animation: dfsStackPush 0.22s ease;
     }
     .dfs-stack-item.top { background: var(--accent-btn); color: #fff; border-color: var(--accent-btn); }
@@ -522,17 +362,15 @@
       font-size: 0.6rem; font-weight: 700; margin-left: auto;
     }
 
-    /* Traversal order list */
     .dfs-traversal-list { display: flex; flex-wrap: wrap; gap: 5px; }
     .dfs-trav-chip {
       background: var(--accent-btn); color: #fff; border-radius: 50%;
       width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700;
       animation: dfsStackPush 0.25s ease both;
       box-shadow: 0 0 8px color-mix(in srgb, var(--accent-btn) 40%, transparent);
     }
 
-    /* Legend */
     .dfs-legend {
       display: flex; flex-wrap: wrap; gap: 10px;
       padding: 10px 20px; border-top: 1px solid var(--border-var); background: var(--bg-card);
@@ -540,42 +378,9 @@
     .dfs-leg-item { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: var(--text-soft); }
     .dfs-leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-    /* =============================================
-       ENHANCED BACKTRACKING ANIMATION STYLES
-    ============================================= */
+    /* Enhanced backtracking animation */
+    #dfsArrowOverlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 10; }
 
-    /* Animated arrow overlay layer */
-    #dfsArrowOverlay {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; overflow: visible; z-index: 10;
-    }
-
-    /* Forward traversal arrow (blue/purple) */
-    .dfs-arrow-forward {
-      stroke-linecap: round; stroke-linejoin: round; fill: none;
-      stroke-width: 3.5; opacity: 0;
-    }
-    /* Backtrack arrow (orange/pink) */
-    .dfs-arrow-back {
-      stroke-linecap: round; stroke-linejoin: round; fill: none;
-      stroke-width: 3; opacity: 0;
-    }
-
-    /* Neon glow edge pulse animation */
-    @keyframes dfsEdgeGlow {
-      0%   { opacity: 0; stroke-width: 2; }
-      20%  { opacity: 1; stroke-width: 5; }
-      80%  { opacity: 0.9; stroke-width: 4; }
-      100% { opacity: 0; stroke-width: 2; }
-    }
-    @keyframes dfsEdgeGlowBack {
-      0%   { opacity: 0; stroke-width: 2; }
-      15%  { opacity: 1; stroke-width: 4.5; }
-      75%  { opacity: 0.8; stroke-width: 3.5; }
-      100% { opacity: 0; stroke-width: 2; }
-    }
-
-    /* Floating return label */
     .dfs-return-label {
       position: absolute; pointer-events: none; z-index: 20;
       background: linear-gradient(135deg, #FF6B35 0%, #FF9B6B 60%, #FFB347 100%);
@@ -583,84 +388,45 @@
       font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap;
       box-shadow: 0 0 12px #FF6B3588, 0 2px 6px rgba(0,0,0,0.3);
       opacity: 0; transform: translateY(0px) scale(0.8);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      letter-spacing: 0.04em;
+      transition: opacity 0.25s ease, transform 0.25s ease; letter-spacing: 0.04em;
     }
-    .dfs-return-label.visible {
-      opacity: 1; transform: translateY(-6px) scale(1);
-    }
+    .dfs-return-label.visible { opacity: 1; transform: translateY(-6px) scale(1); }
 
-    /* Forward call label */
     .dfs-call-label {
       position: absolute; pointer-events: none; z-index: 20;
-      background: linear-gradient(135deg, #1A88D0 0%, #0EC4E0 100%);
+      background: linear-gradient(135deg, var(--accent-btn) 0%, var(--accent-2) 100%);
       color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
       font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap;
-      box-shadow: 0 0 12px #1A88D088, 0 2px 6px rgba(0,0,0,0.3);
+      box-shadow: 0 0 12px color-mix(in srgb, var(--accent-btn) 55%, transparent), 0 2px 6px rgba(0,0,0,0.3);
       opacity: 0; transform: translateY(0px) scale(0.8);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      letter-spacing: 0.04em;
+      transition: opacity 0.25s ease, transform 0.25s ease; letter-spacing: 0.04em;
     }
-    [data-theme="dark"] .dfs-call-label {
-      background: linear-gradient(135deg, #9B4DFF 0%, #C07AFF 100%);
-      box-shadow: 0 0 12px #9B4DFF88, 0 2px 6px rgba(0,0,0,0.3);
-    }
-    .dfs-call-label.visible {
-      opacity: 1; transform: translateY(-6px) scale(1);
-    }
+    .dfs-call-label.visible { opacity: 1; transform: translateY(-6px) scale(1); }
 
-    /* Node flash ring for backtrack */
-    @keyframes dfsBacktrackRing {
-      0%   { r: 26; opacity: 0.9; stroke-width: 4; }
-      100% { r: 52; opacity: 0;   stroke-width: 1; }
-    }
-    @keyframes dfsForwardRing {
-      0%   { r: 26; opacity: 0.7; stroke-width: 3; }
-      100% { r: 48; opacity: 0;   stroke-width: 1; }
-    }
-
-    /* Particle dot */
     .dfs-particle {
       position: absolute; pointer-events: none; z-index: 15;
-      width: 6px; height: 6px; border-radius: 50%;
-      opacity: 0;
+      width: 6px; height: 6px; border-radius: 50%; opacity: 0;
     }
     @keyframes dfsParticleFloat {
       0%   { opacity: 0.9; transform: translate(0,0) scale(1); }
       100% { opacity: 0;   transform: translate(var(--px), var(--py)) scale(0.2); }
     }
 
-    /* Enhanced edge active states */
-    .dfs-edge-forward-active {
-      animation: dfsEdgeGlow 0.8s ease-out forwards;
-    }
-    .dfs-edge-back-active {
-      animation: dfsEdgeGlowBack 0.9s ease-out forwards;
-    }
-
-    /* Updated legend to show new colors */
-    .dfs-leg-item-back {
-      display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: var(--text-soft);
-    }
-
-    /* Stack push/pop animations */
-    @keyframes dfsStackPop {
-      from { opacity: 1; transform: translateY(0) scale(1); max-height: 40px; }
-      to   { opacity: 0; transform: translateY(-10px) scale(0.9); max-height: 0; margin: 0; padding: 0; }
-    }
-    .dfs-stack-item.popping { animation: dfsStackPop 0.3s ease forwards; }
     .dfs-stack-item.top-back {
       background: linear-gradient(90deg, #FF6B35, #FF9B6B) !important;
       color: #fff !important; border-color: #FF6B35 !important;
       box-shadow: 0 0 10px #FF6B3566;
     }
+    @keyframes dfsStackPop {
+      from { opacity: 1; transform: translateY(0) scale(1); max-height: 40px; }
+      to   { opacity: 0; transform: translateY(-10px) scale(0.9); max-height: 0; margin: 0; padding: 0; }
+    }
 
-    /* Tooltip & Toast */
     .dfs-tooltip {
       position: fixed; background: var(--bg-card); border: 1px solid var(--border-var);
       border-radius: 8px; padding: 7px 12px; font-size: 0.7rem; color: var(--text-primary);
       box-shadow: var(--sh-card); pointer-events: none; z-index: 200;
-      opacity: 0; transition: opacity 0.2s ease; font-family: var(--font-mono); white-space: nowrap;
+      opacity: 0; transition: opacity 0.2s ease; font-family: 'JetBrains Mono', monospace; white-space: nowrap;
     }
     .dfs-tooltip.visible { opacity: 1; }
     .dfs-toast {
@@ -671,27 +437,121 @@
       opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 1000;
     }
     .dfs-toast.show { opacity: 1; }
+        /* ── Viva accordion ── */
+.viva-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
 
-    /* =============================================
-       RESPONSIVE
-    ============================================= */
+.viva-item {
+    background: var(--card-inner);
+    border: 1px solid var(--border-var);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    transition: border-color 0.22s, box-shadow 0.22s;
+}
+
+.viva-item.open {
+    border-color: var(--accent-btn, var(--teal));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-btn, var(--teal)) 10%, transparent);
+}
+
+.viva-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    gap: 12px;
+}
+
+.viva-question:hover {
+    background: var(--scale-bg);
+}
+
+.viva-q-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.viva-q-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-btn, var(--teal)), var(--accent-2, #0EC4E0));
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.viva-chevron {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--text-soft);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+.viva-item.open .viva-chevron {
+    transform: rotate(180deg);
+}
+
+.viva-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), padding 0.28s;
+    padding: 0 18px;
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    line-height: 1.8;
+}
+
+.viva-item.open .viva-answer {
+    max-height: 300px;
+    padding: 0 18px 16px;
+}
+
+.viva-answer p {
+    margin: 0;
+}
+
+    /* ---- Responsive ---- */
     @media (max-width: 900px) {
-      .exp-main-body { flex-direction: column; padding: 20px 16px; }
-      .exp-sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
+      .exp-main-body  { flex-direction: column; padding: 20px 16px; }
+      .exp-sidebar    { width: 100%; margin-right: 0; margin-bottom: 20px; }
       .exp-sidebar-card { position: static; }
-      .exp-nav-list { flex-direction: row; flex-wrap: wrap; padding: 10px; gap: 6px; }
-      .exp-nav-btn { flex: 1; min-width: calc(50% - 3px); justify-content: center; font-size: 0.8rem; padding: 10px 8px; }
+      .exp-nav-list   { flex-direction: row; flex-wrap: wrap; padding: 10px; gap: 6px; }
+      .exp-nav-btn    { flex: 1; min-width: calc(50% - 3px); justify-content: center; font-size: 0.8rem; padding: 10px 8px; }
       .exp-nav-btn.active::before { display: none; }
       .exp-panel-body { padding: 20px; }
       .exp-panel-header { padding: 18px 20px; }
       .exp-breadcrumb { padding: 8px 16px; }
-      .exp-banner { padding: 18px 20px; flex-wrap: wrap; }
+      .exp-banner     { padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
       .dfs-left-panel, .dfs-right-panel { display: none; }
       .dfs-canvas-zone { min-height: 320px; }
     }
     @media (max-width: 520px) {
       .exp-banner-badge { display: none; }
+      .exp-nav-btn { min-width: calc(50% - 3px); }
     }
+    .portal-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
   </style>
 </head>
 
@@ -700,43 +560,114 @@
   <!-- ===================== HEADER ===================== -->
   <header class="portal-header">
     <div class="header-left">
-      <div class="logo-placeholder">L</div>
+      <a href="" aria-label="LabMate home">
+        <img src="../assets/images/LabMateLogo2.png" alt="LabMate Logo" class="portal-logo" />
+      </a>
       <div class="college-info">
         <h1 class="college-name">Aditya University</h1>
-        <span class="stream-badge">CS &amp; DS Stream</span>
+        <!-- <span class="stream-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              style="vertical-align:-1px;margin-right:3px">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"></path>
+            <path d="M4.93 4.93l14.14 14.14"></path>
+          </svg>
+          CS &amp; DS Stream
+        </span> -->
       </div>
     </div>
-    <div class="header-center">
+
+    <!-- <div class="header-center">
       <div class="search-wrapper">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="search-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <input type="text" class="global-search" placeholder="Search experiments &amp; records…" />
       </div>
-    </div>
+    </div> -->
+
     <div class="header-right">
-      <label class="theme-switch" for="theme-toggle-chk">
-        <input type="checkbox" id="theme-toggle-chk" />
+      <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+        <input type="checkbox" id="portal-theme-checkbox" />
         <div class="slider round">
           <span class="icon light-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
-              <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
             </svg>
           </span>
           <span class="icon dark-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
           </span>
         </div>
       </label>
-      <div style="display:flex;align-items:center;gap:8px;border:1px solid var(--border-var);border-radius:10px;padding:5px 10px;">
-        <div class="profile-avatar">S</div>
-        <div>
-          <span class="prof-name">Santhosh</span>
-          <span class="prof-roll">24P31A42XX</span>
+
+      <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notification-badge"></span>
+      </button>
+
+      <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+        <div class="notif-panel-header">
+          <span>Notifications</span>
+          <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item notif-unread">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>New assignment from <strong>Aditya University</strong></p>
+              <span>DFS experiment is now due this Friday</span>
+              <time>2 hours ago</time>
+            </div>
+          </div>
+          <div class="notif-item notif-unread">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>Physics Lab Update</p>
+              <span>Zener Diode Characteristics has been unlocked</span>
+              <time>Yesterday</time>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-dropdown">
+        <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
+          <div class="profile-avatar">S</div>
+          <div class="profile-name-tag">
+            <span class="prof-name">Santhosh</span>
+            <span class="prof-roll">24P31A42XX</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+              class="chevron-down">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="dropdown-menu">
+          <div class="dropdown-header">
+            <div class="dh-avatar">S</div>
+            <div><strong>Santhosh</strong><span>24P31A42XX</span></div>
+          </div>
+          <hr>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Progress</a>
+          <hr>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Help &amp; Support</a>
+          <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
         </div>
       </div>
     </div>
@@ -766,11 +697,11 @@
   <div class="exp-main-body">
 
     <!-- LEFT SIDEBAR -->
-    <aside class="exp-sidebar">
+    <aside class="exp-sidebar" role="complementary" aria-label="Experiment sections">
       <div class="exp-sidebar-card">
         <div class="exp-sidebar-header">Sections</div>
-        <nav class="exp-nav-list">
-          <button class="exp-nav-btn active" data-section="aim">
+        <nav class="exp-nav-list" aria-label="Experiment navigation">
+          <button class="exp-nav-btn active" data-section="aim" aria-current="true">
             <span class="exp-nav-icon">🎯</span>Aim
           </button>
           <button class="exp-nav-btn" data-section="description">
@@ -788,6 +719,9 @@
           <button class="exp-nav-btn" data-section="result">
             <span class="exp-nav-icon">📊</span>Result
           </button>
+          <button class="exp-nav-btn" data-section="viva">
+    <span class="exp-nav-icon">🎤</span>Viva Questions
+</button>
         </nav>
         <div class="exp-sidebar-progress">
           <div class="exp-progress-label">
@@ -802,7 +736,7 @@
     </aside>
 
     <!-- RIGHT CONTENT AREA -->
-    <main class="exp-content-area">
+    <main class="exp-content-area" id="exp-content-main" role="main">
       <div class="exp-panel">
 
         <!-- ========== AIM ========== -->
@@ -893,10 +827,7 @@
             <hr class="exp-divider" />
             <p class="exp-body-text"><strong>Program in C language:</strong></p>
             <div class="code-block-wrapper">
-              <div class="code-block-header">
-                <span>dfs_graph.c</span>
-                <span class="code-lang-badge">C</span>
-              </div>
+              <div class="code-block-header"><span>dfs_graph.c</span><span class="code-lang-badge">C</span></div>
               <div class="code-block-body">
 <pre><span class="code-kw">#include</span>&lt;stdio.h&gt;
 
@@ -946,7 +877,7 @@
             <hr class="exp-divider" />
             <p class="exp-body-text"><strong>Complexity Analysis:</strong></p>
             <div class="exp-materials-grid">
-              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Time: O(V + E) — Adjacency Matrix</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Time: O(V + E) — Adjacency List</div>
               <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Space: O(V) — visited[ ] + call stack</div>
               <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Adjacency Matrix Time: O(V²)</div>
               <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Adjacency List Time: O(V + E)</div>
@@ -981,76 +912,13 @@
           <div class="exp-panel-body">
             <p class="exp-body-text">The DFS algorithm systematically explores all vertices of a graph by going as deep as possible from each vertex before backtracking. Here is the formal step-by-step breakdown:</p>
             <div class="algo-steps" style="margin-top:28px;">
-              <div class="algo-step">
-                <div class="algo-step-line">
-                  <div class="algo-step-num">1</div>
-                  <div class="algo-step-connector"></div>
-                </div>
-                <div class="algo-step-body">
-                  <div class="algo-step-title">Initialise visited[ ] array</div>
-                  <div class="algo-step-desc">Set <code>visited[i] = 0</code> for all vertices i from 0 to n-1. This marks all nodes as unvisited before traversal begins.</div>
-                </div>
-              </div>
-              <div class="algo-step">
-                <div class="algo-step-line">
-                  <div class="algo-step-num">2</div>
-                  <div class="algo-step-connector"></div>
-                </div>
-                <div class="algo-step-body">
-                  <div class="algo-step-title">Start from source vertex (vertex 0)</div>
-                  <div class="algo-step-desc">Call <code>DFS(G, n, 0)</code> to begin traversal from vertex 0. The source vertex is printed and marked visited immediately upon entry.</div>
-                </div>
-              </div>
-              <div class="algo-step">
-                <div class="algo-step-line">
-                  <div class="algo-step-num">3</div>
-                  <div class="algo-step-connector"></div>
-                </div>
-                <div class="algo-step-body">
-                  <div class="algo-step-title">Print and mark current vertex as visited</div>
-                  <div class="algo-step-desc">Inside DFS(i): print vertex i, then set <code>visited[i] = 1</code>. This ensures the vertex is counted in the traversal order and never visited again.</div>
-                </div>
-              </div>
-              <div class="algo-step">
-                <div class="algo-step-line">
-                  <div class="algo-step-num">4</div>
-                  <div class="algo-step-connector"></div>
-                </div>
-                <div class="algo-step-body">
-                  <div class="algo-step-title">Explore all adjacent unvisited neighbours</div>
-                  <div class="algo-step-desc">Iterate j from 0 to n-1. For each j where <code>G[i][j] == 1</code> (edge exists) and <code>visited[j] == 0</code> (unvisited), recursively call <code>DFS(G, n, j)</code>.</div>
-                </div>
-              </div>
-              <div class="algo-step">
-                <div class="algo-step-line">
-                  <div class="algo-step-num">5</div>
-                  <div class="algo-step-connector"></div>
-                </div>
-                <div class="algo-step-body">
-                  <div class="algo-step-title">Recursion goes deeper (depth-first exploration)</div>
-                  <div class="algo-step-desc">Each recursive call pushes a new stack frame. DFS always prefers going deeper over exploring siblings — it fully explores one branch before moving to the next.</div>
-                </div>
-              </div>
-              <div class="algo-step">
-                <div class="algo-step-line">
-                  <div class="algo-step-num">6</div>
-                  <div class="algo-step-connector"></div>
-                </div>
-                <div class="algo-step-body">
-                  <div class="algo-step-title">Backtrack when all neighbours are visited</div>
-                  <div class="algo-step-desc">If vertex i has no unvisited adjacent vertices, DFS(i) returns to its caller. The call stack frame for i is popped, and the previous vertex resumes scanning its remaining neighbours.</div>
-                </div>
-              </div>
-              <div class="algo-step">
-                <div class="algo-step-line">
-                  <div class="algo-step-num">7</div>
-                  <div class="algo-step-connector"></div>
-                </div>
-                <div class="algo-step-body">
-                  <div class="algo-step-title">Repeat until all reachable vertices are visited</div>
-                  <div class="algo-step-desc">Traversal completes when the recursion fully unwinds back to the initial DFS(0) call. All vertices reachable from vertex 0 have been printed in DFS order.</div>
-                </div>
-              </div>
+              <div class="algo-step"><div class="algo-step-line"><div class="algo-step-num">1</div><div class="algo-step-connector"></div></div><div class="algo-step-body"><div class="algo-step-title">Initialise visited[ ] array</div><div class="algo-step-desc">Set <code>visited[i] = 0</code> for all vertices i from 0 to n-1. This marks all nodes as unvisited before traversal begins.</div></div></div>
+              <div class="algo-step"><div class="algo-step-line"><div class="algo-step-num">2</div><div class="algo-step-connector"></div></div><div class="algo-step-body"><div class="algo-step-title">Start from source vertex (vertex 0)</div><div class="algo-step-desc">Call <code>DFS(G, n, 0)</code> to begin traversal from vertex 0. The source vertex is printed and marked visited immediately upon entry.</div></div></div>
+              <div class="algo-step"><div class="algo-step-line"><div class="algo-step-num">3</div><div class="algo-step-connector"></div></div><div class="algo-step-body"><div class="algo-step-title">Print and mark current vertex as visited</div><div class="algo-step-desc">Inside DFS(i): print vertex i, then set <code>visited[i] = 1</code>. This ensures the vertex is counted in the traversal order and never visited again.</div></div></div>
+              <div class="algo-step"><div class="algo-step-line"><div class="algo-step-num">4</div><div class="algo-step-connector"></div></div><div class="algo-step-body"><div class="algo-step-title">Explore all adjacent unvisited neighbours</div><div class="algo-step-desc">Iterate j from 0 to n-1. For each j where <code>G[i][j] == 1</code> (edge exists) and <code>visited[j] == 0</code> (unvisited), recursively call <code>DFS(G, n, j)</code>.</div></div></div>
+              <div class="algo-step"><div class="algo-step-line"><div class="algo-step-num">5</div><div class="algo-step-connector"></div></div><div class="algo-step-body"><div class="algo-step-title">Recursion goes deeper (depth-first exploration)</div><div class="algo-step-desc">Each recursive call pushes a new stack frame. DFS always prefers going deeper over exploring siblings — it fully explores one branch before moving to the next.</div></div></div>
+              <div class="algo-step"><div class="algo-step-line"><div class="algo-step-num">6</div><div class="algo-step-connector"></div></div><div class="algo-step-body"><div class="algo-step-title">Backtrack when all neighbours are visited</div><div class="algo-step-desc">If vertex i has no unvisited adjacent vertices, DFS(i) returns to its caller. The call stack frame for i is popped, and the previous vertex resumes scanning its remaining neighbours.</div></div></div>
+              <div class="algo-step"><div class="algo-step-line"><div class="algo-step-num">7</div><div class="algo-step-connector"></div></div><div class="algo-step-body"><div class="algo-step-title">Repeat until all reachable vertices are visited</div><div class="algo-step-desc">Traversal completes when the recursion fully unwinds back to the initial DFS(0) call. All vertices reachable from vertex 0 have been printed in DFS order.</div></div></div>
             </div>
             <hr class="exp-divider" />
             <p class="exp-body-text"><strong>Pseudocode:</strong></p>
@@ -1126,7 +994,7 @@ main:
               <div class="exp-panel-subtitle">Interactive DFS visualiser — GraphTrace</div>
             </div>
           </div>
-          <div class="exp-panel-body" style="padding: 20px;">
+          <div class="exp-panel-body" style="padding:20px;">
 
             <div class="dfs-sim-outer" id="dfsSimOuter">
 
@@ -1162,9 +1030,7 @@ main:
               <div class="dfs-graph-controls">
                 <span style="font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;color:var(--text-soft);letter-spacing:1px;">GRAPH</span>
                 <div class="dfs-sep"></div>
-                <button class="dfs-btn dfs-btn-accent" id="dfsBtnSample">
-                  🔀 Sample Graph
-                </button>
+                <button class="dfs-btn dfs-btn-accent" id="dfsBtnSample">🔀 Sample Graph</button>
                 <div class="dfs-sep"></div>
                 <label>Add Edge: From</label>
                 <input type="number" class="dfs-small-input" id="dfsEdgeFrom" min="0" value="0" />
@@ -1239,9 +1105,7 @@ main:
                 <!-- Center: graph SVG -->
                 <div class="dfs-graph-zone" id="dfsGraphZone">
                   <svg id="dfsGraphSVG" class="dfs-graph-svg" width="100%" height="100%"></svg>
-                  <!-- Arrow + particle overlay -->
                   <svg id="dfsArrowOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:10;"></svg>
-                  <!-- Floating labels container -->
                   <div id="dfsLabelContainer" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:20;overflow:hidden;"></div>
                   <div class="dfs-empty-state" id="dfsEmptyState">
                     <div class="dfs-empty-icon">🕸️</div>
@@ -1344,27 +1208,149 @@ main:
         </div>
 
       </div><!-- /.exp-panel -->
+      <div id="section-viva" class="exp-section-content">
+        <div class="viva-list">
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">1</div>
+                <span>What is Depth First Search (DFS)?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                DFS is a graph traversal algorithm that explores a node completely before moving to the next adjacent node.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">2</div>
+                <span>Which data structure is used in DFS?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                DFS uses a stack data structure. In recursive DFS, the system call stack is used implicitly.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">3</div>
+                <span>What is the time complexity of DFS?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                The time complexity of DFS is O(V + E), where V is the number of vertices and E is the number of edges.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">4</div>
+                <span>Why is the visited array used in DFS?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                The visited array prevents revisiting the same node and avoids infinite loops in cyclic graphs.
+            </p>
+        </div>
+    </div>
+
+    <div class="viva-item">
+        <div class="viva-question">
+            <div class="viva-q-left">
+                <div class="viva-q-num">5</div>
+                <span>What is the difference between DFS and BFS?</span>
+            </div>
+
+            <svg class="viva-chevron" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div class="viva-answer">
+            <p>
+                DFS explores depth-wise using a stack, while BFS explores level-wise using a queue.
+            </p>
+        </div>
+    </div>
+
+</div>
+      </div>
     </main>
 
   </div><!-- /.exp-main-body -->
 
   <!-- Tooltip & Toast -->
   <div class="dfs-tooltip" id="dfsTooltip"></div>
-  <div class="dfs-toast" id="dfsToast"></div>
+  <div class="dfs-toast"   id="dfsToast"></div>
 
   <script>
+    document.querySelectorAll('.viva-question').forEach(question => {
+    question.addEventListener('click', () => {
+
+        const item = question.parentElement;
+
+        // close others
+        document.querySelectorAll('.viva-item').forEach(v => {
+            if (v !== item) {
+                v.classList.remove('open');
+            }
+        });
+
+        // toggle current
+        item.classList.toggle('open');
+    });
+});
     /* =====================================================
        THEME & PAGE NAV
     ===================================================== */
     document.addEventListener('DOMContentLoaded', () => {
-      const toggle = document.getElementById('theme-toggle-chk');
-      const saved  = localStorage.getItem('labTheme') || 'light';
+      const toggle = document.getElementById('portal-theme-checkbox');
+      const saved  = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', saved);
-      if (toggle && saved === 'dark') toggle.checked = true;
+      if (toggle && saved === 'light') toggle.checked = true;
       toggle?.addEventListener('change', () => {
-        const t = toggle.checked ? 'dark' : 'light';
+        const t = toggle.checked ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', t);
-        localStorage.setItem('labTheme', t);
+        localStorage.setItem('theme', t);
+        if (typeof dfsRenderGraph === 'function' && dfsN > 0) dfsRenderGraph();
       });
 
       const navBtns  = document.querySelectorAll('.exp-nav-btn');
@@ -1388,6 +1374,7 @@ main:
           sections.forEach(s => s.classList.remove('visible'));
           const sec = document.getElementById('section-' + target);
           if (sec) { sec.style.animation = 'none'; sec.offsetHeight; sec.style.animation = ''; sec.classList.add('visible'); }
+          if (target === 'simulation' && typeof dfsComputeLayout === 'function' && dfsN > 0) setTimeout(() => { dfsComputeLayout(); dfsRenderGraph(); }, 50);
           if (!visited_nav.includes(target)) visited_nav.push(target);
           updateProgress();
         });
@@ -1395,19 +1382,12 @@ main:
     });
 
     /* =====================================================
-       DFS GRAPH ENGINE — GraphTrace (Enhanced)
+       DFS GRAPH ENGINE — GraphTrace
     ===================================================== */
     const DFS_SPEED_MAP = [1200, 780, 480, 260, 110];
     const SPEED_LABELS  = ['Slow','Slwr','Med','Fast','Blzg'];
     const NODE_R        = 26;
-    const COLORS = {
-      unvisited:  { fill: '#F0F7FF', stroke: '#C8DFF4', text: '#2A5278' },
-      active:     { fill: null,      stroke: null,      text: '#fff'    },
-      visited:    { fill: null,      stroke: null,      text: '#fff'    },
-      backtrack:  { fill: '#FF9B6B', stroke: '#FF9B6B', text: '#fff'    },
-    };
 
-    /* --- State --- */
     let dfsGraph = [];
     let dfsN = 0;
     let dfsNodePos = [];
@@ -1423,7 +1403,6 @@ main:
     let dfsRecursiveCalls = 0;
     let dfsEdges = [];
 
-    /* --- DOM refs --- */
     const dfsBtnStart     = document.getElementById('dfsBtnStart');
     const dfsBtnPause     = document.getElementById('dfsBtnPause');
     const dfsBtnResume    = document.getElementById('dfsBtnResume');
@@ -1464,17 +1443,12 @@ main:
     const dfsEdgeFrom     = document.getElementById('dfsEdgeFrom');
     const dfsEdgeTo       = document.getElementById('dfsEdgeTo');
 
-    /* Speed */
-    dfsSpeedSlider.addEventListener('input', () => {
-      dfsSpeedVal.textContent = SPEED_LABELS[dfsSpeedSlider.value - 1];
-    });
+    dfsSpeedSlider.addEventListener('input', () => { dfsSpeedVal.textContent = SPEED_LABELS[dfsSpeedSlider.value - 1]; });
     dfsSpeedVal.textContent = 'Med';
 
-    /* --- Error helpers --- */
     function showDfsError(msg) { dfsError.textContent = msg; dfsError.classList.add('visible'); }
     function hideDfsError()    { dfsError.classList.remove('visible'); }
 
-    /* --- Init graph --- */
     function dfsInitGraph(n) {
       dfsN = n;
       dfsGraph = Array.from({length:n}, ()=>Array(n).fill(0));
@@ -1486,7 +1460,6 @@ main:
       dfsUpdatePills();
     }
 
-    /* --- Layout: arrange nodes in circle --- */
     function dfsComputeLayout() {
       const W = dfsGraphZone.clientWidth  || 500;
       const H = dfsGraphZone.clientHeight || 380;
@@ -1499,7 +1472,6 @@ main:
       }
     }
 
-    /* --- Add edge --- */
     function dfsAddEdge(from, to) {
       if (from < 0 || to < 0 || from >= dfsN || to >= dfsN) { showDfsError(`Invalid vertices. Valid range: 0 – ${dfsN-1}.`); return; }
       if (from === to) { showDfsError('Self-loops not supported.'); return; }
@@ -1512,9 +1484,6 @@ main:
       dfsUpdatePills();
     }
 
-    /* =====================================================
-       ENHANCED RENDER GRAPH — with SVG defs for arrows
-    ===================================================== */
     function dfsRenderGraph(nodeStates) {
       nodeStates = nodeStates || {};
       const edgeStates = nodeStates._edges || {};
@@ -1534,10 +1503,8 @@ main:
       const borderV= isDark ? '#2A1F5A' : '#C8DFF4';
       const bgCard = isDark ? '#13132E' : '#F0F7FF';
 
-      // Defs: multiple arrowheads for different states
       const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
 
-      // Forward arrow
       const mkrFwd = document.createElementNS('http://www.w3.org/2000/svg','marker');
       mkrFwd.setAttribute('id','dfs-arrow-fwd'); mkrFwd.setAttribute('markerWidth','8'); mkrFwd.setAttribute('markerHeight','8');
       mkrFwd.setAttribute('refX','6'); mkrFwd.setAttribute('refY','3'); mkrFwd.setAttribute('orient','auto');
@@ -1545,7 +1512,6 @@ main:
       polyFwd.setAttribute('points','0 0, 8 3, 0 6'); polyFwd.setAttribute('fill', accent);
       mkrFwd.appendChild(polyFwd); defs.appendChild(mkrFwd);
 
-      // Backtrack arrow
       const mkrBck = document.createElementNS('http://www.w3.org/2000/svg','marker');
       mkrBck.setAttribute('id','dfs-arrow-bck'); mkrBck.setAttribute('markerWidth','8'); mkrBck.setAttribute('markerHeight','8');
       mkrBck.setAttribute('refX','6'); mkrBck.setAttribute('refY','3'); mkrBck.setAttribute('orient','auto');
@@ -1553,7 +1519,6 @@ main:
       polyBck.setAttribute('points','0 0, 8 3, 0 6'); polyBck.setAttribute('fill','#FF6B35');
       mkrBck.appendChild(polyBck); defs.appendChild(mkrBck);
 
-      // Visited arrow
       const mkrVis = document.createElementNS('http://www.w3.org/2000/svg','marker');
       mkrVis.setAttribute('id','dfs-arrow-vis'); mkrVis.setAttribute('markerWidth','7'); mkrVis.setAttribute('markerHeight','7');
       mkrVis.setAttribute('refX','5'); mkrVis.setAttribute('refY','3'); mkrVis.setAttribute('orient','auto');
@@ -1561,7 +1526,6 @@ main:
       polyVis.setAttribute('points','0 0, 7 3, 0 6'); polyVis.setAttribute('fill', accent2);
       mkrVis.appendChild(polyVis); defs.appendChild(mkrVis);
 
-      // Glow filter for active edges
       const fltFwd = document.createElementNS('http://www.w3.org/2000/svg','filter');
       fltFwd.setAttribute('id','glow-fwd'); fltFwd.setAttribute('x','-50%'); fltFwd.setAttribute('y','-50%');
       fltFwd.setAttribute('width','200%'); fltFwd.setAttribute('height','200%');
@@ -1582,87 +1546,57 @@ main:
 
       dfsGraphSVG.appendChild(defs);
 
-      // Draw edges — solid base line always stays intact; backtrack arrow is layered on top
       for (let i = 0; i < dfsN; i++) {
         for (let j = i+1; j < dfsN; j++) {
           if (dfsGraph[i][j] !== 1) continue;
           const p1 = dfsNodePos[i], p2 = dfsNodePos[j];
-          // Normalised key (smaller_larger) matches how applyStep stores states
           const eKey = `${i}_${j}`;
           const eState = edgeStates[eKey] || 'none';
-
-          // Compute unit vector and offset endpoints outside node circles
           const dx = p2.x - p1.x, dy = p2.y - p1.y;
           const dist = Math.sqrt(dx*dx+dy*dy);
           const ux = dx/dist, uy = dy/dist;
           const x1 = p1.x + ux*(NODE_R+3), y1 = p1.y + uy*(NODE_R+3);
           const x2 = p2.x - ux*(NODE_R+8), y2 = p2.y - uy*(NODE_R+8);
 
-          // ── BASE LINE — always drawn, style reflects traversal state ──
           const line = document.createElementNS('http://www.w3.org/2000/svg','line');
           line.setAttribute('x1', x1); line.setAttribute('y1', y1);
           line.setAttribute('x2', x2); line.setAttribute('y2', y2);
           line.setAttribute('stroke-linecap','round');
 
           if (eState === 'active') {
-            // Forward traversal: blue/purple glowing dashed with forward arrow
-            line.setAttribute('stroke', accent);
-            line.setAttribute('stroke-width','3.5');
-            line.setAttribute('stroke-dasharray','7,4');
-            line.setAttribute('filter','url(#glow-fwd)');
-            line.setAttribute('marker-end','url(#dfs-arrow-fwd)');
-            line.setAttribute('opacity','1');
+            line.setAttribute('stroke', accent); line.setAttribute('stroke-width','3.5');
+            line.setAttribute('stroke-dasharray','7,4'); line.setAttribute('filter','url(#glow-fwd)');
+            line.setAttribute('marker-end','url(#dfs-arrow-fwd)'); line.setAttribute('opacity','1');
           } else if (eState === 'backtracking' || eState === 'visited') {
-            // Traversed edge: keep as solid teal line — intact, not replaced
-            line.setAttribute('stroke', accent2);
-            line.setAttribute('stroke-width','2.8');
-            line.setAttribute('marker-end','url(#dfs-arrow-vis)');
-            line.setAttribute('opacity','0.9');
+            line.setAttribute('stroke', accent2); line.setAttribute('stroke-width','2.8');
+            line.setAttribute('marker-end','url(#dfs-arrow-vis)'); line.setAttribute('opacity','0.9');
           } else {
-            // Unvisited edge
-            line.setAttribute('stroke', borderV);
-            line.setAttribute('stroke-width','1.5');
-            line.setAttribute('opacity','0.6');
+            line.setAttribute('stroke', borderV); line.setAttribute('stroke-width','1.5'); line.setAttribute('opacity','0.6');
           }
           dfsGraphSVG.appendChild(line);
 
-          // ── BACKTRACK DASHED ARROW — drawn ON TOP of the solid line ──
-          // Only on the current returnfrom step
           if (eState === 'backtracking') {
-            // dir_ tells us which node is the child (start of backtrack arrow)
             const childNode = edgeStates[`dir_${eKey}`];
             const parentNode = childNode === i ? j : i;
-
-            const bf = dfsNodePos[childNode];
-            const bt = dfsNodePos[parentNode];
+            const bf = dfsNodePos[childNode], bt = dfsNodePos[parentNode];
             const bdx = bt.x - bf.x, bdy = bt.y - bf.y;
             const bdist = Math.sqrt(bdx*bdx+bdy*bdy);
             const bux = bdx/bdist, buy = bdy/bdist;
-
-            // Slight perpendicular offset so the dashed arrow sits beside the solid line
             const perpX = -buy * 5, perpY = bux * 5;
-
-            const bx1 = bf.x + bux*(NODE_R+4) + perpX;
-            const by1 = bf.y + buy*(NODE_R+4) + perpY;
-            const bx2 = bt.x - bux*(NODE_R+10) + perpX;
-            const by2 = bt.y - buy*(NODE_R+10) + perpY;
-
+            const bx1 = bf.x + bux*(NODE_R+4) + perpX, by1 = bf.y + buy*(NODE_R+4) + perpY;
+            const bx2 = bt.x - bux*(NODE_R+10) + perpX, by2 = bt.y - buy*(NODE_R+10) + perpY;
             const backLine = document.createElementNS('http://www.w3.org/2000/svg','line');
             backLine.setAttribute('x1', bx1); backLine.setAttribute('y1', by1);
             backLine.setAttribute('x2', bx2); backLine.setAttribute('y2', by2);
-            backLine.setAttribute('stroke', '#FF6B35');
-            backLine.setAttribute('stroke-width','2.5');
-            backLine.setAttribute('stroke-dasharray','5,4');
-            backLine.setAttribute('stroke-linecap','round');
-            backLine.setAttribute('filter','url(#glow-bck)');
-            backLine.setAttribute('marker-end','url(#dfs-arrow-bck)');
+            backLine.setAttribute('stroke', '#FF6B35'); backLine.setAttribute('stroke-width','2.5');
+            backLine.setAttribute('stroke-dasharray','5,4'); backLine.setAttribute('stroke-linecap','round');
+            backLine.setAttribute('filter','url(#glow-bck)'); backLine.setAttribute('marker-end','url(#dfs-arrow-bck)');
             backLine.setAttribute('opacity','0.92');
             dfsGraphSVG.appendChild(backLine);
           }
         }
       }
 
-      // Draw nodes (same as before, enhanced)
       for (let i = 0; i < dfsN; i++) {
         const pos = dfsNodePos[i];
         const state = nodeStates[i] || 'unvisited';
@@ -1672,21 +1606,11 @@ main:
 
         const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
         circle.setAttribute('r', NODE_R);
-        let fillColor = bgCard, strokeColor = borderV, textColor = textPri;
-        let glowFilter = '';
-        if (state === 'active') {
-          fillColor = accent; strokeColor = accent; textColor = '#fff';
-          glowFilter = `drop-shadow(0 0 10px ${accent}) drop-shadow(0 0 20px ${accent}88)`;
-        } else if (state === 'visited') {
-          fillColor = accent2; strokeColor = accent2; textColor = '#fff';
-          glowFilter = `drop-shadow(0 0 6px ${accent2}88)`;
-        } else if (state === 'backtrack') {
-          fillColor = '#FF9B6B'; strokeColor = '#FF6B35'; textColor = '#fff';
-          glowFilter = `drop-shadow(0 0 10px #FF6B3588) drop-shadow(0 0 18px #FF9B6B66)`;
-        }
-        circle.setAttribute('fill', fillColor);
-        circle.setAttribute('stroke', strokeColor);
-        circle.setAttribute('stroke-width','2.5');
+        let fillColor = bgCard, strokeColor = borderV, textColor = textPri, glowFilter = '';
+        if (state === 'active')    { fillColor = accent;    strokeColor = accent;    textColor = '#fff'; glowFilter = `drop-shadow(0 0 10px ${accent}) drop-shadow(0 0 20px ${accent}88)`; }
+        else if (state === 'visited')  { fillColor = accent2;   strokeColor = accent2;   textColor = '#fff'; glowFilter = `drop-shadow(0 0 6px ${accent2}88)`; }
+        else if (state === 'backtrack'){ fillColor = '#FF9B6B'; strokeColor = '#FF6B35'; textColor = '#fff'; glowFilter = `drop-shadow(0 0 10px #FF6B3588) drop-shadow(0 0 18px #FF9B6B66)`; }
+        circle.setAttribute('fill', fillColor); circle.setAttribute('stroke', strokeColor); circle.setAttribute('stroke-width','2.5');
         if (glowFilter) circle.setAttribute('filter', glowFilter);
 
         const text = document.createElementNS('http://www.w3.org/2000/svg','text');
@@ -1697,38 +1621,30 @@ main:
         text.textContent = String(i);
         g.appendChild(circle); g.appendChild(text);
 
-        // Pulse ring for active node
         if (state === 'active') {
           const pulse = document.createElementNS('http://www.w3.org/2000/svg','circle');
-          pulse.setAttribute('r', NODE_R);
-          pulse.setAttribute('fill','none'); pulse.setAttribute('stroke', accent);
+          pulse.setAttribute('r', NODE_R); pulse.setAttribute('fill','none'); pulse.setAttribute('stroke', accent);
           pulse.setAttribute('stroke-width','3'); pulse.setAttribute('opacity','0.6');
           const anim = document.createElementNS('http://www.w3.org/2000/svg','animate');
-          anim.setAttribute('attributeName','r'); anim.setAttribute('from', NODE_R);
-          anim.setAttribute('to', NODE_R+12); anim.setAttribute('dur','1.2s');
-          anim.setAttribute('repeatCount','indefinite');
+          anim.setAttribute('attributeName','r'); anim.setAttribute('from', NODE_R); anim.setAttribute('to', NODE_R+12);
+          anim.setAttribute('dur','1.2s'); anim.setAttribute('repeatCount','indefinite');
           const animO = document.createElementNS('http://www.w3.org/2000/svg','animate');
-          animO.setAttribute('attributeName','opacity'); animO.setAttribute('from','0.6');
-          animO.setAttribute('to','0'); animO.setAttribute('dur','1.2s');
-          animO.setAttribute('repeatCount','indefinite');
+          animO.setAttribute('attributeName','opacity'); animO.setAttribute('from','0.6'); animO.setAttribute('to','0');
+          animO.setAttribute('dur','1.2s'); animO.setAttribute('repeatCount','indefinite');
           pulse.appendChild(anim); pulse.appendChild(animO);
           g.insertBefore(pulse, circle);
         }
 
-        // Backtrack flash ring
         if (state === 'backtrack') {
           const bRing = document.createElementNS('http://www.w3.org/2000/svg','circle');
-          bRing.setAttribute('r', NODE_R);
-          bRing.setAttribute('fill','none'); bRing.setAttribute('stroke','#FF6B35');
+          bRing.setAttribute('r', NODE_R); bRing.setAttribute('fill','none'); bRing.setAttribute('stroke','#FF6B35');
           bRing.setAttribute('stroke-width','4'); bRing.setAttribute('opacity','0.8');
           const bAnim = document.createElementNS('http://www.w3.org/2000/svg','animate');
-          bAnim.setAttribute('attributeName','r'); bAnim.setAttribute('from', NODE_R);
-          bAnim.setAttribute('to', NODE_R+16); bAnim.setAttribute('dur','0.7s');
-          bAnim.setAttribute('repeatCount','2');
+          bAnim.setAttribute('attributeName','r'); bAnim.setAttribute('from', NODE_R); bAnim.setAttribute('to', NODE_R+16);
+          bAnim.setAttribute('dur','0.7s'); bAnim.setAttribute('repeatCount','2');
           const bAnimO = document.createElementNS('http://www.w3.org/2000/svg','animate');
-          bAnimO.setAttribute('attributeName','opacity'); bAnimO.setAttribute('from','0.8');
-          bAnimO.setAttribute('to','0'); bAnimO.setAttribute('dur','0.7s');
-          bAnimO.setAttribute('repeatCount','2');
+          bAnimO.setAttribute('attributeName','opacity'); bAnimO.setAttribute('from','0.8'); bAnimO.setAttribute('to','0');
+          bAnimO.setAttribute('dur','0.7s'); bAnimO.setAttribute('repeatCount','2');
           bRing.appendChild(bAnim); bRing.appendChild(bAnimO);
           g.insertBefore(bRing, circle);
         }
@@ -1742,15 +1658,8 @@ main:
       dfsEmptyState.classList.add('hidden');
     }
 
-    /* --- Update pills --- */
-    function dfsUpdatePills() {
-      dsPillV.textContent = dfsN;
-      dsPillE.textContent = dfsEdges.length;
-    }
+    function dfsUpdatePills() { dsPillV.textContent = dfsN; dsPillE.textContent = dfsEdges.length; }
 
-    /* =====================================================
-       ENHANCED BUILD STEPS — forward + backtrack steps
-    ===================================================== */
     function dfsBuildSteps() {
       dfsSteps = [];
       const localVisited = Array(dfsN).fill(0);
@@ -1768,11 +1677,9 @@ main:
           if (dfsGraph[i][j] === 1 && !localVisited[j]) {
             dfsSteps.push({ type:'recurse', node:i, neighbor:j, depth, msg:`Edge <span class="dfs-highlight">${i}→${j}</span> found — <span class="dfs-highlight">${j}</span> unvisited → calling <span class="dfs-highlight">DFS(${j})</span>`, codeLine:6 });
             dfs(j, i, depth+1);
-            // Enhanced return step
             dfsSteps.push({ type:'returnfrom', node:i, child:j, depth, msg:`<span class="dfs-ret-hl">↩ Returning</span> from DFS(${j}) back to DFS(${i}) — backtracking <span class="dfs-ret-hl">${j}→${i}</span>`, codeLine:7, stackAction:'backtrack_return' });
           }
         }
-        // Backtrack step with parent info
         dfsSteps.push({ type:'backtrack', node:i, parent:parentNode, depth, msg:`All neighbours of <span class="dfs-visited-hl">${i}</span> explored → <span class="dfs-ret-hl">backtracking</span> from DFS(${i})${parentNode !== null ? ` to parent <span class="dfs-ret-hl">${parentNode}</span>` : ''}`, codeLine:8, stackAction:'pop' });
       }
 
@@ -1780,14 +1687,10 @@ main:
       return calls;
     }
 
-    /* =====================================================
-       ANIMATED ARROW SYSTEM
-    ===================================================== */
     let _arrowTimers = [];
 
     function dfsClearArrows() {
-      _arrowTimers.forEach(t=>clearTimeout(t));
-      _arrowTimers = [];
+      _arrowTimers.forEach(t=>clearTimeout(t)); _arrowTimers = [];
       const overlay = document.getElementById('dfsArrowOverlay');
       if (overlay) overlay.innerHTML = '';
       const lc = document.getElementById('dfsLabelContainer');
@@ -1797,7 +1700,6 @@ main:
     function dfsAnimateArrow(fromNode, toNode, isBacktrack, delay, duration) {
       if (fromNode < 0 || toNode < 0 || fromNode >= dfsN || toNode >= dfsN) return;
       if (!dfsNodePos[fromNode] || !dfsNodePos[toNode]) return;
-
       const overlay = document.getElementById('dfsArrowOverlay');
       if (!overlay) return;
 
@@ -1805,125 +1707,71 @@ main:
       const accent = isDark ? '#9B4DFF' : '#1A88D0';
       const color = isBacktrack ? '#FF6B35' : accent;
 
-      const p1 = dfsNodePos[fromNode];
-      const p2 = dfsNodePos[toNode];
+      const p1 = dfsNodePos[fromNode], p2 = dfsNodePos[toNode];
       const dx = p2.x - p1.x, dy = p2.y - p1.y;
       const dist = Math.sqrt(dx*dx+dy*dy);
       const ux = dx/dist, uy = dy/dist;
-
-      // sx/sy = start (just outside fromNode), ex/ey = end (just before toNode)
-      // Arrow travels FROM fromNode TO toNode — arrowhead must arrive at toNode end
-      const sx = p1.x + ux*(NODE_R+4),  sy = p1.y + uy*(NODE_R+4);
+      const sx = p1.x + ux*(NODE_R+4), sy = p1.y + uy*(NODE_R+4);
       const ex = p2.x - ux*(NODE_R+10), ey = p2.y - uy*(NODE_R+10);
-
       const uid = `${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
-      const W = dfsGraphZone.clientWidth || 500;
-      const H = dfsGraphZone.clientHeight || 380;
+      const W = dfsGraphZone.clientWidth || 500, H = dfsGraphZone.clientHeight || 380;
 
       overlay.setAttribute('viewBox', `0 0 ${W} ${H}`);
-      overlay.setAttribute('width', W);
-      overlay.setAttribute('height', H);
+      overlay.setAttribute('width', W); overlay.setAttribute('height', H);
 
       let defs = overlay.querySelector('defs');
       if (!defs) { defs = document.createElementNS('http://www.w3.org/2000/svg','defs'); overlay.appendChild(defs); }
 
-      // ── Glow filter ──────────────────────────────────────────
       const fltId = `flt-${uid}`;
       const flt = document.createElementNS('http://www.w3.org/2000/svg','filter');
-      flt.setAttribute('id', fltId);
-      flt.setAttribute('x','-60%'); flt.setAttribute('y','-60%');
+      flt.setAttribute('id', fltId); flt.setAttribute('x','-60%'); flt.setAttribute('y','-60%');
       flt.setAttribute('width','220%'); flt.setAttribute('height','220%');
       const feB = document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');
-      feB.setAttribute('stdDeviation', isBacktrack ? '5' : '4');
-      feB.setAttribute('result','blur');
+      feB.setAttribute('stdDeviation', isBacktrack ? '5' : '4'); feB.setAttribute('result','blur');
       const feM = document.createElementNS('http://www.w3.org/2000/svg','feMerge');
-      ['blur','SourceGraphic'].forEach(n=>{
-        const fe = document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');
-        fe.setAttribute('in',n); feM.appendChild(fe);
-      });
+      ['blur','SourceGraphic'].forEach(n=>{ const fe = document.createElementNS('http://www.w3.org/2000/svg','feMergeNode'); fe.setAttribute('in',n); feM.appendChild(fe); });
       flt.appendChild(feB); flt.appendChild(feM); defs.appendChild(flt);
 
-      // ── Path string: straight line from source to target ─────
       const pathD = `M ${sx} ${sy} L ${ex} ${ey}`;
       const pathLen = Math.sqrt((ex-sx)**2+(ey-sy)**2);
-
-      // ── Trail line (stroke-dashoffset reveals from sx toward ex) ─
-      // No marker-end here — the separate arrowhead element handles the tip
-      const trail = document.createElementNS('http://www.w3.org/2000/svg','path');
-      trail.setAttribute('d', pathD);
-      trail.setAttribute('stroke', color);
-      trail.setAttribute('stroke-width', isBacktrack ? '3.5' : '4');
-      trail.setAttribute('stroke-linecap','round');
-      trail.setAttribute('fill','none');
-      trail.setAttribute('stroke-dasharray', `${pathLen} ${pathLen}`);
-      trail.setAttribute('stroke-dashoffset', `${pathLen}`);   // fully hidden initially
-      trail.setAttribute('filter', `url(#${fltId})`);
-      trail.setAttribute('opacity','0.92');
-
-      // Reveal stroke from sx → ex (dashoffset pathLen → 0)
       const travelDur = duration * 0.55;
+
+      const trail = document.createElementNS('http://www.w3.org/2000/svg','path');
+      trail.setAttribute('d', pathD); trail.setAttribute('stroke', color);
+      trail.setAttribute('stroke-width', isBacktrack ? '3.5' : '4');
+      trail.setAttribute('stroke-linecap','round'); trail.setAttribute('fill','none');
+      trail.setAttribute('stroke-dasharray', `${pathLen} ${pathLen}`);
+      trail.setAttribute('stroke-dashoffset', `${pathLen}`);
+      trail.setAttribute('filter', `url(#${fltId})`); trail.setAttribute('opacity','0.92');
       const animTrail = document.createElementNS('http://www.w3.org/2000/svg','animate');
-      animTrail.setAttribute('attributeName','stroke-dashoffset');
-      animTrail.setAttribute('from', `${pathLen}`);
-      animTrail.setAttribute('to','0');
-      animTrail.setAttribute('dur', `${travelDur}ms`);
-      animTrail.setAttribute('begin', `${delay}ms`);
-      animTrail.setAttribute('fill','freeze');
+      animTrail.setAttribute('attributeName','stroke-dashoffset'); animTrail.setAttribute('from', `${pathLen}`);
+      animTrail.setAttribute('to','0'); animTrail.setAttribute('dur', `${travelDur}ms`);
+      animTrail.setAttribute('begin', `${delay}ms`); animTrail.setAttribute('fill','freeze');
       trail.appendChild(animTrail);
-
-      // Fade trail out after it fully appears
       const animFadeT = document.createElementNS('http://www.w3.org/2000/svg','animate');
-      animFadeT.setAttribute('attributeName','opacity');
-      animFadeT.setAttribute('from','0.92');
-      animFadeT.setAttribute('to','0');
-      animFadeT.setAttribute('dur',`${duration * 0.38}ms`);
-      animFadeT.setAttribute('begin', `${delay + travelDur * 0.85}ms`);
-      animFadeT.setAttribute('fill','freeze');
-      trail.appendChild(animFadeT);
-
+      animFadeT.setAttribute('attributeName','opacity'); animFadeT.setAttribute('from','0.92'); animFadeT.setAttribute('to','0');
+      animFadeT.setAttribute('dur',`${duration * 0.38}ms`); animFadeT.setAttribute('begin', `${delay + travelDur * 0.85}ms`);
+      animFadeT.setAttribute('fill','freeze'); trail.appendChild(animFadeT);
       overlay.appendChild(trail);
 
-      // ── Moving arrowhead: a polygon that travels along the path ──
-      // animateMotion always moves element along path direction → arrowhead
-      // naturally points in the from→to direction regardless of angle.
-      // We use rotate="auto" so the polygon auto-rotates to face travel direction.
       const arrowG = document.createElementNS('http://www.w3.org/2000/svg','g');
       arrowG.setAttribute('filter', `url(#${fltId})`);
-
-      // Arrowhead polygon: tip at (9,0), base at (-2,±5) — points rightward by default
       const arrowPoly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
-      arrowPoly.setAttribute('points','-3,-5  9,0  -3,5');
-      arrowPoly.setAttribute('fill', color);
-      arrowPoly.setAttribute('opacity','0');
+      arrowPoly.setAttribute('points','-3,-5  9,0  -3,5'); arrowPoly.setAttribute('fill', color); arrowPoly.setAttribute('opacity','0');
       arrowG.appendChild(arrowPoly);
-
-      // animateMotion: travels from start of path to end — auto-rotates arrowhead
       const motionPath = document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
-      motionPath.setAttribute('dur', `${travelDur}ms`);
-      motionPath.setAttribute('begin', `${delay}ms`);
-      motionPath.setAttribute('fill','freeze');
-      motionPath.setAttribute('rotate','auto');            // ← auto-aligns to travel direction
-      motionPath.setAttribute('calcMode','linear');
-      // Path: from source to target (the full travel direction)
-      const mpathEl = document.createElementNS('http://www.w3.org/2000/svg','mpath');
-
-      // Instead of mpath href (requires id), use path attribute directly
-      motionPath.setAttribute('path', pathD);
+      motionPath.setAttribute('dur', `${travelDur}ms`); motionPath.setAttribute('begin', `${delay}ms`);
+      motionPath.setAttribute('fill','freeze'); motionPath.setAttribute('rotate','auto');
+      motionPath.setAttribute('calcMode','linear'); motionPath.setAttribute('path', pathD);
       arrowG.appendChild(motionPath);
-
-      // Make arrowhead visible when motion starts, hide after trail fades
       const arrowAppear = document.createElementNS('http://www.w3.org/2000/svg','animate');
-      arrowAppear.setAttribute('attributeName','opacity');
-      arrowAppear.setAttribute('values','0;1;1;0');
+      arrowAppear.setAttribute('attributeName','opacity'); arrowAppear.setAttribute('values','0;1;1;0');
       arrowAppear.setAttribute('keyTimes','0;0.05;0.85;1');
       arrowAppear.setAttribute('dur', `${travelDur + duration * 0.38}ms`);
-      arrowAppear.setAttribute('begin', `${delay}ms`);
-      arrowAppear.setAttribute('fill','freeze');
+      arrowAppear.setAttribute('begin', `${delay}ms`); arrowAppear.setAttribute('fill','freeze');
       arrowPoly.appendChild(arrowAppear);
-
       overlay.appendChild(arrowG);
 
-      // ── Cleanup ───────────────────────────────────────────────
       const cleanTimer = setTimeout(() => {
         if (trail.parentNode)  trail.parentNode.removeChild(trail);
         if (arrowG.parentNode) arrowG.parentNode.removeChild(arrowG);
@@ -1931,31 +1779,20 @@ main:
       }, delay + duration + 300);
       _arrowTimers.push(cleanTimer);
 
-      // ── Particles ─────────────────────────────────────────────
       dfsSpawnPathParticles(sx, sy, ex, ey, color, delay, isBacktrack ? 5 : 6);
     }
 
-    /* --- Spawn neon particles along edge path --- */
     function dfsSpawnPathParticles(sx, sy, ex, ey, color, delay, count) {
       const lc = document.getElementById('dfsLabelContainer');
       if (!lc) return;
       for (let k = 0; k < count; k++) {
         const t = setTimeout(() => {
           const frac = (k + 0.5) / count + (Math.random()-0.5)*0.15;
-          const px = sx + (ex-sx)*frac;
-          const py = sy + (ey-sy)*frac;
-
+          const px = sx + (ex-sx)*frac, py = sy + (ey-sy)*frac;
           const dot = document.createElement('div');
           dot.className = 'dfs-particle';
-          const offX = (Math.random()-0.5)*22;
-          const offY = (Math.random()-0.5)*22 - 10;
-          dot.style.cssText = `
-            left:${px-3}px; top:${py-3}px;
-            background:${color};
-            box-shadow: 0 0 6px ${color};
-            --px:${offX}px; --py:${offY}px;
-            animation: dfsParticleFloat ${280 + Math.random()*200}ms ease-out forwards;
-          `;
+          const offX = (Math.random()-0.5)*22, offY = (Math.random()-0.5)*22 - 10;
+          dot.style.cssText = `left:${px-3}px;top:${py-3}px;background:${color};box-shadow:0 0 6px ${color};--px:${offX}px;--py:${offY}px;animation:dfsParticleFloat ${280 + Math.random()*200}ms ease-out forwards;`;
           lc.appendChild(dot);
           setTimeout(() => { if(dot.parentNode) dot.parentNode.removeChild(dot); }, 600);
         }, delay + k * 35);
@@ -1963,67 +1800,38 @@ main:
       }
     }
 
-    /* --- Show floating label near midpoint of edge --- */
     function dfsShowEdgeLabel(fromNode, toNode, text, isBacktrack, delay, ttl) {
       if (fromNode < 0 || toNode < 0) return;
       if (!dfsNodePos[fromNode] || !dfsNodePos[toNode]) return;
       const lc = document.getElementById('dfsLabelContainer');
       if (!lc) return;
-
       const t = setTimeout(() => {
         const p1 = dfsNodePos[fromNode], p2 = dfsNodePos[toNode];
         const mx = (p1.x + p2.x)/2, my = (p1.y + p2.y)/2;
-
         const lbl = document.createElement('div');
         lbl.className = isBacktrack ? 'dfs-return-label' : 'dfs-call-label';
         lbl.textContent = text;
-        lbl.style.left = (mx - 55) + 'px';
-        lbl.style.top  = (my - 28) + 'px';
+        lbl.style.left = (mx - 55) + 'px'; lbl.style.top = (my - 28) + 'px';
         lc.appendChild(lbl);
-
-        // Trigger visible class on next frame
         requestAnimationFrame(() => requestAnimationFrame(() => lbl.classList.add('visible')));
-
-        // Remove after ttl
-        setTimeout(() => {
-          lbl.classList.remove('visible');
-          setTimeout(() => { if(lbl.parentNode) lbl.parentNode.removeChild(lbl); }, 300);
-        }, ttl);
+        setTimeout(() => { lbl.classList.remove('visible'); setTimeout(() => { if(lbl.parentNode) lbl.parentNode.removeChild(lbl); }, 300); }, ttl);
       }, delay);
       _arrowTimers.push(t);
     }
 
-    /* =====================================================
-       APPLY STEP — enhanced with arrow animations
-    ===================================================== */
     function dfsApplyStep(index) {
       if (index < 0 || index >= dfsSteps.length) return;
       const step = dfsSteps[index];
 
-      // Rebuild state from scratch
-      const nodeStates = {};
-      const edgeStates = {};
-      const localVis   = Array(dfsN).fill(0);
-      const travOrder  = [];
-      const stack      = [];
+      const nodeStates = {}, edgeStates = {}, localVis = Array(dfsN).fill(0);
+      const travOrder = [], stack = [];
       let calls = 0;
 
       for (let si = 0; si <= index; si++) {
         const s = dfsSteps[si];
-        if (s.type === 'enter') {
-          nodeStates[s.node] = 'active';
-          stack.push(s.node);
-          calls++;
-        }
-        if (s.type === 'mark') {
-          localVis[s.node] = 1;
-          travOrder.push(s.node);
-        }
-        if (s.type === 'recurse') {
-          // Normalise key: smaller_larger, but tag direction so render knows forward
-          const a = Math.min(s.node, s.neighbor), b = Math.max(s.node, s.neighbor);
-          edgeStates[`${a}_${b}`] = 'active';
-        }
+        if (s.type === 'enter')   { nodeStates[s.node] = 'active'; stack.push(s.node); calls++; }
+        if (s.type === 'mark')    { localVis[s.node] = 1; travOrder.push(s.node); }
+        if (s.type === 'recurse') { const a = Math.min(s.node, s.neighbor), b = Math.max(s.node, s.neighbor); edgeStates[`${a}_${b}`] = 'active'; }
         if (s.type === 'backtrack') {
           nodeStates[s.node] = s.depth === 0 ? 'visited' : 'backtrack';
           if (stack.length > 0 && stack[stack.length-1] === s.node) stack.pop();
@@ -2031,15 +1839,8 @@ main:
         }
         if (s.type === 'returnfrom') {
           const a = Math.min(s.node, s.child), b = Math.max(s.node, s.child);
-          // Only the CURRENT step gets backtracking; past returnfroms become visited
-          if (si === index) {
-            // Store direction: child → parent. child=s.child, parent=s.node
-            edgeStates[`${a}_${b}`] = 'backtracking';
-            // Also record which node is the child so render draws arrow correctly
-            edgeStates[`dir_${a}_${b}`] = s.child; // child is "from" node
-          } else {
-            edgeStates[`${a}_${b}`] = 'visited';
-          }
+          if (si === index) { edgeStates[`${a}_${b}`] = 'backtracking'; edgeStates[`dir_${a}_${b}`] = s.child; }
+          else              { edgeStates[`${a}_${b}`] = 'visited'; }
           nodeStates[s.child] = 'visited';
         }
       }
@@ -2051,97 +1852,67 @@ main:
       const ns = Object.assign({}, nodeStates, { _edges: edgeStates });
       dfsRenderGraph(ns);
 
-      // --- TRIGGER ANIMATIONS based on step type ---
       dfsClearArrows();
       const delay = dfsGetDelay();
 
       if (step.type === 'recurse' && step.node !== undefined && step.neighbor !== undefined) {
-        // Forward call arrow: parent → child
         dfsAnimateArrow(step.node, step.neighbor, false, 40, Math.min(delay * 0.8, 700));
         dfsShowEdgeLabel(step.node, step.neighbor, `DFS(${step.neighbor})`, false, 80, Math.min(delay * 0.7, 600));
       }
-
       if (step.type === 'backtrack' && step.parent !== null && step.parent !== undefined) {
-        // Backtracking arrow: current → parent
         dfsAnimateArrow(step.node, step.parent, true, 40, Math.min(delay * 0.85, 750));
         dfsShowEdgeLabel(step.node, step.parent, `↩ ${step.node}→${step.parent}`, true, 80, Math.min(delay * 0.75, 680));
       }
-
       if (step.type === 'returnfrom' && step.node !== undefined && step.child !== undefined) {
-        // Return flow animation
         dfsAnimateArrow(step.child, step.node, true, 20, Math.min(delay * 0.75, 650));
         dfsShowEdgeLabel(step.child, step.node, `Returning to ${step.node}`, true, 60, Math.min(delay * 0.65, 580));
       }
 
-      // Call stack display
       dfsCallStack = [...stack];
       dfsStackDepthBadge.textContent = dfsCallStack.length;
       dssDepth.textContent = dfsCallStack.length;
 
-      // Animate stack: pop on backtrack
       if (!dfsCallStack.length) {
         dfsStackList.innerHTML = '<div class="dfs-stack-empty">Stack is empty</div>';
       } else {
         dfsStackList.innerHTML = [...dfsCallStack].reverse().map((n, i) => {
           const isTop = i === 0;
-          const isBacktracking = step.type === 'backtrack' && n === step.node;
           let cls = 'dfs-stack-item';
           if (isTop && (step.type === 'backtrack' || step.type === 'returnfrom')) cls += ' top-back';
           else if (isTop) cls += ' top';
-          return `<div class="${cls}">
-            <span>DFS(${n})</span><span class="dfs-stack-depth">depth ${dfsCallStack.length-1-i}</span>
-           </div>`;
+          return `<div class="${cls}"><span>DFS(${n})</span><span class="dfs-stack-depth">depth ${dfsCallStack.length-1-i}</span></div>`;
         }).join('');
       }
 
-      // Visited array
       dfsVisitedArray.innerHTML = Array.from({length:dfsN},(_,i) =>
-        `<div style="
-          min-width:28px;height:28px;border-radius:6px;
-          background:${localVis[i]?'var(--accent-btn)':'var(--bg-page)'};
-          border:1.5px solid ${localVis[i]?'var(--accent-btn)':'var(--border-var)'};
-          color:${localVis[i]?'#fff':'var(--text-soft)'};
-          display:flex;align-items:center;justify-content:center;
-          font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;
-          transition:all 0.3s;">${i}</div>`
+        `<div style="min-width:28px;height:28px;border-radius:6px;background:${localVis[i]?'var(--accent-btn)':'var(--bg-page)'};border:1.5px solid ${localVis[i]?'var(--accent-btn)':'var(--border-var)'};color:${localVis[i]?'#fff':'var(--text-soft)'};display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;transition:all 0.3s;">${i}</div>`
       ).join('');
 
-      // Traversal chips
       dssTraversalList.innerHTML = travOrder.map((n,i) =>
         `<div class="dfs-trav-chip" style="animation-delay:${i*0.04}s">${n}</div>`).join('');
 
-      // Stats
       const visitedCount = travOrder.length;
-      dssCalls.textContent = calls;
-      dssVisited.textContent = visitedCount;
-      dsPillVisited.textContent = visitedCount;
-      dsPillCalls.textContent = calls;
+      dssCalls.textContent = calls; dssVisited.textContent = visitedCount;
+      dsPillVisited.textContent = visitedCount; dsPillCalls.textContent = calls;
       dsPillOrder.textContent = travOrder.join('→') || '—';
 
-      // Explanation
       dfsExplLog.push(step.msg);
       if (dfsExplLog.length > 20) dfsExplLog.shift();
       dfsExplanation.innerHTML = `<div>${step.msg}</div>`;
-      dfsHistory.innerHTML = dfsExplLog.slice(-6,-1).reverse()
-        .map(h=>`<div class="dfs-hist-item">${h}</div>`).join('');
+      dfsHistory.innerHTML = dfsExplLog.slice(-6,-1).reverse().map(h=>`<div class="dfs-hist-item">${h}</div>`).join('');
 
-      // Code highlight
       dfsHighlight(step.codeLine);
-
-      // Progress
       dfsStepLabel.textContent = `Step ${index+1}`;
       dfsTotalLabel.textContent = `of ${dfsSteps.length}`;
       dfsProgressFill.style.width = ((index+1)/dfsSteps.length*100) + '%';
     }
 
-    /* --- Code highlight --- */
     function dfsHighlight(line) {
       document.querySelectorAll('.dfs-code-line').forEach(el => el.classList.remove('highlighted'));
       const t = document.querySelector(`.dfs-code-line[data-line="${line}"]`);
       if (t) t.classList.add('highlighted');
     }
 
-    /* --- Runner --- */
     function dfsGetDelay() { return DFS_SPEED_MAP[dfsSpeedSlider.value-1] || 480; }
 
     async function dfsRunSim() {
@@ -2151,10 +1922,9 @@ main:
         await dfsSleep(dfsGetDelay());
       }
       if (dfsCurrentStep >= dfsSteps.length-1 && dfsIsRunning) {
-        dfsIsRunning = false;
-        dfsClearArrows();
+        dfsIsRunning = false; dfsClearArrows();
         dfsSetBtnState('done');
-        const order = dfsSteps.filter(s=>s.type==='print').map(s=>s.node).join(' → ');
+        const order  = dfsSteps.filter(s=>s.type==='print').map(s=>s.node).join(' → ');
         const visits = dfsSteps.filter(s=>s.type==='print').length;
         const callCount = dfsSteps.filter(s=>s.type==='enter').length;
         dfsStatus.textContent = `✅ DFS complete: ${order}`;
@@ -2165,7 +1935,6 @@ main:
     }
     function dfsSleep(ms) { return new Promise(r=>{ dfsAnimTimer=setTimeout(r,ms); }); }
 
-    /* --- Button state --- */
     function dfsSetBtnState(state) {
       dfsBtnStart.disabled  = state==='running'||state==='paused';
       dfsBtnPause.disabled  = state!=='running';
@@ -2174,7 +1943,6 @@ main:
       dfsBtnNext.disabled   = state==='running'||dfsCurrentStep>=dfsSteps.length-1;
     }
 
-    /* --- Finalize result tab --- */
     function dfsFinalizeResult(order, visits, callCount) {
       document.getElementById('result-pending').style.display='none';
       document.getElementById('result-inprogress').style.display='none';
@@ -2212,18 +1980,14 @@ main:
       document.getElementById('result-live').style.display = '';
     }
 
-    /* --- Load sample graph --- */
     function dfsLoadSample() {
       dfsInitGraph(6);
-      // Sample: 0-1, 0-2, 1-3, 1-4, 2-5
       [[0,1],[0,2],[1,3],[1,4],[2,5]].forEach(([a,b])=>dfsAddEdge(a,b));
       dfsStatus.textContent = 'Sample graph loaded — press Start DFS';
       dfsStatus.className = 'dfs-status';
     }
 
-    /* --- Tooltip --- */
     function dfsShowTip(e, id) {
-      const vis = dfsVisitedArr[id] || 0;
       const neighbors = dfsGraph[id] ? dfsGraph[id].map((v,j)=>v?j:-1).filter(j=>j>=0) : [];
       dfsTooltip.innerHTML = `Node ${id} · Neighbors: [${neighbors.join(',')||'none'}]`;
       dfsTooltip.classList.add('visible'); dfsMoveTip(e);
@@ -2231,30 +1995,25 @@ main:
     function dfsMoveTip(e) { dfsTooltip.style.left=(e.clientX+14)+'px'; dfsTooltip.style.top=(e.clientY-30)+'px'; }
     function dfsHideTip()  { dfsTooltip.classList.remove('visible'); }
 
-    /* --- Toast --- */
     let dfsToastTimer = null;
     function dfsShowToast(msg) {
       dfsToast.textContent = msg; dfsToast.classList.add('show');
       clearTimeout(dfsToastTimer); dfsToastTimer = setTimeout(()=>dfsToast.classList.remove('show'), 2800);
     }
 
-    /* --- Full reset --- */
     function dfsDoReset() {
-      clearTimeout(dfsAnimTimer);
-      dfsClearArrows();
+      clearTimeout(dfsAnimTimer); dfsClearArrows();
       dfsIsRunning = false; dfsIsPaused = false;
       dfsCurrentStep = -1; dfsSteps = [];
       dfsCallStack = []; dfsExplLog = [];
       dfsStackList.innerHTML = '<div class="dfs-stack-empty">Stack is empty</div>';
-      dfsStackDepthBadge.textContent = '0';
-      dssDepth.textContent = '0'; dssCalls.textContent = '0'; dssVisited.textContent = '0';
-      dssTraversalList.innerHTML = '';
-      dfsVisitedArray.innerHTML = '';
+      dfsStackDepthBadge.textContent = '0'; dssDepth.textContent = '0';
+      dssCalls.textContent = '0'; dssVisited.textContent = '0';
+      dssTraversalList.innerHTML = ''; dfsVisitedArray.innerHTML = '';
       dfsProgressFill.style.width = '0%';
       dfsStepLabel.textContent = 'Step 0'; dfsTotalLabel.textContent = 'of 0';
       dfsExplanation.innerHTML = '<span class="dfs-explanation-idle">Load a graph and start DFS to see explanations.</span>';
-      dfsHistory.innerHTML = '';
-      dfsHighlight(-1);
+      dfsHistory.innerHTML = ''; dfsHighlight(-1);
       dsPillVisited.textContent = '0'; dsPillCalls.textContent = '0'; dsPillOrder.textContent = '—';
       dfsStatus.textContent = 'Load a sample graph and press Start DFS';
       dfsStatus.className = 'dfs-status';
@@ -2262,13 +2021,10 @@ main:
       document.getElementById('result-live').style.display='none';
       document.getElementById('result-pending').style.display='';
       dfsSetBtnState('idle');
-      // Re-render graph without states
       if (dfsN > 0) dfsRenderGraph();
     }
 
-    /* =====================================================
-       BUTTON HANDLERS
-    ===================================================== */
+    /* ---- Button handlers ---- */
     dfsBtnStart.addEventListener('click', () => {
       if (dfsN < 2) { showDfsError('Please load a graph first (click Sample Graph).'); return; }
       hideDfsError();
@@ -2277,16 +2033,13 @@ main:
       dfsExplLog = []; dfsCallStack = [];
       dfsStackList.innerHTML = '<div class="dfs-stack-empty">Stack is empty</div>';
       dssTraversalList.innerHTML = '';
-
-      const totalCalls = dfsBuildSteps();
+      dfsBuildSteps();
       dfsProgressFill.style.width = '0%';
       dfsStepLabel.textContent = 'Step 0';
       dfsTotalLabel.textContent = `of ${dfsSteps.length}`;
-
       document.getElementById('result-pending').style.display='none';
       document.getElementById('result-live').style.display='none';
       document.getElementById('result-inprogress').style.display='';
-
       dfsIsRunning = true;
       dfsStatus.textContent = `Running DFS from vertex 0…`;
       dfsStatus.className = 'dfs-status running';
@@ -2296,38 +2049,29 @@ main:
 
     dfsBtnPause.addEventListener('click', () => {
       dfsIsPaused = true; dfsIsRunning = false;
-      clearTimeout(dfsAnimTimer);
-      dfsClearArrows();
-      dfsStatus.textContent = '⏸ Paused';
-      dfsStatus.className = 'dfs-status';
+      clearTimeout(dfsAnimTimer); dfsClearArrows();
+      dfsStatus.textContent = '⏸ Paused'; dfsStatus.className = 'dfs-status';
       dfsSetBtnState('paused');
     });
 
     dfsBtnResume.addEventListener('click', () => {
       if (!dfsIsPaused) return;
       dfsIsPaused = false; dfsIsRunning = true;
-      dfsStatus.textContent = '▶ Resumed…';
-      dfsStatus.className = 'dfs-status running';
-      dfsSetBtnState('running');
-      dfsRunSim();
+      dfsStatus.textContent = '▶ Resumed…'; dfsStatus.className = 'dfs-status running';
+      dfsSetBtnState('running'); dfsRunSim();
     });
 
     dfsBtnPrev.addEventListener('click', () => {
       if (dfsCurrentStep <= 0) { dfsCurrentStep = -1; dfsDoReset(); return; }
       dfsIsPaused = true; dfsIsRunning = false;
-      dfsCurrentStep--;
-      // Re-apply from scratch up to current step
-      dfsExplLog = [];
-      dfsApplyStep(dfsCurrentStep);
-      dfsSetBtnState('paused');
+      dfsCurrentStep--; dfsExplLog = [];
+      dfsApplyStep(dfsCurrentStep); dfsSetBtnState('paused');
     });
 
     dfsBtnNext.addEventListener('click', () => {
       if (dfsCurrentStep >= dfsSteps.length-1) return;
       dfsIsPaused = true; dfsIsRunning = false;
-      dfsCurrentStep++;
-      dfsApplyStep(dfsCurrentStep);
-      dfsSetBtnState('paused');
+      dfsCurrentStep++; dfsApplyStep(dfsCurrentStep); dfsSetBtnState('paused');
       if (dfsCurrentStep >= dfsSteps.length-1) {
         dfsSetBtnState('done');
         const order = dfsSteps.filter(s=>s.type==='print').map(s=>s.node).join(' → ');
@@ -2337,25 +2081,18 @@ main:
       }
     });
 
-    dfsBtnReset.addEventListener('click', () => { dfsDoReset(); });
+    dfsBtnReset.addEventListener('click', () => dfsDoReset());
 
-    dfsBtnSample.addEventListener('click', () => {
-      dfsDoReset();
-      dfsLoadSample();
-    });
+    dfsBtnSample.addEventListener('click', () => { dfsDoReset(); dfsLoadSample(); });
 
     dfsBtnAddEdge.addEventListener('click', () => {
-      const from = parseInt(dfsEdgeFrom.value);
-      const to   = parseInt(dfsEdgeTo.value);
-      dfsAddEdge(from, to);
+      dfsAddEdge(parseInt(dfsEdgeFrom.value), parseInt(dfsEdgeTo.value));
     });
 
     dfsBtnSetNodes.addEventListener('click', () => {
       const n = parseInt(dfsNodeCountInput.value);
       if (isNaN(n) || n < 2 || n > 10) { showDfsError('Please enter 2–10 vertices.'); return; }
-      hideDfsError();
-      dfsDoReset();
-      dfsInitGraph(n);
+      hideDfsError(); dfsDoReset(); dfsInitGraph(n);
       dfsEmptyState.classList.add('hidden');
       dfsStatus.textContent = `Graph with ${n} vertices ready — add edges then Start DFS`;
     });
@@ -2363,24 +2100,19 @@ main:
     dfsBtnClearEdges.addEventListener('click', () => {
       if (dfsN === 0) return;
       dfsDoReset();
-      const n = dfsN;
-      dfsGraph = Array.from({length:n}, ()=>Array(n).fill(0));
-      dfsEdges = [];
-      dfsRenderGraph();
-      dfsUpdatePills();
+      dfsGraph = Array.from({length:dfsN}, ()=>Array(dfsN).fill(0));
+      dfsEdges = []; dfsRenderGraph(); dfsUpdatePills();
       dfsStatus.textContent = 'Edges cleared — add edges then Start DFS';
     });
 
-    /* Resize observer to recompute layout */
     if (typeof ResizeObserver !== 'undefined') {
       new ResizeObserver(() => {
         if (dfsN > 0) { dfsComputeLayout(); dfsRenderGraph(); }
       }).observe(dfsGraphZone);
     }
 
-    /* --- Initial state --- */
     dfsSetBtnState('idle');
   </script>
-
+  <script src="../js/portal.js"></script>
 </body>
 </html>

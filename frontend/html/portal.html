@@ -18,26 +18,18 @@
 
   <header class="portal-header">
     <div class="header-left">
-      <button class="icon-btn sidebar-toggle" id="sidebar-toggle-btn" aria-label="Toggle Sidebar">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
       <a href="" aria-label="LabMate home">
-        <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+        <img src="../assets/images/LabMateLogo2.png" alt="LabMate Logo" class="portal-logo" />
       </a>
       <div class="college-info">
         <h1 class="college-name">Aditya University</h1>
         <span class="stream-badge">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          <!-- <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             style="vertical-align:-1px;margin-right:3px">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"></path>
             <path d="M4.93 4.93l14.14 14.14"></path>
-          </svg>
+          </svg> -->
           AIML Stream
         </span>
       </div>
@@ -118,9 +110,9 @@
 
       <div class="profile-dropdown">
         <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
-          <div class="profile-avatar">S</div>
+          <div class="profile-avatar">LA</div>
           <div class="profile-name-tag">
-            <span class="prof-name">Santhosh</span>
+            <span class="prof-name">LabMate</span>
             <span class="prof-roll">24P31A42XX</span>
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -132,9 +124,9 @@
 
         <div class="dropdown-menu">
           <div class="dropdown-header">
-            <div class="dh-avatar">S</div>
+            <div class="dh-avatar">LA</div>
             <div>
-              <strong>Santhosh</strong>
+              <strong>LabMate</strong>
               <span>24P31A42XX · AIML</span>
             </div>
           </div>
@@ -173,265 +165,43 @@
   </header>
 
   <div class="portal-layout">
-
-    <aside class="portal-sidebar" aria-label="Stream subjects navigation">
-      <div class="sidebar-accordion">
-        <button class="sidebar-accordion-btn" id="my-labs-toggle" aria-expanded="true">
-          <span style="display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-            </svg>
-            My Labs
-          </span>
-          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-
-        <nav class="sidebar-nav accordion-content" id="my-labs-content">
-          <a href="c_programming_lab.html" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg>
-            </span>
-            <span class="subj-label">C Programming</span>
-            <span class="subj-count">1 lab</span>
-          </a>
-
-          <a href="physics_lab.html" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3" />
-                <path
-                  d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" />
-              </svg>
-            </span>
-            <span class="subj-label">Physics</span>
-            <span class="subj-count">1 lab</span>
-          </a>
-
-          <a href="chemistry_lab.html" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path
-                  d="M10 2v7.31M14 2v7.31M8.5 2h7M7 21h10a2 2 0 0 0 2-2v-5.26a1 1 0 0 0-.27-.68L14.4 8.7V2H9.6v6.7l-4.32 4.36a1 1 0 0 0-.28.68V19a2 2 0 0 0 2 2z" />
-              </svg>
-            </span>
-            <span class="subj-label">Chemistry</span>
-            <span class="subj-count">1 lab</span>
-          </a>
-        </nav>
-      </div>
-
-      <div class="sidebar-accordion">
-        <button class="sidebar-accordion-btn" id="lab-tests-toggle" aria-expanded="true">
-          <span style="display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-            Lab Tests
-          </span>
-          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-
-        <nav class="sidebar-nav accordion-content" id="lab-tests-content">
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </span>
-            <span class="subj-label">Internal</span>
-          </a>
-
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="17 8 12 3 7 8"></polyline>
-                <line x1="12" y1="3" x2="12" y2="15"></line>
-              </svg>
-            </span>
-            <span class="subj-label">External</span>
-          </a>
-        </nav>
-      </div>
-
-      <div class="sidebar-accordion">
-        <button class="sidebar-accordion-btn" id="records-toggle" aria-expanded="true">
-          <span style="display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-            Academic Records
-          </span>
-          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-
-        <nav class="sidebar-nav accordion-content" id="records-content">
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-              </svg>
-            </span>
-            <span class="subj-label">Observation Books</span>
-          </a>
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="17 8 12 3 7 8"></polyline>
-                <line x1="12" y1="3" x2="12" y2="15"></line>
-              </svg>
-            </span>
-            <span class="subj-label">Final PDFs</span>
-          </a>
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="20" x2="18" y2="10"></line>
-                <line x1="12" y1="20" x2="12" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="14"></line>
-              </svg>
-            </span>
-            <span class="subj-label">Analytics</span>
-          </a>
-        </nav>
-      </div>
-
-      <div class="sidebar-accordion">
-        <button class="sidebar-accordion-btn" id="notice-toggle" aria-expanded="true">
-          <span style="display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path>
-            </svg>
-            Announcements
-          </span>
-          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-
-        <nav class="sidebar-nav accordion-content" id="notice-content">
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </span>
-            <span class="subj-label">Recent Updates</span>
-          </a>
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-              </svg>
-            </span>
-            <span class="subj-label">Lecturer Notices</span>
-          </a>
-        </nav>
-      </div>
-
-      <div class="sidebar-accordion">
-        <button class="sidebar-accordion-btn" id="activity-toggle" aria-expanded="true">
-          <span style="display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            Recent Activity
-          </span>
-          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-
-        <nav class="sidebar-nav accordion-content" id="activity-content">
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-              </svg>
-            </span>
-            <span class="subj-label">Last Experiment</span>
-          </a>
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-            </span>
-            <span class="subj-label">Pending Labs</span>
-          </a>
-          <a href="#" class="subject-link" style="text-decoration:none;">
-            <span class="subj-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-            </span>
-            <span class="subj-label">Recently Graded</span>
-          </a>
-        </nav>
-      </div>
-
-    </aside>
-
     <main class="portal-main" id="portal-main">
 
+      <!-- ══ WELCOME BANNER (UNCHANGED) ══ -->
       <section class="welcome-banner" aria-label="Welcome banner">
-        <div class="welcome-text">
-          <h2>Welcome back, <span class="welcome-name">Santhosh</span> 👋</h2>
-          <p class="welcome-subtitle">
-            Ready to explore your virtual laboratories? You have <strong style="color: #ffeb3b; font-weight: 600;">1
-              pending assignments</strong> this week. Stay curious and let's build something amazing today!
-          </p>
-          <div class="welcome-meta-row">
-            <span class="welcome-meta-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              </svg> Aditya University</span>
-            <span class="welcome-meta-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
-              </svg> AIML Stream</span>
-          </div>
+        <div class="welcome-profile">
+          <img src="https://ui-avatars.com/api/?name=LabMate&background=1a88d0&color=fff&size=80&bold=true"
+            alt="LabMate Profile" class="welcome-avatar" />
         </div>
+        <div class="welcome-text">
+  <div class="welcome-date" id="welcome-date">Loading date...</div>
+  <h2>Welcome back, <span class="welcome-name">LabMate</span> 👋</h2>
+  
+  <p class="welcome-quote">
+    <span class="quote-mark">“</span>
+    <span id="student-bio">The best way to predict the future is to create it...</span>
+    <span class="quote-mark">”</span>
+  </p>
+
+  <div class="welcome-meta-row">
+    <span class="welcome-meta-chip" id="student-meta">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+      </svg> 
+      <span id="meta-text">Loading Details...</span>
+    </span>
+  </div>
+</div>
         <div class="welcome-art" aria-hidden="true">
           <div class="art-ring art-ring-1"></div>
           <div class="art-ring art-ring-2"></div>
           <div class="art-ring art-ring-3"></div>
-          <span class="art-icon">⚗️</span>
+          <span class="art-icon">🚀</span>
         </div>
       </section>
 
+      <!-- ══ DASHBOARD OVERVIEW (UNCHANGED) ══ -->
       <section class="dashboard-overview" aria-label="Dashboard overview">
         <div class="stat-card">
           <div class="stat-icon" style="background:rgba(26,136,208,0.1);color:var(--teal)">
@@ -441,7 +211,7 @@
             </svg>
           </div>
           <div class="stat-info">
-            <span class="stat-value" id="stat-total">—</span>
+            <span class="stat-value" id="stat-total">0</span>
             <span class="stat-label">Labs Assigned</span>
           </div>
         </div>
@@ -452,7 +222,7 @@
             </svg>
           </div>
           <div class="stat-info">
-            <span class="stat-value" id="stat-done">—</span>
+            <span class="stat-value" id="stat-done">0</span>
             <span class="stat-label">Completed</span>
           </div>
         </div>
@@ -464,7 +234,7 @@
             </svg>
           </div>
           <div class="stat-info">
-            <span class="stat-value" id="stat-pending">—</span>
+            <span class="stat-value" id="stat-pending">0</span>
             <span class="stat-label">Pending</span>
           </div>
         </div>
@@ -476,131 +246,527 @@
             </svg>
           </div>
           <div class="stat-info">
-            <span class="stat-value" id="stat-score">—</span>
+            <span class="stat-value" id="stat-score">0%</span>
             <span class="stat-label">Overall Score</span>
           </div>
         </div>
       </section>
 
-      <div class="portal-content-grid">
+      <!-- ══════════════════════════════════════════
+           TOP METRICS ROW: Leaderboard | Labs Mastery | Upcoming Exams
+           (Placed ABOVE My Labs as required)
+      ══════════════════════════════════════════ -->
+      <div class="metrics-row-top">
 
-        <div class="grid-left">
+        <!-- 1. STREAM LEADERBOARD (Fully Redesigned) -->
+        <section class="pw-card pw-leaderboard" id="leaderboard-section" data-modal="leaderboard-modal">
+          <div class="pw-card-header">
+            <div class="pw-header-left">
+              <span class="pw-eyebrow">Weekly Rankings</span>
+              <h3 class="pw-title">Stream Leaderboard</h3>
+            </div>
+            <span class="pw-pill">AIML</span>
+          </div>
+          <div class="lb-table">
+            <div class="lb-thead">
+              <span class="lb-col-rank">Rank</span>
+              <span class="lb-col-student">Student</span>
+              <span class="lb-col-score">Score</span>
+            </div>
 
-          <section class="portal-widget" id="labs-section" aria-labelledby="labs-heading">
-            <div class="widget-header">
-              <h3 id="labs-heading">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                  style="vertical-align:-2px;margin-right:6px">
-                  <path
-                    d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5a2 2 0 0 1-2-2V5m6 9h10a2 2 0 0 0 2-2V5M9 14v7m0 0H5a2 2 0 0 1-2-2v-3m6 5h10a2 2 0 0 0 2-2v-3" />
+            <!-- Rank 1 -->
+            <div class="lb-row lb-gold">
+              <div class="lb-col-rank">
+                <div class="lb-badge lb-badge-gold">1</div>
+              </div>
+              <div class="lb-col-student">
+                <div class="lb-avatar lb-avatar-gold">
+                  <img src="https://ui-avatars.com/api/?name=TSR&background=f1c40f&color=fff&bold=true" alt="TSR">
+                  <span class="lb-crown">👑</span>
+                </div>
+                <div class="lb-info">
+                  <span class="lb-name">TSR</span>
+                  <span class="lb-sub">AIML · <em class="lb-neutral">— Level 0</em></span>
+                </div>
+              </div>
+              <div class="lb-col-score">
+                <span class="lb-val">0%</span>
+                <div class="lb-bar">
+                  <div class="lb-fill" style="width:0%;background:#f1c40f"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rank 2 — YOU -->
+            <div class="lb-row lb-you">
+              <div class="lb-col-rank">
+                <div class="lb-badge lb-badge-silver">2</div>
+              </div>
+              <div class="lb-col-student">
+                <div class="lb-avatar lb-avatar-silver">
+                  <img src="https://ui-avatars.com/api/?name=LabMate&background=1a88d0&color=fff&bold=true" alt="You">
+                </div>
+                <div class="lb-info">
+                  <span class="lb-name lb-name-you">LabMate <em class="lb-you-tag">(You)</em></span>
+                  <span class="lb-sub">AIML · <em class="lb-neutral">— Level 0</em></span>
+                </div>
+              </div>
+              <div class="lb-col-score">
+                <span class="lb-val lb-val-you">0%</span>
+                <div class="lb-bar">
+                  <div class="lb-fill" style="width:0%;background:#1a88d0"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rank 3 -->
+            <div class="lb-row">
+              <div class="lb-col-rank">
+                <div class="lb-badge lb-badge-bronze">3</div>
+              </div>
+              <div class="lb-col-student">
+                <div class="lb-avatar lb-avatar-bronze">
+                  <img src="https://ui-avatars.com/api/?name=Siddhi&background=cd7f32&color=fff&bold=true" alt="Siddhi">
+                </div>
+                <div class="lb-info">
+                  <span class="lb-name">Siddhi</span>
+                  <span class="lb-sub">AIML · <em class="lb-neutral">— Level 0</em></span>
+                </div>
+              </div>
+              <div class="lb-col-score">
+                <span class="lb-val">0%</span>
+                <div class="lb-bar">
+                  <div class="lb-fill" style="width:0%;background:#cd7f32"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rank 4 -->
+            <div class="lb-row lb-last">
+              <div class="lb-col-rank">
+                <div class="lb-badge">4</div>
+              </div>
+              <div class="lb-col-student">
+                <div class="lb-avatar">
+                  <img src="https://ui-avatars.com/api/?name=Ganesh&background=95a5a6&color=fff&bold=true" alt="Ganesh">
+                </div>
+                <div class="lb-info">
+                  <span class="lb-name">Ganesh</span>
+                  <span class="lb-sub">AIML · Rising</span>
+                </div>
+              </div>
+              <div class="lb-col-score">
+                <span class="lb-val">0%</span>
+                <div class="lb-bar">
+                  <div class="lb-fill" style="width:0%;background:#95a5a6"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. LABS MASTERY (Fully Redesigned, renamed from Course Mastery) -->
+        <section class="pw-card pw-mastery" id="mastery-section" data-modal="mastery-modal">
+          <div class="pw-card-header">
+            <div class="pw-header-left">
+              <span class="pw-eyebrow">Performance</span>
+              <h3 class="pw-title">Labs Mastery</h3>
+            </div>
+            <span class="pw-pill pw-pill-green">0%</span>
+          </div>
+          <div class="mastery-body">
+            <div class="mastery-ring-wrap">
+              <div class="mastery-ring" data-percent="0">
+                <svg class="ring-svg" width="110" height="110" viewBox="0 0 110 110">
+                  <circle class="ring-bg" cx="55" cy="55" r="46" stroke="var(--border)" stroke-width="9" fill="none" />
+                  <circle class="ring-fill" cx="55" cy="55" r="46" stroke="var(--teal)" stroke-width="9" fill="none"
+                    stroke-dasharray="289" stroke-dashoffset="289" stroke-linecap="round"
+                    transform="rotate(-90 55 55)" />
                 </svg>
-                My Labs
-              </h3>
+                <span class="ring-label">0%</span>
+              </div>
             </div>
-
-            <div class="labs-card-grid">
-
-              <a href="c_programming_lab.html" class="lab-card-link">
-                <div class="lab-card">
-                  <div class="lab-card-top">
-                    <span class="lab-card-emoji">💻</span>
-                  </div>
-                  <div class="lab-card-bottom">
-                    <h4>C Programming Lab</h4>
-                    <span class="lab-card-badge">COMPUTERS</span>
-                    <p>Visualise arrays, strings, pointers, and sorting techniques with interactive step-by-step
-                      simulations.</p>
-
-                  </div>
+            <div class="mastery-stats">
+              <div class="ms-item">
+                <div class="ms-top">
+                  <span class="ms-name">C Labs</span>
+                  <span class="ms-count">0/15</span>
                 </div>
-              </a>
-
-              <a href="data_structures_lab.html" class="lab-card-link">
-                <div class="lab-card">
-                  <div class="lab-card-top">
-                    <span class="lab-card-emoji">👨‍💻</span>
-                  </div>
-                  <div class="lab-card-bottom">
-                    <h4>Data Structures Lab</h4>
-                    <span class="lab-card-badge">COMPUTERS</span>
-                    <p>Mastering efficient problem-solving through practical implementation of data structures and algorithms.
-</p>
-
-                  </div>
+                <div class="ms-bar">
+                  <div class="ms-fill" style="width:0%;background:var(--teal)"></div>
                 </div>
-              </a>
-
-              <a href="physics_lab.html" class="lab-card-link">
-                <div class="lab-card">
-                  <div class="lab-card-top">
-                    <span class="lab-card-emoji">⚡</span>
-                  </div>
-                  <div class="lab-card-bottom">
-                    <h4>Physics Lab</h4>
-                    <span class="lab-card-badge">BASIC SCIENCE</span>
-                    <p>Build and test circuits, optics, and mechanics experiments in a risk-free virtual environment.
-                    </p>
-
-                  </div>
+              </div>
+              <div class="ms-item">
+                <div class="ms-top">
+                  <span class="ms-name">Physics</span>
+                  <span class="ms-count">0/12</span>
                 </div>
-              </a>
-
-              <a href="chemistry_lab.html" class="lab-card-link">
-                <div class="lab-card">
-                  <div class="lab-card-top">
-                    <span class="lab-card-emoji">🧪</span>
-                  </div>
-                  <div class="lab-card-bottom">
-                    <h4>Chemistry Lab</h4>
-                    <span class="lab-card-badge">BASIC SCIENCE</span>
-                    <p>Simulate titrations, chemical reactions, and molecular structures with real-time graphs and
-                      safety.</p>
-
-                  </div>
+                <div class="ms-bar">
+                  <div class="ms-fill" style="width:0%;background:#9b59b6"></div>
                 </div>
-              </a>
-
+              </div>
+              <div class="ms-item">
+                <div class="ms-top">
+                  <span class="ms-name">BEEE</span>
+                  <span class="ms-count">0/10</span>
+                </div>
+                <div class="ms-bar">
+                  <div class="ms-fill" style="width:0%;background:#2ecc71"></div>
+                </div>
+              </div>
+              <div class="ms-item">
+                <div class="ms-top">
+                  <span class="ms-name">DSA</span>
+                  <span class="ms-count">0/15</span>
+                </div>
+                <div class="ms-bar">
+                  <div class="ms-fill" style="width:0%;background:#f39c12"></div>
+                </div>
+              </div>
             </div>
-          </section>
+          </div>
+        </section>
 
+        <!-- 3. UPCOMING EXAMS (Fully Redesigned) -->
+        <section class="pw-card pw-exams" id="exams-section" data-modal="exams-modal">
+          <div class="pw-card-header">
+            <div class="pw-header-left">
+              <span class="pw-eyebrow">Schedule</span>
+              <h3 class="pw-title">Upcoming Exams</h3>
+            </div>
+            <span class="pw-pill pw-pill-red">0 Total</span>
+          </div>
+          <div class="exams-list">
+            <div class="exam-card exam-internal">
+              <div class="exam-date-block">
+                <span class="exam-day">15</span>
+                <span class="exam-mon">MAY</span>
+              </div>
+              <div class="exam-info">
+                <h5 class="exam-name">Assessment - I</h5>
+                <span class="exam-meta">Physics · Hall 4</span>
+                <span class="exam-type exam-type-int">Internal</span>
+              </div>
+            </div>
+            <div class="exam-card exam-internal">
+              <div class="exam-date-block">
+                <span class="exam-day">18</span>
+                <span class="exam-mon">MAY</span>
+              </div>
+              <div class="exam-info">
+                <h5 class="exam-name">Mid-Term</h5>
+                <span class="exam-meta">C Prog · CS Lab 2</span>
+                <span class="exam-type exam-type-int">Internal</span>
+              </div>
+            </div>
+            <div class="exam-card exam-external">
+              <div class="exam-date-block exam-date-highlight">
+                <span class="exam-day">02</span>
+                <span class="exam-mon">JUN</span>
+              </div>
+              <div class="exam-info">
+                <h5 class="exam-name">Final Practical</h5>
+                <span class="exam-meta">BEEE · Main Lab</span>
+                <span class="exam-type exam-type-ext">External</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- end metrics-row-top -->
+
+      <!-- ══════════════════════════════════════════
+           MY LABS SECTION (UNCHANGED, just moved below metrics)
+      ══════════════════════════════════════════ -->
+      <section class="portal-widget full-width-labs">
+        <div class="widget-header-simple">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            style="color: var(--text-primary);">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <h3>My Labs</h3>
         </div>
-      </div>
-  </div>
-  </main>
-  </div>
+        <div class="labs-scroll-area">
+          <div class="labs-card-grid-full">
+            <a href="c_programming_lab.html" class="lab-card-link lab-item">
+              <div class="lab-card-ref">
+                <div class="lcr-top"><span class="lcr-emoji">💻</span></div>
+                <div class="lcr-bottom">
+                  <h4 class="lcr-title">C Programming Lab</h4>
+                  <span class="lcr-badge badge-computers">COMPUTERS</span>
+                  <p class="lcr-desc">Visualise arrays, strings, pointers, and sorting techniques with interactive
+                    step-by-step simulations.</p>
+                </div>
+              </div>
+            </a>
+            <a href="../html/data_structures_lab.html" class="lab-card-link lab-item">
+              <div class="lab-card-ref">
+                <div class="lcr-top"><span class="lcr-emoji">🌳</span></div>
+                <div class="lcr-bottom">
+                  <h4 class="lcr-title">Data Structures Lab</h4>
+                  <span class="lcr-badge badge-computers">COMPUTERS</span>
+                  <p class="lcr-desc">Mastering efficient problem-solving through practical implementation of data
+                    structures and algorithms.</p>
+                </div>
+              </div>
+            </a>
+            <a href="physics_lab.html" class="lab-card-link lab-item">
+              <div class="lab-card-ref">
+                <div class="lcr-top"><span class="lcr-emoji">⚡</span></div>
+                <div class="lcr-bottom">
+                  <h4 class="lcr-title">Physics Lab</h4>
+                  <span class="lcr-badge badge-science">BASIC SCIENCE</span>
+                  <p class="lcr-desc">Build and test circuits, optics, and mechanics experiments in a risk-free virtual
+                    environment.</p>
+                </div>
+              </div>
+            </a>
+            <a href="chemistry_lab.html" class="lab-card-link lab-item">
+              <div class="lab-card-ref">
+                <div class="lcr-top"><span class="lcr-emoji">📟</span></div>
+                <div class="lcr-bottom">
+                  <h4 class="lcr-title">BEEE Lab</h4>
+                  <span class="lcr-badge badge-science">BASIC SCIENCE</span>
+                  <p class="lcr-desc">Simulate electrical circuits, voltage-current characteristics, and power analysis with real-time
+graphs and safe virtual experimentation.</p>
+                </div>
+              </div>
+            </a>
+            <a href="java_lab.html" class="lab-card-link lab-item">
+              <div class="lab-card-ref">
+                <div class="lcr-top"><span class="lcr-emoji">☕</span></div>
+                <div class="lcr-bottom">
+                  <h4 class="lcr-title">Java Lab</h4>
+                  <span class="lcr-badge badge-computers">COMPUTERS</span>
+                  <p class="lcr-desc">Explore Object-Oriented Programming concepts, multithreading, and collections
+                    with visual debuggers.</p>
+                </div>
+              </div>
+            </a>
+            <a href="advance_dsa_lab.html" class="lab-card-link lab-item">
+              <div class="lab-card-ref">
+                <div class="lcr-top"><span class="lcr-emoji">🏗️</span></div>
+                <div class="lcr-bottom">
+                  <h4 class="lcr-title">Advance DSA</h4>
+                  <span class="lcr-badge badge-computers">COMPUTERS</span>
+                  <p class="lcr-desc">Dive deep into advanced algorithms like Dynamic Programming, Graphs, and Greedy
+                    strategies.</p>
+                </div>
+              </div>
+            </a>
+            <a href="ml_lab.html" class="lab-card-link lab-item">
+              <div class="lab-card-ref">
+                <div class="lcr-top"><span class="lcr-emoji">🧠</span></div>
+                <div class="lcr-bottom">
+                  <h4 class="lcr-title">Machine Learning Lab</h4>
+                  <span class="lcr-badge badge-computers">COMPUTERS</span>
+                  <p class="lcr-desc">Interactive visualisations of regression, classification, and neural network
+                    training processes.</p>
+                </div>
+              </div>
+            </a>
+            <a href="fullstack_lab.html" class="lab-card-link lab-item">
+              <div class="lab-card-ref">
+                <div class="lcr-top"><span class="lcr-emoji">🌐</span></div>
+                <div class="lcr-bottom">
+                  <h4 class="lcr-title">Full Stack Development</h4>
+                  <span class="lcr-badge badge-computers">COMPUTERS</span>
+                  <p class="lcr-desc">Build and deploy end-to-end applications with real-time preview and architecture
+                    mapping.</p>
+                </div>
+              </div>
+            </a>
+            <a href="python_lab.html" class="lab-card-link lab-item">
+              <div class="lab-card-ref">
+                <div class="lcr-top"><span class="lcr-emoji">🐍</span></div>
+                <div class="lcr-bottom">
+                  <h4 class="lcr-title">Python Lab</h4>
+                  <span class="lcr-badge badge-computers">COMPUTERS</span>
+                  <p class="lcr-desc">Master data science libraries and Pythonic patterns through interactive coding
+                    playgrounds.</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           BOTTOM ROW: Academic Records | Recent Updates | Recent Activity
+           (Same 3-column layout as top metrics row)
+      ══════════════════════════════════════════ -->
+      <div class="metrics-row-top">
+
+        <!-- 5. ACADEMIC RECORDS (Fully Redesigned) -->
+        <section class="pw-card pw-records" id="records-section" data-modal="records-modal">
+          <div class="pw-card-header">
+            <div class="pw-header-left">
+              <span class="pw-eyebrow">Documents</span>
+              <h3 class="pw-title">Academic Records</h3>
+            </div>
+            <span class="pw-pill">0 Files</span>
+          </div>
+          <div class="records-body">
+            <div class="rec-item">
+              <div class="rec-icon-wrap rec-pdf">📄</div>
+              <div class="rec-details">
+                <span class="rec-name">Diffraction_Record.pdf</span>
+                <span class="rec-meta">Physics · May 5 · 1.2 MB</span>
+              </div>
+              <button class="rec-dl-btn" title="Download">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </button>
+            </div>
+            <div class="rec-item">
+              <div class="rec-icon-wrap rec-pdf">📄</div>
+              <div class="rec-details">
+                <span class="rec-name">BubbleSort_Obs.pdf</span>
+                <span class="rec-meta">Computers · May 2 · 850 KB</span>
+              </div>
+              <button class="rec-dl-btn" title="Download">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </button>
+            </div>
+            <div class="rec-item">
+              <div class="rec-icon-wrap" style="color:#e74c3c">📕</div>
+              <div class="rec-details">
+                <span class="rec-name">Zener_Diode_Final.pdf</span>
+                <span class="rec-meta">Physics · Apr 28 · 2.1 MB</span>
+              </div>
+              <button class="rec-dl-btn" title="Download">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. RECENT UPDATES (Fully Redesigned) -->
+        <section class="pw-card pw-updates" id="updates-section" data-modal="updates-modal">
+          <div class="pw-card-header">
+            <div class="pw-header-left">
+              <span class="pw-eyebrow">Announcements</span>
+              <h3 class="pw-title">Recent Updates</h3>
+            </div>
+            <span class="pw-pill pw-pill-purple">0 New</span>
+          </div>
+          <div class="updates-body">
+            <div class="upd-item">
+              <div class="upd-dot upd-new"></div>
+              <div class="upd-content">
+                <span class="upd-tag upd-tag-new">NEW</span>
+                <h5 class="upd-title">Zener Diode Simulation 2.0</h5>
+                <span class="upd-meta">May 8 · Character curves updated</span>
+              </div>
+            </div>
+            <div class="upd-item">
+              <div class="upd-dot upd-event"></div>
+              <div class="upd-content">
+                <span class="upd-tag upd-tag-event">EVENT</span>
+                <h5 class="upd-title">Webinar: Lab Records Tips</h5>
+                <span class="upd-meta">May 7 · Tips & Tricks</span>
+              </div>
+            </div>
+            <div class="upd-item">
+              <div class="upd-dot upd-update"></div>
+              <div class="upd-content">
+                <span class="upd-tag upd-tag-update">UPDATE</span>
+                <h5 class="upd-title">Improved Mobile Experience</h5>
+                <span class="upd-meta">May 5 · Platform-wide</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. RECENT ACTIVITY (Fully Redesigned) -->
+        <section class="pw-card pw-activity" id="activity-section" data-modal="activity-modal">
+          <div class="pw-card-header">
+            <div class="pw-header-left">
+              <span class="pw-eyebrow">History</span>
+              <h3 class="pw-title">Recent Activity</h3>
+            </div>
+            <span class="pw-pill pw-pill-green">Today</span>
+          </div>
+          <div class="activity-body">
+            <div class="act-item act-success">
+              <div class="act-icon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <div class="act-line"></div>
+              <div class="act-content">
+                <p class="act-text">Completed <strong>Zener Diode</strong> simulation</p>
+                <span class="act-time">2 hours ago</span>
+              </div>
+            </div>
+            <div class="act-item act-info">
+              <div class="act-icon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+              </div>
+              <div class="act-line"></div>
+              <div class="act-content">
+                <p class="act-text">Generated <strong>Newton's Rings</strong> record</p>
+                <span class="act-time">Yesterday, 4:30 PM</span>
+              </div>
+            </div>
+            <div class="act-item act-warn">
+              <div class="act-icon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+              </div>
+              <div class="act-line act-line-last"></div>
+              <div class="act-content">
+                <p class="act-text">Pending record: <strong>Diffraction Grating</strong></p>
+                <span class="act-time">2 days ago</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- end bottom metrics row -->
+
+    </main>
+  </div><!-- end portal-layout -->
 
   <footer id="site-footer" role="contentinfo" aria-label="Site footer">
     <div id="footer-top" class="footer-grid">
       <div class="footer-col" id="footer-brand-col">
         <a href="#home-section" aria-label="LabMate home">
-          <img src="../assets/images/LabMateLogo.png" alt="LabMate" class="footer-logo" />
+          <img src="../assets/images/LabMateLogo2.png" alt="LabMate" class="footer-logo" />
         </a>
-        <p class="footer-brand-desc">
-          LabMate — empowering the next generation of scientists and
-          engineers with accessible, immersive virtual laboratory
-          experiences.
-        </p>
+        <p class="footer-brand-desc">LabMate — empowering the next generation of scientists and engineers with
+          accessible, immersive virtual laboratory experiences.</p>
         <div id="footer-social-links" aria-label="LabMate on social media">
           <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" class="social-link"
-            aria-label="LabMate on LinkedIn (opens in new tab)">
-            <img src="assets/icons/linkedin.svg" alt="" class="social-icon" />
-          </a>
+            aria-label="LinkedIn"><img src="../assets/icons/linkedin.svg" alt="" class="social-icon" /></a>
           <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" class="social-link"
-            aria-label="LabMate on Twitter/X (opens in new tab)">
-            <img src="assets/icons/twitter.svg" alt="" class="social-icon" />
-          </a>
+            aria-label="Twitter"><img src="../assets/icons/twitter.svg" alt="" class="social-icon" /></a>
           <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link"
-            aria-label="LabMate on Instagram (opens in new tab)">
-            <img src="assets/icons/instagram.svg" alt="" class="social-icon" />
-          </a>
+            aria-label="Instagram"><img src="../assets/icons/instagram.svg" alt="" class="social-icon" /></a>
           <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="social-link"
-            aria-label="LabMate on YouTube (opens in new tab)">
-            <img src="assets/icons/youtube.svg" alt="" class="social-icon" />
-          </a>
+            aria-label="YouTube"><img src="../assets/icons/youtube.svg" alt="" class="social-icon" /></a>
           <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="social-link"
-            aria-label="LabMate on Facebook (opens in new tab)">
-            <img src="assets/icons/facebook.svg" alt="" class="social-icon" />
-          </a>
+            aria-label="Facebook"><img src="../assets/icons/facebook.svg" alt="" class="social-icon" /></a>
         </div>
       </div>
       <div class="footer-col" id="footer-quicklinks-col">
@@ -611,16 +777,14 @@
             <li><a href="labmate_landing.html#about-section" class="footer-link">About Us</a></li>
             <li><a href="labmate_landing.html#courses-section" class="footer-link">Courses</a></li>
             <li><a href="labmate_landing.html#colleges-section" class="footer-link">Partner Colleges</a></li>
-            <li><a href="labmate_landing.html#enews-section" class="footer-link">E-News</a></li>
             <li><a href="labmate_landing.html#why-labmate-section" class="footer-link">Why LabMate?</a></li>
             <li><a href="labmate_landing.html#contact-section" class="footer-link">Contact Us</a></li>
-            <li><a href="sitemap.html" class="footer-link">Sitemap</a></li>
           </ul>
         </nav>
       </div>
       <div class="footer-col" id="footer-resources-col">
         <h3 class="footer-col-heading">Resources</h3>
-        <nav aria-label="Footer resources and legal links">
+        <nav aria-label="Footer resources">
           <ul class="footer-link-list" role="list">
             <li><a href="blog.html" class="footer-link">Blog</a></li>
             <li><a href="faq.html" class="footer-link">FAQ</a></li>
@@ -628,46 +792,351 @@
             <li><a href="careers.html" class="footer-link">Careers</a></li>
             <li><a href="privacy-policy.html" class="footer-link">Privacy Policy</a></li>
             <li><a href="terms.html" class="footer-link">Terms of Service</a></li>
-            <li><a href="refund-policy.html" class="footer-link">Refund Policy</a></li>
-            <li><a href="accessibility.html" class="footer-link">Accessibility</a></li>
           </ul>
         </nav>
       </div>
       <div class="footer-col" id="footer-contact-col">
         <h3 class="footer-col-heading">Contact</h3>
         <address class="footer-address">
-          <p>
-            LabMate Technologies Pvt. Ltd.<br />
-            Vishweshwaraya Bhavan, 3rd-Floor<br />
-            Surampalem, AndhraPradesh — 533437<br />
-            India
-          </p>
-          <p>
-            <a href="mailto:hello@labmate.in" class="footer-link">hello@labmate.in</a>
-          </p>
-          <p>
-            <a href="tel:+917777777777" class="footer-link">+91 77777 77777</a>
-          </p>
+          <p>LabMate Technologies Pvt. Ltd.<br />Vishweshwaraya Bhavan, 3rd-Floor<br />Surampalem, AndhraPradesh —
+            533437<br />India</p>
+          <p><a href="mailto:labmateai@outlook.com" class="footer-link">labmateai@outlook.com</a></p>
+          <p><a href="tel:+917777777777" class="footer-link">+91 77777 77777</a></p>
         </address>
       </div>
     </div>
     <hr id="footer-divider" aria-hidden="true" />
     <div id="footer-bottom">
-      <p id="footer-copyright">
-        <small>
-          © <span id="copyright-year">2026</span>
-          LabMate Technologies Pvt. Ltd. All rights reserved.
-        </small>
-      </p>
-      <p id="footer-legal-note">
-        <small>
-          LabMate&reg; is a registered trademark. Unauthorised reproduction
-          of any content on this platform is prohibited.
-        </small>
-      </p>
-      <div id="footer-badges" aria-label="Trust and certification badges"></div>
+      <p id="footer-copyright"><small>© <span id="copyright-year">2026</span> LabMate Technologies Pvt. Ltd. All rights
+          reserved.</small></p>
+      <p id="footer-legal-note"><small>LabMate<span class="reg-mark">&reg;</span> is a registered trademark.</small></p>
     </div>
   </footer>
+
+  <!-- ══ MODAL: LEADERBOARD ══ -->
+  <div id="leaderboard-modal" class="pw-modal-overlay" role="dialog" aria-modal="true" aria-label="Stream Leaderboard">
+    <div class="pw-modal-box">
+      <div class="pw-modal-header">
+        <div>
+          <span class="pw-modal-eyebrow">Weekly Rankings</span>
+          <h3 class="pw-modal-title">Stream Leaderboard</h3>
+        </div>
+        <button class="pw-modal-close" data-close="leaderboard-modal">&times;</button>
+      </div>
+      <div class="pw-modal-body">
+        <div class="modal-lb-table">
+          <div class="mlb-header">
+            <span>Rank</span><span>Student</span><span>Score</span><span>Level</span>
+          </div>
+          <div class="mlb-row mlb-gold">
+            <span class="mlb-rank gold">1 👑</span>
+            <span class="mlb-student"><img
+                src="https://ui-avatars.com/api/?name=TSR&background=f1c40f&color=fff&bold=true" alt="TSR"> TSR</span>
+            <span class="mlb-score" style="color:#f1c40f">0%</span>
+            <span class="mlb-level">Level 0</span>
+          </div>
+          <div class="mlb-row mlb-you">
+            <span class="mlb-rank silver">2</span>
+            <span class="mlb-student"><img
+                src="https://ui-avatars.com/api/?name=LabMate&background=1a88d0&color=fff&bold=true" alt="You"> LabMate
+              (You)</span>
+            <span class="mlb-score" style="color:#1a88d0">0%</span>
+            <span class="mlb-level">Level 0</span>
+          </div>
+          <div class="mlb-row">
+            <span class="mlb-rank bronze">3</span>
+            <span class="mlb-student"><img
+                src="https://ui-avatars.com/api/?name=Siddhi&background=cd7f32&color=fff&bold=true" alt="Siddhi">
+              Siddhi</span>
+            <span class="mlb-score">0%</span>
+            <span class="mlb-level">Level 0</span>
+          </div>
+          <div class="mlb-row">
+            <span class="mlb-rank">4</span>
+            <span class="mlb-student"><img
+                src="https://ui-avatars.com/api/?name=Ganesh&background=95a5a6&color=fff&bold=true" alt="Ganesh">
+              Ganesh</span>
+            <span class="mlb-score">0%</span>
+            <span class="mlb-level">Rising</span>
+          </div>
+          <div class="mlb-row">
+            <span class="mlb-rank">5</span>
+            <span class="mlb-student"><img
+                src="https://ui-avatars.com/api/?name=Priya&background=e74c3c&color=fff&bold=true" alt="Priya">
+              Priya</span>
+            <span class="mlb-score">0%</span>
+            <span class="mlb-level">Level 0</span>
+          </div>
+          <div class="mlb-row">
+            <span class="mlb-rank">6</span>
+            <span class="mlb-student"><img
+                src="https://ui-avatars.com/api/?name=Ravi&background=2ecc71&color=fff&bold=true" alt="Ravi">
+              Ravi</span>
+            <span class="mlb-score">0%</span>
+            <span class="mlb-level">Level 0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: LABS MASTERY ══ -->
+  <div id="mastery-modal" class="pw-modal-overlay" role="dialog" aria-modal="true" aria-label="Labs Mastery">
+    <div class="pw-modal-box">
+      <div class="pw-modal-header">
+        <div>
+          <span class="pw-modal-eyebrow">Performance</span>
+          <h3 class="pw-modal-title">Labs Mastery</h3>
+        </div>
+        <button class="pw-modal-close" data-close="mastery-modal">&times;</button>
+      </div>
+      <div class="pw-modal-body">
+        <div class="modal-mastery-grid">
+          <div class="mm-card">
+            <div class="mm-header"><span class="mm-subject">C Programming Lab</span><span
+                class="mm-pct mm-teal">0%</span></div>
+            <div class="mm-bar">
+              <div style="width:0%;background:var(--teal)"></div>
+            </div>
+            <span class="mm-sub">0 of 15 labs completed</span>
+          </div>
+          <div class="mm-card">
+            <div class="mm-header"><span class="mm-subject">Engineering Physics</span><span
+                class="mm-pct mm-purple">0%</span></div>
+            <div class="mm-bar">
+              <div style="width:0%;background:#9b59b6"></div>
+            </div>
+            <span class="mm-sub">0 of 12 labs completed</span>
+          </div>
+          <div class="mm-card">
+            <div class="mm-header"><span class="mm-subject">BEEE</span><span class="mm-pct mm-green">0%</span></div>
+            <div class="mm-bar">
+              <div style="width:0%;background:#2ecc71"></div>
+            </div>
+            <span class="mm-sub">0 of 10 labs completed</span>
+          </div>
+          <div class="mm-card">
+            <div class="mm-header"><span class="mm-subject">Data Structures & Algorithms</span><span
+                class="mm-pct mm-orange">0%</span></div>
+            <div class="mm-bar">
+              <div style="width:0%;background:#f39c12"></div>
+            </div>
+            <span class="mm-sub">0 of 15 labs completed</span>
+          </div>
+        </div>
+        <div class="mm-overall">
+          <span>Overall Mastery</span>
+          <strong>0%</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: UPCOMING EXAMS ══ -->
+  <div id="exams-modal" class="pw-modal-overlay" role="dialog" aria-modal="true" aria-label="Upcoming Exams">
+    <div class="pw-modal-box">
+      <div class="pw-modal-header">
+        <div>
+          <span class="pw-modal-eyebrow">Schedule</span>
+          <h3 class="pw-modal-title">Upcoming Exams</h3>
+        </div>
+        <button class="pw-modal-close" data-close="exams-modal">&times;</button>
+      </div>
+      <div class="pw-modal-body">
+        <div class="modal-exams-list">
+          <div class="me-card me-internal">
+            <div class="me-date"><span class="me-day">15</span><span class="me-mon">MAY</span></div>
+            <div class="me-info">
+              <h5>Assessment - I</h5>
+              <span>Physics · Hall 4 · 9:00 AM</span>
+              <em class="me-badge me-int">Internal</em>
+            </div>
+          </div>
+          <div class="me-card me-internal">
+            <div class="me-date"><span class="me-day">18</span><span class="me-mon">MAY</span></div>
+            <div class="me-info">
+              <h5>Mid-Term Exam</h5>
+              <span>C Programming · CS Lab 2 · 10:00 AM</span>
+              <em class="me-badge me-int">Internal</em>
+            </div>
+          </div>
+          <div class="me-card me-external">
+            <div class="me-date me-date-ext"><span class="me-day">02</span><span class="me-mon">JUN</span></div>
+            <div class="me-info">
+              <h5>Final Practical Exam</h5>
+              <span>BEEE · Main Lab · 2:00 PM</span>
+              <em class="me-badge me-ext">External</em>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: ACADEMIC RECORDS ══ -->
+  <div id="records-modal" class="pw-modal-overlay" role="dialog" aria-modal="true" aria-label="Academic Records">
+    <div class="pw-modal-box">
+      <div class="pw-modal-header">
+        <div>
+          <span class="pw-modal-eyebrow">Documents</span>
+          <h3 class="pw-modal-title">Academic Records</h3>
+        </div>
+        <button class="pw-modal-close" data-close="records-modal">&times;</button>
+      </div>
+      <div class="pw-modal-body">
+        <div class="modal-records-list">
+          <div class="mr-card">
+            <div class="mr-icon">📄</div>
+            <div class="mr-details">
+              <h4>Diffraction Grating_Record.pdf</h4>
+              <p>Physics · May 5, 2026 · 1.2 MB</p>
+            </div>
+            <button class="mr-dl" title="Download"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg></button>
+          </div>
+          <div class="mr-card">
+            <div class="mr-icon">📄</div>
+            <div class="mr-details">
+              <h4>BubbleSort_Logic_Obs.pdf</h4>
+              <p>Computers · May 2, 2026 · 850 KB</p>
+            </div>
+            <button class="mr-dl" title="Download"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg></button>
+          </div>
+          <div class="mr-card">
+            <div class="mr-icon" style="color:#e74c3c">📕</div>
+            <div class="mr-details">
+              <h4>Zener_Diode_Experiment_Final.pdf</h4>
+              <p>Physics · Apr 28, 2026 · 2.1 MB</p>
+            </div>
+            <button class="mr-dl" title="Download"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg></button>
+          </div>
+          <div class="mr-card">
+            <div class="mr-icon" style="color:#2ecc71">📗</div>
+            <div class="mr-details">
+              <h4>Newton_Rings_Observations.pdf</h4>
+              <p>Physics · Apr 25, 2026 · 940 KB</p>
+            </div>
+            <button class="mr-dl" title="Download"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: RECENT UPDATES ══ -->
+  <div id="updates-modal" class="pw-modal-overlay" role="dialog" aria-modal="true" aria-label="Recent Updates">
+    <div class="pw-modal-box">
+      <div class="pw-modal-header">
+        <div>
+          <span class="pw-modal-eyebrow">Announcements</span>
+          <h3 class="pw-modal-title">Recent Updates</h3>
+        </div>
+        <button class="pw-modal-close" data-close="updates-modal">&times;</button>
+      </div>
+      <div class="pw-modal-body">
+        <div class="modal-updates-list">
+          <div class="mu-card">
+            <div class="mu-icon" style="background:rgba(26,136,208,0.1)">🚀</div>
+            <div class="mu-content">
+              <span class="mu-tag mu-new">NEW</span>
+              <h4>Zener Diode Simulation 2.0</h4>
+              <p>Updated character curves and improved accuracy for the Physics lab simulation.</p>
+              <span class="mu-date">May 8, 2026</span>
+            </div>
+          </div>
+          <div class="mu-card">
+            <div class="mu-icon" style="background:rgba(243,156,18,0.1)">📅</div>
+            <div class="mu-content">
+              <span class="mu-tag mu-event">EVENT</span>
+              <h4>Webinar: Mastering Virtual Lab Records</h4>
+              <p>Join the live session covering tips and best practices for writing observations.</p>
+              <span class="mu-date">May 7, 2026</span>
+            </div>
+          </div>
+          <div class="mu-card">
+            <div class="mu-icon" style="background:rgba(155,89,182,0.1)">✨</div>
+            <div class="mu-content">
+              <span class="mu-tag mu-update">UPDATE</span>
+              <h4>Improved Mobile Responsiveness</h4>
+              <p>The platform now fully supports tablet and mobile devices with optimized layouts.</p>
+              <span class="mu-date">May 5, 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: RECENT ACTIVITY ══ -->
+  <div id="activity-modal" class="pw-modal-overlay" role="dialog" aria-modal="true" aria-label="Recent Activity">
+    <div class="pw-modal-box">
+      <div class="pw-modal-header">
+        <div>
+          <span class="pw-modal-eyebrow">History</span>
+          <h3 class="pw-modal-title">Recent Activity</h3>
+        </div>
+        <button class="pw-modal-close" data-close="activity-modal">&times;</button>
+      </div>
+      <div class="pw-modal-body">
+        <div class="modal-activity-list">
+          <div class="ma-item ma-success">
+            <div class="ma-icon">✓</div>
+            <div class="ma-content">
+              <p>Completed <strong>Zener Diode</strong> simulation</p>
+              <span>2 hours ago · Physics Lab</span>
+            </div>
+          </div>
+          <div class="ma-item ma-info">
+            <div class="ma-icon">⚡</div>
+            <div class="ma-content">
+              <p>Generated <strong>Newton's Rings</strong> observation record</p>
+              <span>Yesterday, 4:30 PM · Physics Lab</span>
+            </div>
+          </div>
+          <div class="ma-item ma-warn">
+            <div class="ma-icon">⚠</div>
+            <div class="ma-content">
+              <p>Pending submission: <strong>Diffraction Grating</strong> record</p>
+              <span>2 days ago · Physics Lab</span>
+            </div>
+          </div>
+          <div class="ma-item ma-success">
+            <div class="ma-icon">✓</div>
+            <div class="ma-content">
+              <p>Started <strong>Bubble Sort</strong> experiment</p>
+              <span>3 days ago · C Programming Lab</span>
+            </div>
+          </div>
+          <div class="ma-item ma-info">
+            <div class="ma-icon">⚡</div>
+            <div class="ma-content">
+              <p>Reviewed <strong>Stack Implementation</strong> notes</p>
+              <span>4 days ago · DSA Lab</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div id="sidebar-overlay" class="sidebar-overlay"></div>
   <script src="../js/portal.js"></script>
