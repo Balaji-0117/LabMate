@@ -1,139 +1,219 @@
 # LabMate AI
 
-An AI-powered virtual laboratory ecosystem that transforms engineering practical learning into an interactive digital experience.
+## 🚀 Smart Virtual Laboratory Platform for Engineering Students
+
+LabMate AI is an interactive virtual laboratory platform designed to simplify practical learning for engineering students through simulations, dashboards, experiment management, and AI-assisted learning tools.
+
+The platform combines virtual experiments, student progress tracking, faculty management, and intelligent assistance into a centralized learning environment.
 
 ---
 
-# What is LabMate AI?
+# 📌 Features
 
-LabMate AI is a smart EdTech platform built for engineering students and faculty.
+## ✅ Implemented Features
 
-It combines:
+### 🔐 Authentication System
+- User Signup & Login
+- JWT-based authentication
+- Password hashing using bcrypt
+- Email verification support
+- Role-based structure
 
-* Interactive virtual lab simulations
-* AI viva & doubt assistance
-* Dynamic graph plotting
-* Smart observation tables
-* Instant PDF record generation
-* Faculty management & analytics
+### 👨‍🎓 Student Dashboard
+- Experiment modules
+- Lab subject navigation
+- Progress tracking
+- Experiment access panel
+- Responsive dashboard UI
 
-—all in one unified platform.
+### 👨‍🏫 Faculty Dashboard
+- Faculty management interface
+- Student monitoring structure
+- Experiment management modules
+- Submission overview interface
 
-Instead of depending on physical labs and manual records, students can perform experiments, visualize concepts, and generate reports directly through an interactive web interface.
+### 🧪 Virtual Lab Simulations
+Implemented interactive simulations including:
+- BFS Visualization
+- DFS Visualization
+- Merge Sort Simulation
+- Bubble Sort Experiment
+- Linked List Experiment
+- Fibonacci Experiment
+- Temperature Converter
+- Logic Gate Simulation
+- Diffraction Grating Experiment
+
+### 🤖 AI Assistance
+- AI chatbot interface
+- Viva preparation support structure
+- Experiment guidance modules
+
+### 🎨 UI/UX
+- Dark/Light Theme
+- Fully Responsive Design
+- Modern Dashboard Layout
+- Sidebar Navigation
+- Interactive Experiment Pages
 
 ---
 
-# Key Features
+# 🖼️ Project Screenshots
 
-## Virtual Lab Simulations
+## Landing Page
+![Landing Page](assets/screenshots/landing-page.png)
 
-* Real-time experiment interaction
-* Adjustable parameters (Voltage, Current, Resistance, etc.)
-* Dynamic graph generation
-* Replay & reset functionality
+---
 
-## AI-Powered Assistance
+## Login Page
+![Login](assets/screenshots/login-page.png)
 
-* AI Viva Question Generator
-* AI Doubt Solver
-* Step-by-step concept explanations
-* Formula & circuit guidance
-
-## Smart Record Automation
-
-* Auto-generated observation tables
-* Real-time calculations
-* Editable experiment values
-* Instant PDF lab records
+---
 
 ## Student Dashboard
-
-* Experiment progress tracking
-* Completed & pending labs
-* Submission monitoring
-* Personalized activity widgets
-
-## Professor Dashboard
-
-* Experiment management
-* Student evaluation
-* Marks & feedback system
-* Performance analytics
+![Student Dashboard](assets/screenshots/student-dashboard.png)
 
 ---
 
-# Tech Stack
-
-### Frontend
-
-* HTML
-* CSS
-* JavaScript
-
-### Backend
-
-* Node.js
-* Express.js
-
-### Database
-
-* PostgreSQL
-
-### AI Integration
-
-* Groq API
-* ChatGPT API
-
-### Deployment
-
-* Vercel
-* Railway
-* GitHub
+## Faculty Dashboard
+![Faculty Dashboard](assets/screenshots/faculty-dashboard.png)
 
 ---
 
-# Core Modules
-
-* Electronics Virtual Labs
-* Data Structures Visualizers
-* AI Viva Generator
-* AI Chat Assistant
-* PDF Report System
-* Analytics Dashboard
+## Simulations Module
+![Simulations](assets/screenshots/simulations-page.png)
 
 ---
 
-# Problem Statement
-
-Engineering students often struggle with:
-
-* Manual record writing
-* Lack of accessible simulations
-* Poor viva preparation
-* Managing experiments across multiple platforms
-
-LabMate AI solves this by creating a centralized intelligent laboratory ecosystem.
+## BFS Simulation
+![BFS Simulation](assets/screenshots/bfs-simulation.png)
 
 ---
 
-# Future Enhancements
-
-* Achievement badges & leaderboards
-* AI-generated experiment summaries
-* Enhanced analytics dashboards
-* Smart email notifications
-* Advanced report customization
+## Merge Sort Visualization
+![Merge Sort](assets/screenshots/merge-sort.png)
 
 ---
 
-# GitHub Repository
-
-[https://github.com/Balaji-0117/LabMate.git](https://github.com/Balaji-0117/LabMate.git)
-
----
+## Linked List Experiment
+![Linked List](assets/screenshots/linkedlist.png)
 
 ---
 
-# Vision
+## AI Chat Assistant
+![AI Chatbot](assets/screenshots/chatbot.png)
 
-> “Making engineering practical learning smarter, visual, and accessible from anywhere.”
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+- HTML
+- CSS
+- JavaScript
+
+## Backend
+- Node.js
+- Express.js
+
+## Database
+- PostgreSQL
+
+## Authentication & Security
+- JWT Authentication
+- bcrypt Password Hashing
+
+## APIs & Tools
+- Groq API
+- GitHub
+
+---
+
+# 🏗️ System Architecture
+
+LabMate AI follows a three-tier architecture:
+
+## Frontend Layer
+Provides responsive interfaces for:
+- Students
+- Faculty
+- Simulations
+- Dashboards
+
+## Backend Layer
+Handles:
+- Authentication
+- Routing
+- API handling
+- Experiment management
+- Request processing
+
+## Database Layer
+Stores:
+- User details
+- Experiment data
+- Progress records
+- Submission information
+
+---
+
+# 📂 Project Structure
+
+```bash
+LabMate/
+│
+├── frontend/
+│   ├── html/
+│   ├── css/
+│   └── js/
+│
+├── backend/
+│   ├── config/
+│   ├── controllers/
+│   ├── routes/
+│   └── server.js
+│
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+│
+├── docs/
+│   ├── project-plan.md
+│   └── sprint-plan.md
+│
+├── simulations/
+│
+└── README.md
+```
+
+---
+
+# 📊 Current Implemented Modules
+
+| Module | Status |
+|---|---|
+| Authentication | ✅ Completed |
+| Student Dashboard | ✅ Completed |
+| Faculty Dashboard | ✅ Completed |
+| BFS Simulation | ✅ Completed |
+| DFS Simulation | ✅ Completed |
+| Merge Sort Visualization | ✅ Completed |
+| Linked List Experiment | ✅ Completed |
+| Responsive UI | ✅ Completed |
+| Backend Routing | ✅ Completed |
+| Database Schema | 🔄 In Progress |
+| AI Integration | 🔄 In Progress |
+| PDF Generation | 🔄 In Progress |
+
+---
+
+# 🎯 Future Enhancements
+
+- AI-generated observation tables
+- PDF lab report generation
+- Advanced analytics dashboard
+- Real-time experiment evaluation
+- Viva voice assistant
+- Experiment bookmarking
+- Email notifications
+- AI-generated summaries
