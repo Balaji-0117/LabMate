@@ -23,6 +23,7 @@
   --text-primary: #112a46;
   --text-mid: #4a6581;
   --text-soft: #7a8fa5;
+  --text-secondary: #5a718a;
   --text-inverse: #ffffff;
 
   /* Original mapping for legacy support */
@@ -385,8 +386,9 @@ button {
 #header-logo-wrapper {
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex: 1;
+  gap: 8px; /* Reduced gap for a tighter look */
+  flex: 0 1 auto; /* Prevents the wrapper from stretching unnecessarily */
+  margin-right: 20px; /* Optional: Adds a little breathing room before the menu starts */
 }
 
 #header-logo-wrapper::before {
@@ -396,17 +398,22 @@ button {
 /* Remove monogram */
 #header-logo-img {
   display: block;
-  height: 48px;
+  height: 56px; /* Increased size */
   width: auto;
   object-fit: contain;
 }
 
 #header-brand-name {
   font-family: var(--font-display);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  color: var(--navy);
-  letter-spacing: -.01em;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-left: 0; /* Explicitly ensure there is no extra margin here */
+}
+
+#header-logo-wrapper a:hover #header-brand-name {
+  color: var(--accent-btn);
 }
 
 #primary-nav {
@@ -1639,7 +1646,7 @@ button {
 #footer-copyright small,
 #footer-legal-note small {
   font-size: .78rem;
-  color: rgba(255, 255, 255, .6);
+  color: var(--text-soft);
 }
 
 #footer-badges {
@@ -1705,9 +1712,11 @@ button {
     position: static;
   }
 
-  #site-header {
-    position: relative;
-  }
+#site-header {
+  height: auto; /* Changed from 66px to auto */
+  min-height: 70px; /* Ensures a consistent minimum height */
+  /* ... rest of your existing code ... */
+}
 
   .two-col-layout {
     grid-template-columns: 1fr;
@@ -1821,7 +1830,9 @@ button {
 
 .footer-link,
 .footer-brand-desc,
-.footer-address p {
+.footer-address p,
+#footer-copyright small,
+#footer-legal-note small {
   color: var(--text-secondary);
 }
 

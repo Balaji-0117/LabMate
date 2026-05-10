@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if(signupForm) {
-        signupForm.addEventListener('submit', (e) => {
+        signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const emailValue = emailInput.value.trim();
@@ -50,28 +50,54 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             emailGroup.classList.remove('error');
-            
-            // Simulate email verification and send process
+
+            // UI loading state
             submitBtn.innerHTML = 'Sending Link...';
             submitBtn.style.opacity = '0.7';
             submitBtn.disabled = true;
 
-            setTimeout(() => {
-                // Hide form, title, subtitle, footer, and show success state
-                signupForm.classList.add('hidden');
-                
-                const loginTitle = document.querySelector('.login-title');
-                if (loginTitle) loginTitle.classList.add('hidden');
-                
-                const loginSubtitle = document.querySelector('.login-subtitle');
-                if (loginSubtitle) loginSubtitle.classList.add('hidden');
-                
-                const loginFooter = document.querySelector('.login-footer');
-                if (loginFooter) loginFooter.classList.add('hidden');
+            try {
+                const res = await fetch("http://localhost:5000/api/auth/signup", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email: emailValue }),
+                });
 
-                if (sentEmailDisplay) sentEmailDisplay.textContent = emailValue;
-                successState.classList.remove('hidden');
-            }, 1500); // 1.5 seconds artificial delay
+                const data = await res.json();
+
+                if (res.ok) {
+                    // ✅ SUCCESS UI (same as your existing code)
+                    signupForm.classList.add('hidden');
+
+                    const loginTitle = document.querySelector('.login-title');
+                    if (loginTitle) loginTitle.classList.add('hidden');
+
+                    const loginSubtitle = document.querySelector('.login-subtitle');
+                    if (loginSubtitle) loginSubtitle.classList.add('hidden');
+
+                    const loginFooter = document.querySelector('.login-footer');
+                    if (loginFooter) loginFooter.classList.add('hidden');
+
+                    if (sentEmailDisplay) sentEmailDisplay.textContent = emailValue;
+                    successState.classList.remove('hidden');
+
+                } else {
+                    // ❌ backend error
+                    alert(data.error || "Failed to send email");
+                    submitBtn.innerHTML = 'Verify Email';
+                    submitBtn.style.opacity = '1';
+                    submitBtn.disabled = false;
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("Server error");
+                submitBtn.innerHTML = 'Verify Email';
+                submitBtn.style.opacity = '1';
+                submitBtn.disabled = false;
+            }
         });
     }
 

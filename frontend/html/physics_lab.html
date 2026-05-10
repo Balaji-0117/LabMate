@@ -61,6 +61,16 @@
     .back-btn:hover {
       text-decoration: underline;
     }
+    .background-theme{
+      background: linear-gradient(130deg, #9b59b6 0%, #112a46 100%);
+    }
+    .portal-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
   </style>
 </head>
 
@@ -68,11 +78,11 @@
   <header class="portal-header">
     <div class="header-left">
       <a href="labmate_landing.html" aria-label="LabMate home">
-        <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+        <img src="../assets/images/LabMateLogo2.png" alt="LabMate Logo" class="portal-logo" />
       </a>
       <div class="college-info">
         <h1 class="college-name">Aditya University</h1>
-        <span class="stream-badge">AIML Stream</span>
+        <!-- <span class="stream-badge">AIML Stream</span> -->
       </div>
     </div>
     <div class="header-right">
@@ -117,7 +127,7 @@
             <div class="notif-dot"></div>
             <div class="notif-body">
               <p>New assignment from <strong>Aditya University</strong></p>
-              <span>Bubble Sort experiment is now due this Friday</span>
+              <span>Zener diode experiment is now due this Friday</span>
               <time>2 hours ago</time>
             </div>
           </div>
@@ -173,7 +183,7 @@
           <h2>Physics Lab</h2>
           <p>
             <span class="welcome-meta-chip">⚡ BASIC SCIENCE</span>
-            <span class="welcome-meta-chip">8 Experiments</span>
+            <span class="welcome-meta-chip">2 Experiments</span>
           </p>
         </div>
       </section>
@@ -184,8 +194,28 @@
         </div>
         
         <div class="experiment-list">
-          <p style="color: var(--text-soft); font-size: 0.9rem;">No experiments have been assigned to this lab yet.</p>
-        </div>
+          <div class="experiment-card">
+            <div class="exp-info">
+              <h4>Exp 1: Zener Diode Characteristics</h4>
+              <p>Analyze voltage-current characteristics of a Zener diode through simulation.</p>
+            </div>
+            <div class="exp-action">
+               <a href="zener_diodeEXP.html">
+              <button style="background: linear-gradient(130deg, #9b59b6 0%, #112a46 100%);" id="startBtn1" class="small-btn cta-primary">Start</button>
+            </a>
+            </div>
+          </div>
+
+          <div class="experiment-card">
+            <div class="exp-info">
+              <h4>Exp 2: Difraction Grating</h4>
+              <p>Observe light diffraction patterns and wavelength measurement visually.</p>
+            </div>
+            <div class="exp-action">
+              <a href="DiffractionGratingEXP.html">
+              <button style="background: linear-gradient(130deg, #9b59b6 0%, #112a46 100%);" id="startBtn2" class="small-btn cta-primary">Start</button>
+              </a>
+            </div>
       </section>
 
     </main>

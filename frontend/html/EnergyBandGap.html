@@ -1,0 +1,2879 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Energy Bandgap — LabMate</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Orbitron:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* =============================================
+   CSS VARIABLES — Dark / Light themes
+   ============================================= */
+   .add-data-btn.stop-btn {
+        background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+    }
+   
+   :root {
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'Orbitron', sans-serif;
+      --font-text: 'DM Sans', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #050510;
+      --bg-card: #0E0E1E;
+      --card-inner: #13132A;
+      --border-var: #2A1F5A;
+      --border-strong: #7B2FBE;
+      --accent-btn: #7B2FBE;
+      --accent-2: #C07AFF;
+      --btn-hover: #9B4DFF;
+      --text-primary: #E8F4FD;
+      --text-mid: #a0a6cc;
+      --text-soft: #6d769c;
+      --scale-bg: #0E0E22;
+      --sh-card: 0 4px 28px rgba(0, 0, 0, 0.4);
+      --teal: #7B2FBE;
+      --teal-dim: rgba(123, 47, 190, 0.12);
+      --r-lg: 20px;
+      --r-md: 12px;
+    }
+
+    [data-theme="light"] {
+      --bg-page: #F0F6FF;
+      --bg-card: #FFFFFF;
+      --card-inner: #F5F8FF;
+      --border-var: #D0DCF0;
+      --border-strong: #1A88D0;
+      --accent-btn: #1A88D0;
+      --accent-2: #0EC4E0;
+      --btn-hover: #1270B0;
+      --text-primary: #0D1B2A;
+      --text-mid: #2D5E8A;
+      --text-soft: #6A9DC8;
+      --scale-bg: #E8F2FF;
+      --sh-card: 0 4px 24px rgba(26, 136, 208, 0.10);
+      --teal: #1A88D0;
+      --teal-dim: rgba(26, 136, 208, 0.10);
+      --r-lg: 20px;
+      --r-md: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-var);
+      border-radius: 3px;
+    }
+
+    /* =============================================
+   EXPERIMENT PAGE LAYOUT
+   ============================================= */
+    .exp-page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg-page);
+    }
+
+    /* =============================================
+       PORTAL HEADER
+       ============================================= */
+    .portal-header {
+      height: 66px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-var);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 1200;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      gap: 16px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    [data-theme="dark"] .portal-header {
+      background: rgba(22, 27, 34, 0.97);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-shrink: 0;
+    }
+
+    .portal-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .college-info {
+      display: flex;
+      flex-direction: column;
+      border-left: 2px solid var(--border-var);
+      padding-left: 18px;
+    }
+
+    .college-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* Theme Switch */
+    .theme-switch {
+      display: inline-block;
+      height: 30px;
+      position: relative;
+      width: 64px;
+    }
+    .theme-switch input { display: none; }
+
+    .slider {
+      background-color: var(--scale-bg);
+      border: 1.5px solid var(--border-var);
+      bottom: 0; cursor: pointer; left: 0;
+      position: absolute; right: 0; top: 0;
+      transition: .4s;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 7px;
+    }
+    .slider .icon { width: 12px; height: 12px; z-index: 1; display: flex; align-items: center; justify-content: center; }
+    .slider .icon svg { width: 100%; height: 100%; }
+    .light-icon { color: #f39c12; }
+    .dark-icon  { color: #aab; }
+
+    .slider::before {
+      background-color: var(--bg-card);
+      bottom: 3px; content: "";
+      height: 22px; left: 4px;
+      position: absolute;
+      transition: transform .4s cubic-bezier(0.18,0.89,0.32,1.28);
+      width: 22px; z-index: 2;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider { border-color: var(--border-strong); }
+    input:checked + .slider::before { transform: translateX(34px); }
+    .slider.round { border-radius: 30px; }
+
+    .icon-btn {
+      background: none; border: none;
+      cursor: pointer; color: var(--text-mid);
+      padding: 5px; position: relative;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; transition: background 0.2s;
+    }
+    .icon-btn:hover { background: var(--scale-bg); }
+
+    .notification-badge {
+      position: absolute; top: 3px; right: 3px;
+      width: 8px; height: 8px;
+      background: #FF4757; border-radius: 50%;
+      border: 2px solid var(--bg-card);
+    }
+
+    /* Notification Panel */
+    .notif-panel {
+      position: absolute; top: calc(100% + 12px); right: 0;
+      width: 280px; background: var(--bg-card);
+      border: 1px solid var(--border-var); border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      display: none; z-index: 1300;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .notif-panel.active { display: block; animation: dropIn 0.2s ease-out; }
+
+    .notif-panel-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 18px; border-bottom: 1px solid var(--border-var);
+      font-size: 0.85rem; font-weight: 700; color: var(--text-primary);
+    }
+    .notif-clear-btn {
+      font-size: 0.75rem; color: var(--accent-btn);
+      background: none; border: none; cursor: pointer; font-weight: 600;
+    }
+    .notif-list { padding: 8px 0; }
+    .notif-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px 18px; transition: background 0.15s;
+    }
+    .notif-item:hover { background: var(--scale-bg); }
+    .notif-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent-btn); flex-shrink: 0; margin-top: 4px;
+    }
+    .notif-body p { font-size: 0.83rem; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+    .notif-body span { font-size: 0.78rem; color: var(--text-soft); display: block; }
+    .notif-body time { font-size: 0.72rem; color: var(--text-soft); display: block; margin-top: 4px; }
+
+    /* Profile Dropdown */
+    .profile-dropdown { position: relative; }
+    .profile-btn {
+      display: flex; align-items: center; gap: 10px;
+      background: none; border: 1px solid var(--border-var);
+      border-radius: 30px; padding: 4px 14px 4px 5px;
+      cursor: pointer; color: var(--text-primary);
+      transition: border-color 0.2s;
+    }
+    .profile-btn:hover { border-color: var(--accent-btn); }
+    .profile-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--border-strong); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem;
+    }
+    .profile-name-tag { display: flex; flex-direction: column; text-align: left; line-height: 1.1; }
+    .prof-name  { font-size: 0.85rem; font-weight: 700; }
+    .prof-roll  { font-size: 0.65rem; color: var(--text-soft); }
+
+    .dropdown-menu {
+      position: absolute; top: calc(100% + 12px); right: 0;
+      width: 220px; background: var(--bg-card);
+      border: 1px solid var(--border-var); border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      display: none; z-index: 1300; overflow: hidden;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .dropdown-menu.active { display: block; animation: dropIn 0.2s ease-out; }
+
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .dropdown-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 18px 10px;
+    }
+    .dh-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--border-strong); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .dropdown-header strong { font-size: 0.88rem; display: block; color: var(--text-primary); }
+    .dropdown-header span   { font-size: 0.72rem; color: var(--text-soft); }
+    .dropdown-menu hr { border: none; border-top: 1px solid var(--border-var); margin: 4px 0; }
+    .dropdown-menu a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 18px; color: var(--text-primary);
+      text-decoration: none; font-size: 0.88rem; transition: background 0.15s;
+    }
+    .dropdown-menu a:hover { background: var(--scale-bg); }
+    .dropdown-menu a.logout-link { color: #ef4444; }
+    .chevron-down { margin-left: auto; }
+
+    /* Dark Mode Dropdown Overrides */
+    [data-theme="dark"] .notif-panel,
+    [data-theme="dark"] .dropdown-menu {
+      background: var(--bg-card);
+      border-color: var(--border-var);
+    }
+    [data-theme="dark"] .dropdown-menu a:hover,
+    [data-theme="dark"] .notif-item:hover {
+      background: var(--scale-bg);
+    }
+
+    /* =============================================
+   BREADCRUMB
+   ============================================= */
+    .exp-breadcrumb {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-var);
+      padding: 10px 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-soft);
+    }
+
+    .exp-breadcrumb a {
+      color: var(--accent-btn);
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .exp-breadcrumb a:hover {
+      color: var(--btn-hover);
+      text-decoration: underline;
+    }
+
+    .exp-breadcrumb .sep {
+      opacity: 0.45;
+      margin: 0 2px;
+    }
+
+    .exp-breadcrumb .current {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* =============================================
+   BANNER
+   ============================================= */
+    .exp-banner {
+      background: linear-gradient(120deg, var(--border-strong) 0%, var(--accent-btn) 100%);
+      color: #fff;
+      padding: 22px 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .exp-banner-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .exp-banner-meta {
+      flex: 1;
+    }
+
+    .exp-banner-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.78;
+      margin-bottom: 4px;
+    }
+
+    .exp-banner-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .exp-banner-sub {
+      font-size: 0.83rem;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    /* =============================================
+   MAIN BODY
+   ============================================= */
+    .exp-main-body {
+      flex: 1;
+      display: flex;
+      gap: 0;
+      padding: 32px 40px;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    /* =============================================
+   SIDEBAR
+   ============================================= */
+    .exp-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      margin-right: 28px;
+    }
+
+    .exp-sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-lg);
+      box-shadow: var(--sh-card);
+      overflow: hidden;
+      position: sticky;
+      top: 90px;
+    }
+
+    .exp-sidebar-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--border-var);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .exp-nav-list {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .exp-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: var(--r-md);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-mid);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
+      text-align: left;
+      position: relative;
+    }
+
+    .exp-nav-btn:hover {
+      background: var(--teal-dim);
+      color: var(--text-primary);
+      transform: translateX(3px);
+    }
+
+    .exp-nav-btn.active {
+      background: var(--teal-dim);
+      color: var(--accent-btn);
+      font-weight: 600;
+    }
+
+    .exp-nav-btn.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      border-radius: 0 3px 3px 0;
+      background: var(--accent-btn);
+    }
+
+    .exp-nav-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--card-inner);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      transition: background 0.22s ease;
+    }
+
+    .exp-nav-btn.active .exp-nav-icon {
+      background: var(--accent-btn);
+      color: #fff;
+    }
+
+    .exp-sidebar-progress {
+      padding: 14px 20px 18px;
+      border-top: 1px solid var(--border-var);
+    }
+
+    .exp-progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .exp-progress-track {
+      height: 5px;
+      background: var(--scale-bg);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .exp-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-btn), var(--accent-2));
+      border-radius: 10px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 20%;
+    }
+
+    /* =============================================
+   CONTENT AREA
+   ============================================= */
+    .exp-content-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .exp-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-lg);
+      box-shadow: var(--sh-card);
+      overflow: hidden;
+    }
+
+    .exp-panel-header {
+      padding: 24px 32px 20px;
+      border-bottom: 1px solid var(--border-var);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .exp-panel-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--scale-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .exp-panel-title {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .exp-panel-subtitle {
+      font-size: 0.83rem;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    .exp-panel-body {
+      padding: 32px;
+    }
+
+    .exp-section-content {
+      display: none;
+      animation: sectionFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    .exp-section-content.visible {
+      display: block;
+    }
+
+    @keyframes sectionFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Shared text/content styles */
+    .exp-body-text {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      line-height: 1.85;
+    }
+
+    .exp-body-text+.exp-body-text {
+      margin-top: 16px;
+    }
+
+    .exp-highlight-box {
+      background: var(--scale-bg);
+      border-left: 4px solid var(--accent-btn);
+      border-radius: 0 var(--r-md) var(--r-md) 0;
+      padding: 15px 20px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    .exp-highlight-box strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+.exp-highlight-box ol {
+    margin: 0;
+    padding-left: 25px;
+}
+
+.exp-highlight-box li {
+    margin-bottom: 8px;
+}
+    .exp-step-list {
+      counter-reset: steps;
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .exp-step-list li {
+      counter-increment: steps;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      font-size: 0.92rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .exp-step-list li::before {
+      content: counter(steps);
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .exp-materials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .exp-material-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 10px 14px;
+      font-size: 0.83rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .exp-material-chip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-btn);
+      flex-shrink: 0;
+    }
+
+    .exp-divider {
+      height: 1px;
+      background: var(--border-var);
+      margin: 28px 0;
+      border: none;
+    }
+
+    .exp-tag {
+      display: inline-block;
+      background: var(--scale-bg);
+      color: var(--accent-btn);
+      border: 1px solid var(--border-var);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin: 2px;
+    }
+
+    /* Formula box */
+    .formula-row {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .formula-card {
+      flex: 1;
+      min-width: 200px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 18px 20px;
+    }
+
+    .formula-card-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-family: var(--font-body);
+    }
+
+    .formula-math {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--accent-btn);
+      font-weight: 600;
+    }
+
+    /* =============================================
+   SIMULATION — SUB SECTIONS
+   ============================================= */
+    .sim-section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      margin-bottom: 18px;
+      background: var(--scale-bg);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-md);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .sim-section-header .sim-section-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-btn);
+      flex-shrink: 0;
+      box-shadow: 0 0 6px var(--accent-btn);
+    }
+
+    /* =============================================
+   MATERIALS PICKER
+   ============================================= */
+    .materials-instruction {
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .material-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: var(--card-inner);
+      border: 2px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 14px 10px;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-mid);
+      text-align: center;
+      user-select: none;
+    }
+
+    .material-item:hover {
+      border-color: var(--accent-btn);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    .material-item.selected {
+      border-color: var(--accent-btn);
+      background: var(--teal-dim);
+      color: var(--accent-btn);
+      box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.15);
+    }
+
+    .material-item .mat-icon {
+      font-size: 1.8rem;
+    }
+
+    .material-item .mat-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-btn);
+      color: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+
+    .material-item.selected .mat-check {
+      display: flex;
+    }
+
+    /* =============================================
+   CIRCUIT SVG AREA
+   ============================================= */
+    .circuit-container {
+      background: var(--card-inner);
+      border: 1.5px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 16px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .circuit-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .circuit-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-var);
+      transition: background 0.4s;
+      flex-shrink: 0;
+    }
+
+    .circuit-status-dot.active {
+      background: #4CAF50;
+      box-shadow: 0 0 6px #4CAF50;
+    }
+
+    .circuit-svg-wrap {
+      width: 100%;
+    }
+
+    /* Component fade in/out */
+    .circ-component {
+      transition: opacity 0.4s ease;
+    }
+
+    .circ-component.hidden {
+      opacity: 0;
+    }
+
+    .circ-component.visible {
+      opacity: 1;
+    }
+
+    .circ-wire {
+      transition: stroke-dashoffset 0.6s ease, opacity 0.4s;
+    }
+
+    /* =============================================
+   CONTROLS & SLIDERS
+   ============================================= */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .control-panel {
+      background: var(--card-inner);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 16px;
+    }
+
+    .control-panel-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .control-panel-label::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-btn);
+    }
+
+    .ctrl-row {
+      margin-bottom: 14px;
+    }
+
+    .ctrl-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .ctrl-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .ctrl-label .ctrl-val {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-btn);
+      font-weight: 700;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slider-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--scale-bg);
+      border: 1.5px solid var(--border-var);
+      color: var(--text-mid);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      font-weight: 700;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .slider-btn:hover {
+      background: var(--teal-dim);
+      border-color: var(--accent-btn);
+      color: var(--accent-btn);
+    }
+
+    .slider-btn:active {
+      transform: scale(0.9);
+    }
+
+    input[type="range"].exp-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 5px;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+      background: linear-gradient(to right, var(--accent-btn) var(--val, 0%), var(--scale-bg) var(--val, 0%));
+      border: none;
+    }
+
+    input[type="range"].exp-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-btn);
+      border: 2px solid var(--bg-card);
+      cursor: pointer;
+      transition: transform 0.15s;
+      box-shadow: 0 0 6px rgba(74, 144, 217, 0.5);
+    }
+
+    input[type="range"].exp-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Meters */
+    .meters-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .meter {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 10px 12px;
+      text-align: center;
+    }
+
+    .meter-unit {
+      font-size: 0.65rem;
+      color: var(--text-soft);
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .meter-val {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-btn);
+    }
+
+    /* Material select */
+    .material-select {
+      width: 100%;
+      padding: 9px 12px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-var);
+      border-radius: var(--r-md);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+      outline: none;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .material-select:focus {
+      border-color: var(--accent-btn);
+    }
+
+    .material-select option {
+      background: var(--bg-card);
+    }
+
+    /* Action buttons container */
+    .action-btns-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .add-data-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      flex: 1;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--border-strong), var(--accent-btn));
+      border: none;
+      border-radius: var(--r-md);
+      color: white;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .add-data-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .add-data-btn:active {
+      transform: scale(0.98);
+    }
+
+    .add-data-btn.clear {
+      background: linear-gradient(135deg, #a03c3c, #7a2020);
+    }
+
+    /* =============================================
+   OBSERVATION TABLE
+   ============================================= */
+    .obs-table-section {
+      background: var(--card-inner);
+      border: 1.5px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .obs-table-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .exp-result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .exp-result-table th {
+      background: var(--scale-bg);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 2px solid var(--border-strong);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .exp-result-table td {
+      padding: 10px 14px;
+      color: var(--text-mid);
+      border-bottom: 1px solid var(--border-var);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .exp-result-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .exp-result-table tr:hover td {
+      background: var(--scale-bg);
+    }
+
+    .exp-result-table td.calc-col {
+      color: var(--accent-btn);
+      font-weight: 600;
+    }
+
+    /* =============================================
+   LIVE CALCULATIONS
+   ============================================= */
+    .formula-panel {
+      background: var(--card-inner);
+      border: 1.5px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .formula-panel-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .formula-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .formula-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .fstep-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent-btn), var(--accent-2));
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .fstep-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+      font-family: var(--font-body);
+    }
+
+    .fstep-value {
+      font-size: 0.92rem;
+      color: var(--text-mid);
+      font-family: var(--font-body);
+      line-height: 1.5;
+    }
+
+    .fstep-value .hi {
+      color: var(--accent-btn);
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .fstep-value .result {
+      color: var(--accent-2);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .formula-display {
+      color: var(--text-primary) !important;
+      font-size: 0.9rem !important;
+    }
+
+    /* =============================================
+   GRAPH SECTION
+   ============================================= */
+    .graph-section {
+      background: var(--card-inner);
+      border: 1.5px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .graph-section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .plot-graph-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: linear-gradient(135deg, var(--border-strong), var(--accent-btn));
+      border: none;
+      border-radius: 40px;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .plot-graph-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .plot-graph-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    canvas#plotCanvas {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* =============================================
+   RESULT SECTION
+   ============================================= */
+    .exp-result-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .exp-stat-card {
+      background: var(--card-inner);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .exp-stat-value {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-btn);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .exp-stat-label {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .exp-conclusion-box {
+      background: linear-gradient(135deg, var(--scale-bg) 0%, var(--card-inner) 100%);
+      border: 1px solid var(--border-var);
+      border-radius: var(--r-md);
+      padding: 20px 24px;
+      margin-top: 24px;
+    }
+
+    .exp-conclusion-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-btn);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .exp-conclusion-text {
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      line-height: 1.75;
+    }
+
+    /* =============================================
+   RESPONSIVE
+   ============================================= */
+    @media (max-width: 800px) {
+      .exp-main-body {
+        flex-direction: column;
+        padding: 20px 16px;
+      }
+
+      .exp-sidebar {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+      }
+
+      .exp-sidebar-card {
+        position: static;
+      }
+
+      .exp-nav-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .exp-nav-btn {
+        flex: 1;
+        min-width: calc(50% - 3px);
+        justify-content: center;
+        font-size: 0.8rem;
+        padding: 10px 8px;
+      }
+
+      .exp-nav-btn.active::before {
+        display: none;
+      }
+
+      .exp-banner {
+        padding: 18px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .exp-panel-body {
+        padding: 20px;
+      }
+
+      .exp-panel-header {
+        padding: 18px 20px;
+      }
+
+      .exp-breadcrumb {
+        padding: 8px 16px;
+      }
+
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    [data-theme="dark"] .portal-header {
+      background: rgba(18, 18, 31, 0.97);
+    }
+
+    /* Notification bell */
+    .notification-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #FF6B6B;
+      border: 1.5px solid var(--bg-card);
+    }
+
+    .bell-icon {
+      position: relative;
+    }
+
+    /* Simulation completion message */
+    .sim-complete-note {
+      display: none;
+      text-align: center;
+      padding: 16px;
+      background: var(--teal-dim);
+      border: 1px solid var(--accent-btn);
+      border-radius: var(--r-md);
+      margin-top: 16px;
+      font-size: 0.88rem;
+      color: var(--accent-btn);
+      font-weight: 600;
+    }
+
+    .sim-complete-note.visible {
+      display: block;
+    }
+
+    /* =============================================
+   ANIMATED CIRCUIT SIMULATION STYLES
+   ============================================= */
+    .mat-btn {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 9px 12px; margin-bottom: 6px;
+      background: var(--card-inner); border: 1.5px solid var(--border-var);
+      border-radius: var(--r-md); color: var(--text-mid);
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; text-align: left;
+    }
+    .mat-btn:hover { border-color: var(--accent-btn); color: var(--text-primary); background: var(--teal-dim); }
+    .mat-btn.sel { border-color: var(--accent-btn); background: var(--teal-dim); color: var(--accent-btn); font-weight: 600; }
+    .mat-btn .mat-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .mat-btn .ck { margin-left: auto; display: none; font-size: 0.75rem; font-weight: 700; }
+    .mat-btn.sel .ck { display: inline; }
+    .mat-count { font-size: 0.72rem; color: var(--text-soft); margin-top: 6px; font-family: var(--font-mono); text-align: right; }
+
+    .circuit-area { position: relative; margin: 12px 0; }
+    .circuit-complete-badge {
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+      background: #4CAF50; color: #fff; padding: 4px 14px; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700; opacity: 0; pointer-events: none;
+      transition: opacity 0.4s; z-index: 5;
+    }
+    .circuit-complete-badge.visible { opacity: 1; }
+
+    .supply-btn {
+      display: none; width: 100%; padding: 11px;
+      background: linear-gradient(135deg, var(--border-strong), var(--accent-btn));
+      border: none; border-radius: var(--r-md); color: #fff;
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; margin-top: 10px; transition: all 0.2s; letter-spacing: 0.02em;
+    }
+    .supply-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .supply-btn.stop { background: linear-gradient(135deg, #c0392b, #922b21) !important; }
+
+    .volt-ctrl-panel {
+      background: var(--card-inner); border: 1.5px solid var(--border-var);
+      border-radius: var(--r-md); padding: 16px; margin-top: 12px; display: none;
+    }
+    .volt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .volt-label { font-size: 0.72rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.08em; }
+    .volt-display { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: var(--accent-btn); }
+
+    .wire { stroke: var(--accent-btn); stroke-width: 2.2; fill: none; stroke-linecap: round; transition: stroke 0.4s; }
+    .cbody { fill: transparent; stroke: var(--accent-btn); stroke-width: 2; transition: stroke 0.4s; }
+    .ctxt { fill: var(--accent-btn); font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 600; }
+    .clbl { fill: var(--text-soft); font-family: 'Outfit', sans-serif; font-size: 9px; }
+
+    @keyframes wire-glow {
+      0%, 100% { stroke-opacity: 1; filter: drop-shadow(0 0 2px var(--accent-btn)); }
+      50% { stroke-opacity: 0.7; filter: drop-shadow(0 0 6px var(--accent-btn)); }
+    }
+    .wire-active { animation: wire-glow 1.5s ease-in-out infinite; }
+
+    #simPCanvas {
+      position: absolute; top: 0; left: 0;
+      width: 100% !important; height: 100% !important;
+      pointer-events: none;
+    }
+
+    .sim-two-col {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
+    }
+    @media (max-width: 700px) { .sim-two-col { grid-template-columns: 1fr; } }
+  </style>
+</head>
+
+<body class="exp-page-wrapper">
+
+  <header class="portal-header">
+    <div class="header-left">
+      <a href="" aria-label="LabMate home">
+        <img src="../assets/images/LabMateLogo2.png" alt="LabMate Logo" class="portal-logo" />
+      </a>
+      <div class="college-info">
+        <h1 class="college-name">Aditya University</h1>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <label class="theme-switch" for="portal-theme-checkbox" aria-label="Toggle dark mode">
+        <input type="checkbox" id="portal-theme-checkbox" />
+        <div class="slider round">
+          <span class="icon light-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="icon dark-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </div>
+      </label>
+
+      <button class="icon-btn bell-icon" aria-label="Notifications" id="notif-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notification-badge"></span>
+      </button>
+
+      <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications">
+        <div class="notif-panel-header">
+          <span>Notifications</span>
+          <button class="notif-clear-btn" id="notif-clear">Clear all</button>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>Physics Lab Update</p>
+              <span>Wavelength of Laser experiment is now due this Friday</span>
+              <time>2 hours ago</time>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-dot"></div>
+            <div class="notif-body">
+              <p>Lab Record</p>
+              <span>Zener Diode Characteristics has been unlocked</span>
+              <time>Yesterday</time>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-dropdown">
+        <button class="profile-btn" id="profile-btn" aria-haspopup="true" aria-expanded="false">
+          <div class="profile-avatar">S</div>
+          <div class="profile-name-tag">
+            <span class="prof-name">Santhosh</span>
+            <span class="prof-roll">24P31A42XX</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chevron-down">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="dropdown-menu" id="dropdown-menu">
+          <div class="dropdown-header">
+            <div class="dh-avatar">S</div>
+            <div>
+              <strong>Santhosh</strong>
+              <span>24P31A42XX · AIML</span>
+            </div>
+          </div>
+          <hr>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</a>
+          <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> My Progress</a>
+          <hr>
+          <a href="login.html" class="logout-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== BREADCRUMB ===================== -->
+  <div class="exp-breadcrumb">
+    <a href="#">Dashboard</a>
+    <span class="sep">›</span>
+    <a href="#">Physics Lab</a>
+    <span class="sep">›</span>
+    <span class="current">Energy Bandgap of a Semiconductor</span>
+  </div>
+
+  <!-- ===================== BANNER ===================== -->
+  <div class="exp-banner">
+    <div class="exp-banner-icon">⚡</div>
+    <div class="exp-banner-meta">
+      <div class="exp-banner-label">Physics Lab · Experiment 05</div>
+      <div class="exp-banner-title">Energy Bandgap of a Semiconductor</div>
+      <div class="exp-banner-sub">Determine the energy bandgap of a p-n junction diode using temperature-dependent
+        reverse saturation current.</div>
+    </div>
+  </div>
+
+  <!-- ===================== MAIN BODY ===================== -->
+  <div class="exp-main-body">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="exp-sidebar" role="complementary">
+      <div class="exp-sidebar-card">
+        <div class="exp-sidebar-header">Sections</div>
+        <nav class="exp-nav-list">
+          <button class="exp-nav-btn active" data-section="aim">
+            <span class="exp-nav-icon">🎯</span>Aim
+          </button>
+          <button class="exp-nav-btn" data-section="description">
+            <span class="exp-nav-icon">📋</span>Description
+          </button>
+          <button class="exp-nav-btn" data-section="procedure">
+            <span class="exp-nav-icon">📝</span>Procedure
+          </button>
+          <button class="exp-nav-btn" data-section="simulation">
+            <span class="exp-nav-icon">💻</span>Simulation
+          </button>
+          <button class="exp-nav-btn" data-section="result">
+            <span class="exp-nav-icon">📊</span>Result
+          </button>
+        </nav>
+        <div class="exp-sidebar-progress">
+          <div class="exp-progress-label">
+            <span>Progress</span>
+            <span id="progress-pct">20%</span>
+          </div>
+          <div class="exp-progress-track">
+            <div class="exp-progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT CONTENT AREA -->
+    <main class="exp-content-area" role="main">
+      <div class="exp-panel">
+
+        <!-- ========== AIM ========== -->
+        <div class="exp-section-content visible" id="section-aim">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">🎯</div>
+            <div>
+              <div class="exp-panel-title">Aim</div>
+              <div class="exp-panel-subtitle">Objective of this experiment</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">
+              To determine the <strong>energy bandgap (Eg)</strong> of a semiconductor material (Germanium or Silicon)
+              by studying the temperature dependence of the reverse saturation current (Is) of a p-n junction diode.
+            </p>
+            <div class="exp-highlight-box">
+              <strong>Learning Objective:</strong> Understand how the energy band gap of a semiconductor governs its
+              electrical behavior with temperature. By plotting Log₁₀(Is) vs 1000/T, we extract the slope and calculate
+              Eg using the relation Eg = (2 × 2.303 × k × |slope| × 10³) / q.
+            </div>
+            <p class="exp-body-text">
+              By the end of this experiment, you will be able to measure reverse saturation current at varying
+              temperatures,
+              construct the observation table, plot the characteristic graph, determine the slope from two best-fit
+              points,
+              and calculate the <strong>energy bandgap in electron Volts (eV)</strong>.
+            </p>
+            <hr class="exp-divider" />
+            <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Subject Tags:</strong>
+            </p>
+            <div style="margin-top:8px;">
+              <span class="exp-tag">Semiconductor Physics</span>
+              <span class="exp-tag">p-n Junction</span>
+              <span class="exp-tag">Band Theory</span>
+              <span class="exp-tag">Boltzmann Equation</span>
+              <span class="exp-tag">Thermometry</span>
+              <span class="exp-tag">Germanium / Silicon</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== DESCRIPTION ========== -->
+        <div class="exp-section-content" id="section-description">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📋</div>
+            <div>
+              <div class="exp-panel-title">Description</div>
+              <div class="exp-panel-subtitle">Theory &amp; Background</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">
+              In a semiconductor, electrons can exist in two energy bands separated by a forbidden region called the
+              <strong>Energy Band Gap (Eg)</strong>. The valence band is the lower energy band where electrons are
+              normally
+              present, while the conduction band is where electrons move freely and contribute to electrical conduction.
+            </p>
+            <p class="exp-body-text">
+              The reverse saturation current (Is) of a p-n junction diode increases exponentially with temperature
+              because more electron-hole pairs are thermally generated as the temperature rises.
+            </p>
+            <hr class="exp-divider" />
+            <div class="formula-row">
+              <div class="formula-card">
+                <div class="formula-card-label">Diode Current Equation</div>
+                <div class="formula-math">I = Is [exp(Eg/kT) − 1]</div>
+              </div>
+              <div class="formula-card">
+                <div class="formula-card-label">Band Gap Formula</div>
+                <div class="formula-math">Eg = (2 × 2.303 × k × |slope| × 10³) / q</div>
+              </div>
+              <div class="formula-card">
+                <div class="formula-card-label">Graph Relationship</div>
+                <div class="formula-math">Y = Log₁₀(Is) vs X = 1000/T</div>
+              </div>
+            </div>
+            <p class="exp-body-text">
+              When a graph is drawn with <strong>Log₁₀(Is)</strong> on the Y-axis and <strong>1000/T</strong> on the
+              X-axis,
+              a straight line is obtained. The slope of this best-fit line is related to the energy band gap Eg.
+            </p>
+            <div class="exp-highlight-box">
+              <strong>Apparatus Required:</strong> p-n junction diode (Ge or Si), variable power supply, microammeter
+              (μA), voltmeter (V), oven for temperature control, connecting wires, thermometer.
+            </div>
+            <p class="exp-body-text">
+              <strong>Constants:</strong> Boltzmann constant k = 1.38 × 10⁻²³ J/K &nbsp;|&nbsp; Elementary charge q =
+              1.6 × 10⁻¹⁹ C
+            </p>
+            <hr class="exp-divider" />
+            <p class="exp-body-text" style="font-size:0.83rem;color:var(--text-soft);"><strong>Theoretical
+                values:</strong></p>
+            <div class="exp-materials-grid" style="margin-top:12px;">
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Germanium: ≈ 0.67 eV</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>Silicon: ≈ 1.12 eV</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>GaAs: ≈ 1.42 eV</div>
+              <div class="exp-material-chip"><span class="exp-material-chip-dot"></span>InP: ≈ 1.35 eV</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== PROCEDURE ========== -->
+        <div class="exp-section-content" id="section-procedure">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📝</div>
+            <div>
+              <div class="exp-panel-title">Procedure</div>
+              <div class="exp-panel-subtitle">Step-by-step instructions</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+            <p class="exp-body-text">Follow each step carefully to perform the energy bandgap experiment with proper
+              safety precautions and accurate measurements.</p>
+            <ol class="exp-step-list">
+              <li>Connect the p-n junction diode in reverse bias configuration with the oven,
+                microammeter (μA), voltmeter (V), and variable power supply as shown in the circuit diagram.</li>
+              <li>Set the power supply to a fixed reverse voltage (e.g., 5V). Ensure all connections are firm and the
+                voltmeter reads the reverse bias voltage across the diode.</li>
+              <li>Switch on the oven and begin heating. Record the temperature t (°C) and corresponding
+                reverse saturation current Is (μA) at regular 5°C intervals.</li>
+              <li>Convert temperature from Celsius to Kelvin using T = t + 273. Calculate
+                1000/T and Log₁₀(Is) for each reading.</li>
+              <li>Record at least 8–9 readings for the temperature range 35°C to 75°C. Do not exceed 90°C as it may
+                damage the diode.</li>
+              <li>Plot a graph of Log₁₀(Is) on the Y-axis vs 1000/T on the X-axis.
+                Draw the best-fit straight line.</li>
+              <li>Calculate the slope (m) using two widely-separated best-fit points on the line: m =
+                ΔY / ΔX = Δ[Log₁₀(Is)] / Δ[1000/T].</li>
+              <li>Apply the band gap formula: Eg = (2 × 2.303 × k × |slope| × 10³) / q eV to calculate
+                the energy bandgap of the semiconductor.</li>
+            </ol>
+            <div class="exp-highlight-box">
+              <strong>⚠️ Precautions:</strong><br />
+              <ol>
+                <li>The current flow should not be too high.</li>
+                <li>Connections must be made properly.</li>
+                <li>Temperature of the oven should not exceed 90°C.</li>
+                <li>Take readings only after the temperature stabilizes.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== SIMULATION ========== -->
+        <div class="exp-section-content" id="section-simulation">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">💻</div>
+            <div>
+              <div class="exp-panel-title">Simulation</div>
+              <div class="exp-panel-subtitle">Interactive Bandgap Measurement</div>
+            </div>
+          </div>
+          <div class="exp-panel-body" style="padding:24px;">
+
+            <!-- ===== SUB-SECTION 1: CIRCUIT SIMULATION ===== -->
+            <div class="sim-section-header">
+              <div class="sim-section-dot"></div>
+              Step 1 &nbsp;—&nbsp; Circuit Simulation
+            </div>
+
+            <div class="sim-two-col">
+              <!-- LEFT: Components panel -->
+              <div>
+                <p class="materials-instruction">Click each component to place it on the circuit board. Place wires last to complete the circuit.</p>
+                <button class="mat-btn" id="mat-psu"       onclick="placePart('psu')">      <span class="mat-icon">🔋</span>Variable PSU (Power Supply)<span class="ck">✓</span></button>
+                <button class="mat-btn" id="mat-ammeter"   onclick="placePart('ammeter')">  <span class="mat-icon">🔵</span>Microammeter (μA)<span class="ck">✓</span></button>
+                <button class="mat-btn" id="mat-voltmeter" onclick="placePart('voltmeter')"><span class="mat-icon">🟡</span>Voltmeter (V)<span class="ck">✓</span></button>
+                <button class="mat-btn" id="mat-oven"      onclick="placePart('oven')">     <span class="mat-icon">🔥</span>Oven (Temperature Control)<span class="ck">✓</span></button>
+                <button class="mat-btn" id="mat-diode"     onclick="placePart('diode')">    <span class="mat-icon">🔺</span>p-n Junction Diode<span class="ck">✓</span></button>
+                <button class="mat-btn" id="mat-resistor"  onclick="placePart('resistor')"> <span class="mat-icon">🟤</span>Resistor<span class="ck">✓</span></button>
+                <button class="mat-btn" id="mat-wires"     onclick="placePart('wires')">    <span class="mat-icon">🔗</span>Connecting Wires<span class="ck">✓</span></button>
+                <div class="mat-count" id="simMatCount">0 / 7 placed</div>
+                <button class="supply-btn" id="simSupplyBtn" onclick="toggleSimPower()">⚡ Supply Electricity</button>
+              </div>
+
+              <!-- RIGHT: Circuit SVG -->
+              <div>
+                <div class="circuit-area" style="position:relative;">
+                  <div class="circuit-complete-badge" id="simCircBadge">✅ Circuit Complete</div>
+                  <svg id="simSvg" viewBox="0 0 520 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+                    <defs>
+                      <pattern id="simgrid" width="22" height="22" patternUnits="userSpaceOnUse">
+                        <circle cx="11" cy="11" r="0.8" fill="currentColor" opacity=".08"/>
+                      </pattern>
+                      <filter id="sgf" x="-30%" y="-30%" width="160%" height="160%">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/>
+                        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                      </filter>
+                    </defs>
+                    <rect width="520" height="280" fill="var(--bg-page)" rx="10"/>
+                    <rect width="520" height="280" fill="url(#simgrid)" color="var(--accent-btn)" rx="10"/>
+
+                    <!-- WIRES -->
+                    <g id="sg-wires" opacity="0">
+                      <line id="swt" class="wire" x1="60" y1="55"  x2="460" y2="55"/>
+                      <line id="swb" class="wire" x1="60" y1="225" x2="460" y2="225"/>
+                      <line id="swl" class="wire" x1="60" y1="55"  x2="60"  y2="225"/>
+                      <line id="swr" class="wire" x1="460" y1="55" x2="460" y2="225"/>
+                    </g>
+
+                    <!-- PSU -->
+                    <g id="sg-psu" opacity="0" filter="url(#sgf)">
+                      <rect x="28" y="110" width="64" height="60" rx="8" class="cbody"/>
+                      <text x="60" y="128" text-anchor="middle" class="clbl">PWR</text>
+                      <text x="60" y="142" text-anchor="middle" class="ctxt" font-size="14">±</text>
+                      <text x="60" y="157" text-anchor="middle" class="clbl">Variable PSU</text>
+                      <text x="33" y="120" class="ctxt" font-size="12">+</text>
+                      <text x="33" y="172" class="ctxt" font-size="14">−</text>
+                      <line x1="60" y1="110" x2="60" y2="55"  class="wire"/>
+                      <line x1="60" y1="170" x2="60" y2="225" class="wire"/>
+                      <text id="simPsV" x="60" y="42" text-anchor="middle" class="ctxt" font-size="10">5.0V</text>
+                    </g>
+
+                    <!-- AMMETER -->
+                    <g id="sg-ammeter" opacity="0" filter="url(#sgf)">
+                      <circle cx="270" cy="55" r="22" class="cbody"/>
+                      <text x="270" y="60" text-anchor="middle" class="ctxt" font-size="14" font-style="italic">A</text>
+                      <text x="270" y="30" text-anchor="middle" class="clbl">Microammeter (μA)</text>
+                      <line x1="160" y1="55" x2="248" y2="55" class="wire"/>
+                      <line x1="292" y1="55" x2="345" y2="55" class="wire"/>
+                    </g>
+
+                    <!-- VOLTMETER -->
+                    <g id="sg-voltmeter" opacity="0" filter="url(#sgf)">
+                      <circle cx="270" cy="225" r="22" class="cbody"/>
+                      <text x="270" y="230" text-anchor="middle" class="ctxt" font-size="14" font-style="italic">V</text>
+                      <text x="270" y="262" text-anchor="middle" class="clbl">Voltmeter (V)</text>
+                      <line x1="160" y1="225" x2="248" y2="225" class="wire"/>
+                      <line x1="292" y1="225" x2="345" y2="225" class="wire"/>
+                    </g>
+
+                    <!-- OVEN box -->
+                    <g id="sg-oven" opacity="0" filter="url(#sgf)">
+                      <rect x="360" y="75" width="115" height="130" rx="10" class="cbody" stroke-dasharray="5,2.5"/>
+                      <text x="418" y="96" text-anchor="middle" class="clbl">OVEN</text>
+                      <text x="418" y="109" text-anchor="middle" class="clbl">Temperature Control</text>
+                      <line x1="360" y1="140" x2="345" y2="140" class="wire"/>
+                      <line x1="345" y1="55"  x2="345" y2="140" class="wire"/>
+                      <line x1="475" y1="140" x2="460" y2="140" class="wire"/>
+                      <line x1="460" y1="55"  x2="460" y2="140" class="wire"/>
+                      <line x1="373" y1="175" x2="463" y2="175" stroke="#FF6B6B" stroke-width="1" opacity="0.5" stroke-dasharray="3,3"/>
+                      <line x1="373" y1="183" x2="463" y2="183" stroke="#FF6B6B" stroke-width="1" opacity="0.3" stroke-dasharray="3,3"/>
+                    </g>
+
+                    <!-- DIODE inside oven -->
+                    <g id="sg-diode" opacity="0" filter="url(#sgf)">
+                      <polygon points="395,140 415,125 415,155" class="cbody" stroke-width="2"/>
+                      <line x1="415" y1="125" x2="415" y2="155" class="cbody" stroke-width="3"/>
+                      <line x1="380" y1="140" x2="395" y2="140" class="wire"/>
+                      <line x1="415" y1="140" x2="430" y2="140" class="wire"/>
+                      <text x="403" y="117" text-anchor="middle" class="clbl">Diode</text>
+                    </g>
+
+                    <!-- RESISTOR -->
+                    <g id="sg-resistor" opacity="0" filter="url(#sgf)">
+                      <polyline points="460,75 466,87 454,97 466,107 454,117 466,127 454,137 460,145"
+                        fill="none" stroke="var(--accent-2)" stroke-width="2.2" stroke-linecap="round"/>
+                      <line x1="460" y1="55"  x2="460" y2="75"  class="wire"/>
+                      <line x1="460" y1="145" x2="460" y2="225" class="wire"/>
+                      <text x="477" y="110" class="clbl">Res.</text>
+                    </g>
+
+                    <!-- NODE DOTS -->
+                    <g id="sg-nodes" opacity="0">
+                      <circle cx="60"  cy="55"  r="3.5" fill="var(--accent-btn)"/>
+                      <circle cx="460" cy="55"  r="3.5" fill="var(--accent-btn)"/>
+                      <circle cx="60"  cy="225" r="3.5" fill="var(--accent-btn)"/>
+                      <circle cx="460" cy="225" r="3.5" fill="var(--accent-btn)"/>
+                    </g>
+
+                    <!-- CIRCUIT LABEL -->
+                    <text x="50" y="268" class="clbl" opacity="0.6" font-size="8">Reverse Bias Configuration — Fixed 5V</text>
+                  </svg>
+                  <canvas id="simPCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
+                </div>
+
+                <!-- Voltage/Current meters (shown when powered) -->
+                <div class="volt-ctrl-panel" id="simVoltCtrl">
+                  <div class="volt-header">
+                    <span class="volt-label">Circuit Status</span>
+                    <span class="volt-display" id="simVoltDisplay">5.0 V</span>
+                  </div>
+                  <div class="meters-row">
+                    <div class="meter" id="simMeterV">
+                      <div class="meter-unit">Voltage (V)</div>
+                      <div class="meter-val" id="simMV">5.0</div>
+                    </div>
+                    <div class="meter" id="simMeterA">
+                      <div class="meter-unit">Is (μA)</div>
+                      <div class="meter-val" id="simMA">—</div>
+                    </div>
+                    <div class="meter" id="simMeterT">
+                      <div class="meter-unit">Temp (K)</div>
+                      <div class="meter-val" id="simMT">—</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="exp-divider" style="margin:20px 0;" />
+
+            <!-- ===== SUB-SECTION 2: CONTROLS & INPUTS ===== -->
+            <div class="sim-section-header">
+              <div class="sim-section-dot"></div>
+              Step 2 &nbsp;—&nbsp; Controls &amp; Inputs
+            </div>
+
+            <div class="controls-grid">
+              <!-- Current panel (first) -->
+              <div class="control-panel">
+                <div class="control-panel-label">Current Control (Is)</div>
+
+                <div class="ctrl-row">
+                  <div class="ctrl-label">Material Type</div>
+                  <select class="material-select" id="materialSelect" onchange="updateMaterial()">
+                    <option value="ge">Germanium (Ge) — Eg ≈ 0.67 eV</option>
+                    <option value="si">Silicon (Si) — Eg ≈ 1.12 eV</option>
+                  </select>
+                </div>
+
+                <div class="ctrl-row">
+                  <div class="ctrl-label">
+                    Reverse Saturation Current (Is)
+                    <span class="ctrl-val" id="currLabel">9.0 μA</span>
+                  </div>
+                  <div class="slider-row">
+                    <button class="slider-btn" onclick="adjustSlider('currSlider', -1)"
+                      title="Decrease current">−</button>
+                    <input type="range" class="exp-slider" id="currSlider" min="1" max="100" value="9" step="1"
+                      oninput="updateSliders()" style="--val:8%" />
+                    <button class="slider-btn" onclick="adjustSlider('currSlider', 1)"
+                      title="Increase current">+</button>
+                  </div>
+                </div>
+
+                <div class="meters-row">
+                  <div class="meter">
+                    <div class="meter-unit">μA (Is)</div>
+                    <div class="meter-val" id="meterCurr">9.0</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Temperature panel (second) -->
+              <div class="control-panel">
+                <div class="control-panel-label">Temperature Control</div>
+
+                <div class="ctrl-row" style="margin-top:8px;">
+                  <div class="ctrl-label">
+                    Temperature (T)
+                    <span class="ctrl-val" id="tempLabel">308 K</span>
+                  </div>
+                  <div class="slider-row">
+                    <button class="slider-btn" onclick="adjustSlider('tempSlider', -5)"
+                      title="Decrease temperature">−</button>
+                    <input type="range" class="exp-slider" id="tempSlider" min="308" max="373" value="308" step="5"
+                      oninput="updateSliders()" style="--val:0%" />
+                    <button class="slider-btn" onclick="adjustSlider('tempSlider', 5)"
+                      title="Increase temperature">+</button>
+                  </div>
+                </div>
+
+                <div class="meters-row">
+                  <div class="meter">
+                    <div class="meter-unit">Kelvin (T)</div>
+                    <div class="meter-val" id="meterTemp">308</div>
+                  </div>
+                  <div class="meter">
+                    <div class="meter-unit">°C (t)</div>
+                    <div class="meter-val" id="meterCelsius">35</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-btns-row">
+                <button class="add-data-btn" onclick="addDataPoint()">
+                    ➕ Add Data Point
+                </button>
+                <button class="add-data-btn clear" onclick="clearData()">
+                    🗑 Clear All
+                </button>
+            </div>
+
+            <hr class="exp-divider" style="margin:24px 0;" />
+
+            <!-- ===== SUB-SECTION 3: OBSERVATION TABLE ===== -->
+            <div class="sim-section-header">
+              <div class="sim-section-dot"></div>
+              Step 3 &nbsp;—&nbsp; Observation Table
+            </div>
+
+            <div class="obs-table-section">
+              <div class="obs-table-title">Observation Table — Reverse Saturation Current vs Temperature</div>
+              <table class="exp-result-table" id="obsTable">
+                <thead>
+                  <tr>
+                    <th>S.No</th>
+                    <th>Is (μA)</th>
+                    <th>t (°C)</th>
+                    <th>T (K)</th>
+                    <th>1000/T (K⁻¹)</th>
+                    <th>Log₁₀(Is)</th>
+                  </tr>
+                </thead>
+                <tbody id="dataTableBody">
+                  <tr>
+                    <td colspan="6"
+                      style="text-align:center;color:var(--text-soft);padding:20px;font-family:var(--font-body);font-size:0.85rem;">
+                      — Add data points using the controls above —</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <hr class="exp-divider" style="margin:20px 0;" />
+
+            <!-- ===== SUB-SECTION 4: LIVE CALCULATIONS (per observation entry) ===== -->
+            <div class="sim-section-header">
+              <div class="sim-section-dot"></div>
+              Step 4 &nbsp;—&nbsp; Live Calculation (Current Entry)
+            </div>
+
+            <div class="formula-panel">
+              <div class="formula-panel-title">🔢 Step-by-Step Calculation — Based on Current Slider Values</div>
+              <div class="formula-steps">
+                <div class="formula-step">
+                  <div class="fstep-num">1</div>
+                  <div>
+                    <div class="fstep-label">User Input</div>
+                    <div class="fstep-value">Current Is = <span class="hi" id="f1curr">9.0 μA</span> &nbsp;|&nbsp;
+                      Temperature T = <span class="hi" id="f1temp">308 K</span></div>
+                  </div>
+                </div>
+                <div class="formula-step">
+                  <div class="fstep-num">2</div>
+                  <div>
+                    <div class="fstep-label">Temperature Conversion</div>
+                    <div class="fstep-value">t (°C) = T − 273 = <span class="hi" id="f2celsius">35 °C</span></div>
+                  </div>
+                </div>
+                <div class="formula-step">
+                  <div class="fstep-num">3</div>
+                  <div>
+                    <div class="fstep-label">Data Processing</div>
+                    <div class="fstep-value">
+                        <div>
+                            1000/T = 1000 ÷ <span class="hi" id="f3T">308</span> =
+                            <span class="hi" id="f3invT">3.247</span> K⁻¹
+                        </div>
+                        <div style="margin-top: 8px;">
+                            Log₁₀(Is) = Log₁₀(<span class="hi" id="f3Is">9.0</span>) =
+                            <span class="hi" id="f3logI">0.954</span>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="formula-step">
+                  <div class="fstep-num">4</div>
+                  <div>
+                    <div class="fstep-label">Slope (from 2 best table points)</div>
+                    <div class="fstep-value">
+                      m = Δ[Log₁₀(Is)] / Δ[1000/T] = <span class="hi" id="f4slope">— (need ≥2 points)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="formula-step">
+                  <div class="fstep-num">5</div>
+                  <div>
+                    <div class="fstep-label">Band Gap Formula</div>
+                    <div class="fstep-value formula-display">Eg = [ (2 × 2.303 × k × |slope| × 10³) / q ] eV</div>
+                  </div>
+                </div>
+                <div class="formula-step">
+                  <div class="fstep-num">6</div>
+                  <div>
+                    <div class="fstep-label">Constants Used</div>
+                    <div class="fstep-value">k = 1.38 × 10⁻²³ J/K &nbsp;|&nbsp; q = 1.6 × 10⁻¹⁹ C</div>
+                  </div>
+                </div>
+                <div class="formula-step">
+                  <div class="fstep-num">7</div>
+                  <div>
+                    <div class="fstep-label">Result</div>
+                    <div class="fstep-value">Energy Bandgap Eg = <span class="result" id="f7result">— (add ≥2 data points)</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="exp-divider" style="margin:20px 0;" />
+
+            <!-- ===== SUB-SECTION 5: GRAPH PLOTTING ===== -->
+            <div class="sim-section-header">
+              <div class="sim-section-dot"></div>
+              Step 5 &nbsp;—&nbsp; Graph Plotting
+            </div>
+
+            <div class="graph-section">
+              <div class="graph-section-title">
+                <span>📈 Log₁₀(Is) vs 1000/T Graph</span>
+                <div style="display:flex; gap:12px;">
+                  <button class="plot-graph-btn" id="plotGraphBtn" onclick="plotGraph()" disabled>
+                    📊 Plot Graph
+                  </button>
+                  <button class="plot-graph-btn" id="goResultBtn" onclick="navigateSection('result')"
+                    style="background:var(--scale-bg); color:var(--text-primary); border:1px solid var(--border-var); display:none;">
+                    🏆 View Results
+                  </button>
+                </div>
+              </div>
+              <div id="graphPlaceholder"
+                style="text-align:center;padding:40px;color:var(--text-soft);font-size:0.88rem;">
+                <div style="font-size:2rem;margin-bottom:10px;">📈</div>
+                Complete the observation table with at least 2 data points, then click <strong>Plot Graph</strong>.
+              </div>
+              <canvas id="plotCanvas" width="800" height="340" style="display:none;"></canvas>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ========== RESULT ========== -->
+        <div class="exp-section-content" id="section-result">
+          <div class="exp-panel-header">
+            <div class="exp-panel-icon">📊</div>
+            <div>
+              <div class="exp-panel-title">Result</div>
+              <div class="exp-panel-subtitle">Experimental findings &amp; analysis</div>
+            </div>
+          </div>
+          <div class="exp-panel-body">
+
+            <div id="result-pending" style="text-align:center;padding:40px 20px;color:var(--text-soft);">
+              <div style="font-size:2.8rem;margin-bottom:14px;">⚡</div>
+              <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;">No simulation data
+                yet</p>
+              <p style="font-size:0.85rem;line-height:1.7;">Go to the <strong>Simulation</strong> tab, add at least 2
+                data points and plot the graph. Your results will appear here automatically.</p>
+            </div>
+
+            <div id="result-live" style="display:none;">
+              <div class="exp-result-stats">
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value" id="resultEg">—</div>
+                  <div class="exp-stat-label">Energy Bandgap (eV)</div>
+                </div>
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value" id="resultSlope">—</div>
+                  <div class="exp-stat-label">Graph Slope (m)</div>
+                </div>
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value" id="resultMaterial">Ge</div>
+                  <div class="exp-stat-label">Material</div>
+                </div>
+                <div class="exp-stat-card">
+                  <div class="exp-stat-value" id="resultPoints">0</div>
+                  <div class="exp-stat-label">Data Points</div>
+                </div>
+              </div>
+
+              <p class="exp-body-text" style="margin-bottom:16px;"><strong>Slope Calculation — Two Best Points:</strong>
+              </p>
+              <div class="exp-highlight-box" id="slopeTwoPointsBox">
+                Select two points from the observation table to calculate slope.
+              </div>
+
+              <div class="exp-conclusion-box">
+                <div class="exp-conclusion-label"><span>✓</span> Conclusion</div>
+                <p class="exp-conclusion-text" id="result-conclusion-text">
+                  Run the simulation and plot the graph to see the conclusion.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.exp-panel -->
+    </main>
+
+  </div><!-- /.exp-main-body -->
+
+
+  <script>
+    /* =====================================================
+       STATE
+    ===================================================== */
+    const SECTIONS = ['aim', 'description', 'procedure', 'simulation', 'result'];
+    let dataPoints = [];
+    let currentMaterial = 'ge';
+    let currentSlope = null;
+    let graphPlotted = false;
+
+    /* =====================================================
+       THEME TOGGLE
+    ===================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggle = document.getElementById('exp-theme-toggle');
+
+      // Persistence
+      const savedTheme = localStorage.getItem('labmate-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      toggle.checked = (savedTheme === 'dark');
+
+      toggle.addEventListener('change', () => {
+        const theme = toggle.checked ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('labmate-theme', theme);
+        if (graphPlotted) drawPlot();
+      });
+
+      // Section navigation
+      const navBtns = document.querySelectorAll('.exp-nav-btn');
+      const sections = document.querySelectorAll('.exp-section-content');
+      const progFill = document.getElementById('progress-fill');
+      const progPct = document.getElementById('progress-pct');
+      const total = navBtns.length;
+
+      let visited = ['aim'];
+
+      function updateProgress() {
+        const pct = Math.round((visited.length / total) * 100);
+        progFill.style.width = pct + '%';
+        progPct.textContent = pct + '%';
+      }
+      updateProgress();
+
+      navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.section;
+          navBtns.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+          btn.classList.add('active'); btn.setAttribute('aria-current', 'true');
+          sections.forEach(s => s.classList.remove('visible'));
+          const sec = document.getElementById('section-' + target);
+          if (sec) {
+            sec.style.animation = 'none'; sec.offsetHeight;
+            sec.style.animation = ''; sec.classList.add('visible');
+          }
+          if (!visited.includes(target)) visited.push(target);
+          updateProgress();
+          if (target === 'result') updateResultSection();
+          if (target === 'simulation' && graphPlotted) drawPlot();
+          document.querySelector('.exp-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // Init sliders
+      updateSliders();
+    });
+
+    function navigateSection(target) {
+      const navBtns = document.querySelectorAll('.exp-nav-btn');
+      const sections = document.querySelectorAll('.exp-section-content');
+      const btn = Array.from(navBtns).find(b => b.dataset.section === target);
+      if (!btn) return;
+      navBtns.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+      btn.classList.add('active'); btn.setAttribute('aria-current', 'true');
+      sections.forEach(s => s.classList.remove('visible'));
+      const sec = document.getElementById('section-' + target);
+      if (sec) { sec.style.animation = 'none'; sec.offsetHeight; sec.style.animation = ''; sec.classList.add('visible'); }
+      updateResultSection();
+      if (target === 'simulation' && graphPlotted) drawPlot();
+      document.querySelector('.exp-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* =====================================================
+       ANIMATED CIRCUIT SIMULATION — Component Placement
+    ===================================================== */
+    const SIM_PARTS = ['psu','ammeter','voltmeter','oven','diode','resistor','wires'];
+    const simPlaced = {psu:false, ammeter:false, voltmeter:false, oven:false, diode:false, resistor:false, wires:false};
+    let simPlacedCount = 0;
+    let simReady = false;
+    let simPowered = false;
+    let simPAF = null;
+    let simParticles = [];
+
+    const SIM_PATH = [
+      {x:60,y:55},{x:160,y:55},{x:248,y:55},{x:270,y:55},{x:292,y:55},
+      {x:345,y:55},{x:460,y:55},{x:460,y:75},{x:460,y:145},{x:460,y:225},
+      {x:292,y:225},{x:270,y:225},{x:248,y:225},{x:160,y:225},{x:60,y:225},{x:60,y:55}
+    ];
+
+    function ptOnSimPath(t) {
+      const total = SIM_PATH.length - 1;
+      const si = Math.floor(t * total);
+      const sp = t * total - si;
+      const a = SIM_PATH[Math.min(si, total - 1)];
+      const b = SIM_PATH[Math.min(si + 1, total)];
+      if (!a || !b) return SIM_PATH[0];
+      return { x: a.x + (b.x - a.x) * sp, y: a.y + (b.y - a.y) * sp };
+    }
+
+    function placePart(name) {
+      if (simPlaced[name]) return;
+      if (name === 'wires') {
+        const others = SIM_PARTS.filter(c => c !== 'wires');
+        if (!others.every(c => simPlaced[c])) {
+          alert('⚠ Place all other components before connecting wires!');
+          return;
+        }
+      }
+      simPlaced[name] = true;
+      simPlacedCount++;
+      document.getElementById('mat-' + name).classList.add('sel');
+      document.getElementById('simMatCount').textContent = simPlacedCount + ' / 7 placed';
+
+      // Animate component appearing
+      if (typeof anime !== 'undefined') {
+        anime({ targets: '#sg-' + name, opacity: [0, 1], scale: [0.5, 1], duration: 650, easing: 'spring(1,80,10,0)' });
+        if (name === 'wires') anime({ targets: '#sg-nodes', opacity: [0, 1], duration: 500 });
+      } else {
+        document.getElementById('sg-' + name).style.opacity = '1';
+        if (name === 'wires') document.getElementById('sg-nodes').style.opacity = '1';
+      }
+
+      if (simPlacedCount === 7) onSimAllPlaced();
+    }
+
+    function onSimAllPlaced() {
+      simReady = true;
+      const badge = document.getElementById('simCircBadge');
+      badge.classList.add('visible');
+      if (typeof anime !== 'undefined') {
+        anime({ targets: '#sg-wires', opacity: [0, 1], duration: 800, easing: 'easeOutQuad' });
+        setTimeout(() => {
+          document.querySelectorAll('#sg-wires line').forEach(l => l.classList.add('wire-active'));
+        }, 800);
+      } else {
+        document.getElementById('sg-wires').style.opacity = '1';
+      }
+      const btn = document.getElementById('simSupplyBtn');
+      btn.style.display = 'block';
+      if (typeof anime !== 'undefined') {
+        anime({ targets: '#simSupplyBtn', opacity: [0, 1], translateY: [12, 0], duration: 500, easing: 'easeOutQuad' });
+      }
+    }
+
+    function toggleSimPower() {
+      if (!simReady) return;
+      simPowered ? stopSimPower() : startSimPower();
+    }
+
+    function startSimPower() {
+      simPowered = true;
+      const btn = document.getElementById('simSupplyBtn');
+      btn.textContent = '⏹ Stop Electricity';
+      btn.classList.add('stop');
+      document.getElementById('simVoltCtrl').style.display = 'block';
+      if (typeof anime !== 'undefined') {
+        anime({ targets: '#simVoltCtrl', opacity: [0, 1], translateY: [-8, 0], duration: 400, easing: 'easeOutQuad' });
+      }
+      startSimParticles();
+      updateSimMeters();
+    }
+
+    function stopSimPower() {
+      simPowered = false;
+      stopSimParticles();
+      const btn = document.getElementById('simSupplyBtn');
+      btn.textContent = '⚡ Supply Electricity';
+      btn.classList.remove('stop');
+      document.getElementById('simVoltCtrl').style.display = 'none';
+      document.getElementById('simMA').textContent = '—';
+      document.getElementById('simMT').textContent = '—';
+    }
+
+    function updateSimMeters() {
+      if (!simPowered) return;
+      const T = parseInt(document.getElementById('tempSlider').value);
+      const Is = parseFloat(document.getElementById('currSlider').value);
+      document.getElementById('simMV').textContent = '5.0';
+      document.getElementById('simMA').textContent = Is.toFixed(1);
+      document.getElementById('simMT').textContent = T;
+    }
+
+    function startSimParticles() {
+      const pCanvas = document.getElementById('simPCanvas');
+      const svg = document.getElementById('simSvg');
+      const r = svg.getBoundingClientRect();
+      pCanvas.width = r.width;
+      pCanvas.height = r.height;
+      pCanvas._sx = r.width / 520;
+      pCanvas._sy = r.height / 280;
+      const pCtx = pCanvas.getContext('2d');
+      simParticles = [];
+      for (let i = 0; i < 12; i++) {
+        simParticles.push({ t: i / 12, spd: 0.0014 + Math.random() * 0.0008, sz: 2 + Math.random() * 1.5, op: 0.5 + Math.random() * 0.4 });
+      }
+      function loop() {
+        if (!simPowered) return;
+        pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+        const sx = pCanvas._sx || 1, sy = pCanvas._sy || 1;
+        const isDarkNow = document.documentElement.getAttribute('data-theme') === 'dark';
+        const clr = isDarkNow ? '123,47,190' : '26,136,208';
+        simParticles.forEach(p => {
+          p.t += p.spd; if (p.t >= 1) p.t -= 1;
+          const pt = ptOnSimPath(p.t);
+          const x = pt.x * sx, y = pt.y * sy;
+          const g = pCtx.createRadialGradient(x, y, 0, x, y, p.sz * 3);
+          g.addColorStop(0, `rgba(${clr},${p.op})`);
+          g.addColorStop(1, `rgba(${clr},0)`);
+          pCtx.beginPath(); pCtx.arc(x, y, p.sz * 3, 0, Math.PI * 2); pCtx.fillStyle = g; pCtx.fill();
+          pCtx.beginPath(); pCtx.arc(x, y, p.sz * 0.4, 0, Math.PI * 2);
+          pCtx.fillStyle = `rgba(255,255,255,${p.op * 0.8})`; pCtx.fill();
+        });
+        simPAF = requestAnimationFrame(loop);
+      }
+      simPAF = requestAnimationFrame(loop);
+    }
+
+    function stopSimParticles() {
+      cancelAnimationFrame(simPAF);
+      const pCanvas = document.getElementById('simPCanvas');
+      const pCtx = pCanvas.getContext('2d');
+      if (pCtx) pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+    }
+
+    window.addEventListener('resize', () => {
+      if (simPowered) {
+        const pCanvas = document.getElementById('simPCanvas');
+        const svg = document.getElementById('simSvg');
+        const r = svg.getBoundingClientRect();
+        pCanvas.width = r.width; pCanvas.height = r.height;
+        pCanvas._sx = r.width / 520; pCanvas._sy = r.height / 280;
+      }
+      if (graphPlotted) drawPlot();
+    });
+
+    /* =====================================================
+       SLIDER ADJUSTMENTS (± buttons)
+    ===================================================== */
+    function adjustSlider(id, delta) {
+      const slider = document.getElementById(id);
+      const newVal = Math.min(parseInt(slider.max), Math.max(parseInt(slider.min), parseInt(slider.value) + delta));
+      slider.value = newVal;
+      updateSliders();
+    }
+
+    /* =====================================================
+       SLIDERS UPDATE
+    ===================================================== */
+    function updateSliders() {
+      const T = parseInt(document.getElementById('tempSlider').value);
+      const Is = parseFloat(document.getElementById('currSlider').value);
+      const t = T - 273;
+
+      // Labels
+      document.getElementById('tempLabel').textContent = T + ' K';
+      document.getElementById('currLabel').textContent = Is.toFixed(1) + ' μA';
+
+      // Slider fill
+      const tempPct = ((T - 308) / (373 - 308)) * 100;
+      const currPct = ((Is - 1) / (100 - 1)) * 100;
+      document.getElementById('tempSlider').style.setProperty('--val', tempPct + '%');
+      document.getElementById('currSlider').style.setProperty('--val', currPct + '%');
+
+      // Meters
+      document.getElementById('meterCurr').textContent = Is.toFixed(1);
+      document.getElementById('meterTemp').textContent = T;
+      document.getElementById('meterCelsius').textContent = t;
+
+      // Live formula (observation table calculations)
+      const invT = (1000 / T);
+      const logI = Math.log10(Is);
+
+      document.getElementById('f1curr').textContent = Is.toFixed(1) + ' μA';
+      document.getElementById('f1temp').textContent = T + ' K';
+      document.getElementById('f2celsius').textContent = t + ' °C';
+      document.getElementById('f3T').textContent = T;
+      document.getElementById('f3Is').textContent = Is.toFixed(1);
+      document.getElementById('f3invT').textContent = invT.toFixed(3);
+      document.getElementById('f3logI').textContent = logI.toFixed(3);
+
+      updateSlopeCalc();
+      if (simPowered) updateSimMeters();
+    }
+
+    function updateMaterial() {
+      currentMaterial = document.getElementById('materialSelect').value;
+      document.getElementById('resultMaterial').textContent = currentMaterial === 'ge' ? 'Ge' : 'Si';
+    }
+
+    /* =====================================================
+       DATA POINTS
+    ===================================================== */
+    function addDataPoint() {
+      const T = parseInt(document.getElementById('tempSlider').value);
+      const Is = parseFloat(document.getElementById('currSlider').value);
+
+      if (dataPoints.find(p => p.T === T)) {
+        alert('A data point for T = ' + T + ' K already exists. Change temperature first.');
+        return;
+      }
+
+      dataPoints.push({ T, Is, invT: 1000 / T, logI: Math.log10(Is) });
+      dataPoints.sort((a, b) => b.T - a.T);
+
+      renderTable();
+      updateSlopeCalc();
+      updatePlotBtnState();
+    }
+
+    function clearData() {
+      dataPoints = [];
+      graphPlotted = false;
+      renderTable();
+      updateSlopeCalc();
+      updatePlotBtnState();
+
+      // Hide plot
+      document.getElementById('plotCanvas').style.display = 'none';
+      document.getElementById('graphPlaceholder').style.display = 'block';
+      document.getElementById('goResultBtn').style.display = 'none';
+
+      updateResultSection();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('dataTableBody');
+      if (dataPoints.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-soft);padding:20px;font-family:var(--font-body);font-size:0.85rem;">— Add data points using the controls above —</td></tr>';
+        return;
+      }
+      tbody.innerHTML = dataPoints.map((p, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${p.Is.toFixed(1)}</td>
+      <td>${p.T - 273}</td>
+      <td>${p.T}</td>
+      <td class="calc-col">${p.invT.toFixed(3)}</td>
+      <td class="calc-col">${p.logI.toFixed(3)}</td>
+    </tr>
+  `).join('');
+    }
+
+    /* =====================================================
+       SLOPE CALCULATION — using 2 extreme points
+    ===================================================== */
+    function updateSlopeCalc() {
+      if (dataPoints.length < 2) {
+        document.getElementById('f4slope').textContent = '— (need ≥2 points)';
+        document.getElementById('f7result').textContent = '— (add ≥2 data points)';
+        currentSlope = null;
+        return;
+      }
+
+      // Use two extreme (best) points: max and min 1000/T
+      const sorted = [...dataPoints].sort((a, b) => a.invT - b.invT);
+      const p1 = sorted[0];
+      const p2 = sorted[sorted.length - 1];
+
+      const slope = (p2.logI - p1.logI) / (p2.invT - p1.invT);
+      currentSlope = slope;
+
+      const k = 1.38e-23;
+      const q = 1.6e-19;
+      const Eg = (2 * 2.303 * k * Math.abs(slope) * 1e3) / q;
+
+      document.getElementById('f4slope').textContent = slope.toFixed(4);
+      document.getElementById('f7result').innerHTML = `<span class="result">${Eg.toFixed(4)} eV</span>`;
+    }
+
+    function updatePlotBtnState() {
+      const btn = document.getElementById('plotGraphBtn');
+      btn.disabled = dataPoints.length < 2;
+    }
+
+    /* =====================================================
+       PLOT GRAPH — triggered only by "Plot Graph" button
+    ===================================================== */
+    function plotGraph() {
+      if (dataPoints.length < 2) return;
+      graphPlotted = true;
+      document.getElementById('graphPlaceholder').style.display = 'none';
+      document.getElementById('plotCanvas').style.display = 'block';
+      document.getElementById('goResultBtn').style.display = 'inline-flex';
+      drawPlot();
+      updateResultSection();
+    }
+
+    function drawPlot() {
+      const canvas = document.getElementById('plotCanvas');
+      const ctx = canvas.getContext('2d');
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+      const W = canvas.width; const H = canvas.height;
+
+      const bg = isDark ? '#0D0D1A' : '#F0F6FF';
+      const gridColor = isDark ? '#2A2A45' : '#D0DCF0';
+      const axisColor = isDark ? '#6A6F9A' : '#6A9DC8';
+      const dotColor = isDark ? '#7B2FBE' : '#1A88D0';
+      const lineColor = isDark ? '#C07AFF' : '#0EC4E0';
+      const textColor = isDark ? '#A8B0D8' : '#2D5E8A';
+      const labelColor = isDark ? '#E8EAFF' : '#0D1B2A';
+      const bestPtColor = '#FF6B6B';
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = bg;
+      ctx.beginPath(); ctx.roundRect(0, 0, W, H, 8); ctx.fill();
+
+      const pad = { top: 40, right: 50, bottom: 60, left: 80 };
+      const pw = W - pad.left - pad.right;
+      const ph = H - pad.top - pad.bottom;
+
+      // Grid
+      for (let i = 0; i <= 5; i++) {
+        const y = pad.top + (ph / 5) * i;
+        ctx.strokeStyle = gridColor; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + pw, y); ctx.stroke();
+      }
+      for (let i = 0; i <= 6; i++) {
+        const x = pad.left + (pw / 6) * i;
+        ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + ph); ctx.stroke();
+      }
+
+      // Axes
+      ctx.strokeStyle = axisColor; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, pad.top + ph); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(pad.left, pad.top + ph); ctx.lineTo(pad.left + pw, pad.top + ph); ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = labelColor; ctx.font = '13px Outfit'; ctx.textAlign = 'center';
+      ctx.fillText('1000/T (K⁻¹)', pad.left + pw / 2, H - 10);
+      ctx.save(); ctx.translate(18, pad.top + ph / 2); ctx.rotate(-Math.PI / 2);
+      ctx.fillText('Log₁₀(Is)', 0, 0); ctx.restore();
+
+      if (dataPoints.length === 0) {
+        ctx.fillStyle = axisColor; ctx.font = '14px Outfit'; ctx.textAlign = 'center';
+        ctx.fillText('Add data points and click Plot Graph', pad.left + pw / 2, pad.top + ph / 2);
+        return;
+      }
+
+      const xs = dataPoints.map(p => p.invT);
+      const ys = dataPoints.map(p => p.logI);
+      const margin = 0.05;
+      const xMin = Math.min(...xs) - margin; const xMax = Math.max(...xs) + margin;
+      const yMargin = Math.max(0.05, (Math.max(...ys) - Math.min(...ys)) * 0.1);
+      const yMin = Math.min(...ys) - yMargin; const yMax = Math.max(...ys) + yMargin;
+
+      const toX = v => pad.left + ((v - xMin) / (xMax - xMin)) * pw;
+      const toY = v => pad.top + ph - ((v - yMin) / (yMax - yMin)) * ph;
+
+      // Axis tick values
+      ctx.fillStyle = textColor; ctx.font = '11px Orbitron'; ctx.textAlign = 'center';
+      for (let i = 0; i <= 5; i++) {
+        const v = xMin + (xMax - xMin) * i / 5;
+        ctx.fillText(v.toFixed(2), toX(v), pad.top + ph + 20);
+      }
+      ctx.textAlign = 'right';
+      for (let i = 0; i <= 4; i++) {
+        const v = yMin + (yMax - yMin) * i / 4;
+        ctx.fillText(v.toFixed(2), pad.left - 10, toY(v) + 4);
+      }
+
+      // Regression line using two extreme best points
+      if (dataPoints.length >= 2 && currentSlope !== null) {
+        const sorted = [...dataPoints].sort((a, b) => a.invT - b.invT);
+        const p1 = sorted[0]; const p2 = sorted[sorted.length - 1];
+        const intercept = p1.logI - currentSlope * p1.invT;
+        const y1 = currentSlope * xMin + intercept;
+        const y2 = currentSlope * xMax + intercept;
+        ctx.strokeStyle = lineColor; ctx.lineWidth = 2.5; ctx.setLineDash([7, 3]);
+        ctx.beginPath(); ctx.moveTo(toX(xMin), toY(y1)); ctx.lineTo(toX(xMax), toY(y2)); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Highlight the two best points
+        [p1, p2].forEach(p => {
+          const x = toX(p.invT); const y = toY(p.logI);
+          ctx.fillStyle = bestPtColor;
+          ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = bg; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI * 2); ctx.stroke();
+        });
+      }
+
+      // All data points
+      dataPoints.forEach(p => {
+        const x = toX(p.invT); const y = toY(p.logI);
+        ctx.fillStyle = dotColor;
+        ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = bg; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.stroke();
+      });
+
+      // Legend
+      const lx = pad.left + pw - 150; const ly = pad.top + 16;
+      ctx.fillStyle = dotColor; ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = textColor; ctx.font = '10px Outfit'; ctx.textAlign = 'left';
+      ctx.fillText('Data points', lx + 10, ly + 4);
+
+      ctx.strokeStyle = lineColor; ctx.lineWidth = 2; ctx.setLineDash([5, 2]);
+      ctx.beginPath(); ctx.moveTo(lx, ly + 20); ctx.lineTo(lx + 24, ly + 20); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillText('Best fit line', lx + 28, ly + 24);
+
+      ctx.fillStyle = bestPtColor; ctx.beginPath(); ctx.arc(lx, ly + 40, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillText('2 best points', lx + 10, ly + 44);
+    }
+
+    /* =====================================================
+       RESULT SECTION UPDATE
+    ===================================================== */
+    function updateResultSection() {
+      if (dataPoints.length < 2 || currentSlope === null || !graphPlotted) {
+        document.getElementById('result-pending').style.display = '';
+        document.getElementById('result-live').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('result-pending').style.display = 'none';
+      document.getElementById('result-live').style.display = 'block';
+
+      const k = 1.38e-23; const q = 1.6e-19;
+      const Eg = (2 * 2.303 * k * Math.abs(currentSlope) * 1e3) / q;
+
+      document.getElementById('resultEg').textContent = Eg.toFixed(4);
+      document.getElementById('resultSlope').textContent = currentSlope.toFixed(4);
+      document.getElementById('resultMaterial').textContent = currentMaterial === 'ge' ? 'Ge' : 'Si';
+      document.getElementById('resultPoints').textContent = dataPoints.length;
+
+      // Two best points for slope
+      const sorted = [...dataPoints].sort((a, b) => a.invT - b.invT);
+      const p1 = sorted[0]; const p2 = sorted[sorted.length - 1];
+      const slopeBox = document.getElementById('slopeTwoPointsBox');
+      slopeBox.innerHTML = `
+    <strong>Point 1:</strong> (1000/T = ${p1.invT.toFixed(3)}, Log₁₀(Is) = ${p1.logI.toFixed(3)}) — T = ${p1.T} K, Is = ${p1.Is.toFixed(1)} μA<br/>
+    <strong>Point 2:</strong> (1000/T = ${p2.invT.toFixed(3)}, Log₁₀(Is) = ${p2.logI.toFixed(3)}) — T = ${p2.T} K, Is = ${p2.Is.toFixed(1)} μA<br/><br/>
+    <strong>Slope (m)</strong> = (${p2.logI.toFixed(3)} − ${p1.logI.toFixed(3)}) / (${p2.invT.toFixed(3)} − ${p1.invT.toFixed(3)}) = <span style="color:var(--accent-btn);font-family:var(--font-mono);">${currentSlope.toFixed(4)}</span><br/>
+    <strong>Eg</strong> = (2 × 2.303 × 1.38×10⁻²³ × ${Math.abs(currentSlope).toFixed(4)} × 10³) / 1.6×10⁻¹⁹ = <span style="color:var(--accent-2);font-family:var(--font-mono);font-weight:700;">${Eg.toFixed(4)} eV</span>
+  `;
+
+      const mat = currentMaterial === 'ge' ? 'Germanium (theoretical: 0.67 eV)' : 'Silicon (theoretical: 1.12 eV)';
+      document.getElementById('result-conclusion-text').innerHTML = `
+    The energy bandgap of the given semiconductor (<strong>${mat}</strong>) was experimentally determined to be
+    <strong style="color:var(--accent-btn)">${Eg.toFixed(4)} eV</strong> using ${dataPoints.length} data points.
+    The slope of the Log₁₀(Is) vs 1000/T graph was calculated from the two extreme best-fit points as
+    <strong>m = ${currentSlope.toFixed(4)}</strong>. The formula Eg = (2 × 2.303 × k × |m| × 10³) / q was applied,
+    where k = 1.38 × 10⁻²³ J/K and q = 1.6 × 10⁻¹⁹ C.
+  `;
+    }
+  </script>
+</body>
+
+</html>

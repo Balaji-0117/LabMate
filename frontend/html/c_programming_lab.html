@@ -61,6 +61,13 @@
     .back-btn:hover {
       text-decoration: underline;
     }
+    .portal-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
   </style>
 </head>
 
@@ -68,11 +75,11 @@
   <header class="portal-header">
     <div class="header-left">
       <a href="labmate_landing.html" aria-label="LabMate home">
-        <img src="../assets/images/LabMateLogo.png" alt="LabMate Logo" class="portal-logo" />
+        <img src="../assets/images/LabMateLogo2.png" alt="LabMate Logo" class="portal-logo" />
       </a>
       <div class="college-info">
         <h1 class="college-name">Aditya University</h1>
-        <span class="stream-badge">AIML Stream</span>
+        <!-- <span class="stream-badge">AIML Stream</span> -->
       </div>
     </div>
     <div class="header-right">
@@ -173,7 +180,7 @@
           <h2>C Programming Lab</h2>
           <p>
             <span class="welcome-meta-chip">💻 CSE</span>
-            <span class="welcome-meta-chip">10 Experiments</span>
+            <span class="welcome-meta-chip">3 Experiments</span>
           </p>
         </div>
       </section>
@@ -186,7 +193,7 @@
         <div class="experiment-list">
           <div class="experiment-card">
             <div class="exp-info">
-              <h4>Exp 1: Bubble Sort Algorithm Visualizer</h4>
+              <h4>Exp 1: Bubble Sort Algorithm</h4>
               <p>Understand the sorting process step-by-step with visualizations.</p>
             </div>
             <div class="exp-action">
@@ -204,6 +211,18 @@
             </div>
           </div>
         </div>
+        <a href="fibonacciEXP.html">
+        <div class="experiment-card">
+            <div class="exp-info">
+              <h4>Exp 3: Fibonacci: Using recursion</h4>
+              <p>Generate Fibonacci series step-by-step using recursive function calls.</p>
+            </div>
+            <div class="exp-action">
+              <button id="startBtn2" class="small-btn cta-primary">Start</button>
+            </div>
+          </div>
+        </div>
+        </a>
       </section>
 
     </main>

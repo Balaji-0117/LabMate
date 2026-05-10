@@ -1,13 +1,103 @@
 /* ═══════════════════════════════════════════════════════════════
    portal.js  |  LabMate Student Portal
    Handles: theme, profile dropdown, notification panel,
-            lab filter pills, sidebar active state,
-            test tab switching, AI chat, stat counter animation
+            stat counter animation, circular ring animation,
+            section modals (click-to-expand with blur overlay),
+            AI chat fab (drag + resize)
 ════════════════════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── 1. THEME SWITCHER ─────────────────────────────────────────
+
+  // ─────────────────────────────────────────────────────────────
+// NEW: AUTO-UPDATE WELCOME DATE
+// ─────────────────────────────────────────────────────────────
+const welcomeDateEl = document.getElementById('welcome-date');
+if (welcomeDateEl) {
+  const today = new Date();
+  const options = { month: 'long', day: 'numeric', year: 'numeric' };
+  
+  // Formats date as "Month Day, Year" (e.g., May 9, 2026)
+  welcomeDateEl.textContent = today.toLocaleDateString('en-US', options);
+}
+
+  async function loadDashboard() {
+  try {
+    const token = localStorage.getItem("token");
+
+    // Perform the fetch ONCE
+    const response = await fetch("http://localhost:5000/api/dashboard", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch dashboard data");
+
+    const data = await response.json();
+    console.log("Dashboard Data:", data);
+
+    // ─────────────────────────────
+    // 1. UPDATE HEADER PROFILE BUTTON (Top Right)
+    // ─────────────────────────────
+    const topNavName = document.querySelector(".prof-name");
+    if (topNavName) topNavName.textContent = data.student.username;
+
+    // ─────────────────────────────
+    // 2. UPDATE DROPDOWN HEADER DETAILS
+    // ─────────────────────────────
+    const dropdownName = document.querySelector(".dropdown-header strong");
+    const dropdownDetails = document.querySelector(".dropdown-header span");
+
+    if (dropdownName) dropdownName.textContent = data.student.username;
+    if (dropdownDetails) {
+      // Formats as: "24P31A42J4 · AIML"
+      dropdownDetails.textContent = `${data.student.roll_number} · ${data.student.branch}`;
+    }
+
+    // ─────────────────────────────
+    // 1. UPDATE PROFILE & BIO
+    // ─────────────────────────────
+    document.querySelector(".welcome-name").textContent = data.student.username;
+    document.querySelector(".prof-roll").textContent = data.student.roll_number;
+    
+    // Update the Bio - uses a fallback if the DB field is empty
+    const bioEl = document.getElementById("student-bio");
+    if (bioEl) {
+      bioEl.textContent = data.student.bio || "The best way to predict the future is to create it. Stay curious, stay bold.";
+    }
+
+    // ─────────────────────────────
+    // 2. UPDATE BRANCH & SECTION
+    // ─────────────────────────────
+    const metaText = `${data.student.branch} • Section ${data.student.section} • Sem ${data.student.semester}`;
+    const metaEl = document.getElementById("meta-text");
+    if (metaEl) metaEl.textContent = metaText;
+
+    // ─────────────────────────────
+    // 3. UPDATE STATS
+    // ─────────────────────────────
+    document.getElementById("stat-total").textContent = data.stats.total_labs;
+    document.getElementById("stat-done").textContent = data.stats.completed_labs;
+    document.getElementById("stat-pending").textContent = data.stats.pending_labs;
+    document.getElementById("stat-score").textContent = data.stats.overall_score + "%";
+
+    // ─────────────────────────────
+    // 4. UPDATE DROPDOWN (Bonus)
+    // ─────────────────────────────
+    const dropDownName = document.querySelector(".dropdown-header strong");
+    if (dropDownName) dropDownName.textContent = data.student.username;
+
+  } catch (err) {
+    console.error("Dashboard Error:", err);
+  }
+}
+
+loadDashboard();
+
+  // ─────────────────────────────────────────────────────────────
+  // 1. THEME SWITCHER
+  // ─────────────────────────────────────────────────────────────
   const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
   const savedTheme = localStorage.getItem('theme');
 
@@ -25,7 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // ── 2. PROFILE DROPDOWN ───────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────
+  // 2. PROFILE DROPDOWN
+  // ─────────────────────────────────────────────────────────────
   const profileBtn = document.querySelector('.profile-btn');
   const dropdownMenu = document.querySelector('.dropdown-menu');
 
@@ -34,13 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
       e.stopPropagation();
       const isOpen = dropdownMenu.classList.toggle('active');
       profileBtn.setAttribute('aria-expanded', String(isOpen));
-      // close notif panel if open
       notifPanel && notifPanel.classList.remove('active');
     });
   }
 
 
-  // ── 3. NOTIFICATION PANEL ─────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────
+  // 3. NOTIFICATION PANEL
+  // ─────────────────────────────────────────────────────────────
   const notifBtn = document.getElementById('notif-btn');
   const notifPanel = document.getElementById('notif-panel');
   const notifClear = document.getElementById('notif-clear');
@@ -48,22 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (notifBtn && notifPanel) {
     notifBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const isOpen = notifPanel.classList.toggle('active');
-      // close profile dropdown if open
+      notifPanel.classList.toggle('active');
       dropdownMenu && dropdownMenu.classList.remove('active');
       profileBtn && profileBtn.setAttribute('aria-expanded', 'false');
     });
 
-    // Clear all: remove unread styling
     notifClear && notifClear.addEventListener('click', () => {
-      document.querySelectorAll('.notif-unread').forEach(el => {
-        el.classList.remove('notif-unread');
-      });
+      document.querySelectorAll('.notif-unread').forEach(el => el.classList.remove('notif-unread'));
       document.querySelectorAll('.notif-dot').forEach(el => {
         el.classList.add('notif-dot-read');
         el.classList.remove('notif-dot');
       });
-      // hide badge
       const badge = document.querySelector('.notification-badge');
       if (badge) badge.style.display = 'none';
     });
@@ -71,66 +159,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Close all dropdowns on outside click
   document.addEventListener('click', (e) => {
-    if (dropdownMenu && profileBtn && !profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+    if (dropdownMenu && profileBtn &&
+      !profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
       dropdownMenu.classList.remove('active');
       profileBtn.setAttribute('aria-expanded', 'false');
     }
-    if (notifPanel && notifBtn && !notifBtn.contains(e.target) && !notifPanel.contains(e.target)) {
+    if (notifPanel && notifBtn &&
+      !notifBtn.contains(e.target) && !notifPanel.contains(e.target)) {
       notifPanel.classList.remove('active');
     }
   });
 
-  // ── 4. SIDEBAR ACCORDION SHUTTER ──────────────────────────────
-  function setupAccordion(toggleId, contentId) {
-    const toggleBtn = document.getElementById(toggleId);
-    const contentBox = document.getElementById(contentId);
-    
-    if (toggleBtn && contentBox) {
-      toggleBtn.addEventListener('click', () => {
-        const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
-        if (isExpanded) {
-          toggleBtn.setAttribute('aria-expanded', 'false');
-          contentBox.classList.add('shuttered');
-        } else {
-          toggleBtn.setAttribute('aria-expanded', 'true');
-          contentBox.classList.remove('shuttered');
-        }
-      });
-    }
-  }
 
-  setupAccordion('my-labs-toggle', 'my-labs-content');
-  setupAccordion('lab-tests-toggle', 'lab-tests-content');
-  setupAccordion('records-toggle', 'records-content');
-  setupAccordion('notice-toggle', 'notice-content');
-  setupAccordion('activity-toggle', 'activity-content');
-
-
-  // ── 5. SIDEBAR TOGGLE & OVERLAY ──────────────────────────────
+  // ─────────────────────────────────────────────────────────────
+  // 4. SIDEBAR OVERLAY (kept for compatibility)
+  // ─────────────────────────────────────────────────────────────
   const sidebarBtn = document.getElementById('sidebar-toggle-btn');
   const sidebar = document.querySelector('.portal-sidebar');
   const overlay = document.getElementById('sidebar-overlay');
 
   if (sidebarBtn && sidebar && overlay) {
     const toggleSidebar = () => {
-      const isActive = sidebar.classList.toggle('active');
+      sidebar.classList.toggle('active');
       overlay.classList.toggle('active');
       sidebarBtn.classList.toggle('active');
     };
-
-    sidebarBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleSidebar();
-    });
-
-    // Tap anywhere else to close
+    sidebarBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleSidebar(); });
     overlay.addEventListener('click', () => {
       sidebar.classList.remove('active');
       overlay.classList.remove('active');
       sidebarBtn.classList.remove('active');
     });
-
-    // Also close on escape key
     document.body.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && sidebar.classList.contains('active')) {
         sidebar.classList.remove('active');
@@ -140,32 +199,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── 8. DASHBOARD STAT COUNTERS ────────────────────────────────
-  // Count lab items and reflect in dashboard
-  function updateStats() {
-    const all = document.querySelectorAll('.lab-item').length;
-    const completed = document.querySelectorAll('.status-completed').length;
-    const pending = document.querySelectorAll('.status-pending').length;
 
-    animateCount(document.getElementById('stat-total'), all);
-    animateCount(document.getElementById('stat-done'), completed);
-    animateCount(document.getElementById('stat-pending'), pending);
-
-    // Score: placeholder based on completion ratio
-    const score = all > 0 ? Math.round((completed / all) * 100) : 0;
-    const scoreEl = document.getElementById('stat-score');
-    if (scoreEl) {
-      // animate to score%
-      let cur = 0;
-      const step = Math.ceil(score / 20);
-      const iv = setInterval(() => {
-        cur = Math.min(cur + step, score);
-        scoreEl.textContent = cur + '%';
-        if (cur >= score) clearInterval(iv);
-      }, 40);
-    }
-  }
-
+  // ─────────────────────────────────────────────────────────────
+  // 5. DASHBOARD STAT COUNTERS
+  // ─────────────────────────────────────────────────────────────
   function animateCount(el, target) {
     if (!el) return;
     let cur = 0;
@@ -177,32 +214,160 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 40);
   }
 
+  function updateStats() {
+    const all = document.querySelectorAll('.lab-item').length;
+    const completed = document.querySelectorAll('.status-completed').length;
+    const pending = document.querySelectorAll('.status-pending').length;
+
+    animateCount(document.getElementById('stat-total'), all);
+    animateCount(document.getElementById('stat-done'), completed);
+    animateCount(document.getElementById('stat-pending'), pending);
+
+    const score = all > 0 ? Math.round((completed / all) * 100) : 0;
+    const scoreEl = document.getElementById('stat-score');
+    if (scoreEl) {
+      let cur = 0;
+      const step = Math.ceil(score / 20) || 1;
+      const iv = setInterval(() => {
+        cur = Math.min(cur + step, score);
+        scoreEl.textContent = cur + '%';
+        if (cur >= score) clearInterval(iv);
+      }, 40);
+    }
+  }
+
   updateStats();
 
 
-  // ── 9. GLOBAL SEARCH (basic highlight) ───────────────────────
+  // ─────────────────────────────────────────────────────────────
+  // 6. GLOBAL SEARCH (lab items)
+  // ─────────────────────────────────────────────────────────────
   const globalSearch = document.querySelector('.global-search');
   if (globalSearch) {
     globalSearch.addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase().trim();
-      if (!q) {
-        // restore all
-        document.querySelectorAll('.lab-item').forEach(el => el.style.display = 'flex');
-        return;
-      }
       document.querySelectorAll('.lab-item').forEach(item => {
-        const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(q) ? 'flex' : 'none';
+        item.style.display = (!q || item.textContent.toLowerCase().includes(q)) ? 'flex' : 'none';
       });
     });
   }
 
-  // ── 10. GLOBAL AI DOUBT SOLVER (V4 — Drag + Custom Resize + Inline Panel) ──
+
+  // ─────────────────────────────────────────────────────────────
+  // 7. LABS MASTERY CIRCULAR RING ANIMATION
+  // ─────────────────────────────────────────────────────────────
+  const masteryRing = document.querySelector('.mastery-ring');
+  if (masteryRing) {
+    const pct = parseInt(masteryRing.dataset.percent) || 0;
+    const circle = masteryRing.querySelector('.ring-fill');
+    const r = 46;
+    const circ = 2 * Math.PI * r;
+
+    circle.style.strokeDasharray = `${circ}`;
+    circle.style.strokeDashoffset = `${circ}`;
+
+    setTimeout(() => {
+      circle.style.strokeDashoffset = `${circ - (pct / 100) * circ}`;
+    }, 400);
+  }
+
+
+  // ─────────────────────────────────────────────────────────────
+  // 8. SECTION MODAL SYSTEM
+  //    All pw-card sections open their corresponding modal when
+  //    clicked. My Labs section is excluded (no data-modal attr).
+  //    Close: ×-button, overlay click, or Escape key.
+  // ─────────────────────────────────────────────────────────────
+
+  /**
+   * Open a modal by its id
+   */
+  function openModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Close a modal by its id (or by the overlay element)
+   */
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Attach click handler to every pw-card that has data-modal
+  document.querySelectorAll('.pw-card[data-modal]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Don't fire if the user clicked a button/link inside the card
+      if (e.target.closest('button, a')) return;
+      const modalId = card.dataset.modal;
+      openModal(modalId);
+    });
+
+    // Keyboard accessibility
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `Open ${card.querySelector('.pw-title')?.textContent || 'section'}`);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const modalId = card.dataset.modal;
+        openModal(modalId);
+      }
+    });
+  });
+
+  // Close buttons inside modals
+  document.querySelectorAll('.pw-modal-close').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const modalId = btn.dataset.close;
+      closeModal(modalId);
+    });
+  });
+
+  // Click on overlay backdrop to close
+  document.querySelectorAll('.pw-modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      // Only close if the click was directly on the overlay (not on the modal box)
+      if (e.target === overlay) {
+        closeModal(overlay.id);
+      }
+    });
+  });
+
+  // Escape key closes any open modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.pw-modal-overlay.active').forEach(m => {
+        closeModal(m.id);
+      });
+    }
+  });
+
+
+  // ─────────────────────────────────────────────────────────────
+  // 9. QUICK-ACTION BUTTONS (kept for compatibility)
+  // ─────────────────────────────────────────────────────────────
+  const button1 = document.getElementById('startBtn1');
+  if (button1) button1.addEventListener('click', () => { window.location.href = '../html/BubbleSortEXP.html'; });
+
+  const button2 = document.getElementById('startBtn2');
+  if (button2) button2.addEventListener('click', () => { window.location.href = '../html/Temperatureconvertor.html'; });
+
+
+  // ─────────────────────────────────────────────────────────────
+  // 10. GLOBAL AI DOUBT SOLVER  (Drag + Custom Resize)
+  // ─────────────────────────────────────────────────────────────
   const isExamPortal = window.location.pathname.toLowerCase().includes('exam');
 
   if (!isExamPortal) {
 
-    // ── Inject HTML ──────────────────────────────────────────────
+    // ── Inject HTML ────────────────────────────────────────────
     const aiHTML = `
       <button id="ai-fab" class="ai-fab" aria-label="Open AI Doubt Solver">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ai-fab-icon">
@@ -217,7 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
       </button>
 
       <div id="ai-chat-window" class="ai-chat-window closed">
-        <!-- Custom resize handles on all 8 edges/corners -->
         <div class="ai-resize-handle ai-rh-n"  data-dir="n"></div>
         <div class="ai-resize-handle ai-rh-s"  data-dir="s"></div>
         <div class="ai-resize-handle ai-rh-e"  data-dir="e"></div>
@@ -232,12 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="ai-status-dot"></span> LABMATE AI
           </div>
           <div class="ai-chat-controls">
-            <button id="ai-minimize-btn" aria-label="Minimize Chat" title="Minimize">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            </button>
-            <button id="ai-close-btn" aria-label="Close Chat" title="Close">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
+            
           </div>
         </div>
 
@@ -248,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div class="ai-chat-footer">
-          <input type="text" placeholder="Type your doubt here..." class="ai-chat-input" id="ai-chat-input" />
+          <input type="text" placeholder="Type your doubt here…" class="ai-chat-input" id="ai-chat-input" />
           <button class="ai-send-btn" id="ai-send-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -261,21 +420,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.body.insertAdjacentHTML('beforeend', aiHTML);
 
-    // ── Element refs ────────────────────────────────────────────
-    const aiFab        = document.getElementById('ai-fab');
-    const aiChat       = document.getElementById('ai-chat-window');
-    const aiClose      = document.getElementById('ai-close-btn');
-    const aiMinimize   = document.getElementById('ai-minimize-btn');
-    const aiChatBody   = document.getElementById('ai-chat-body');
-    const aiInput      = document.getElementById('ai-chat-input');
-    const aiSendBtn    = document.getElementById('ai-send-btn');
-    const aiHeader     = document.getElementById('ai-chat-header');
+    // ── Element refs ──────────────────────────────────────────
+    const aiFab = document.getElementById('ai-fab');
+    const aiChat = document.getElementById('ai-chat-window');
+    // const aiClose = document.getElementById('ai-close-btn');
+    // const aiMinimize = document.getElementById('ai-minimize-btn');
+    const aiChatBody = document.getElementById('ai-chat-body');
+    const aiInput = document.getElementById('ai-chat-input');
+    const aiSendBtn = document.getElementById('ai-send-btn');
+    const aiHeader = document.getElementById('ai-chat-header');
 
-    // ── Default size / position ─────────────────────────────────
+    // const MIN_W = 280, MIN_H = 320;
+
+    // // ── Open / close / minimize ───────────────────────────────
+    // const openChat = () => {
+    //   aiChat.classList.remove('closed', 'minimized');
+    //   aiChat.classList.add('open');
+    //   aiFab.classList.add('hidden');
+    //   aiInput.focus();
+    // };
+    // const closeChat = () => {
+    //   aiChat.classList.remove('open', 'minimized');
+    //   aiChat.classList.add('closed');
+    //   aiFab.classList.remove('hidden');
+    // };
+    // const minimizeChat = () => aiChat.classList.toggle('minimized');
+
+    // aiClose.addEventListener('click', (e) => { e.stopPropagation(); closeChat(); });
+    // aiMinimize.addEventListener('click', (e) => { e.stopPropagation(); minimizeChat(); });
+
     const DEFAULT = { width: 360, height: 500, right: 30, bottom: 100 };
     const MIN_W = 280, MIN_H = 320;
 
-    // ── Open / close / minimize ─────────────────────────────────
+    // OPEN CHAT
     const openChat = () => {
       aiChat.classList.remove('closed', 'minimized');
       aiChat.classList.add('open');
@@ -283,114 +460,115 @@ document.addEventListener('DOMContentLoaded', () => {
       aiInput.focus();
     };
 
+    // CLOSE CHAT
     const closeChat = () => {
       aiChat.classList.remove('open', 'minimized');
       aiChat.classList.add('closed');
       aiFab.classList.remove('hidden');
     };
 
-    const minimizeChat = () => {
-      aiChat.classList.toggle('minimized');
-    };
+    // // FAB DRAG + OPEN
+    // makeDraggable(aiFab, aiFab, openChat);
 
-    aiClose.addEventListener('click', (e) => { e.stopPropagation(); closeChat(); });
-    aiMinimize.addEventListener('click', (e) => { e.stopPropagation(); minimizeChat(); });
+    // OUTSIDE CLICK CLOSE
+    document.addEventListener('click', function (e) {
 
-    // ── Storage ─────────────────────────────────────────────────
+      if (
+        aiChat.classList.contains('open') &&
+        !aiChat.contains(e.target) &&
+        !aiFab.contains(e.target)
+      ) {
+        closeChat();
+      }
+
+    });
+
+    // ── Storage ───────────────────────────────────────────────
     const AI_KEY = 'labmate_ai_v4';
 
     function saveState() {
-      const state = {
-        left: aiChat.style.left,   top: aiChat.style.top,
+      const s = {
+        left: aiChat.style.left, top: aiChat.style.top,
         right: aiChat.style.right, bottom: aiChat.style.bottom,
         width: aiChat.style.width, height: aiChat.style.height,
         fabLeft: aiFab.style.left, fabTop: aiFab.style.top,
         fabRight: aiFab.style.right, fabBottom: aiFab.style.bottom
       };
-      localStorage.setItem(AI_KEY, JSON.stringify(state));
+      localStorage.setItem(AI_KEY, JSON.stringify(s));
     }
 
     function loadState() {
       try {
         const s = JSON.parse(localStorage.getItem(AI_KEY));
         if (!s) return;
-        if (s.width)  aiChat.style.width  = s.width;
+        if (s.width) aiChat.style.width = s.width;
         if (s.height) aiChat.style.height = s.height;
         if (s.left && s.left !== 'auto' && s.left !== '') {
           aiChat.style.right = 'auto'; aiChat.style.bottom = 'auto';
-          aiChat.style.left = s.left;  aiChat.style.top    = s.top;
+          aiChat.style.left = s.left; aiChat.style.top = s.top;
         }
         if (s.fabLeft && s.fabLeft !== 'auto' && s.fabLeft !== '') {
           aiFab.style.right = 'auto'; aiFab.style.bottom = 'auto';
-          aiFab.style.left  = s.fabLeft; aiFab.style.top = s.fabTop;
+          aiFab.style.left = s.fabLeft; aiFab.style.top = s.fabTop;
         }
-      } catch(e) {}
+      } catch (e) { }
     }
 
-    // ── Universal drag helper ────────────────────────────────────
+    // ── Universal drag helper ─────────────────────────────────
     function makeDraggable(el, handle, onClickCb) {
       let active = false, moved = false;
       let sx, sy, ox, oy;
 
       function startDrag(cx, cy) {
-        active = true; moved = false;
-        sx = cx; sy = cy;
+        active = true; moved = false; sx = cx; sy = cy;
         const r = el.getBoundingClientRect();
         ox = r.left; oy = r.top;
         el.classList.add('ai-dragging');
       }
-
       function moveDrag(cx, cy) {
         if (!active) return;
         const dx = cx - sx, dy = cy - sy;
         if (!moved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
-          el.style.right  = 'auto';
-          el.style.bottom = 'auto';
-          el.style.left   = ox + 'px';
-          el.style.top    = oy + 'px';
+          el.style.right = 'auto'; el.style.bottom = 'auto';
+          el.style.left = ox + 'px'; el.style.top = oy + 'px';
           moved = true;
         }
         if (moved) {
-          const nx = Math.max(0, Math.min(ox + dx, window.innerWidth  - el.offsetWidth));
-          const ny = Math.max(0, Math.min(oy + dy, window.innerHeight - el.offsetHeight));
-          el.style.left = nx + 'px';
-          el.style.top  = ny + 'px';
+          el.style.left = Math.max(0, Math.min(ox + dx, window.innerWidth - el.offsetWidth)) + 'px';
+          el.style.top = Math.max(0, Math.min(oy + dy, window.innerHeight - el.offsetHeight)) + 'px';
         }
       }
-
       function endDrag() {
         if (!active) return;
         active = false;
         el.classList.remove('ai-dragging');
-        if (moved) { saveState(); }
-        else if (onClickCb) { onClickCb(); }
+        if (moved) saveState();
+        else if (onClickCb) onClickCb();
       }
 
-      // Mouse
       handle.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         if (e.target.closest('button') && e.target !== handle) return;
         startDrag(e.clientX, e.clientY);
         document.addEventListener('mousemove', onMM);
-        document.addEventListener('mouseup',   onMU);
+        document.addEventListener('mouseup', onMU);
         e.preventDefault();
       });
       function onMM(e) { moveDrag(e.clientX, e.clientY); }
-      function onMU()  { endDrag(); document.removeEventListener('mousemove', onMM); document.removeEventListener('mouseup', onMU); }
+      function onMU() { endDrag(); document.removeEventListener('mousemove', onMM); document.removeEventListener('mouseup', onMU); }
 
-      // Touch
       handle.addEventListener('touchstart', (e) => {
         if (e.target.closest('button') && e.target !== handle) return;
         const t = e.touches[0];
         startDrag(t.clientX, t.clientY);
-        document.addEventListener('touchmove',  onTM, { passive: false });
-        document.addEventListener('touchend',   onTE);
+        document.addEventListener('touchmove', onTM, { passive: false });
+        document.addEventListener('touchend', onTE);
       }, { passive: true });
       function onTM(e) { e.preventDefault(); const t = e.touches[0]; moveDrag(t.clientX, t.clientY); }
-      function onTE()  { endDrag(); document.removeEventListener('touchmove', onTM); document.removeEventListener('touchend', onTE); }
+      function onTE() { endDrag(); document.removeEventListener('touchmove', onTM); document.removeEventListener('touchend', onTE); }
     }
 
-    // ── Custom resize logic (all 8 handles) ─────────────────────
+    // ── Custom resize (8-directional) ─────────────────────────
     function setupResize() {
       const handles = aiChat.querySelectorAll('.ai-resize-handle');
 
@@ -467,12 +645,11 @@ document.addEventListener('DOMContentLoaded', () => {
       function onResizeTouchUp()     { endResize(); document.removeEventListener('touchmove', onResizeTouchMove); document.removeEventListener('touchend', onResizeTouchUp); }
     }
 
-    // ── Send message (mock echo) ─────────────────────────────────
+    // ── Send message ──────────────────────────────────────────
     function sendMessage() {
       const text = aiInput.value.trim();
       if (!text) return;
 
-      // User bubble
       const userMsg = document.createElement('div');
       userMsg.className = 'ai-msg ai-msg-user';
       userMsg.innerHTML = `<div class="ai-bubble ai-bubble-user">${text}</div>`;
@@ -480,7 +657,6 @@ document.addEventListener('DOMContentLoaded', () => {
       aiInput.value = '';
       aiChatBody.scrollTop = aiChatBody.scrollHeight;
 
-      // Typing indicator
       const typing = document.createElement('div');
       typing.className = 'ai-msg ai-msg-bot';
       typing.innerHTML = '<div class="ai-bubble ai-typing"><span></span><span></span><span></span></div>';
@@ -488,40 +664,67 @@ document.addEventListener('DOMContentLoaded', () => {
       aiChatBody.scrollTop = aiChatBody.scrollHeight;
 
       // Simulated reply (replace with real API call as needed)
-      setTimeout(() => {
-        aiChatBody.removeChild(typing);
+            // REAL API CALL
+      fetch("http://localhost:5000/api/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: text
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+
+       aiChatBody.removeChild(typing);
+
         const botMsg = document.createElement('div');
         botMsg.className = 'ai-msg ai-msg-bot';
-        botMsg.innerHTML = `<div class="ai-bubble">I received your question about "<strong>${text}</strong>". Connect me to the Anthropic API to get real answers!</div>`;
+
+        botMsg.innerHTML = `
+        <div class="ai-bubble">
+          ${data.reply.replace(/\n/g, "<br>")}
+        </div>
+       `;
+
         aiChatBody.appendChild(botMsg);
         aiChatBody.scrollTop = aiChatBody.scrollHeight;
-      }, 1200);
+      })
+      .catch(error => {
+
+        aiChatBody.removeChild(typing);
+
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'ai-msg ai-msg-bot';
+
+        errorMsg.innerHTML = `
+          <div class="ai-bubble">
+            Server Error. Please try again later.
+          </div>
+        `;
+
+        aiChatBody.appendChild(errorMsg);
+
+        console.log(error);
+      });
+
     }
 
     aiSendBtn.addEventListener('click', sendMessage);
-    aiInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+    aiInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
 
-    // ── Wire up drag & resize ────────────────────────────────────
+    // ── Wire up drag & resize ─────────────────────────────────
     makeDraggable(aiFab, aiFab, openChat);
     makeDraggable(aiChat, aiHeader, null);
     setupResize();
-
-    // ── Load saved state ─────────────────────────────────────────
     loadState();
 
-    // Clear old storage keys
+    // Clean up old storage keys
     localStorage.removeItem('ai_bot_state');
     localStorage.removeItem('labmate_ai_coords_v3');
   }
-
-  const button1 = document.getElementById('startBtn1');
-  button1.addEventListener('click', ()=>{
-    window.location.href="../html/BubbleSortEXP.html";
-  });
-
-  const button2 = document.getElementById('startBtn2');
-  button2.addEventListener('click', ()=>{
-    window.location.href="../html/Temperatureconvertor.html";
-  });
 
 }); // end DOMContentLoaded
