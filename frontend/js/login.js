@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
 
         const response = await fetch(
-            "http://localhost:5000/api/auth/login",
+            `${API_BASE}/api/auth/login`,
             {
                 method: "POST",
 
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
 
             try {
-                const res = await fetch("http://localhost:5000/api/auth/login", {
+                const res = await fetch(`${API_BASE}/api/auth/login`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -140,9 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
 
-                    // ✅ Store JWT token
+                    // ✅ Store JWT token and User Info
                     if (data.token) {
                         localStorage.setItem("token", data.token);
+                        localStorage.setItem("role", data.role);
+                        localStorage.setItem("username", data.username);
+                        localStorage.setItem("email", data.email);
                     }
 
                     // ✅ SAME SUCCESS UI (no change)
@@ -159,9 +162,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     successState.classList.remove('hidden');
 
-                    // ✅ Redirect to portal (IMPORTANT CHANGE)
+                    // ✅ Redirect to portal based on role
                     setTimeout(() => {
-                        window.location.href = '../html/portal.html';
+                        if (data.role === 'admin') {
+                            window.location.href = '../html/faculty_portal.html';
+                        } else {
+                            window.location.href = '../html/portal.html';
+                        }
                     }, 1500);
 
                 } else {

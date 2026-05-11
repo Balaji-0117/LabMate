@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
 
             try {
-                const res = await fetch(`http://localhost:5000/api/auth/set-password/${token}`, {
+                const res = await fetch(`${API_BASE}/api/auth/set-password/${token}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

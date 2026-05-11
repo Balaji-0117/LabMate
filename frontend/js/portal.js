@@ -26,7 +26,7 @@ if (welcomeDateEl) {
     const token = localStorage.getItem("token");
 
     // Perform the fetch ONCE
-    const response = await fetch("http://localhost:5000/api/dashboard", {
+    const response = await fetch(`${API_BASE}/api/dashboard`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -665,7 +665,7 @@ loadDashboard();
 
       // Simulated reply (replace with real API call as needed)
             // REAL API CALL
-      fetch("http://localhost:5000/api/ai", {
+      fetch(`${API_BASE}/api/ai`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
