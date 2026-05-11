@@ -13,12 +13,31 @@
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/portal.css" />
   <style>
-    .experiment-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 20px;
+        .small-btn {
+      padding: 10px 18px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
     }
+
+    .cta-primary {
+      background: linear-gradient(135deg, #1A88D0, #112a46);
+      color: white;
+      transition: 0.3s ease;
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+        .experiment-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: 20px;
+        }
     .experiment-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -211,18 +230,17 @@
             </div>
           </div>
         </div>
-        <a href="fibonacciEXP.html">
-        <div class="experiment-card">
-            <div class="exp-info">
-              <h4>Exp 3: Fibonacci: Using recursion</h4>
-              <p>Generate Fibonacci series step-by-step using recursive function calls.</p>
-            </div>
-            <div class="exp-action">
-              <button id="startBtn2" class="small-btn cta-primary">Start</button>
-            </div>
-          </div>
+       <div class="experiment-card">
+        <div class="exp-info">
+          <h4>Exp 3: Fibonacci: Using recursion</h4>
+          <p>Generate Fibonacci series step-by-step using recursive function calls.</p>
         </div>
-        </a>
+        <div class="exp-action">
+          <a href="fibonacciEXP.html">
+            <button id="startBtn3" class="small-btn cta-primary">Start</button>
+          </a>
+        </div>
+      </div>
       </section>
 
     </main>
