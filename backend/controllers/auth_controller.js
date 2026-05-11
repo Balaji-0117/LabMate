@@ -9,15 +9,26 @@ exports.signup = async (req, res) => {
     const token = uuidv4();
     const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
+    const teamResult = await pool.query('SELECT * FROM team WHERE email = $1', [email]);
+    if (teamResult.rows.length === 0) {
+      return res.status(400).json({ error: "Email not found in team records" });
+    }
+    const teamRecord = teamResult.rows[0];
+    const defaultUsername = teamRecord.username;
+    const defaultPassword = 'unverified_user';
+    const rollNumber = teamRecord.rollno;
+    const assignedRole = rollNumber ? 'student' : 'admin';
+
     await pool.query(
-      `INSERT INTO users (email, verification_token, token_expiry)
-       VALUES ($1, $2, $3)
+      `INSERT INTO users (email, username, password, roll_number, role, verification_token, token_expiry)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        ON CONFLICT (email) DO UPDATE 
-       SET verification_token=$2, token_expiry=$3`,
-      [email, token, expiry]
+       SET verification_token=$6, token_expiry=$7`,
+      [email, defaultUsername, defaultPassword, rollNumber, assignedRole, token, expiry]
     );
 
-    const link = `http://127.0.0.1:5500/frontend/html/create_password.html?token=${token}`;
+    const frontendBase = process.env.FRONTEND_URL || "http://127.0.0.1:5500";
+    const link = `${frontendBase}/frontend/html/create_password.html?token=${token}`;
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -102,12 +113,12 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { user_id: user.user_id },
+      { user_id: user.user_id, role: user.role, username: user.username, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    res.json({ token });
+    res.json({ token, role: user.role, username: user.username, email: user.email });
 
   } catch (err) {
     res.status(500).json({ error: "Login failed" });

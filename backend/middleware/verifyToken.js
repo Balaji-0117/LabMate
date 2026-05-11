@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-module.exports = (req, res, next) => {
+const verifyToken = (req, res, next) => {
 
     try {
 
@@ -29,4 +29,12 @@ module.exports = (req, res, next) => {
             error: "Invalid token"
         });
     }
+};
+
+module.exports = verifyToken;
+module.exports.checkRole = (...allowedRoles) => (req, res, next) => {
+  if (!req.user || !allowedRoles.includes(req.user.role)) {
+    return res.status(403).json({ message: "Access denied" });
+  }
+  next();
 };
