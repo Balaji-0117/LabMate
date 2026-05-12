@@ -60,6 +60,7 @@ exports.completeExperiment = async (req, res) => {
   try {
     const studentId = req.user.user_id;
     const expId = req.params.id;
+    const observationData = req.body?.observation_data ? JSON.stringify(req.body.observation_data) : null;
 
     // Check if already completed
     const existing = await pool.query('SELECT * FROM student_records WHERE student_id = $1 AND experiment_id = $2', [studentId, expId]);
@@ -68,8 +69,8 @@ exports.completeExperiment = async (req, res) => {
     }
 
     const result = await pool.query(
-      `INSERT INTO student_records (student_id, experiment_id) VALUES ($1, $2) RETURNING id`,
-      [studentId, expId]
+      `INSERT INTO student_records (student_id, experiment_id, observation_data) VALUES ($1, $2, $3) RETURNING id`,
+      [studentId, expId, observationData]
     );
     res.json({ success: true, recordId: result.rows[0].id });
   } catch (err) {
@@ -130,7 +131,7 @@ exports.downloadLabRecordPdf = async (req, res) => {
     const recordId = req.params.recordId;
     
     const result = await pool.query(`
-      SELECT r.id, r.completed_at, r.notes, e.title as experiment_title, e.lab_category, e.aim, e.procedure, u.username, u.roll_number
+      SELECT r.id, r.completed_at, r.notes, r.observation_data, e.title as experiment_title, e.lab_category, e.aim, e.procedure, u.username, u.roll_number
       FROM student_records r
       JOIN experiments e ON r.experiment_id = e.id
       JOIN users u ON r.student_id = u.user_id
@@ -146,9 +147,10 @@ exports.downloadLabRecordPdf = async (req, res) => {
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader(
-  'Content-Disposition',
-  `attachment; filename="LabRecord_${recordData.experiment_title.replace(/\s+/g, '_')}.pdf"`
-  );
+      'Content-Disposition',
+      `attachment; filename="LabRecord_${recordData.experiment_title.replace(/\s+/g, '_')}.pdf"`
+    );
+    res.send(pdfBuffer);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });

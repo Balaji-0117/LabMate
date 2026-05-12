@@ -690,8 +690,8 @@
         <button class="profile-btn" aria-haspopup="true" aria-expanded="false">
           <div class="profile-avatar">S</div>
           <div class="profile-name-tag">
-            <span class="prof-name">Santhosh</span>
-            <span class="prof-roll">24P31A42XX</span>
+            <span class="prof-name">Student</span>
+            <span class="prof-roll">Loading...</span>
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chevron-down">
             <polyline points="6 9 12 15 18 9"/>
@@ -700,7 +700,7 @@
         <div class="dropdown-menu">
           <div class="dropdown-header">
             <div class="dh-avatar">S</div>
-            <div><strong>Santhosh</strong><span>24P31A42XX · AIML</span></div>
+            <div><strong>Student</strong><span>24P31A42XX · AIML</span></div>
           </div>
           <hr>
           <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
@@ -1836,12 +1836,60 @@ struct Node* reverse(struct Node* head) {
     /* INIT */
     simRenderTutStep();
   </script>
-  <script src="../js/portal.js"></script>
+  <script src="../js/config.js"></script>
+    <script src="../js/portal.js"></script>
 
 
-<div id="record-download-section" style="display:none; margin-top:2rem; text-align:center;">
-  <button id="downloadRecordBtn" onclick="downloadLabRecord()" 
-    style="background:#4f46e5;color:#fff;padding:12px 28px;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">
+
+<style>
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Hide UI elements not meant for the PDF record */
+  .portal-header, .exp-breadcrumb, .back-btn, #record-download-section, .chat-widget-btn, .chat-widget-window, .exp-sidebar, .tabs-nav {
+    display: none !important;
+  }
+  
+  /* Force ALL sections to be visible */
+  .exp-section-content, .tab-content, .section, .sim-section, .viva-section, .result-section {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin-bottom: 2rem !important;
+    page-break-inside: auto !important;
+  }
+  
+  /* Ensure parent containers expand */
+  .exp-main-body, .exp-content-area, .exp-panel, .exp-panel-body, .sim-wrapper, .s-layout {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    width: 100% !important;
+  }
+  
+  .exp-section-content {
+    page-break-after: always;
+  }
+  .exp-section-content:last-child {
+    page-break-after: auto;
+  }
+
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid !important;
+  }
+}
+</style>
+<div id="record-download-section" style="margin-top:2rem; text-align:center; padding-bottom: 2rem;">
+  <button id="downloadRecordBtn" onclick="downloadLabRecordFrontEnd()" 
+    style="background:#4f46e5;color:#fff;padding:12px 28px;border:none;border-radius:8px;font-size:1rem;cursor:pointer;box-shadow:0 4px 6px rgba(0,0,0,0.1);transition:transform 0.2s;">
     ⬇ Download Lab Record (PDF)
   </button>
 </div>
@@ -1850,29 +1898,46 @@ struct Node* reverse(struct Node* head) {
   const API_BASE = window.__ENV__?.API_BASE || "http://localhost:5000";
   const EXPERIMENT_ID = 16;
 
-  async function markComplete() {
-    const token = localStorage.getItem('token');
-    const res = await fetch(`${API_BASE}/api/student/experiments/${EXPERIMENT_ID}/complete`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const data = await res.json();
-    if (data.recordId) {
-      document.getElementById('record-download-section').style.display = 'block';
-      document.getElementById('downloadRecordBtn').dataset.recordId = data.recordId;
-    }
-  }
+  async function downloadLabRecordFrontEnd() {
+    const btn = document.getElementById('downloadRecordBtn');
+    const originalText = btn.innerHTML;
+    btn.textContent = 'Preparing PDF...';
+    btn.disabled = true;
 
-  async function downloadLabRecord() {
-    const token = localStorage.getItem('token');
-    const recordId = document.getElementById('downloadRecordBtn').dataset.recordId;
-    const res = await fetch(`${API_BASE}/api/student/records/${recordId}/pdf`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'LabRecord.pdf'; a.click();
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (typeof EXPERIMENT_ID !== 'undefined') {
+        const observationData = {
+          forward: (typeof simFwdObs !== 'undefined') ? simFwdObs : [],
+          reverse: (typeof simRevObs !== 'undefined') ? simRevObs : []
+        };
+        
+        await fetch(`${API_BASE}/api/student/experiments/${EXPERIMENT_ID}/complete`, {
+          method: 'POST',
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ observation_data: observationData })
+        }).catch(err => console.log('Backend sync failed', err));
+      }
+
+      document.body.classList.add('is-printing');
+      setTimeout(() => {
+        window.print();
+        document.body.classList.remove('is-printing');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }, 500);
+
+    } catch (e) {
+      console.error(e);
+      alert('Error generating PDF.');
+      document.body.classList.remove('is-printing');
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
   }
 </script>
 </body>

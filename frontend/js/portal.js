@@ -56,10 +56,21 @@ if (welcomeDateEl) {
     }
 
     // ─────────────────────────────
+    // 3. UPDATE AVATARS
+    // ─────────────────────────────
+    const initial = data.student.username ? data.student.username.charAt(0).toUpperCase() : 'U';
+    const profileAvatar = document.querySelector(".profile-avatar");
+    const dhAvatar = document.querySelector(".dh-avatar");
+    if (profileAvatar) profileAvatar.textContent = initial;
+    if (dhAvatar) dhAvatar.textContent = initial;
+
+    // ─────────────────────────────
     // 1. UPDATE PROFILE & BIO
     // ─────────────────────────────
-    document.querySelector(".welcome-name").textContent = data.student.username;
-    document.querySelector(".prof-roll").textContent = data.student.roll_number;
+    const welcomeName = document.querySelector(".welcome-name");
+    if (welcomeName) welcomeName.textContent = data.student.username;
+    
+    document.querySelectorAll(".prof-roll").forEach(el => el.textContent = data.student.roll_number);
     
     // Update the Bio - uses a fallback if the DB field is empty
     const bioEl = document.getElementById("student-bio");
@@ -77,10 +88,17 @@ if (welcomeDateEl) {
     // ─────────────────────────────
     // 3. UPDATE STATS
     // ─────────────────────────────
-    document.getElementById("stat-total").textContent = data.stats.total_labs;
-    document.getElementById("stat-done").textContent = data.stats.completed_labs;
-    document.getElementById("stat-pending").textContent = data.stats.pending_labs;
-    document.getElementById("stat-score").textContent = data.stats.overall_score + "%";
+    const statTotal = document.getElementById("stat-total");
+    if (statTotal) statTotal.textContent = data.stats.total_labs;
+    
+    const statDone = document.getElementById("stat-done");
+    if (statDone) statDone.textContent = data.stats.completed_labs;
+    
+    const statPending = document.getElementById("stat-pending");
+    if (statPending) statPending.textContent = data.stats.pending_labs;
+    
+    const statScore = document.getElementById("stat-score");
+    if (statScore) statScore.textContent = data.stats.overall_score + "%";
 
     // ─────────────────────────────
     // 4. UPDATE DROPDOWN (Bonus)
