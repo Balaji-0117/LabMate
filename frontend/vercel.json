@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/html/labmate_landing.html",
+      "permanent": true
+    }
+  ]
+}
