@@ -1,1 +1,1 @@
-const API_BASE = window.__ENV__?.API_BASE || "http://localhost:5000";
+const API_BASE = "courageous-freedom-production-ddae.up.railway.app";

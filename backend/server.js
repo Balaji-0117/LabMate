@@ -2,14 +2,10 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 const cors = require("cors");
-// Allow flexible origins for local development (any localhost port and file:// protocols)
+// Allow all origins in production so Vercel frontend can connect
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || origin === 'null') return callback(null, true);
-    if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
-      return callback(null, true);
-    }
-    callback(new Error('Not allowed by CORS'));
+    return callback(null, true); 
   },
   optionsSuccessStatus: 200
 };
