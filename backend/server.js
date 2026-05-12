@@ -2,8 +2,18 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 const cors = require("cors");
-// Allow all origins for local development to prevent CORS errors
-app.use(cors());
+// Allow flexible origins for local development (any localhost port and file:// protocols)
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || origin === 'null') return callback(null, true);
+    if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+    callback(new Error('Not allowed by CORS'));
+  },
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 
 //middleware
 app.use(express.json());
@@ -61,8 +71,12 @@ app.use(errorHandler);
 // ===============================
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    console.log(`Server is Running on http://localhost:${PORT}`);
-})
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`Server is Running on http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
 
 
