@@ -1,1 +1,1 @@
-const API_BASE = "courageous-freedom-production-ddae.up.railway.app";
+const API_BASE = "https://courageous-freedom-production-ddae.up.railway.app";
