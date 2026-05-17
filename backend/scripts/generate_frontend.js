@@ -12,7 +12,6 @@ let adminLoginHtml = loginHtml
   .replace('<a href="signup.html" class="login-link">Sign up here</a>', '<a href="admin_signup.html" class="login-link">Sign up here</a>')
   .replace('<script src="../js/login.js"></script>', `
 <script>
-  const API_BASE = window.__ENV__?.API_BASE || "http://localhost:5000";
   document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email-input').value;
@@ -42,7 +41,6 @@ let facultyLoginHtml = loginHtml
   .replace('<a href="signup.html" class="login-link">Sign up here</a>', '<a href="faculty_signup.html" class="login-link">Sign up here</a>')
   .replace('<script src="../js/login.js"></script>', `
 <script>
-  const API_BASE = window.__ENV__?.API_BASE || "http://localhost:5000";
   document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email-input').value;
@@ -90,7 +88,6 @@ let adminSignupHtml = signupHtml
   .replace('Verify Email Address', 'Register Admin')
   .replace('<script src="../js/signup.js"></script>', `
 <script>
-  const API_BASE = window.__ENV__?.API_BASE || "http://localhost:5000";
   document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const username = document.getElementById('username-input').value;
@@ -119,7 +116,6 @@ let facultySignupHtml = signupHtml
   .replace('Verify Email Address', 'Register Faculty')
   .replace('<script src="../js/signup.js"></script>', `
 <script>
-  const API_BASE = window.__ENV__?.API_BASE || "http://localhost:5000";
   document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const username = document.getElementById('username-input').value;

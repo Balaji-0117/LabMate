@@ -1,4 +1,4 @@
-const API_BASE = window.__ENV__?.API_BASE || "http://localhost:5000";
+// API_BASE is inherited globally from config.js
 
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");

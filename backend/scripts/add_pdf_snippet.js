@@ -19,7 +19,6 @@ for (const file of files) {
 </div>
 
 <script>
-  const API_BASE = window.__ENV__?.API_BASE || "http://localhost:5000";
   const EXPERIMENT_ID = ${expIdCounter++};
 
   async function markComplete() {
