@@ -30,18 +30,27 @@ exports.signup = async (req, res) => {
     const frontendBase = process.env.FRONTEND_URL || "http://127.0.0.1:5500";
     const link = `${frontendBase}/frontend/html/create_password.html?token=${token}`;
 
-    await transporter.sendMail({
+    const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Verify your account",
       html: `<p>Click below to set password:</p>
              <a href="${link}">${link}</a>`,
-    });
+    };
 
-    res.json({ message: "Verification email sent" });
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: "Verification email sent" });
+    } catch (err) {
+      console.error("MAIL ERROR:", err);
+      res.status(500).json({
+        error: "Failed to send mail",
+        details: err.message
+      });
+    }
 
   } catch (err) {
-    console.error(err);
+    console.error("Signup database error:", err);
     res.status(500).json({ error: "Signup failed" });
   }
 };
