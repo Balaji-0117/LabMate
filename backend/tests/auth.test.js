@@ -1,7 +1,6 @@
 const request = require('supertest');
 const app = require('../server');
 const pool = require('../config/db');
-const transporter = require('../config/mail');
 
 // Mock external services to prevent actual DB operations and emails
 jest.mock('../config/db', () => {
@@ -9,11 +8,22 @@ jest.mock('../config/db', () => {
     query: jest.fn()
   };
 });
-jest.mock('../config/mail', () => {
+
+jest.mock('resend', () => {
+  const mockSendFn = jest.fn().mockResolvedValue({ id: 'some-id' });
   return {
-    sendMail: jest.fn()
+    Resend: jest.fn().mockImplementation(() => {
+      return {
+        emails: {
+          send: mockSendFn
+        }
+      };
+    }),
+    mockSend: mockSendFn
   };
 });
+
+const { mockSend } = require('resend');
 
 describe('Auth API Validation & Routing', () => {
 
@@ -41,7 +51,7 @@ describe('Auth API Validation & Routing', () => {
 
       expect(res.statusCode).toEqual(200);
       expect(res.body.message).toBe('Verification email sent');
-      expect(transporter.sendMail).toHaveBeenCalled();
+      expect(mockSend).toHaveBeenCalled();
     });
 
     it('should return 400 if email is not found in team table', async () => {
