@@ -29,8 +29,7 @@ exports.signup = async (req, res) => {
       [email, defaultUsername, defaultPassword, rollNumber, assignedRole, token, expiry]
     );
 
-    const frontendBase = process.env.FRONTEND_URL || "http://127.0.0.1:5500";
-    const link = `${frontendBase}/frontend/html/create_password.html?token=${token}`;
+    const link = `${process.env.FRONTEND_URL || "http://127.0.0.1:5501/frontend/html"}/create_password.html?token=${token}`;
 
     try {
       const data = await resend.emails.send({
